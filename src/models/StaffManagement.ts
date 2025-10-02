@@ -3,6 +3,8 @@
  * Handles employee profiles, roles, scheduling, and HR functions
  */
 
+import { Address, EmergencyContact } from './CommonTypes';
+
 export interface Employee {
   id: string;
   employeeNumber: string;
@@ -18,21 +20,6 @@ export interface Employee {
   emergencyContact: EmergencyContact;
   credentials: Credential[];
   userId: string;
-}
-
-export interface Address {
-  street: string;
-  city: string;
-  state: string;
-  postalCode: string;
-  country: string;
-}
-
-export interface EmergencyContact {
-  name: string;
-  relationship: string;
-  phoneNumber: string;
-  alternatePhone?: string;
 }
 
 export interface Credential {
@@ -167,7 +154,7 @@ export interface PerformanceGoal {
   notes?: string;
 }
 
-export interface TrainingRecord {
+export interface StaffTrainingRecord {
   id: string;
   employeeId: string;
   trainingName: string;

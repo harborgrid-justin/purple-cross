@@ -3,6 +3,8 @@
  * Handles stock tracking, ordering, and vendor management
  */
 
+import { Address } from './CommonTypes';
+
 export interface InventoryItem {
   id: string;
   sku: string;
@@ -70,14 +72,6 @@ export interface Vendor {
   active: boolean;
   rating: number;
   performance: VendorPerformance;
-}
-
-export interface Address {
-  street: string;
-  city: string;
-  state: string;
-  postalCode: string;
-  country: string;
 }
 
 export interface VendorPerformance {

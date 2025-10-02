@@ -3,6 +3,8 @@
  * Handles e-prescribing, medication tracking, and pharmacy integration
  */
 
+import { Address } from './CommonTypes';
+
 export interface Prescription {
   id: string;
   patientId: string;
@@ -127,14 +129,6 @@ export interface PharmacyIntegration {
   electronicSubmissionEnabled: boolean;
   credentials: Record<string, string>;
   active: boolean;
-}
-
-export interface Address {
-  street: string;
-  city: string;
-  state: string;
-  postalCode: string;
-  country: string;
 }
 
 export interface MedicationReminder {

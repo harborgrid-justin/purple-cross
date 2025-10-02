@@ -170,11 +170,11 @@ export interface Statement {
   periodEnd: Date;
   previousBalance: number;
   charges: number;
-  payments: number;
+  paymentsAmount: number;
   adjustments: number;
   currentBalance: number;
   invoices: StatementInvoice[];
-  payments: StatementPayment[];
+  paymentTransactions: StatementPayment[];
 }
 
 export interface StatementInvoice {
@@ -220,7 +220,7 @@ export interface CreditMemo {
   notes?: string;
 }
 
-export interface FinancialReport {
+export interface BillingFinancialReport {
   reportType: 'daily_summary' | 'revenue_analysis' | 'aging_report' | 'payment_methods' | 'profitability';
   periodStart: Date;
   periodEnd: Date;

@@ -5,6 +5,9 @@
  * featuring 15 primary modules with 120 sub-features.
  */
 
+// Common Types (exported first to avoid conflicts)
+export * from './models/CommonTypes';
+
 // Module 1: Patient Management
 export * from './models/PatientManagement';
 

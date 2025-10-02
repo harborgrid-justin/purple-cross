@@ -3,6 +3,8 @@
  * Handles in-house and external lab testing
  */
 
+import { Address } from './CommonTypes';
+
 export interface LabTest {
   id: string;
   testCode: string;
@@ -109,14 +111,6 @@ export interface ExternalLab {
   apiCredentials?: Record<string, string>;
   averageTurnaround: number;
   active: boolean;
-}
-
-export interface Address {
-  street: string;
-  city: string;
-  state: string;
-  postalCode: string;
-  country: string;
 }
 
 export interface TestCatalog {

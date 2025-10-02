@@ -100,7 +100,7 @@ export interface TreatmentHistory {
   treatments: HistoricalTreatment[];
   surgeries: Surgery[];
   medications: MedicationRecord[];
-  outcomes: TreatmentOutcome[];
+  outcomes: MedicalTreatmentOutcome[];
 }
 
 export interface HistoricalTreatment {
@@ -136,7 +136,7 @@ export interface MedicationRecord {
   reason: string;
 }
 
-export interface TreatmentOutcome {
+export interface MedicalTreatmentOutcome {
   treatmentId: string;
   outcome: 'cured' | 'improved' | 'stable' | 'worsened' | 'died';
   notes: string;

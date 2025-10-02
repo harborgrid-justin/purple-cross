@@ -3,6 +3,8 @@
  * Handles mobile applications, remote access, and field service
  */
 
+import { Address } from './CommonTypes';
+
 export interface MobileDevice {
   id: string;
   deviceId: string;
@@ -63,7 +65,7 @@ export interface DataSync {
   itemsToSync: number;
   itemsSynced: number;
   conflicts: SyncConflict[];
-  errors: SyncError[];
+  errors: MobileSyncError[];
 }
 
 export interface SyncConflict {
@@ -78,7 +80,7 @@ export interface SyncConflict {
   resolvedBy?: string;
 }
 
-export interface SyncError {
+export interface MobileSyncError {
   dataType: string;
   recordId?: string;
   error: string;
@@ -180,15 +182,6 @@ export interface FieldServiceAppointment {
   checklist: ServiceChecklistItem[];
 }
 
-export interface Address {
-  street: string;
-  city: string;
-  state: string;
-  postalCode: string;
-  country: string;
-  coordinates?: { latitude: number; longitude: number };
-}
-
 export interface ServiceChecklistItem {
   id: string;
   task: string;
@@ -226,7 +219,7 @@ export interface MobileInvoice {
   invoiceId?: string;
   appointmentId: string;
   clientId: string;
-  items: InvoiceItem[];
+  items: MobileInvoiceItem[];
   subtotal: number;
   tax: number;
   total: number;
@@ -238,7 +231,7 @@ export interface MobileInvoice {
   synced: boolean;
 }
 
-export interface InvoiceItem {
+export interface MobileInvoiceItem {
   description: string;
   quantity: number;
   unitPrice: number;

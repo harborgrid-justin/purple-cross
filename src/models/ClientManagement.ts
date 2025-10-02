@@ -3,6 +3,8 @@
  * Handles all client-related data and operations
  */
 
+import { Address, EmergencyContact } from './CommonTypes';
+
 export interface Client {
   id: string;
   firstName: string;
@@ -16,21 +18,6 @@ export interface Client {
   status: 'active' | 'inactive' | 'suspended';
   createdAt: Date;
   updatedAt: Date;
-}
-
-export interface Address {
-  street: string;
-  city: string;
-  state: string;
-  postalCode: string;
-  country: string;
-}
-
-export interface EmergencyContact {
-  name: string;
-  relationship: string;
-  phoneNumber: string;
-  email?: string;
 }
 
 export interface ClientAccount {
