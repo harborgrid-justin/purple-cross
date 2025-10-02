@@ -1,3 +1,6 @@
+# Package lock files (use npm ci in CI/CD)
+package-lock.json
+
 # Logs
 logs
 *.log
