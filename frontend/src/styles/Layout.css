@@ -5,6 +5,24 @@
   overflow: hidden;
 }
 
+/* Skip link for accessibility */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--primary-color);
+  color: white;
+  padding: var(--spacing-sm) var(--spacing-md);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  z-index: 1000;
+}
+
+.skip-link:focus {
+  top: var(--spacing-sm);
+  left: var(--spacing-sm);
+}
+
 .header {
   background-color: var(--primary-color);
   color: white;
@@ -34,6 +52,11 @@
 
 .menu-toggle:hover {
   background-color: rgba(255, 255, 255, 0.1);
+}
+
+.menu-toggle:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 2px;
 }
 
 .app-title {
@@ -95,6 +118,11 @@
   color: var(--primary-color);
 }
 
+.nav-item:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: -2px;
+}
+
 .nav-item.active {
   background-color: var(--primary-light);
   color: white;
@@ -123,15 +151,67 @@
   background-color: var(--bg-secondary);
 }
 
+/* Tablet and mobile responsive design */
+@media (max-width: 1024px) {
+  .sidebar.open {
+    width: 200px;
+  }
+}
+
 @media (max-width: 768px) {
+  .header {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+  
+  .app-title {
+    font-size: 1.25rem;
+  }
+  
   .sidebar.open {
     position: absolute;
     height: 100%;
     z-index: 50;
     box-shadow: var(--shadow-lg);
+    width: 240px;
+  }
+  
+  .sidebar.closed {
+    width: 0;
+    overflow: hidden;
   }
   
   .content {
     padding: var(--spacing-md);
+  }
+  
+  /* Overlay when sidebar is open on mobile */
+  .sidebar.open::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+  
+  .app-title {
+    font-size: 1rem;
+  }
+  
+  .user-info {
+    font-size: 0.8rem;
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+  
+  .content {
+    padding: var(--spacing-sm);
   }
 }

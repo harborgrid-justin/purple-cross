@@ -30,39 +30,56 @@ const Layout = ({ children }: LayoutProps) => {
 
   return (
     <div className="layout">
-      <header className="header">
+      {/* Skip to main content link for screen readers */}
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
+
+      <header className="header" role="banner">
         <div className="header-left">
           <button
             className="menu-toggle"
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            aria-label="Toggle sidebar"
+            aria-label={sidebarOpen ? 'Close sidebar navigation' : 'Open sidebar navigation'}
+            aria-expanded={sidebarOpen}
+            aria-controls="sidebar-nav"
           >
             ☰
           </button>
           <h1 className="app-title">🟣 Purple Cross</h1>
         </div>
         <div className="header-right">
-          <span className="user-info">Dr. Smith</span>
+          <span className="user-info" aria-label="Current user: Dr. Smith">Dr. Smith</span>
         </div>
       </header>
 
       <div className="main-container">
-        <aside className={`sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
+        <aside 
+          id="sidebar-nav"
+          className={`sidebar ${sidebarOpen ? 'open' : 'closed'}`}
+          aria-hidden={!sidebarOpen}
+          role="navigation"
+          aria-label="Main navigation"
+        >
           <nav className="sidebar-nav">
             {navigation.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
                 className={`nav-item ${location.pathname === item.path ? 'active' : ''}`}
+                aria-current={location.pathname === item.path ? 'page' : undefined}
+                aria-label={item.name}
               >
-                <span className="nav-icon">{item.icon}</span>
+                <span className="nav-icon" aria-hidden="true">{item.icon}</span>
                 {sidebarOpen && <span className="nav-label">{item.name}</span>}
               </Link>
             ))}
           </nav>
         </aside>
 
-        <main className="content">{children}</main>
+        <main id="main-content" className="content" role="main" tabIndex={-1}>
+          {children}
+        </main>
       </div>
     </div>
   );
