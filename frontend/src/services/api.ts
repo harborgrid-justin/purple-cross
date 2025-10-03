@@ -95,6 +95,98 @@ class ApiClient {
     update: (id: string, data: unknown) => this.put(`/appointments/${id}`, data),
     delete: (id: string) => this.delete(`/appointments/${id}`),
   };
+
+  // Medical Records endpoints
+  medicalRecords = {
+    getAll: (params?: { page?: number; limit?: number; patientId?: string }) =>
+      this.get('/medical-records', params),
+    getById: (id: string) => this.get(`/medical-records/${id}`),
+    create: (data: unknown) => this.post('/medical-records', data),
+    update: (id: string, data: unknown) => this.put(`/medical-records/${id}`, data),
+    delete: (id: string) => this.delete(`/medical-records/${id}`),
+  };
+
+  // Prescription endpoints
+  prescriptions = {
+    getAll: (params?: { page?: number; limit?: number; patientId?: string }) =>
+      this.get('/prescriptions', params),
+    getById: (id: string) => this.get(`/prescriptions/${id}`),
+    create: (data: unknown) => this.post('/prescriptions', data),
+    update: (id: string, data: unknown) => this.put(`/prescriptions/${id}`, data),
+    delete: (id: string) => this.delete(`/prescriptions/${id}`),
+  };
+
+  // Inventory endpoints
+  inventory = {
+    getAll: (params?: { page?: number; limit?: number; category?: string; lowStock?: boolean }) =>
+      this.get('/inventory', params),
+    getById: (id: string) => this.get(`/inventory/${id}`),
+    create: (data: unknown) => this.post('/inventory', data),
+    update: (id: string, data: unknown) => this.put(`/inventory/${id}`, data),
+    delete: (id: string) => this.delete(`/inventory/${id}`),
+  };
+
+  // Invoice endpoints
+  invoices = {
+    getAll: (params?: { page?: number; limit?: number; clientId?: string; status?: string }) =>
+      this.get('/invoices', params),
+    getById: (id: string) => this.get(`/invoices/${id}`),
+    create: (data: unknown) => this.post('/invoices', data),
+    update: (id: string, data: unknown) => this.put(`/invoices/${id}`, data),
+    delete: (id: string) => this.delete(`/invoices/${id}`),
+  };
+
+  // Lab Test endpoints
+  labTests = {
+    getAll: (params?: { page?: number; limit?: number; patientId?: string; status?: string }) =>
+      this.get('/lab-tests', params),
+    getById: (id: string) => this.get(`/lab-tests/${id}`),
+    create: (data: unknown) => this.post('/lab-tests', data),
+    update: (id: string, data: unknown) => this.put(`/lab-tests/${id}`, data),
+    delete: (id: string) => this.delete(`/lab-tests/${id}`),
+  };
+
+  // Staff endpoints
+  staff = {
+    getAll: (params?: { page?: number; limit?: number; role?: string; status?: string }) =>
+      this.get('/staff', params),
+    getById: (id: string) => this.get(`/staff/${id}`),
+    create: (data: unknown) => this.post('/staff', data),
+    update: (id: string, data: unknown) => this.put(`/staff/${id}`, data),
+    delete: (id: string) => this.delete(`/staff/${id}`),
+  };
+
+  // Communication endpoints
+  communications = {
+    getAll: (params?: { page?: number; limit?: number; clientId?: string; type?: string }) =>
+      this.get('/communications', params),
+    getById: (id: string) => this.get(`/communications/${id}`),
+    create: (data: unknown) => this.post('/communications', data),
+    update: (id: string, data: unknown) => this.put(`/communications/${id}`, data),
+    delete: (id: string) => this.delete(`/communications/${id}`),
+  };
+
+  // Document endpoints
+  documents = {
+    getAll: (params?: { page?: number; limit?: number; entityType?: string; entityId?: string }) =>
+      this.get('/documents', params),
+    getById: (id: string) => this.get(`/documents/${id}`),
+    create: (data: unknown) => this.post('/documents', data),
+    update: (id: string, data: unknown) => this.put(`/documents/${id}`, data),
+    delete: (id: string) => this.delete(`/documents/${id}`),
+  };
+
+  // Analytics endpoints
+  analytics = {
+    getDashboard: () => this.get('/analytics/dashboard'),
+    getPatientDemographics: () => this.get('/analytics/patients'),
+    getAppointmentAnalytics: (params?: { startDate?: string; endDate?: string }) =>
+      this.get('/analytics/appointments', params),
+    getFinancialReport: (params?: { startDate?: string; endDate?: string }) =>
+      this.get('/analytics/financial', params),
+    getInventoryReport: () => this.get('/analytics/inventory'),
+    getStaffAnalytics: () => this.get('/analytics/staff'),
+  };
 }
 
 export const api = new ApiClient();

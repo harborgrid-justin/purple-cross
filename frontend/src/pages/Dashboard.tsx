@@ -1,12 +1,47 @@
+import { useState, useEffect } from 'react';
+import api from '../services/api';
 import '../styles/Page.css';
 
+interface DashboardStats {
+  totalPatients: number;
+  totalClients: number;
+  totalAppointments: number;
+  activePatients: number;
+  todayAppointments: number;
+  pendingInvoices: number;
+}
+
 const Dashboard = () => {
-  const stats = [
-    { label: 'Total Patients', value: '1,234', change: '+12%', icon: '🐕' },
-    { label: 'Today\'s Appointments', value: '24', change: '+5%', icon: '📅' },
-    { label: 'Active Prescriptions', value: '567', change: '-2%', icon: '💊' },
-    { label: 'Revenue (MTD)', value: '$45,678', change: '+18%', icon: '💰' },
-  ];
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchDashboardStats = async () => {
+      try {
+        setLoading(true);
+        const response: { status: string; data: DashboardStats } = await api.analytics.getDashboard();
+        setStats(response.data);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching dashboard stats:', err);
+        setError('Failed to load dashboard data. Using demo data.');
+        // Fallback to demo data
+        setStats({
+          totalPatients: 1234,
+          totalClients: 856,
+          totalAppointments: 3456,
+          activePatients: 1180,
+          todayAppointments: 24,
+          pendingInvoices: 45,
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardStats();
+  }, []);
 
   const recentActivities = [
     { time: '10:30 AM', activity: 'Appointment with Max (Labrador)', type: 'appointment' },
@@ -16,23 +51,41 @@ const Dashboard = () => {
     { time: '03:30 PM', activity: 'Payment received: $250', type: 'payment' },
   ];
 
+  const displayStats = stats
+    ? [
+        { label: 'Total Patients', value: stats.totalPatients.toLocaleString(), icon: '🐕' },
+        { label: "Today's Appointments", value: stats.todayAppointments.toString(), icon: '📅' },
+        { label: 'Active Patients', value: stats.activePatients.toLocaleString(), icon: '✅' },
+        { label: 'Pending Invoices', value: stats.pendingInvoices.toString(), icon: '💰' },
+      ]
+    : [];
+
+  if (loading) {
+    return (
+      <div className="page">
+        <div className="page-header">
+          <h1>Dashboard</h1>
+          <p className="page-subtitle">Loading dashboard data...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="page">
       <div className="page-header">
         <h1>Dashboard</h1>
         <p className="page-subtitle">Welcome back! Here's what's happening today.</p>
+        {error && <p className="error-message">{error}</p>}
       </div>
 
       <div className="stats-grid">
-        {stats.map((stat) => (
+        {displayStats.map((stat) => (
           <div key={stat.label} className="stat-card">
             <div className="stat-icon">{stat.icon}</div>
             <div className="stat-content">
               <div className="stat-label">{stat.label}</div>
               <div className="stat-value">{stat.value}</div>
-              <div className={`stat-change ${stat.change.startsWith('+') ? 'positive' : 'negative'}`}>
-                {stat.change}
-              </div>
             </div>
           </div>
         ))}
