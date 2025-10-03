@@ -87,45 +87,42 @@ purple-cross/
 
 ## 🚀 Quick Start
 
-### Prerequisites
-
-- **Node.js 18+** and **npm 9+**
-- **Docker Desktop** (includes Docker Compose)
-- **Git**
-
-### One-Command Setup
+### TL;DR - Get Started in 5 Minutes
 
 ```bash
+# 1. Install prerequisites: Node.js 18+, Docker Desktop, Git
+# 2. Clone and setup
 git clone https://github.com/harborgrid-justin/purple-cross.git
 cd purple-cross
 npm run setup
+
+# 3. Access at http://localhost:5173
 ```
 
-That's it! The setup script will automatically:
-- ✅ Verify prerequisites
-- ✅ Create environment files
-- ✅ Start all Docker services
-- ✅ Install dependencies
-- ✅ Setup the database
-- ✅ Run migrations
+**That's it!** 🎉
 
-**Setup typically takes 3-5 minutes.**
+The automated setup handles everything:
+- ✅ Verifies prerequisites
+- ✅ Creates configuration files
+- ✅ Starts Docker services (PostgreSQL, Redis, Backend, Frontend)
+- ✅ Installs all dependencies
+- ✅ Sets up database and runs migrations
+- ✅ Verifies everything works
 
-### Access the Application
+### Access Points
 
-Once setup is complete:
+Once setup completes:
 
 - **Frontend**: http://localhost:5173
 - **Backend API**: http://localhost:3000
 - **API Health**: http://localhost:3000/health
-- **Prisma Studio**: `npm run prisma:studio`
+- **Database GUI**: `npm run prisma:studio`
 
-### Detailed Setup Guide
+### Documentation
 
-For detailed instructions, alternative setup methods, and troubleshooting, see:
-
-- **[Complete Setup Guide](./docs/SETUP.md)** - Step-by-step setup instructions
-- **[Development Guide](./docs/DEVELOPMENT.md)** - Development workflow and best practices
+- 🚀 **[Quick Start Guide](./QUICK_START.md)** - Get running in 5 minutes
+- 📖 **[Complete Setup Guide](./docs/SETUP.md)** - Detailed installation & troubleshooting
+- 💻 **[Development Guide](./docs/DEVELOPMENT.md)** - Development workflow & best practices
 
 ---
 

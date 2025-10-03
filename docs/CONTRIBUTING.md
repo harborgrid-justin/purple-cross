@@ -56,7 +56,17 @@ Enhancement suggestions are tracked as GitHub issues. When creating an enhanceme
 
 ## Development Setup
 
-See [DEVELOPMENT.md](./DEVELOPMENT.md) for detailed development setup instructions.
+Before contributing, you'll need to set up your development environment:
+
+1. **Initial Setup**: Follow the [Complete Setup Guide](./SETUP.md) for step-by-step installation
+2. **Development Workflow**: See [Development Guide](./DEVELOPMENT.md) for detailed development instructions
+
+Quick start:
+```bash
+git clone https://github.com/harborgrid-justin/purple-cross.git
+cd purple-cross
+npm run setup
+```
 
 ## Coding Standards
 
