@@ -23,8 +23,13 @@ if ! command -v docker &> /dev/null; then
 fi
 echo -e "${GREEN}✓ Docker is installed${NC}"
 
-# Check if Docker Compose is installed
-if ! command -v docker-compose &> /dev/null; then
+# Check if Docker Compose is installed (support both v1 and v2)
+DOCKER_COMPOSE_CMD=""
+if command -v docker-compose &> /dev/null; then
+    DOCKER_COMPOSE_CMD="docker-compose"
+elif docker compose version &> /dev/null; then
+    DOCKER_COMPOSE_CMD="docker compose"
+else
     echo -e "${RED}✗ Docker Compose is not installed${NC}"
     echo "Please install Docker Compose from https://docs.docker.com/compose/install/"
     exit 1
@@ -62,19 +67,19 @@ fi
 
 echo ""
 echo "Starting Docker containers..."
-docker-compose up -d
+$DOCKER_COMPOSE_CMD up -d
 
 echo ""
 echo "Waiting for PostgreSQL to be ready..."
 echo -n "Checking PostgreSQL connection..."
 MAX_RETRIES=30
 RETRY_COUNT=0
-until docker-compose exec -T postgres pg_isready -U postgres > /dev/null 2>&1; do
+until $DOCKER_COMPOSE_CMD exec -T postgres pg_isready -U postgres > /dev/null 2>&1; do
     RETRY_COUNT=$((RETRY_COUNT + 1))
     if [ $RETRY_COUNT -ge $MAX_RETRIES ]; then
         echo ""
         echo -e "${RED}✗ PostgreSQL failed to start after ${MAX_RETRIES} attempts${NC}"
-        echo "Please check Docker logs: docker-compose logs postgres"
+        echo "Please check Docker logs: $DOCKER_COMPOSE_CMD logs postgres"
         exit 1
     fi
     echo -n "."
@@ -87,12 +92,12 @@ echo ""
 echo "Waiting for Redis to be ready..."
 echo -n "Checking Redis connection..."
 RETRY_COUNT=0
-until docker-compose exec -T redis redis-cli ping > /dev/null 2>&1; do
+until $DOCKER_COMPOSE_CMD exec -T redis redis-cli ping > /dev/null 2>&1; do
     RETRY_COUNT=$((RETRY_COUNT + 1))
     if [ $RETRY_COUNT -ge $MAX_RETRIES ]; then
         echo ""
         echo -e "${RED}✗ Redis failed to start after ${MAX_RETRIES} attempts${NC}"
-        echo "Please check Docker logs: docker-compose logs redis"
+        echo "Please check Docker logs: $DOCKER_COMPOSE_CMD logs redis"
         exit 1
     fi
     echo -n "."
@@ -104,22 +109,22 @@ echo -e "${GREEN}✓ Redis is ready${NC}"
 echo ""
 echo "Installing dependencies..."
 echo "Installing backend dependencies..."
-docker-compose exec -T backend npm install
+$DOCKER_COMPOSE_CMD exec -T backend npm install
 echo -e "${GREEN}✓ Backend dependencies installed${NC}"
 
 echo ""
 echo "Installing frontend dependencies..."
-docker-compose exec -T frontend npm install
+$DOCKER_COMPOSE_CMD exec -T frontend npm install
 echo -e "${GREEN}✓ Frontend dependencies installed${NC}"
 
 echo ""
 echo "Generating Prisma Client..."
-docker-compose exec -T backend npx prisma generate
+$DOCKER_COMPOSE_CMD exec -T backend npx prisma generate
 echo -e "${GREEN}✓ Prisma Client generated${NC}"
 
 echo ""
 echo "Running database migrations..."
-docker-compose exec -T backend npx prisma migrate deploy
+$DOCKER_COMPOSE_CMD exec -T backend npx prisma migrate deploy
 echo -e "${GREEN}✓ Database migrations completed${NC}"
 
 echo ""
@@ -134,7 +139,7 @@ until curl -s http://localhost:3000/health > /dev/null 2>&1; do
     if [ $RETRY_COUNT -ge 30 ]; then
         echo ""
         echo -e "${YELLOW}⚠ Backend health check timeout (this is normal on first run)${NC}"
-        echo "The backend may still be starting up. Check logs with: docker-compose logs -f backend"
+        echo "The backend may still be starting up. Check logs with: $DOCKER_COMPOSE_CMD logs -f backend"
         break
     fi
     echo -n "."
@@ -153,7 +158,7 @@ until curl -s http://localhost:5173 > /dev/null 2>&1; do
     if [ $RETRY_COUNT -ge 30 ]; then
         echo ""
         echo -e "${YELLOW}⚠ Frontend health check timeout (this is normal on first run)${NC}"
-        echo "The frontend may still be starting up. Check logs with: docker-compose logs -f frontend"
+        echo "The frontend may still be starting up. Check logs with: $DOCKER_COMPOSE_CMD logs -f frontend"
         break
     fi
     echo -n "."
@@ -183,9 +188,9 @@ echo "  • Contributing:   docs/CONTRIBUTING.md"
 echo "  • API Docs:       docs/API.md"
 echo ""
 echo "🛠️  Useful Commands:"
-echo "  • View logs:      docker-compose logs -f"
-echo "  • Stop services:  docker-compose down"
-echo "  • Restart:        docker-compose restart"
+echo "  • View logs:      $DOCKER_COMPOSE_CMD logs -f"
+echo "  • Stop services:  $DOCKER_COMPOSE_CMD down"
+echo "  • Restart:        $DOCKER_COMPOSE_CMD restart"
 echo "  • Run tests:      npm test"
 echo "  • Start dev:      npm run dev"
 echo ""

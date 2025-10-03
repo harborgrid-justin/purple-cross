@@ -25,11 +25,13 @@ Before you begin, ensure you have the following installed on your system:
 
 - **Docker Desktop** (includes Docker Compose)
   - Download from [docker.com](https://docs.docker.com/get-docker/)
-  - Verify: `docker -v` and `docker-compose -v`
+  - Verify: `docker -v` and `docker compose version` (or `docker-compose -v`)
 
 - **Git**
   - Download from [git-scm.com](https://git-scm.com/)
   - Verify: `git --version`
+
+**Note**: The setup script supports both Docker Compose V1 (`docker-compose`) and V2 (`docker compose`) commands.
 
 ### Optional (for local development without Docker)
 
