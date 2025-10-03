@@ -1,0 +1,76 @@
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+export class PatientRelationshipService {
+  async createRelationship(data: {
+    patientId: string;
+    relatedPatientId: string;
+    relationshipType: string;
+    notes?: string;
+  }) {
+    return prisma.patientRelationship.create({
+      data,
+    });
+  }
+
+  async getRelationship(id: string) {
+    return prisma.patientRelationship.findUnique({
+      where: { id },
+    });
+  }
+
+  async getPatientRelationships(patientId: string) {
+    return prisma.patientRelationship.findMany({
+      where: {
+        OR: [
+          { patientId },
+          { relatedPatientId: patientId },
+        ],
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async getPatientFamily(patientId: string) {
+    const relationships = await this.getPatientRelationships(patientId);
+    
+    const family = {
+      parents: relationships.filter(r => 
+        r.relationshipType === 'parent' && r.relatedPatientId === patientId
+      ),
+      offspring: relationships.filter(r => 
+        r.relationshipType === 'parent' && r.patientId === patientId
+      ),
+      siblings: relationships.filter(r => 
+        r.relationshipType === 'sibling'
+      ),
+      litter: relationships.filter(r => 
+        r.relationshipType === 'litter'
+      ),
+    };
+
+    return family;
+  }
+
+  async updateRelationship(
+    id: string,
+    data: {
+      relationshipType?: string;
+      notes?: string;
+    }
+  ) {
+    return prisma.patientRelationship.update({
+      where: { id },
+      data,
+    });
+  }
+
+  async deleteRelationship(id: string) {
+    return prisma.patientRelationship.delete({
+      where: { id },
+    });
+  }
+}
+
+export default new PatientRelationshipService();
