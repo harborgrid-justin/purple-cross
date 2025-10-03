@@ -20,6 +20,26 @@ import communicationRoutes from './routes/communication.routes';
 import documentRoutes from './routes/document.routes';
 import analyticsRoutes from './routes/analytics.routes';
 
+// New module routes
+import breedInfoRoutes from './routes/breedInfo.routes';
+import patientRelationshipRoutes from './routes/patientRelationship.routes';
+import patientReminderRoutes from './routes/patientReminder.routes';
+import clientPortalRoutes from './routes/clientPortal.routes';
+import loyaltyProgramRoutes from './routes/loyaltyProgram.routes';
+import feedbackRoutes from './routes/feedback.routes';
+import waitlistRoutes from './routes/waitlist.routes';
+import timeBlockRoutes from './routes/timeBlock.routes';
+import estimateRoutes from './routes/estimate.routes';
+import paymentPlanRoutes from './routes/paymentPlan.routes';
+import purchaseOrderRoutes from './routes/purchaseOrder.routes';
+import equipmentRoutes from './routes/equipment.routes';
+import insuranceClaimRoutes from './routes/insuranceClaim.routes';
+import refundRoutes from './routes/refund.routes';
+import marketingCampaignRoutes from './routes/marketingCampaign.routes';
+import policyRoutes from './routes/policy.routes';
+import reportTemplateRoutes from './routes/reportTemplate.routes';
+import documentTemplateRoutes from './routes/documentTemplate.routes';
+
 export function createApp(): Application {
   const app = express();
 
@@ -59,7 +79,7 @@ export function createApp(): Application {
     });
   });
 
-  // API routes
+  // API routes - Core modules
   app.use(`${env.apiPrefix}/patients`, patientRoutes);
   app.use(`${env.apiPrefix}/clients`, clientRoutes);
   app.use(`${env.apiPrefix}/appointments`, appointmentRoutes);
@@ -72,6 +92,26 @@ export function createApp(): Application {
   app.use(`${env.apiPrefix}/communications`, communicationRoutes);
   app.use(`${env.apiPrefix}/documents`, documentRoutes);
   app.use(`${env.apiPrefix}/analytics`, analyticsRoutes);
+
+  // API routes - Extended modules
+  app.use(`${env.apiPrefix}/breed-info`, breedInfoRoutes);
+  app.use(`${env.apiPrefix}/patient-relationships`, patientRelationshipRoutes);
+  app.use(`${env.apiPrefix}/patient-reminders`, patientReminderRoutes);
+  app.use(`${env.apiPrefix}/client-portal`, clientPortalRoutes);
+  app.use(`${env.apiPrefix}/loyalty-programs`, loyaltyProgramRoutes);
+  app.use(`${env.apiPrefix}/feedback`, feedbackRoutes);
+  app.use(`${env.apiPrefix}/waitlist`, waitlistRoutes);
+  app.use(`${env.apiPrefix}/time-blocks`, timeBlockRoutes);
+  app.use(`${env.apiPrefix}/estimates`, estimateRoutes);
+  app.use(`${env.apiPrefix}/payment-plans`, paymentPlanRoutes);
+  app.use(`${env.apiPrefix}/purchase-orders`, purchaseOrderRoutes);
+  app.use(`${env.apiPrefix}/equipment`, equipmentRoutes);
+  app.use(`${env.apiPrefix}/insurance-claims`, insuranceClaimRoutes);
+  app.use(`${env.apiPrefix}/refunds`, refundRoutes);
+  app.use(`${env.apiPrefix}/marketing-campaigns`, marketingCampaignRoutes);
+  app.use(`${env.apiPrefix}/policies`, policyRoutes);
+  app.use(`${env.apiPrefix}/report-templates`, reportTemplateRoutes);
+  app.use(`${env.apiPrefix}/document-templates`, documentTemplateRoutes);
 
   // 404 handler
   app.use(notFoundHandler);

@@ -569,3 +569,1124 @@ model WebhookSubscription {
   
   @@map("webhook_subscriptions")
 }
+
+// ============================================================================
+// Patient Module Extensions
+// ============================================================================
+
+model BreedInformation {
+  id                    String   @id @default(uuid())
+  breed                 String   @unique
+  species               String
+  
+  commonHealthIssues    Json?
+  geneticPredispositions Json?
+  careGuidelines        Json?
+  nutritionalNeeds      Json?
+  averageLifespan       Int?
+  temperament           String?
+  
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  
+  @@index([species])
+  @@map("breed_information")
+}
+
+model PatientRelationship {
+  id                String   @id @default(uuid())
+  patientId         String
+  relatedPatientId  String
+  relationshipType  String
+  
+  notes             String?
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@unique([patientId, relatedPatientId, relationshipType])
+  @@index([patientId])
+  @@index([relatedPatientId])
+  @@map("patient_relationships")
+}
+
+model PatientReminder {
+  id                String   @id @default(uuid())
+  patientId         String
+  reminderType      String
+  reminderDate      DateTime
+  description       String
+  
+  recurring         Boolean  @default(false)
+  frequency         String?
+  
+  status            String   @default("pending")
+  completedAt       DateTime?
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([patientId])
+  @@index([reminderDate])
+  @@index([status])
+  @@map("patient_reminders")
+}
+
+// ============================================================================
+// Client Module Extensions
+// ============================================================================
+
+model ClientPortalAccess {
+  id                String   @id @default(uuid())
+  clientId          String   @unique
+  email             String   @unique
+  passwordHash      String
+  
+  twoFactorEnabled  Boolean  @default(false)
+  twoFactorSecret   String?
+  
+  lastLoginAt       DateTime?
+  loginAttempts     Int      @default(0)
+  lockedUntil       DateTime?
+  
+  status            String   @default("active")
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([email])
+  @@map("client_portal_access")
+}
+
+model LoyaltyProgram {
+  id                String   @id @default(uuid())
+  clientId          String   @unique
+  
+  pointsBalance     Int      @default(0)
+  tier              String   @default("bronze")
+  
+  lifetimePoints    Int      @default(0)
+  lifetimeSpending  Float    @default(0)
+  
+  joinDate          DateTime @default(now())
+  lastActivityDate  DateTime?
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  transactions      LoyaltyTransaction[]
+  
+  @@index([clientId])
+  @@index([tier])
+  @@map("loyalty_programs")
+}
+
+model LoyaltyTransaction {
+  id                String   @id @default(uuid())
+  loyaltyProgramId  String
+  loyaltyProgram    LoyaltyProgram @relation(fields: [loyaltyProgramId], references: [id])
+  
+  transactionType   String
+  points            Int
+  description       String?
+  
+  relatedType       String?
+  relatedId         String?
+  
+  transactionDate   DateTime @default(now())
+  
+  @@index([loyaltyProgramId])
+  @@index([transactionDate])
+  @@map("loyalty_transactions")
+}
+
+model ClientFeedback {
+  id                String   @id @default(uuid())
+  clientId          String
+  
+  feedbackType      String
+  rating            Int?
+  comment           String?
+  
+  relatedType       String?
+  relatedId         String?
+  
+  npsScore          Int?
+  
+  status            String   @default("new")
+  reviewedBy        String?
+  reviewedAt        DateTime?
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([clientId])
+  @@index([feedbackType])
+  @@index([rating])
+  @@map("client_feedback")
+}
+
+model Survey {
+  id                String   @id @default(uuid())
+  title             String
+  description       String?
+  
+  questions         Json
+  
+  status            String   @default("draft")
+  publishedAt       DateTime?
+  expiresAt         DateTime?
+  
+  responses         SurveyResponse[]
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([status])
+  @@map("surveys")
+}
+
+model SurveyResponse {
+  id                String   @id @default(uuid())
+  surveyId          String
+  survey            Survey   @relation(fields: [surveyId], references: [id])
+  
+  clientId          String?
+  
+  answers           Json
+  
+  submittedAt       DateTime @default(now())
+  
+  @@index([surveyId])
+  @@index([clientId])
+  @@map("survey_responses")
+}
+
+model ClientSegment {
+  id                String   @id @default(uuid())
+  name              String
+  description       String?
+  
+  criteria          Json
+  
+  clientCount       Int      @default(0)
+  lastCalculatedAt  DateTime?
+  
+  status            String   @default("active")
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@map("client_segments")
+}
+
+// ============================================================================
+// Appointment Module Extensions
+// ============================================================================
+
+model Waitlist {
+  id                String   @id @default(uuid())
+  patientId         String
+  clientId          String
+  
+  appointmentType   String
+  preferredDate     DateTime?
+  preferredTime     String?
+  
+  priority          Int      @default(0)
+  urgency           String   @default("routine")
+  
+  reason            String
+  notes             String?
+  
+  status            String   @default("active")
+  notifiedAt        DateTime?
+  bookedAt          DateTime?
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([status])
+  @@index([priority])
+  @@index([preferredDate])
+  @@map("waitlist")
+}
+
+model TimeBlock {
+  id                String   @id @default(uuid())
+  staffId           String
+  
+  blockType         String
+  title             String
+  
+  startTime         DateTime
+  endTime           DateTime
+  
+  recurring         Boolean  @default(false)
+  recurrenceRule    String?
+  
+  notes             String?
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([staffId])
+  @@index([startTime])
+  @@map("time_blocks")
+}
+
+// ============================================================================
+// Medical Records Extensions
+// ============================================================================
+
+model ClinicalTemplate {
+  id                String   @id @default(uuid())
+  name              String
+  category          String
+  
+  template          Json
+  quickTexts        Json?
+  
+  specialty         String?
+  
+  usageCount        Int      @default(0)
+  lastUsedAt        DateTime?
+  
+  status            String   @default("active")
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([category])
+  @@map("clinical_templates")
+}
+
+model MedicalRecordShare {
+  id                String   @id @default(uuid())
+  medicalRecordId   String
+  
+  sharedWith        String
+  sharedBy          String
+  
+  shareType         String
+  accessLevel       String
+  
+  expiresAt         DateTime?
+  accessedAt        DateTime?
+  
+  status            String   @default("active")
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([medicalRecordId])
+  @@index([sharedWith])
+  @@map("medical_record_shares")
+}
+
+// ============================================================================
+// Prescription Extensions
+// ============================================================================
+
+model DrugInteraction {
+  id                String   @id @default(uuid())
+  medication1Id     String
+  medication2Id     String
+  
+  severity          String
+  description       String
+  recommendation    String?
+  
+  references        String?
+  
+  status            String   @default("active")
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@unique([medication1Id, medication2Id])
+  @@index([severity])
+  @@map("drug_interactions")
+}
+
+model ControlledSubstanceLog {
+  id                String   @id @default(uuid())
+  medicationId      String
+  
+  action            String
+  quantity          Float
+  unit              String
+  
+  prescriptionId    String?
+  patientId         String?
+  
+  performedBy       String
+  witnessedBy       String?
+  
+  reason            String?
+  notes             String?
+  
+  timestamp         DateTime @default(now())
+  
+  @@index([medicationId])
+  @@index([timestamp])
+  @@map("controlled_substance_logs")
+}
+
+model CompoundingFormula {
+  id                String   @id @default(uuid())
+  name              String
+  description       String?
+  
+  ingredients       Json
+  instructions      Json
+  
+  stabilityPeriod   Int?
+  storageConditions String?
+  
+  usageCount        Int      @default(0)
+  
+  status            String   @default("active")
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@map("compounding_formulas")
+}
+
+// ============================================================================
+// Inventory Extensions
+// ============================================================================
+
+model PurchaseOrder {
+  id                String   @id @default(uuid())
+  poNumber          String   @unique
+  
+  vendor            String
+  vendorContact     String?
+  
+  orderDate         DateTime @default(now())
+  expectedDate      DateTime?
+  receivedDate      DateTime?
+  
+  status            String   @default("pending")
+  
+  subtotal          Float
+  tax               Float    @default(0)
+  shipping          Float    @default(0)
+  total             Float
+  
+  lineItems         PurchaseOrderItem[]
+  
+  notes             String?
+  
+  approvedBy        String?
+  approvedAt        DateTime?
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([poNumber])
+  @@index([status])
+  @@map("purchase_orders")
+}
+
+model PurchaseOrderItem {
+  id                String   @id @default(uuid())
+  purchaseOrderId   String
+  purchaseOrder     PurchaseOrder @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
+  
+  itemType          String
+  itemId            String?
+  description       String
+  
+  quantityOrdered   Int
+  quantityReceived  Int      @default(0)
+  
+  unitCost          Float
+  total             Float
+  
+  status            String   @default("pending")
+  
+  @@index([purchaseOrderId])
+  @@map("purchase_order_items")
+}
+
+model Equipment {
+  id                String   @id @default(uuid())
+  name              String
+  category          String
+  
+  manufacturer      String?
+  modelNumber       String?
+  serialNumber      String?  @unique
+  
+  purchaseDate      DateTime?
+  purchasePrice     Float?
+  
+  warrantyExpiration DateTime?
+  
+  location          String?
+  
+  maintenanceRecords EquipmentMaintenance[]
+  
+  status            String   @default("active")
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([serialNumber])
+  @@index([category])
+  @@map("equipment")
+}
+
+model EquipmentMaintenance {
+  id                String   @id @default(uuid())
+  equipmentId       String
+  equipment         Equipment @relation(fields: [equipmentId], references: [id])
+  
+  maintenanceType   String
+  scheduledDate     DateTime
+  completedDate     DateTime?
+  
+  performedBy       String?
+  vendor            String?
+  
+  cost              Float?
+  
+  notes             String?
+  
+  nextMaintenanceDate DateTime?
+  
+  status            String   @default("scheduled")
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([equipmentId])
+  @@index([scheduledDate])
+  @@map("equipment_maintenance")
+}
+
+// ============================================================================
+// Billing Extensions
+// ============================================================================
+
+model InsuranceClaim {
+  id                String   @id @default(uuid())
+  claimNumber       String   @unique
+  
+  patientId         String
+  clientId          String
+  
+  insuranceProvider String
+  policyNumber      String
+  
+  claimDate         DateTime @default(now())
+  serviceDate       DateTime
+  
+  diagnosisCodes    String[]
+  procedureCodes    String[]
+  
+  claimAmount       Float
+  approvedAmount    Float?
+  paidAmount        Float?
+  
+  status            String   @default("submitted")
+  
+  submittedDate     DateTime?
+  processedDate     DateTime?
+  paidDate          DateTime?
+  
+  denialReason      String?
+  
+  notes             String?
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([claimNumber])
+  @@index([status])
+  @@map("insurance_claims")
+}
+
+model Estimate {
+  id                String   @id @default(uuid())
+  estimateNumber    String   @unique
+  
+  clientId          String
+  patientId         String?
+  
+  title             String
+  description       String?
+  
+  lineItems         EstimateLineItem[]
+  
+  subtotal          Float
+  tax               Float
+  total             Float
+  
+  validUntil        DateTime
+  
+  status            String   @default("pending")
+  approvedAt        DateTime?
+  convertedToInvoiceAt DateTime?
+  invoiceId         String?
+  
+  notes             String?
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([estimateNumber])
+  @@index([status])
+  @@map("estimates")
+}
+
+model EstimateLineItem {
+  id                String   @id @default(uuid())
+  estimateId        String
+  estimate          Estimate @relation(fields: [estimateId], references: [id], onDelete: Cascade)
+  
+  description       String
+  quantity          Int
+  unitPrice         Float
+  total             Float
+  
+  itemType          String
+  itemId            String?
+  
+  @@index([estimateId])
+  @@map("estimate_line_items")
+}
+
+model PaymentPlan {
+  id                String   @id @default(uuid())
+  clientId          String
+  invoiceId         String?
+  
+  totalAmount       Float
+  downPayment       Float    @default(0)
+  remainingBalance  Float
+  
+  installmentAmount Float
+  installmentFrequency String
+  numberOfInstallments Int
+  
+  interestRate      Float    @default(0)
+  
+  startDate         DateTime
+  nextPaymentDate   DateTime
+  
+  installments      PaymentPlanInstallment[]
+  
+  status            String   @default("active")
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([clientId])
+  @@index([status])
+  @@map("payment_plans")
+}
+
+model PaymentPlanInstallment {
+  id                String   @id @default(uuid())
+  paymentPlanId     String
+  paymentPlan       PaymentPlan @relation(fields: [paymentPlanId], references: [id])
+  
+  installmentNumber Int
+  dueDate           DateTime
+  amount            Float
+  
+  paidAmount        Float    @default(0)
+  paidDate          DateTime?
+  
+  status            String   @default("pending")
+  
+  @@index([paymentPlanId])
+  @@index([dueDate])
+  @@map("payment_plan_installments")
+}
+
+model Refund {
+  id                String   @id @default(uuid())
+  refundNumber      String   @unique
+  
+  invoiceId         String?
+  paymentId         String?
+  
+  clientId          String
+  
+  amount            Float
+  reason            String
+  
+  refundMethod      String
+  processedBy       String
+  
+  status            String   @default("pending")
+  
+  requestedDate     DateTime @default(now())
+  processedDate     DateTime?
+  
+  notes             String?
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([refundNumber])
+  @@index([status])
+  @@map("refunds")
+}
+
+// ============================================================================
+// Laboratory Extensions
+// ============================================================================
+
+model ExternalLabIntegration {
+  id                String   @id @default(uuid())
+  labName           String   @unique
+  
+  apiEndpoint       String?
+  apiKey            String?
+  apiSecret         String?
+  
+  integrationStatus String   @default("inactive")
+  
+  supportedTests    Json?
+  
+  lastSyncAt        DateTime?
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@map("external_lab_integrations")
+}
+
+model QualityControlRecord {
+  id                String   @id @default(uuid())
+  equipmentId       String?
+  testType          String
+  
+  controlType       String
+  controlDate       DateTime @default(now())
+  
+  expectedValue     String
+  actualValue       String
+  acceptable        Boolean
+  
+  performedBy       String
+  reviewedBy        String?
+  
+  correctiveAction  String?
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([testType])
+  @@index([controlDate])
+  @@map("quality_control_records")
+}
+
+// ============================================================================
+// Staff Extensions
+// ============================================================================
+
+model TimeAttendance {
+  id                String   @id @default(uuid())
+  staffId           String
+  
+  clockIn           DateTime
+  clockOut          DateTime?
+  
+  breakStart        DateTime?
+  breakEnd          DateTime?
+  
+  totalHours        Float?
+  overtimeHours     Float?
+  
+  status            String   @default("active")
+  
+  notes             String?
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([staffId])
+  @@index([clockIn])
+  @@map("time_attendance")
+}
+
+model PerformanceReview {
+  id                String   @id @default(uuid())
+  staffId           String
+  
+  reviewPeriodStart DateTime
+  reviewPeriodEnd   DateTime
+  
+  reviewDate        DateTime
+  reviewedBy        String
+  
+  overallRating     Int?
+  
+  ratings           Json
+  strengths         String?
+  areasForImprovement String?
+  goals             Json?
+  
+  comments          String?
+  
+  status            String   @default("draft")
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([staffId])
+  @@index([reviewDate])
+  @@map("performance_reviews")
+}
+
+model ContinuingEducation {
+  id                String   @id @default(uuid())
+  staffId           String
+  
+  courseTitle       String
+  provider          String
+  
+  courseDate        DateTime
+  completionDate    DateTime?
+  
+  credits           Float
+  certificateNumber String?
+  
+  category          String
+  
+  status            String   @default("registered")
+  
+  expirationDate    DateTime?
+  
+  documentUrl       String?
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([staffId])
+  @@index([completionDate])
+  @@map("continuing_education")
+}
+
+// ============================================================================
+// Reporting Extensions
+// ============================================================================
+
+model ReportTemplate {
+  id                String   @id @default(uuid())
+  name              String
+  description       String?
+  
+  reportType        String
+  category          String
+  
+  configuration     Json
+  
+  isPublic          Boolean  @default(false)
+  createdBy         String
+  
+  usageCount        Int      @default(0)
+  lastUsedAt        DateTime?
+  
+  status            String   @default("active")
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([reportType])
+  @@map("report_templates")
+}
+
+model ReportSchedule {
+  id                String   @id @default(uuid())
+  reportTemplateId  String?
+  
+  name              String
+  description       String?
+  
+  frequency         String
+  schedule          Json
+  
+  recipients        String[]
+  
+  format            String   @default("pdf")
+  
+  lastRunAt         DateTime?
+  nextRunAt         DateTime?
+  
+  status            String   @default("active")
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([nextRunAt])
+  @@map("report_schedules")
+}
+
+// ============================================================================
+// Communication Extensions
+// ============================================================================
+
+model MarketingCampaign {
+  id                String   @id @default(uuid())
+  name              String
+  description       String?
+  
+  campaignType      String
+  channel           String[]
+  
+  targetSegment     Json?
+  
+  startDate         DateTime
+  endDate           DateTime?
+  
+  content           Json
+  
+  metrics           Json?
+  
+  status            String   @default("draft")
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([status])
+  @@map("marketing_campaigns")
+}
+
+model PushSubscription {
+  id                String   @id @default(uuid())
+  userId            String
+  
+  endpoint          String
+  keys              Json
+  
+  deviceType        String?
+  
+  status            String   @default("active")
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([userId])
+  @@map("push_subscriptions")
+}
+
+model SocialMediaPost {
+  id                String   @id @default(uuid())
+  platform          String
+  
+  content           String
+  mediaUrls         String[]
+  
+  scheduledFor      DateTime?
+  publishedAt       DateTime?
+  
+  externalPostId    String?
+  
+  metrics           Json?
+  
+  status            String   @default("draft")
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([platform])
+  @@index([status])
+  @@map("social_media_posts")
+}
+
+// ============================================================================
+// Document Extensions
+// ============================================================================
+
+model DocumentTemplate {
+  id                String   @id @default(uuid())
+  name              String
+  category          String
+  
+  template          Json
+  
+  fields            Json?
+  
+  usageCount        Int      @default(0)
+  lastUsedAt        DateTime?
+  
+  status            String   @default("active")
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([category])
+  @@map("document_templates")
+}
+
+model DocumentSignature {
+  id                String   @id @default(uuid())
+  documentId        String
+  
+  signerId          String
+  signerName        String
+  signerEmail       String
+  
+  signatureData     String
+  signedAt          DateTime
+  
+  ipAddress         String?
+  
+  status            String   @default("signed")
+  
+  createdAt         DateTime @default(now())
+  
+  @@index([documentId])
+  @@index([signerId])
+  @@map("document_signatures")
+}
+
+model DocumentWorkflow {
+  id                String   @id @default(uuid())
+  documentId        String
+  
+  workflowName      String
+  currentStep       Int      @default(1)
+  totalSteps        Int
+  
+  steps             Json
+  
+  status            String   @default("in_progress")
+  completedAt       DateTime?
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([documentId])
+  @@index([status])
+  @@map("document_workflows")
+}
+
+// ============================================================================
+// Compliance Extensions
+// ============================================================================
+
+model Policy {
+  id                String   @id @default(uuid())
+  title             String
+  category          String
+  
+  content           String
+  version           String
+  
+  effectiveDate     DateTime
+  reviewDate        DateTime?
+  
+  acknowledgments   PolicyAcknowledgment[]
+  
+  status            String   @default("active")
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([category])
+  @@map("policies")
+}
+
+model PolicyAcknowledgment {
+  id                String   @id @default(uuid())
+  policyId          String
+  policy            Policy   @relation(fields: [policyId], references: [id])
+  
+  userId            String
+  
+  acknowledgedAt    DateTime @default(now())
+  
+  ipAddress         String?
+  
+  @@index([policyId])
+  @@index([userId])
+  @@map("policy_acknowledgments")
+}
+
+model RegulatoryUpdate {
+  id                String   @id @default(uuid())
+  title             String
+  category          String
+  
+  description       String
+  effectiveDate     DateTime
+  
+  impact            String
+  actionRequired    String?
+  
+  status            String   @default("new")
+  
+  assignedTo        String?
+  completedAt       DateTime?
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([status])
+  @@index([effectiveDate])
+  @@map("regulatory_updates")
+}
+
+// ============================================================================
+// Integration Extensions
+// ============================================================================
+
+model DataImportJob {
+  id                String   @id @default(uuid())
+  jobType           String
+  
+  fileName          String
+  fileUrl           String
+  
+  totalRecords      Int?
+  processedRecords  Int      @default(0)
+  successCount      Int      @default(0)
+  errorCount        Int      @default(0)
+  
+  errors            Json?
+  
+  status            String   @default("pending")
+  
+  startedAt         DateTime?
+  completedAt       DateTime?
+  
+  createdBy         String
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([status])
+  @@map("data_import_jobs")
+}
+
+model ApiUsageMetric {
+  id                String   @id @default(uuid())
+  apiKeyId          String?
+  
+  endpoint          String
+  method            String
+  
+  statusCode        Int
+  responseTime      Int
+  
+  timestamp         DateTime @default(now())
+  
+  ipAddress         String?
+  userAgent         String?
+  
+  error             String?
+  
+  @@index([apiKeyId])
+  @@index([endpoint])
+  @@index([timestamp])
+  @@map("api_usage_metrics")
+}
