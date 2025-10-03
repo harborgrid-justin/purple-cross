@@ -66,25 +66,129 @@ docker-compose up -d
 
 echo ""
 echo "Waiting for PostgreSQL to be ready..."
-sleep 5
+echo -n "Checking PostgreSQL connection..."
+MAX_RETRIES=30
+RETRY_COUNT=0
+until docker-compose exec -T postgres pg_isready -U postgres > /dev/null 2>&1; do
+    RETRY_COUNT=$((RETRY_COUNT + 1))
+    if [ $RETRY_COUNT -ge $MAX_RETRIES ]; then
+        echo ""
+        echo -e "${RED}✗ PostgreSQL failed to start after ${MAX_RETRIES} attempts${NC}"
+        echo "Please check Docker logs: docker-compose logs postgres"
+        exit 1
+    fi
+    echo -n "."
+    sleep 1
+done
+echo ""
+echo -e "${GREEN}✓ PostgreSQL is ready${NC}"
 
 echo ""
-echo "Installing dependencies and running migrations..."
+echo "Waiting for Redis to be ready..."
+echo -n "Checking Redis connection..."
+RETRY_COUNT=0
+until docker-compose exec -T redis redis-cli ping > /dev/null 2>&1; do
+    RETRY_COUNT=$((RETRY_COUNT + 1))
+    if [ $RETRY_COUNT -ge $MAX_RETRIES ]; then
+        echo ""
+        echo -e "${RED}✗ Redis failed to start after ${MAX_RETRIES} attempts${NC}"
+        echo "Please check Docker logs: docker-compose logs redis"
+        exit 1
+    fi
+    echo -n "."
+    sleep 1
+done
+echo ""
+echo -e "${GREEN}✓ Redis is ready${NC}"
+
+echo ""
+echo "Installing dependencies..."
+echo "Installing backend dependencies..."
 docker-compose exec -T backend npm install
-docker-compose exec -T backend npx prisma generate
-docker-compose exec -T backend npx prisma migrate dev --name init
+echo -e "${GREEN}✓ Backend dependencies installed${NC}"
 
 echo ""
-echo -e "${GREEN}✓ Setup complete!${NC}"
+echo "Installing frontend dependencies..."
+docker-compose exec -T frontend npm install
+echo -e "${GREEN}✓ Frontend dependencies installed${NC}"
+
 echo ""
-echo "Next steps:"
-echo "  1. Frontend: http://localhost:5173"
-echo "  2. Backend API: http://localhost:3000"
-echo "  3. Prisma Studio: cd backend && npm run prisma:studio"
+echo "Generating Prisma Client..."
+docker-compose exec -T backend npx prisma generate
+echo -e "${GREEN}✓ Prisma Client generated${NC}"
+
 echo ""
-echo "Useful commands:"
-echo "  - View logs: docker-compose logs -f"
-echo "  - Stop: docker-compose down"
-echo "  - Restart: docker-compose restart"
+echo "Running database migrations..."
+docker-compose exec -T backend npx prisma migrate deploy
+echo -e "${GREEN}✓ Database migrations completed${NC}"
+
+echo ""
+echo "Verifying setup..."
+echo ""
+
+# Verify backend is responding
+echo -n "Checking backend health..."
+RETRY_COUNT=0
+until curl -s http://localhost:3000/health > /dev/null 2>&1; do
+    RETRY_COUNT=$((RETRY_COUNT + 1))
+    if [ $RETRY_COUNT -ge 30 ]; then
+        echo ""
+        echo -e "${YELLOW}⚠ Backend health check timeout (this is normal on first run)${NC}"
+        echo "The backend may still be starting up. Check logs with: docker-compose logs -f backend"
+        break
+    fi
+    echo -n "."
+    sleep 2
+done
+if [ $RETRY_COUNT -lt 30 ]; then
+    echo ""
+    echo -e "${GREEN}✓ Backend is responding${NC}"
+fi
+
+# Verify frontend is responding
+echo -n "Checking frontend..."
+RETRY_COUNT=0
+until curl -s http://localhost:5173 > /dev/null 2>&1; do
+    RETRY_COUNT=$((RETRY_COUNT + 1))
+    if [ $RETRY_COUNT -ge 30 ]; then
+        echo ""
+        echo -e "${YELLOW}⚠ Frontend health check timeout (this is normal on first run)${NC}"
+        echo "The frontend may still be starting up. Check logs with: docker-compose logs -f frontend"
+        break
+    fi
+    echo -n "."
+    sleep 2
+done
+if [ $RETRY_COUNT -lt 30 ]; then
+    echo ""
+    echo -e "${GREEN}✓ Frontend is responding${NC}"
+fi
+
+echo ""
+echo "========================================"
+echo -e "${GREEN}✓ Setup Complete!${NC}"
+echo "========================================"
+echo ""
+echo "🎉 Purple Cross is ready for development!"
+echo ""
+echo "📍 Access Points:"
+echo "  • Frontend:       http://localhost:5173"
+echo "  • Backend API:    http://localhost:3000"
+echo "  • API Health:     http://localhost:3000/health"
+echo "  • Prisma Studio:  npm run prisma:studio"
+echo ""
+echo "📚 Documentation:"
+echo "  • Development:    docs/DEVELOPMENT.md"
+echo "  • Contributing:   docs/CONTRIBUTING.md"
+echo "  • API Docs:       docs/API.md"
+echo ""
+echo "🛠️  Useful Commands:"
+echo "  • View logs:      docker-compose logs -f"
+echo "  • Stop services:  docker-compose down"
+echo "  • Restart:        docker-compose restart"
+echo "  • Run tests:      npm test"
+echo "  • Start dev:      npm run dev"
+echo ""
+echo "💡 Tip: Run 'make help' to see all available commands"
 echo ""
 echo "Happy coding! 🚀"

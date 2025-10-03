@@ -89,44 +89,52 @@ purple-cross/
 
 ### Prerequisites
 
-- Node.js 18+
-- Docker & Docker Compose
-- Git
+- **Node.js 18+** and **npm 9+**
+- **Docker Desktop** (includes Docker Compose)
+- **Git**
 
-### Installation
+### One-Command Setup
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/harborgrid-justin/purple-cross.git
-   cd purple-cross
-   ```
+```bash
+git clone https://github.com/harborgrid-justin/purple-cross.git
+cd purple-cross
+npm run setup
+```
 
-2. **Start with Docker**
-   ```bash
-   docker-compose up
-   ```
+That's it! The setup script will automatically:
+- ✅ Verify prerequisites
+- ✅ Create environment files
+- ✅ Start all Docker services
+- ✅ Install dependencies
+- ✅ Setup the database
+- ✅ Run migrations
 
-3. **Access the application**
-   - Frontend: http://localhost:5173
-   - Backend API: http://localhost:3000
-   - API Health: http://localhost:3000/health
+**Setup typically takes 3-5 minutes.**
 
-4. **Run migrations**
-   ```bash
-   docker-compose exec backend npx prisma migrate dev
-   ```
+### Access the Application
 
-### Local Development
+Once setup is complete:
 
-See [DEVELOPMENT.md](./docs/DEVELOPMENT.md) for detailed setup instructions.
+- **Frontend**: http://localhost:5173
+- **Backend API**: http://localhost:3000
+- **API Health**: http://localhost:3000/health
+- **Prisma Studio**: `npm run prisma:studio`
+
+### Detailed Setup Guide
+
+For detailed instructions, alternative setup methods, and troubleshooting, see:
+
+- **[Complete Setup Guide](./docs/SETUP.md)** - Step-by-step setup instructions
+- **[Development Guide](./docs/DEVELOPMENT.md)** - Development workflow and best practices
 
 ---
 
 ## 📚 Documentation
 
-- **[Development Guide](./docs/DEVELOPMENT.md)** - Setup and development workflow
+- **[Setup Guide](./docs/SETUP.md)** - Complete installation and setup instructions
+- **[Development Guide](./docs/DEVELOPMENT.md)** - Development workflow and best practices
 - **[Contributing Guide](./docs/CONTRIBUTING.md)** - How to contribute
-- **[API Documentation](./docs/API.md)** - API endpoints and usage (coming soon)
+- **[API Documentation](./docs/API.md)** - API endpoints and usage
 - **[Architecture Overview](./ARCHITECTURE.md)** - System design and architecture
 - **[Features Documentation](./FEATURES.md)** - Detailed feature list
 

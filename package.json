@@ -8,6 +8,7 @@
     "frontend"
   ],
   "scripts": {
+    "setup": "bash scripts/setup.sh",
     "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:backend": "cd backend && npm run dev",
