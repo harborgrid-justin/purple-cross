@@ -35,9 +35,9 @@ const Appointments = () => {
     const fetchAppointments = async () => {
       try {
         setLoading(true);
-        const response: { status: string; data: Appointment[] } = await api.appointments.getAll({
+        const response = await api.appointments.getAll({
           limit: 50,
-        });
+        }) as { status: string; data: Appointment[] };
         setAppointments(response.data);
       } catch (err) {
         console.error('Error fetching appointments:', err);

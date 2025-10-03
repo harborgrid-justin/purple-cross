@@ -20,7 +20,7 @@ const Dashboard = () => {
     const fetchDashboardStats = async () => {
       try {
         setLoading(true);
-        const response: { status: string; data: DashboardStats } = await api.analytics.getDashboard();
+        const response = await api.analytics.getDashboard() as { status: string; data: DashboardStats };
         setStats(response.data);
         setError(null);
       } catch (err) {

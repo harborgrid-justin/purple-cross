@@ -24,10 +24,10 @@ const Patients = () => {
     const fetchPatients = async () => {
       try {
         setLoading(true);
-        const response: { status: string; data: Patient[] } = await api.patients.getAll({
+        const response = await api.patients.getAll({
           search: searchTerm || undefined,
           limit: 50,
-        });
+        }) as { status: string; data: Patient[] };
         setPatients(response.data);
       } catch (err) {
         console.error('Error fetching patients:', err);

@@ -12,7 +12,7 @@ interface Patient {
   };
 }
 
-interface PatientsResponse {
+export interface PatientsResponse {
   status: string;
   data: Patient[];
   pagination: {

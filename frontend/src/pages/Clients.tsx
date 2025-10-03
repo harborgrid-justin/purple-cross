@@ -22,10 +22,10 @@ const Clients = () => {
     const fetchClients = async () => {
       try {
         setLoading(true);
-        const response: { status: string; data: Client[] } = await api.clients.getAll({
+        const response = await api.clients.getAll({
           search: searchTerm || undefined,
           limit: 50,
-        });
+        }) as { status: string; data: Client[] };
         setClients(response.data);
       } catch (err) {
         console.error('Error fetching clients:', err);
