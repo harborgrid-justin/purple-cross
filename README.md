@@ -196,6 +196,7 @@ For detailed architecture information, see [ARCHITECTURE.md](./ARCHITECTURE.md).
 
 - **[FEATURES.md](./FEATURES.md)** - Detailed specification of all 120 sub-features
 - **[ARCHITECTURE.md](./ARCHITECTURE.md)** - System architecture and technology stack
+- **[FRONTEND.md](./FRONTEND.md)** - Complete React/TypeScript frontend documentation
 - **[TypeScript Models](./src/models/)** - Type definitions for all modules
 
 ---
@@ -219,8 +220,11 @@ cd purple-cross
 # Install dependencies
 npm install
 
-# Build the project
+# Build the backend
 npm run build
+
+# Build the frontend
+npm run build:frontend
 
 # Run tests
 npm test
