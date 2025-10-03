@@ -1,0 +1,571 @@
+// Purple Cross - Prisma Schema
+// Enterprise Veterinary Practice Management Platform
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// Patient (Pet) Management
+// ============================================================================
+
+model Patient {
+  id                String   @id @default(uuid())
+  name              String
+  species           String
+  breed             String?
+  dateOfBirth       DateTime
+  gender            String
+  color             String?
+  weight            Float?
+  microchipId       String?  @unique
+  insuranceProvider String?
+  insurancePolicy   String?
+  status            String   @default("active")
+  
+  ownerId           String
+  owner             Client   @relation(fields: [ownerId], references: [id])
+  
+  medicalRecords    MedicalRecord[]
+  appointments      Appointment[]
+  prescriptions     Prescription[]
+  labTests          LabTest[]
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([ownerId])
+  @@index([microchipId])
+  @@map("patients")
+}
+
+// ============================================================================
+// Client (Pet Owner) Management
+// ============================================================================
+
+model Client {
+  id                String   @id @default(uuid())
+  firstName         String
+  lastName          String
+  email             String   @unique
+  phone             String
+  alternatePhone    String?
+  address           String
+  city              String
+  state             String
+  zipCode           String
+  emergencyContact  String?
+  emergencyPhone    String?
+  preferredContact  String   @default("email")
+  status            String   @default("active")
+  
+  patients          Patient[]
+  appointments      Appointment[]
+  invoices          Invoice[]
+  communications    Communication[]
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([email])
+  @@index([phone])
+  @@map("clients")
+}
+
+// ============================================================================
+// Appointment Scheduling
+// ============================================================================
+
+model Appointment {
+  id                String   @id @default(uuid())
+  patientId         String
+  patient           Patient  @relation(fields: [patientId], references: [id])
+  clientId          String
+  client            Client   @relation(fields: [clientId], references: [id])
+  
+  appointmentType   String
+  startTime         DateTime
+  endTime           DateTime
+  status            String   @default("scheduled")
+  reason            String
+  notes             String?
+  
+  veterinarianId    String
+  veterinarian      Staff    @relation("VeterinarianAppointments", fields: [veterinarianId], references: [id])
+  roomId            String?
+  
+  reminders         AppointmentReminder[]
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([patientId])
+  @@index([clientId])
+  @@index([veterinarianId])
+  @@index([startTime])
+  @@map("appointments")
+}
+
+model AppointmentReminder {
+  id                String      @id @default(uuid())
+  appointmentId     String
+  appointment       Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  
+  reminderType      String
+  reminderTime      DateTime
+  sent              Boolean     @default(false)
+  sentAt            DateTime?
+  
+  createdAt         DateTime    @default(now())
+  
+  @@index([appointmentId])
+  @@index([reminderTime])
+  @@map("appointment_reminders")
+}
+
+// ============================================================================
+// Medical Records & History
+// ============================================================================
+
+model MedicalRecord {
+  id                String   @id @default(uuid())
+  patientId         String
+  patient           Patient  @relation(fields: [patientId], references: [id])
+  
+  visitDate         DateTime
+  chiefComplaint    String
+  diagnosis         String
+  treatment         String
+  notes             String?
+  
+  veterinarianId    String
+  veterinarian      Staff    @relation(fields: [veterinarianId], references: [id])
+  
+  vitalSigns        Json?
+  attachments       Json?
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([patientId])
+  @@index([veterinarianId])
+  @@index([visitDate])
+  @@map("medical_records")
+}
+
+// ============================================================================
+// Prescription & Medication Management
+// ============================================================================
+
+model Prescription {
+  id                String   @id @default(uuid())
+  patientId         String
+  patient           Patient  @relation(fields: [patientId], references: [id])
+  
+  medicationId      String
+  medication        Medication @relation(fields: [medicationId], references: [id])
+  
+  dosage            String
+  frequency         String
+  duration          String
+  instructions      String?
+  refillsAllowed    Int      @default(0)
+  refillsUsed       Int      @default(0)
+  
+  prescribedBy      String
+  prescriber        Staff    @relation(fields: [prescribedBy], references: [id])
+  
+  prescribedDate    DateTime @default(now())
+  expirationDate    DateTime
+  status            String   @default("active")
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([patientId])
+  @@index([medicationId])
+  @@index([prescribedBy])
+  @@map("prescriptions")
+}
+
+model Medication {
+  id                String   @id @default(uuid())
+  name              String
+  genericName       String?
+  category          String
+  dosageForm        String
+  strength          String
+  manufacturer      String?
+  ndcCode           String?  @unique
+  controlled        Boolean  @default(false)
+  controlSchedule   String?
+  
+  prescriptions     Prescription[]
+  inventoryItems    InventoryItem[]
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([name])
+  @@index([ndcCode])
+  @@map("medications")
+}
+
+// ============================================================================
+// Inventory & Supply Chain Management
+// ============================================================================
+
+model InventoryItem {
+  id                String   @id @default(uuid())
+  itemType          String
+  name              String
+  sku               String   @unique
+  category          String
+  
+  medicationId      String?
+  medication        Medication? @relation(fields: [medicationId], references: [id])
+  
+  quantityOnHand    Int
+  minimumQuantity   Int
+  reorderPoint      Int
+  unitCost          Float
+  sellingPrice      Float
+  
+  supplier          String?
+  supplierSku       String?
+  
+  expirationDate    DateTime?
+  lotNumber         String?
+  location          String?
+  
+  status            String   @default("active")
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([sku])
+  @@index([medicationId])
+  @@index([category])
+  @@map("inventory_items")
+}
+
+// ============================================================================
+// Billing & Payment Processing
+// ============================================================================
+
+model Invoice {
+  id                String   @id @default(uuid())
+  invoiceNumber     String   @unique
+  clientId          String
+  client            Client   @relation(fields: [clientId], references: [id])
+  
+  invoiceDate       DateTime @default(now())
+  dueDate           DateTime
+  
+  subtotal          Float
+  tax               Float
+  discount          Float    @default(0)
+  total             Float
+  
+  status            String   @default("unpaid")
+  
+  lineItems         InvoiceLineItem[]
+  payments          Payment[]
+  
+  notes             String?
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([clientId])
+  @@index([invoiceNumber])
+  @@index([status])
+  @@map("invoices")
+}
+
+model InvoiceLineItem {
+  id                String   @id @default(uuid())
+  invoiceId         String
+  invoice           Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  
+  description       String
+  quantity          Int
+  unitPrice         Float
+  total             Float
+  
+  itemType          String
+  itemId            String?
+  
+  @@index([invoiceId])
+  @@map("invoice_line_items")
+}
+
+model Payment {
+  id                String   @id @default(uuid())
+  invoiceId         String
+  invoice           Invoice  @relation(fields: [invoiceId], references: [id])
+  
+  amount            Float
+  paymentMethod     String
+  paymentDate       DateTime @default(now())
+  
+  transactionId     String?
+  status            String   @default("completed")
+  
+  notes             String?
+  
+  createdAt         DateTime @default(now())
+  
+  @@index([invoiceId])
+  @@index([paymentDate])
+  @@map("payments")
+}
+
+// ============================================================================
+// Laboratory Management
+// ============================================================================
+
+model LabTest {
+  id                String   @id @default(uuid())
+  patientId         String
+  patient           Patient  @relation(fields: [patientId], references: [id])
+  
+  testType          String
+  testName          String
+  orderedBy         String
+  orderedDate       DateTime @default(now())
+  
+  labType           String
+  externalLabName   String?
+  
+  status            String   @default("ordered")
+  
+  sampleId          String?
+  collectionDate    DateTime?
+  receivedDate      DateTime?
+  completedDate     DateTime?
+  
+  results           Json?
+  interpretation    String?
+  notes             String?
+  
+  urgency           String   @default("routine")
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([patientId])
+  @@index([status])
+  @@index([orderedDate])
+  @@map("lab_tests")
+}
+
+// ============================================================================
+// Staff & User Management
+// ============================================================================
+
+model Staff {
+  id                String   @id @default(uuid())
+  firstName         String
+  lastName          String
+  email             String   @unique
+  phone             String
+  
+  role              String
+  specialization    String?
+  licenseNumber     String?
+  licenseExpiry     DateTime?
+  
+  employmentType    String
+  hireDate          DateTime
+  terminationDate   DateTime?
+  
+  status            String   @default("active")
+  
+  appointments      Appointment[] @relation("VeterinarianAppointments")
+  medicalRecords    MedicalRecord[]
+  prescriptions     Prescription[]
+  schedules         StaffSchedule[]
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([email])
+  @@index([role])
+  @@map("staff")
+}
+
+model StaffSchedule {
+  id                String   @id @default(uuid())
+  staffId           String
+  staff             Staff    @relation(fields: [staffId], references: [id])
+  
+  dayOfWeek         Int
+  startTime         String
+  endTime           String
+  
+  effectiveFrom     DateTime
+  effectiveTo       DateTime?
+  
+  @@index([staffId])
+  @@map("staff_schedules")
+}
+
+// ============================================================================
+// Communication & Messaging
+// ============================================================================
+
+model Communication {
+  id                String   @id @default(uuid())
+  clientId          String
+  client            Client   @relation(fields: [clientId], references: [id])
+  
+  type              String
+  direction         String
+  subject           String?
+  message           String
+  
+  sentAt            DateTime @default(now())
+  deliveredAt       DateTime?
+  readAt            DateTime?
+  
+  status            String   @default("sent")
+  
+  metadata          Json?
+  
+  createdAt         DateTime @default(now())
+  
+  @@index([clientId])
+  @@index([type])
+  @@index([sentAt])
+  @@map("communications")
+}
+
+// ============================================================================
+// Document Management
+// ============================================================================
+
+model Document {
+  id                String   @id @default(uuid())
+  title             String
+  description       String?
+  category          String
+  
+  fileUrl           String
+  fileName          String
+  fileSize          Int
+  mimeType          String
+  
+  relatedType       String?
+  relatedId         String?
+  
+  uploadedBy        String
+  uploadedAt        DateTime @default(now())
+  
+  tags              String[]
+  
+  status            String   @default("active")
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([relatedType, relatedId])
+  @@index([category])
+  @@map("documents")
+}
+
+// ============================================================================
+// Compliance & Regulatory
+// ============================================================================
+
+model ComplianceIncident {
+  id                String   @id @default(uuid())
+  incidentType      String
+  severity          String
+  description       String
+  dateOccurred      DateTime
+  
+  reportedBy        String
+  reportedDate      DateTime @default(now())
+  
+  status            String   @default("reported")
+  
+  investigation     Json?
+  resolution        Json?
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([incidentType])
+  @@index([severity])
+  @@index([status])
+  @@map("compliance_incidents")
+}
+
+model AuditLog {
+  id                String   @id @default(uuid())
+  userId            String
+  action            String
+  resource          String
+  resourceId        String?
+  
+  changes           Json?
+  metadata          Json?
+  
+  ipAddress         String?
+  userAgent         String?
+  
+  timestamp         DateTime @default(now())
+  
+  @@index([userId])
+  @@index([action])
+  @@index([resource])
+  @@index([timestamp])
+  @@map("audit_logs")
+}
+
+// ============================================================================
+// Integration & API Management
+// ============================================================================
+
+model ApiKey {
+  id                String   @id @default(uuid())
+  name              String
+  key               String   @unique
+  
+  permissions       String[]
+  rateLimit         Int?
+  
+  expiresAt         DateTime?
+  lastUsedAt        DateTime?
+  
+  status            String   @default("active")
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([key])
+  @@map("api_keys")
+}
+
+model WebhookSubscription {
+  id                String   @id @default(uuid())
+  name              String
+  url               String
+  
+  events            String[]
+  secret            String
+  
+  active            Boolean  @default(true)
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@map("webhook_subscriptions")
+}

@@ -1,4 +1,15 @@
-# Package lock files (use npm ci in CI/CD)
+# Dependencies
+node_modules/
+jspm_packages/
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+.nuxt/
+
+# Package lock files
 package-lock.json
 
 # Logs
@@ -83,7 +94,6 @@ out
 
 # Nuxt.js build / generate output
 .nuxt
-dist
 
 # Gatsby files
 .cache/
