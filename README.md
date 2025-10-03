@@ -120,18 +120,26 @@ Once setup completes:
 
 ### Documentation
 
+- 📦 **[Installation Guide](./INSTALLATION.md)** - Complete installation reference
 - 🚀 **[Quick Start Guide](./QUICK_START.md)** - Get running in 5 minutes
-- 📖 **[Complete Setup Guide](./docs/SETUP.md)** - Detailed installation & troubleshooting
+- 📖 **[Setup Guide](./docs/SETUP.md)** - Detailed setup & troubleshooting
 - 💻 **[Development Guide](./docs/DEVELOPMENT.md)** - Development workflow & best practices
 
 ---
 
 ## 📚 Documentation
 
-- **[Setup Guide](./docs/SETUP.md)** - Complete installation and setup instructions
+### Getting Started
+- **[Installation Guide](./INSTALLATION.md)** - Complete installation reference
+- **[Quick Start Guide](./QUICK_START.md)** - 5-minute quick start
+- **[Setup Guide](./docs/SETUP.md)** - Detailed setup with troubleshooting
+
+### Development
 - **[Development Guide](./docs/DEVELOPMENT.md)** - Development workflow and best practices
 - **[Contributing Guide](./docs/CONTRIBUTING.md)** - How to contribute
 - **[API Documentation](./docs/API.md)** - API endpoints and usage
+
+### Architecture
 - **[Architecture Overview](./ARCHITECTURE.md)** - System design and architecture
 - **[Features Documentation](./FEATURES.md)** - Detailed feature list
 
