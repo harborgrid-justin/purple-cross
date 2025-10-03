@@ -10,6 +10,15 @@ import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 import patientRoutes from './routes/patient.routes';
 import clientRoutes from './routes/client.routes';
 import appointmentRoutes from './routes/appointment.routes';
+import medicalRecordRoutes from './routes/medicalRecord.routes';
+import prescriptionRoutes from './routes/prescription.routes';
+import inventoryRoutes from './routes/inventory.routes';
+import invoiceRoutes from './routes/invoice.routes';
+import labTestRoutes from './routes/labTest.routes';
+import staffRoutes from './routes/staff.routes';
+import communicationRoutes from './routes/communication.routes';
+import documentRoutes from './routes/document.routes';
+import analyticsRoutes from './routes/analytics.routes';
 
 export function createApp(): Application {
   const app = express();
@@ -54,6 +63,15 @@ export function createApp(): Application {
   app.use(`${env.apiPrefix}/patients`, patientRoutes);
   app.use(`${env.apiPrefix}/clients`, clientRoutes);
   app.use(`${env.apiPrefix}/appointments`, appointmentRoutes);
+  app.use(`${env.apiPrefix}/medical-records`, medicalRecordRoutes);
+  app.use(`${env.apiPrefix}/prescriptions`, prescriptionRoutes);
+  app.use(`${env.apiPrefix}/inventory`, inventoryRoutes);
+  app.use(`${env.apiPrefix}/invoices`, invoiceRoutes);
+  app.use(`${env.apiPrefix}/lab-tests`, labTestRoutes);
+  app.use(`${env.apiPrefix}/staff`, staffRoutes);
+  app.use(`${env.apiPrefix}/communications`, communicationRoutes);
+  app.use(`${env.apiPrefix}/documents`, documentRoutes);
+  app.use(`${env.apiPrefix}/analytics`, analyticsRoutes);
 
   // 404 handler
   app.use(notFoundHandler);
