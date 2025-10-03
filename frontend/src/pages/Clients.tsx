@@ -41,52 +41,75 @@ const Clients = () => {
 
   return (
     <div className="page">
-      <div className="page-header">
-        <h1>👥 Clients</h1>
-        <button className="btn-primary">+ Add New Client</button>
-      </div>
+      <header className="page-header">
+        <h1><span aria-hidden="true">👥</span> Clients</h1>
+        <button className="btn-primary" aria-label="Add a new client">
+          + Add New Client
+        </button>
+      </header>
 
-      <div className="search-bar">
+      <div className="search-bar" role="search">
+        <label htmlFor="client-search" className="sr-only">
+          Search clients
+        </label>
         <input
-          type="text"
+          id="client-search"
+          type="search"
           placeholder="Search clients by name, email, or phone..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          aria-label="Search clients by name, email, or phone"
         />
       </div>
 
       <div className="table-container">
         {loading ? (
-          <p>Loading clients...</p>
+          <div role="status" aria-live="polite">
+            <p>Loading clients...</p>
+          </div>
         ) : clients.length === 0 ? (
-          <p>No clients found. Add a new client to get started.</p>
+          <div role="status" aria-live="polite">
+            <p>No clients found. Add a new client to get started.</p>
+          </div>
         ) : (
-          <table className="data-table">
+          <table className="data-table" role="table" aria-label="Clients list">
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Location</th>
-                <th>Pets</th>
-                <th>Actions</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Location</th>
+                <th scope="col">Pets</th>
+                <th scope="col">Actions</th>
               </tr>
             </thead>
             <tbody>
               {clients.map((client) => (
                 <tr key={client.id}>
-                  <td>
+                  <th scope="row">
                     {client.firstName} {client.lastName}
+                  </th>
+                  <td>
+                    <a href={`mailto:${client.email}`} aria-label={`Email ${client.firstName} ${client.lastName}`}>
+                      {client.email}
+                    </a>
                   </td>
-                  <td>{client.email}</td>
-                  <td>{client.phone}</td>
+                  <td>
+                    <a href={`tel:${client.phone}`} aria-label={`Call ${client.firstName} ${client.lastName}`}>
+                      {client.phone}
+                    </a>
+                  </td>
                   <td>
                     {client.city}, {client.state}
                   </td>
                   <td>{client.patients?.length || 0}</td>
                   <td>
-                    <button className="btn-action">View</button>
-                    <button className="btn-action">Edit</button>
+                    <button className="btn-action" aria-label={`View details for ${client.firstName} ${client.lastName}`}>
+                      View
+                    </button>
+                    <button className="btn-action" aria-label={`Edit information for ${client.firstName} ${client.lastName}`}>
+                      Edit
+                    </button>
                   </td>
                 </tr>
               ))}

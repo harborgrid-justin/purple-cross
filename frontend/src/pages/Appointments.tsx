@@ -52,40 +52,48 @@ const Appointments = () => {
 
   return (
     <div className="page">
-      <div className="page-header">
-        <h1>📅 Appointments</h1>
-        <button className="btn-primary">+ Schedule Appointment</button>
-      </div>
+      <header className="page-header">
+        <h1><span aria-hidden="true">📅</span> Appointments</h1>
+        <button className="btn-primary" aria-label="Schedule a new appointment">
+          + Schedule Appointment
+        </button>
+      </header>
 
       <div className="table-container">
         {loading ? (
-          <p>Loading appointments...</p>
+          <div role="status" aria-live="polite">
+            <p>Loading appointments...</p>
+          </div>
         ) : appointments.length === 0 ? (
-          <p>No appointments found. Schedule a new appointment to get started.</p>
+          <div role="status" aria-live="polite">
+            <p>No appointments found. Schedule a new appointment to get started.</p>
+          </div>
         ) : (
-          <table className="data-table">
+          <table className="data-table" role="table" aria-label="Appointments list">
             <thead>
               <tr>
-                <th>Date & Time</th>
-                <th>Patient</th>
-                <th>Client</th>
-                <th>Type</th>
-                <th>Veterinarian</th>
-                <th>Status</th>
-                <th>Actions</th>
+                <th scope="col">Date & Time</th>
+                <th scope="col">Patient</th>
+                <th scope="col">Client</th>
+                <th scope="col">Type</th>
+                <th scope="col">Veterinarian</th>
+                <th scope="col">Status</th>
+                <th scope="col">Actions</th>
               </tr>
             </thead>
             <tbody>
               {appointments.map((appointment) => (
                 <tr key={appointment.id}>
-                  <td>
-                    {new Date(appointment.startTime).toLocaleString('en-US', {
-                      month: 'short',
-                      day: 'numeric',
-                      hour: 'numeric',
-                      minute: '2-digit',
-                    })}
-                  </td>
+                  <th scope="row">
+                    <time dateTime={appointment.startTime}>
+                      {new Date(appointment.startTime).toLocaleString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: '2-digit',
+                      })}
+                    </time>
+                  </th>
                   <td>
                     {appointment.patient.name} ({appointment.patient.species})
                   </td>
@@ -97,13 +105,27 @@ const Appointments = () => {
                     Dr. {appointment.veterinarian.firstName} {appointment.veterinarian.lastName}
                   </td>
                   <td>
-                    <span className={`status-badge status-${appointment.status}`}>
+                    <span 
+                      className={`status-badge status-${appointment.status}`}
+                      role="status"
+                      aria-label={`Status: ${appointment.status}`}
+                    >
                       {appointment.status}
                     </span>
                   </td>
                   <td>
-                    <button className="btn-action">View</button>
-                    <button className="btn-action">Edit</button>
+                    <button 
+                      className="btn-action" 
+                      aria-label={`View appointment for ${appointment.patient.name} on ${new Date(appointment.startTime).toLocaleDateString()}`}
+                    >
+                      View
+                    </button>
+                    <button 
+                      className="btn-action" 
+                      aria-label={`Edit appointment for ${appointment.patient.name} on ${new Date(appointment.startTime).toLocaleDateString()}`}
+                    >
+                      Edit
+                    </button>
                   </td>
                 </tr>
               ))}

@@ -73,47 +73,57 @@ const Dashboard = () => {
 
   return (
     <div className="page">
-      <div className="page-header">
+      <header className="page-header">
         <h1>Dashboard</h1>
         <p className="page-subtitle">Welcome back! Here's what's happening today.</p>
-        {error && <p className="error-message">{error}</p>}
-      </div>
+        {error && <div role="alert" className="error-message">{error}</div>}
+      </header>
 
-      <div className="stats-grid">
+      <section aria-label="Dashboard statistics" className="stats-grid">
         {displayStats.map((stat) => (
-          <div key={stat.label} className="stat-card">
-            <div className="stat-icon">{stat.icon}</div>
+          <article key={stat.label} className="stat-card" role="region" aria-label={`${stat.label}: ${stat.value}`}>
+            <div className="stat-icon" aria-hidden="true">{stat.icon}</div>
             <div className="stat-content">
               <div className="stat-label">{stat.label}</div>
-              <div className="stat-value">{stat.value}</div>
+              <div className="stat-value" aria-live="polite">{stat.value}</div>
             </div>
-          </div>
+          </article>
         ))}
-      </div>
+      </section>
 
       <div className="dashboard-content">
-        <div className="activity-section">
-          <h2>Recent Activity</h2>
-          <div className="activity-list">
+        <section className="activity-section" aria-labelledby="recent-activity-heading">
+          <h2 id="recent-activity-heading">Recent Activity</h2>
+          <ul className="activity-list" role="list">
             {recentActivities.map((activity, index) => (
-              <div key={index} className="activity-item">
-                <span className="activity-time">{activity.time}</span>
+              <li key={index} className="activity-item">
+                <time className="activity-time">{activity.time}</time>
                 <span className="activity-text">{activity.activity}</span>
-                <span className={`activity-badge ${activity.type}`}>{activity.type}</span>
-              </div>
+                <span className={`activity-badge ${activity.type}`} aria-label={`Type: ${activity.type}`}>
+                  {activity.type}
+                </span>
+              </li>
             ))}
-          </div>
-        </div>
+          </ul>
+        </section>
 
-        <div className="quick-actions-section">
-          <h2>Quick Actions</h2>
-          <div className="quick-actions">
-            <button className="action-button">📅 New Appointment</button>
-            <button className="action-button">🐕 Register Patient</button>
-            <button className="action-button">💊 Create Prescription</button>
-            <button className="action-button">📋 Add Medical Record</button>
-          </div>
-        </div>
+        <section className="quick-actions-section" aria-labelledby="quick-actions-heading">
+          <h2 id="quick-actions-heading">Quick Actions</h2>
+          <nav className="quick-actions" aria-label="Quick action buttons">
+            <button className="action-button" aria-label="Schedule a new appointment">
+              <span aria-hidden="true">📅</span> New Appointment
+            </button>
+            <button className="action-button" aria-label="Register a new patient">
+              <span aria-hidden="true">🐕</span> Register Patient
+            </button>
+            <button className="action-button" aria-label="Create a new prescription">
+              <span aria-hidden="true">💊</span> Create Prescription
+            </button>
+            <button className="action-button" aria-label="Add a new medical record">
+              <span aria-hidden="true">📋</span> Add Medical Record
+            </button>
+          </nav>
+        </section>
       </div>
     </div>
   );
