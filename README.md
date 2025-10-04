@@ -87,46 +87,59 @@ purple-cross/
 
 ## 🚀 Quick Start
 
-### Prerequisites
+### TL;DR - Get Started in 5 Minutes
 
-- Node.js 18+
-- Docker & Docker Compose
-- Git
+```bash
+# 1. Install prerequisites: Node.js 18+, Docker Desktop, Git
+# 2. Clone and setup
+git clone https://github.com/harborgrid-justin/purple-cross.git
+cd purple-cross
+npm run setup
 
-### Installation
+# 3. Access at http://localhost:5173
+```
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/harborgrid-justin/purple-cross.git
-   cd purple-cross
-   ```
+**That's it!** 🎉
 
-2. **Start with Docker**
-   ```bash
-   docker-compose up
-   ```
+The automated setup handles everything:
+- ✅ Verifies prerequisites
+- ✅ Creates configuration files
+- ✅ Starts Docker services (PostgreSQL, Redis, Backend, Frontend)
+- ✅ Installs all dependencies
+- ✅ Sets up database and runs migrations
+- ✅ Verifies everything works
 
-3. **Access the application**
-   - Frontend: http://localhost:5173
-   - Backend API: http://localhost:3000
-   - API Health: http://localhost:3000/health
+### Access Points
 
-4. **Run migrations**
-   ```bash
-   docker-compose exec backend npx prisma migrate dev
-   ```
+Once setup completes:
 
-### Local Development
+- **Frontend**: http://localhost:5173
+- **Backend API**: http://localhost:3000
+- **API Health**: http://localhost:3000/health
+- **Database GUI**: `npm run prisma:studio`
 
-See [DEVELOPMENT.md](./docs/DEVELOPMENT.md) for detailed setup instructions.
+### Documentation
+
+- 📦 **[Installation Guide](./INSTALLATION.md)** - Complete installation reference
+- 🚀 **[Quick Start Guide](./QUICK_START.md)** - Get running in 5 minutes
+- 📖 **[Setup Guide](./docs/SETUP.md)** - Detailed setup & troubleshooting
+- 💻 **[Development Guide](./docs/DEVELOPMENT.md)** - Development workflow & best practices
 
 ---
 
 ## 📚 Documentation
 
-- **[Development Guide](./docs/DEVELOPMENT.md)** - Setup and development workflow
+### Getting Started
+- **[Installation Guide](./INSTALLATION.md)** - Complete installation reference
+- **[Quick Start Guide](./QUICK_START.md)** - 5-minute quick start
+- **[Setup Guide](./docs/SETUP.md)** - Detailed setup with troubleshooting
+
+### Development
+- **[Development Guide](./docs/DEVELOPMENT.md)** - Development workflow and best practices
 - **[Contributing Guide](./docs/CONTRIBUTING.md)** - How to contribute
-- **[API Documentation](./docs/API.md)** - API endpoints and usage (coming soon)
+- **[API Documentation](./docs/API.md)** - API endpoints and usage
+
+### Architecture
 - **[Architecture Overview](./ARCHITECTURE.md)** - System design and architecture
 - **[Features Documentation](./FEATURES.md)** - Detailed feature list
 

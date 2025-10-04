@@ -98,5 +98,19 @@ prisma-generate: ## Generate Prisma Client
 prisma-seed: ## Seed database
 	@cd backend && npm run prisma:seed
 
-setup: install docker-up prisma-migrate ## Complete project setup
-	@echo "✓ Setup complete! Run 'make dev' to start development"
+setup: ## Complete project setup with Docker
+	@echo "🟣 Purple Cross - Complete Setup"
+	@echo "=================================="
+	@bash scripts/setup.sh
+
+setup-local: install ## Setup for local development (without Docker)
+	@echo "🟣 Purple Cross - Local Setup"
+	@echo "=================================="
+	@echo "Setting up environment files..."
+	@test -f backend/.env || cp backend/.env.example backend/.env
+	@test -f frontend/.env || cp frontend/.env.example frontend/.env
+	@echo "✓ Environment files ready"
+	@echo ""
+	@echo "⚠️  Please ensure PostgreSQL and Redis are running locally"
+	@echo "Then run: cd backend && npx prisma migrate deploy && npx prisma generate"
+	@echo "Start development with: make dev"

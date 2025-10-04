@@ -1,11 +1,17 @@
 # Development Guide
 
+> **New to Purple Cross?** Start with the [Complete Setup Guide](./SETUP.md) for step-by-step installation instructions.
+
+This guide covers the development workflow, code structure, and best practices for contributing to Purple Cross.
+
 ## Prerequisites
 
 - Node.js 18+ and npm 9+
 - Docker and Docker Compose (for local development)
 - PostgreSQL 14+ (if running without Docker)
 - Redis 6+ (optional, for caching)
+
+**Note**: If you haven't set up the project yet, follow the [Setup Guide](./SETUP.md) first.
 
 ## Project Structure
 
