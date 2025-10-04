@@ -1,6 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
+import { Link, Routes, Route, useLocation } from 'react-router-dom';
 import api from '../services/api';
 import '../styles/Page.css';
+
+// Lazy load subfeature pages
+const Registration = lazy(() => import('./patients/Registration'));
+const Search = lazy(() => import('./patients/Search'));
+const Demographics = lazy(() => import('./patients/Demographics'));
+const HealthStatus = lazy(() => import('./patients/HealthStatus'));
+const Lifecycle = lazy(() => import('./patients/Lifecycle'));
+const BreedInfo = lazy(() => import('./patients/BreedInfo'));
+const Relationships = lazy(() => import('./patients/Relationships'));
+const Reminders = lazy(() => import('./patients/Reminders'));
 
 interface Patient {
   id: string;
@@ -15,7 +26,7 @@ interface Patient {
   updatedAt: string;
 }
 
-const Patients = () => {
+const PatientsList = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -42,14 +53,7 @@ const Patients = () => {
   }, [searchTerm]);
 
   return (
-    <div className="page">
-      <header className="page-header">
-        <h1><span aria-hidden="true">🐕</span> Patients</h1>
-        <button className="btn-primary" aria-label="Add a new patient">
-          + Add New Patient
-        </button>
-      </header>
-
+    <>
       <div className="search-bar" role="search">
         <label htmlFor="patient-search" className="sr-only">
           Search patients
@@ -115,6 +119,47 @@ const Patients = () => {
           </table>
         )}
       </div>
+    </>
+  );
+};
+
+const Patients = () => {
+  const location = useLocation();
+  
+  return (
+    <div className="page">
+      <header className="page-header">
+        <h1><span aria-hidden="true">🐕</span> Patients</h1>
+        <button className="btn-primary" aria-label="Add a new patient">
+          + Add New Patient
+        </button>
+      </header>
+
+      <nav className="sub-nav" role="navigation" aria-label="Patient sections">
+        <Link to="/patients" className={`sub-nav-link ${location.pathname === '/patients' ? 'active' : ''}`}>All Patients</Link>
+        <Link to="/patients/registration" className={`sub-nav-link ${location.pathname.includes('/registration') ? 'active' : ''}`}>Registration & Profiles</Link>
+        <Link to="/patients/search" className={`sub-nav-link ${location.pathname.includes('/search') ? 'active' : ''}`}>Search & Filtering</Link>
+        <Link to="/patients/demographics" className={`sub-nav-link ${location.pathname.includes('/demographics') ? 'active' : ''}`}>Demographics</Link>
+        <Link to="/patients/health-status" className={`sub-nav-link ${location.pathname.includes('/health-status') ? 'active' : ''}`}>Health Status</Link>
+        <Link to="/patients/lifecycle" className={`sub-nav-link ${location.pathname.includes('/lifecycle') ? 'active' : ''}`}>Lifecycle Management</Link>
+        <Link to="/patients/breed-info" className={`sub-nav-link ${location.pathname.includes('/breed-info') ? 'active' : ''}`}>Breed Information</Link>
+        <Link to="/patients/relationships" className={`sub-nav-link ${location.pathname.includes('/relationships') ? 'active' : ''}`}>Relationship Mapping</Link>
+        <Link to="/patients/reminders" className={`sub-nav-link ${location.pathname.includes('/reminders') ? 'active' : ''}`}>Reminders & Alerts</Link>
+      </nav>
+
+      <Suspense fallback={<div role="status"><p>Loading...</p></div>}>
+        <Routes>
+          <Route path="/" element={<PatientsList />} />
+          <Route path="/registration" element={<Registration />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/demographics" element={<Demographics />} />
+          <Route path="/health-status" element={<HealthStatus />} />
+          <Route path="/lifecycle" element={<Lifecycle />} />
+          <Route path="/breed-info" element={<BreedInfo />} />
+          <Route path="/relationships" element={<Relationships />} />
+          <Route path="/reminders" element={<Reminders />} />
+        </Routes>
+      </Suspense>
     </div>
   );
 };
