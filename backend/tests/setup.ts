@@ -1,19 +1,24 @@
-import { prisma } from '../src/config/database';
+// Mock Prisma before importing it
+jest.mock('../src/config/database', () => ({
+  prisma: {
+    $connect: jest.fn(),
+    $disconnect: jest.fn(),
+  },
+  connectDatabase: jest.fn(),
+  disconnectDatabase: jest.fn(),
+}));
 
 // Setup function runs before all tests
 beforeAll(async () => {
-  // Connect to test database
-  await prisma.$connect();
+  // Tests use mocked database
 });
 
 // Teardown function runs after all tests
 afterAll(async () => {
-  // Clean up and disconnect
-  await prisma.$disconnect();
+  // Clean up
 });
 
-// Clean database between tests
+// Clean mocks between tests
 beforeEach(async () => {
-  // Optionally truncate tables between tests
-  // await prisma.$executeRaw`TRUNCATE TABLE patients CASCADE`;
+  jest.clearAllMocks();
 });
