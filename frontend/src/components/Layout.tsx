@@ -26,6 +26,7 @@ const Layout = ({ children }: LayoutProps) => {
     { name: 'Documents', path: '/documents', icon: '📄' },
     { name: 'Compliance', path: '/compliance', icon: '✓' },
     { name: 'Integrations', path: '/integrations', icon: '🔗' },
+    { name: 'Mobile', path: '/mobile', icon: '📱' },
   ];
 
   return (

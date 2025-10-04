@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../services/api';
 import '../styles/Page.css';
 
@@ -47,6 +48,18 @@ const Clients = () => {
           + Add New Client
         </button>
       </header>
+
+      <nav className="sub-nav" role="navigation" aria-label="Client sections">
+        <Link to="/clients" className="sub-nav-link active">All Clients</Link>
+        <Link to="/clients/registration" className="sub-nav-link">Registration & Profiles</Link>
+        <Link to="/clients/account-management" className="sub-nav-link">Account Management</Link>
+        <Link to="/clients/multi-pet" className="sub-nav-link">Multi-Pet Households</Link>
+        <Link to="/clients/communication-history" className="sub-nav-link">Communication History</Link>
+        <Link to="/clients/portal-access" className="sub-nav-link">Portal Access</Link>
+        <Link to="/clients/loyalty" className="sub-nav-link">Loyalty Programs</Link>
+        <Link to="/clients/feedback" className="sub-nav-link">Feedback & Surveys</Link>
+        <Link to="/clients/segmentation" className="sub-nav-link">Client Segmentation</Link>
+      </nav>
 
       <div className="search-bar" role="search">
         <label htmlFor="client-search" className="sr-only">

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../services/api';
 import '../styles/Page.css';
 
@@ -58,6 +59,18 @@ const Appointments = () => {
           + Schedule Appointment
         </button>
       </header>
+
+      <nav className="sub-nav" role="navigation" aria-label="Appointment sections">
+        <Link to="/appointments" className="sub-nav-link active">Calendar</Link>
+        <Link to="/appointments/booking" className="sub-nav-link">Booking</Link>
+        <Link to="/appointments/calendar-management" className="sub-nav-link">Calendar Management</Link>
+        <Link to="/appointments/types" className="sub-nav-link">Types & Duration</Link>
+        <Link to="/appointments/waitlist" className="sub-nav-link">Waitlist</Link>
+        <Link to="/appointments/reminders" className="sub-nav-link">Reminder System</Link>
+        <Link to="/appointments/optimization" className="sub-nav-link">Schedule Optimization</Link>
+        <Link to="/appointments/time-blocks" className="sub-nav-link">Time Block Management</Link>
+        <Link to="/appointments/analytics" className="sub-nav-link">Analytics</Link>
+      </nav>
 
       <div className="table-container">
         {loading ? (
