@@ -1,8 +1,11 @@
 import React from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
+import { useMedicalRecords } from '../../frontend/src/hooks/useMedicalRecords';
 import '../styles/Module.css';
 
 const MedicalRecords: React.FC = () => {
+  const { data, isLoading, error } = useMedicalRecords();
+
   return (
     <div className="module-container">
       <Routes>
@@ -23,28 +26,63 @@ const MedicalRecords: React.FC = () => {
             </div>
 
             <div className="content-section">
-              <div className="info-cards">
-                <div className="info-card">
-                  <h3>Electronic Medical Records</h3>
-                  <p>Comprehensive medical history tracking for all patients</p>
-                  <ul>
-                    <li>SOAP notes with templates</li>
-                    <li>Treatment history timeline</li>
-                    <li>Diagnostic result integration</li>
-                    <li>Complete audit trail</li>
-                  </ul>
+              {isLoading && <div className="loading">Loading medical records...</div>}
+              {error && <div className="error">Error loading medical records: {error instanceof Error ? error.message : 'Unknown error'}</div>}
+              
+              {data && data.data && data.data.length > 0 ? (
+                <div className="table-container">
+                  <table className="data-table">
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Patient</th>
+                        <th>Type</th>
+                        <th>Veterinarian</th>
+                        <th>Diagnosis</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.data.map((record: any) => (
+                        <tr key={record.id}>
+                          <td>{new Date(record.visitDate || record.createdAt).toLocaleDateString()}</td>
+                          <td>{record.patient?.name}</td>
+                          <td>{record.recordType || 'General'}</td>
+                          <td>{record.veterinarian?.firstName} {record.veterinarian?.lastName}</td>
+                          <td>{record.diagnosis || record.chiefComplaint}</td>
+                          <td>
+                            <button className="btn-small">View</button>
+                            <button className="btn-small">Edit</button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-                <div className="info-card">
-                  <h3>Clinical Documentation</h3>
-                  <p>Streamlined documentation workflows</p>
-                  <ul>
-                    <li>Customizable templates</li>
-                    <li>Voice-to-text input</li>
-                    <li>Image and file attachments</li>
-                    <li>Secure record sharing</li>
-                  </ul>
+              ) : (
+                <div className="info-cards">
+                  <div className="info-card">
+                    <h3>Electronic Medical Records</h3>
+                    <p>Comprehensive medical history tracking for all patients</p>
+                    <ul>
+                      <li>SOAP notes with templates</li>
+                      <li>Treatment history timeline</li>
+                      <li>Diagnostic result integration</li>
+                      <li>Complete audit trail</li>
+                    </ul>
+                  </div>
+                  <div className="info-card">
+                    <h3>Clinical Documentation</h3>
+                    <p>Streamlined documentation workflows</p>
+                    <ul>
+                      <li>Customizable templates</li>
+                      <li>Voice-to-text input</li>
+                      <li>Image and file attachments</li>
+                      <li>Secure record sharing</li>
+                    </ul>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </>
         } />

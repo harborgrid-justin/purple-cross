@@ -11,22 +11,42 @@ const Inventory = () => {
   return (
     <div className="page">
       <header className="page-header">
-        <h1><span aria-hidden="true">📦</span> Inventory</h1>
+        <h1>
+          <span aria-hidden="true">📦</span> Inventory
+        </h1>
         <button className="btn-primary" aria-label="Add inventory item">
           + Add Item
         </button>
       </header>
 
       <nav className="sub-nav" role="navigation" aria-label="Inventory sections">
-        <Link to="/inventory" className="sub-nav-link active">Stock Levels</Link>
-        <Link to="/inventory/stock-monitoring" className="sub-nav-link">Stock Monitoring</Link>
-        <Link to="/inventory/auto-reorder" className="sub-nav-link">Auto Reordering</Link>
-        <Link to="/inventory/vendors" className="sub-nav-link">Vendors</Link>
-        <Link to="/inventory/purchase-orders" className="sub-nav-link">Purchase Orders</Link>
-        <Link to="/inventory/valuation" className="sub-nav-link">Valuation</Link>
-        <Link to="/inventory/analytics" className="sub-nav-link">Usage Analytics</Link>
-        <Link to="/inventory/barcode" className="sub-nav-link">Barcode/RFID</Link>
-        <Link to="/inventory/equipment" className="sub-nav-link">Equipment & Assets</Link>
+        <Link to="/inventory" className="sub-nav-link active">
+          Stock Levels
+        </Link>
+        <Link to="/inventory/stock-monitoring" className="sub-nav-link">
+          Stock Monitoring
+        </Link>
+        <Link to="/inventory/auto-reorder" className="sub-nav-link">
+          Auto Reordering
+        </Link>
+        <Link to="/inventory/vendors" className="sub-nav-link">
+          Vendors
+        </Link>
+        <Link to="/inventory/purchase-orders" className="sub-nav-link">
+          Purchase Orders
+        </Link>
+        <Link to="/inventory/valuation" className="sub-nav-link">
+          Valuation
+        </Link>
+        <Link to="/inventory/analytics" className="sub-nav-link">
+          Usage Analytics
+        </Link>
+        <Link to="/inventory/barcode" className="sub-nav-link">
+          Barcode/RFID
+        </Link>
+        <Link to="/inventory/equipment" className="sub-nav-link">
+          Equipment & Assets
+        </Link>
       </nav>
 
       <div className="table-container">
@@ -47,7 +67,9 @@ const Inventory = () => {
                 <td>{item.quantity}</td>
                 <td>{item.reorderLevel}</td>
                 <td>
-                  <span className={`status-badge status-${item.status === 'Low Stock' ? 'warning' : 'confirmed'}`}>
+                  <span
+                    className={`status-badge status-${item.status === 'Low Stock' ? 'warning' : 'confirmed'}`}
+                  >
                     {item.status}
                   </span>
                 </td>
