@@ -187,6 +187,96 @@ class ApiClient {
     getInventoryReport: () => this.get('/analytics/inventory'),
     getStaffAnalytics: () => this.get('/analytics/staff'),
   };
+
+  // Reporting endpoints
+  reports = {
+    getAll: (params?: { page?: number; limit?: number; type?: string }) =>
+      this.get('/reports', params),
+    getById: (id: string) => this.get(`/reports/${id}`),
+    create: (data: unknown) => this.post('/reports', data),
+    update: (id: string, data: unknown) => this.put(`/reports/${id}`, data),
+    delete: (id: string) => this.delete(`/reports/${id}`),
+    getClinical: (params?: { startDate?: string; endDate?: string }) =>
+      this.get('/reports/clinical', params),
+    getFinancial: (params?: { startDate?: string; endDate?: string }) =>
+      this.get('/reports/financial', params),
+    getOperational: (params?: { startDate?: string; endDate?: string }) =>
+      this.get('/reports/operational', params),
+    getClientAnalytics: (params?: { startDate?: string; endDate?: string }) =>
+      this.get('/reports/client-analytics', params),
+    getTrends: (params?: { metric?: string; period?: string }) =>
+      this.get('/reports/trends', params),
+    export: (id: string, format: string) => this.get(`/reports/${id}/export`, { format }),
+  };
+
+  // Compliance endpoints
+  compliance = {
+    getHIPAA: (params?: { page?: number; limit?: number }) =>
+      this.get('/compliance/hipaa', params),
+    getLicenses: (params?: { page?: number; limit?: number; status?: string }) =>
+      this.get('/compliance/licenses', params),
+    getControlledSubstances: (params?: { page?: number; limit?: number; startDate?: string; endDate?: string }) =>
+      this.get('/compliance/controlled-substances', params),
+    getRecordRetention: () => this.get('/compliance/record-retention'),
+    getIncidents: (params?: { page?: number; limit?: number; severity?: string }) =>
+      this.get('/compliance/incidents', params),
+    createIncident: (data: unknown) => this.post('/compliance/incidents', data),
+    getPolicies: (params?: { page?: number; limit?: number; category?: string }) =>
+      this.get('/compliance/policies', params),
+    getAuditPrep: () => this.get('/compliance/audit-prep'),
+    getRegulatoryUpdates: (params?: { page?: number; limit?: number }) =>
+      this.get('/compliance/regulatory-updates', params),
+  };
+
+  // Integration endpoints
+  integrations = {
+    getAll: (params?: { page?: number; limit?: number; type?: string; status?: string }) =>
+      this.get('/integrations', params),
+    getById: (id: string) => this.get(`/integrations/${id}`),
+    create: (data: unknown) => this.post('/integrations', data),
+    update: (id: string, data: unknown) => this.put(`/integrations/${id}`, data),
+    delete: (id: string) => this.delete(`/integrations/${id}`),
+    getThirdParty: (params?: { page?: number; limit?: number }) =>
+      this.get('/integrations/third-party', params),
+    getAPIKeys: (params?: { page?: number; limit?: number }) =>
+      this.get('/integrations/api-keys', params),
+    createAPIKey: (data: unknown) => this.post('/integrations/api-keys', data),
+    revokeAPIKey: (id: string) => this.delete(`/integrations/api-keys/${id}`),
+    getWebhooks: (params?: { page?: number; limit?: number }) =>
+      this.get('/integrations/webhooks', params),
+    createWebhook: (data: unknown) => this.post('/integrations/webhooks', data),
+    testWebhook: (id: string) => this.post(`/integrations/webhooks/${id}/test`),
+    getSSO: () => this.get('/integrations/sso'),
+    updateSSO: (data: unknown) => this.put('/integrations/sso', data),
+    getHL7FHIR: (params?: { page?: number; limit?: number }) =>
+      this.get('/integrations/hl7-fhir', params),
+    getAccounting: (params?: { page?: number; limit?: number }) =>
+      this.get('/integrations/accounting', params),
+    syncAccounting: (id: string) => this.post(`/integrations/accounting/${id}/sync`),
+    getAPIAnalytics: (params?: { startDate?: string; endDate?: string }) =>
+      this.get('/integrations/api-analytics', params),
+    importData: (data: unknown) => this.post('/integrations/import', data),
+    exportData: (params?: { type?: string; format?: string }) =>
+      this.get('/integrations/export', params),
+  };
+
+  // Mobile endpoints
+  mobile = {
+    getApplications: () => this.get('/mobile/applications'),
+    getDevices: (params?: { page?: number; limit?: number; platform?: string }) =>
+      this.get('/mobile/devices', params),
+    registerDevice: (data: unknown) => this.post('/mobile/devices', data),
+    updateDevice: (id: string, data: unknown) => this.put(`/mobile/devices/${id}`, data),
+    getSync: (params?: { lastSync?: string }) => this.get('/mobile/sync', params),
+    syncData: (data: unknown) => this.post('/mobile/sync', data),
+    getOfflineData: () => this.get('/mobile/offline'),
+    getEmergencyAccess: (params?: { page?: number; limit?: number }) =>
+      this.get('/mobile/emergency-access', params),
+    getFieldService: (params?: { page?: number; limit?: number; status?: string }) =>
+      this.get('/mobile/field-service', params),
+    getMobileReports: (params?: { page?: number; limit?: number; type?: string }) =>
+      this.get('/mobile/reports', params),
+  };
 }
 
 export const api = new ApiClient();

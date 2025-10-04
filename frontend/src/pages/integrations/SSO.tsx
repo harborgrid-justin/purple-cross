@@ -1,6 +1,9 @@
+import { useSSO } from '../../hooks/useAPI';
 import '../../styles/Page.css';
 
 const SSO = () => {
+  const { data: ssoData, isLoading, error } = useSSO();
+
   return (
     <div className="page">
       <header className="page-header">
@@ -9,6 +12,15 @@ const SSO = () => {
 
       <div className="content-section">
         <p>Enterprise SSO and identity management.</p>
+        
+        {isLoading && <p>Loading SSO configuration...</p>}
+        {error && <p style={{ color: 'red' }}>Error loading SSO configuration</p>}
+        {!!ssoData && (
+          <div style={{ marginBottom: '1rem' }}>
+            <p>SSO configuration loaded successfully.</p>
+          </div>
+        )}
+
         <div className="info-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
           <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
             <h3>Protocols</h3>

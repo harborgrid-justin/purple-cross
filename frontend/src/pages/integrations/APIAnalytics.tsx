@@ -1,6 +1,11 @@
+import { useState } from 'react';
+import { useAPIAnalytics } from '../../hooks/useAPI';
 import '../../styles/Page.css';
 
 const APIAnalytics = () => {
+  const [dateRange] = useState({ startDate: '', endDate: '' });
+  const { data: analyticsData, isLoading, error } = useAPIAnalytics(dateRange);
+
   return (
     <div className="page">
       <header className="page-header">
@@ -9,6 +14,15 @@ const APIAnalytics = () => {
 
       <div className="content-section">
         <p>Monitor and analyze API usage and performance.</p>
+        
+        {isLoading && <p>Loading API analytics...</p>}
+        {error && <p style={{ color: 'red' }}>Error loading API analytics</p>}
+        {!!analyticsData && (
+          <div style={{ marginBottom: '1rem' }}>
+            <p>API analytics data loaded.</p>
+          </div>
+        )}
+
         <div className="info-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
           <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
             <h3>Metrics</h3>

@@ -1,6 +1,9 @@
+import { useAccountingIntegrations } from '../../hooks/useAPI';
 import '../../styles/Page.css';
 
 const Accounting = () => {
+  const { data: accountingData, isLoading, error } = useAccountingIntegrations();
+
   return (
     <div className="page">
       <header className="page-header">
@@ -8,7 +11,16 @@ const Accounting = () => {
       </header>
 
       <div className="content-section">
-        <p>Sync financial data with accounting systems.</p>
+        <p>Sync financial data with accounting software.</p>
+        
+        {isLoading && <p>Loading accounting integrations...</p>}
+        {error && <p style={{ color: 'red' }}>Error loading accounting integrations</p>}
+        {!!accountingData && (
+          <div style={{ marginBottom: '1rem' }}>
+            <p>Accounting integrations loaded successfully.</p>
+          </div>
+        )}
+
         <div className="info-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
           <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
             <h3>Platforms</h3>
@@ -20,12 +32,12 @@ const Accounting = () => {
             </ul>
           </div>
           <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
-            <h3>Sync</h3>
+            <h3>Data Sync</h3>
             <ul>
-              <li>Revenue sync</li>
-              <li>Expense sync</li>
-              <li>Invoice sync</li>
-              <li>Payment sync</li>
+              <li>Invoices</li>
+              <li>Payments</li>
+              <li>Expenses</li>
+              <li>Chart of accounts</li>
             </ul>
           </div>
           <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
@@ -33,8 +45,8 @@ const Accounting = () => {
             <ul>
               <li>Auto-sync</li>
               <li>Manual sync</li>
-              <li>Reconciliation</li>
-              <li>Error handling</li>
+              <li>Conflict resolution</li>
+              <li>Audit trail</li>
             </ul>
           </div>
         </div>

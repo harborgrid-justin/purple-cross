@@ -1,6 +1,9 @@
+import { useOfflineData } from '../../hooks/useAPI';
 import '../../styles/Page.css';
 
 const Offline = () => {
+  const { data: offlineData, isLoading, error } = useOfflineData();
+
   return (
     <div className="page">
       <header className="page-header">
@@ -8,32 +11,41 @@ const Offline = () => {
       </header>
 
       <div className="content-section">
-        <p>Work without internet connectivity.</p>
+        <p>Continue working without internet connectivity.</p>
+        
+        {isLoading && <p>Loading offline data...</p>}
+        {error && <p style={{ color: 'red' }}>Error loading offline data</p>}
+        {!!offlineData && (
+          <div style={{ marginBottom: '1rem' }}>
+            <p>Offline data loaded successfully.</p>
+          </div>
+        )}
+
         <div className="info-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
           <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
-            <h3>Offline Features</h3>
+            <h3>Features</h3>
             <ul>
-              <li>View records</li>
-              <li>Create notes</li>
-              <li>Process payments</li>
-              <li>Update data</li>
+              <li>Local data storage</li>
+              <li>Offline forms</li>
+              <li>Queue sync</li>
+              <li>Conflict resolution</li>
+            </ul>
+          </div>
+          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+            <h3>Data Access</h3>
+            <ul>
+              <li>Patient records</li>
+              <li>Appointments</li>
+              <li>Medical history</li>
+              <li>Prescriptions</li>
             </ul>
           </div>
           <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
             <h3>Sync</h3>
             <ul>
               <li>Auto-sync</li>
-              <li>Conflict resolution</li>
-              <li>Queue management</li>
-              <li>Bandwidth optimization</li>
-            </ul>
-          </div>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
-            <h3>Management</h3>
-            <ul>
-              <li>Sync settings</li>
-              <li>Storage limits</li>
-              <li>Data prioritization</li>
+              <li>Manual sync</li>
+              <li>Selective sync</li>
               <li>Sync status</li>
             </ul>
           </div>
