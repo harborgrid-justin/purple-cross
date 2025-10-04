@@ -86,6 +86,10 @@ export class MarketingCampaignService {
     });
   }
 
+  async updateCampaign(id: string, data: any) {
+    return prisma.marketingCampaign.update({ where: { id }, data });
+  }
+
   async deleteCampaign(id: string) {
     return prisma.marketingCampaign.delete({
       where: { id },

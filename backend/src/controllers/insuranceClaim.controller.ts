@@ -28,6 +28,16 @@ export class InsuranceClaimController {
     const claim = await insuranceClaimService.processClaim(req.params.id, approvedAmount, paidAmount);
     res.status(200).json({ status: 'success', data: claim });
   }
+
+  async update(req: Request, res: Response) {
+    const claim = await insuranceClaimService.updateClaim(req.params.id, req.body);
+    res.status(200).json({ status: 'success', data: claim });
+  }
+
+  async delete(req: Request, res: Response) {
+    await insuranceClaimService.deleteClaim(req.params.id);
+    res.status(204).send();
+  }
 }
 
 export default new InsuranceClaimController();

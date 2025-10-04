@@ -166,6 +166,10 @@ export class PurchaseOrderService {
     });
   }
 
+  async updatePurchaseOrder(id: string, data: any) {
+    return prisma.purchaseOrder.update({ where: { id }, data });
+  }
+
   async deletePurchaseOrder(id: string) {
     return prisma.purchaseOrder.delete({
       where: { id },

@@ -173,6 +173,26 @@ export class LoyaltyProgramService {
       totalPages: Math.ceil(total / limit),
     };
   }
+
+  async listPrograms(filters?: { tier?: string; page?: number; limit?: number }) {
+    const { tier, page = 1, limit = 20 } = filters || {};
+    const skip = (page - 1) * limit;
+    const where: any = {};
+    if (tier) where.tier = tier;
+    const [items, total] = await Promise.all([
+      prisma.loyaltyProgram.findMany({ where, skip, take: limit, orderBy: { lifetimePoints: 'desc' } }),
+      prisma.loyaltyProgram.count({ where }),
+    ]);
+    return { items, total, page, limit, totalPages: Math.ceil(total / limit) };
+  }
+
+  async updateProgram(id: string, data: any) {
+    return prisma.loyaltyProgram.update({ where: { id }, data });
+  }
+
+  async deleteProgram(id: string) {
+    return prisma.loyaltyProgram.delete({ where: { id } });
+  }
 }
 
 export default new LoyaltyProgramService();

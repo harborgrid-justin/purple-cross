@@ -200,6 +200,14 @@ export class PaymentPlanService {
       },
     });
   }
+
+  async updatePaymentPlan(id: string, data: any) {
+    return prisma.paymentPlan.update({ where: { id }, data });
+  }
+
+  async deletePaymentPlan(id: string) {
+    return prisma.paymentPlan.delete({ where: { id } });
+  }
 }
 
 export default new PaymentPlanService();

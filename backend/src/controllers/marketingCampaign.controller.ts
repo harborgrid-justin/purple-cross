@@ -39,6 +39,11 @@ export class MarketingCampaignController {
     res.status(200).json({ status: 'success', data: campaign });
   }
 
+  async update(req: Request, res: Response) {
+    const campaign = await marketingCampaignService.updateCampaign(req.params.id, req.body);
+    res.status(200).json({ status: 'success', data: campaign });
+  }
+
   async delete(req: Request, res: Response) {
     await marketingCampaignService.deleteCampaign(req.params.id);
     res.status(204).send();

@@ -53,6 +53,14 @@ export class InsuranceClaimService {
       data: { status: 'paid', approvedAmount, paidAmount, processedDate: new Date(), paidDate: new Date() },
     });
   }
+
+  async updateClaim(id: string, data: any) {
+    return prisma.insuranceClaim.update({ where: { id }, data });
+  }
+
+  async deleteClaim(id: string) {
+    return prisma.insuranceClaim.delete({ where: { id } });
+  }
 }
 
 export default new InsuranceClaimService();

@@ -53,6 +53,10 @@ export class PolicyService {
   async updatePolicy(id: string, data: any) {
     return prisma.policy.update({ where: { id }, data });
   }
+
+  async deletePolicy(id: string) {
+    return prisma.policy.delete({ where: { id } });
+  }
 }
 
 export default new PolicyService();

@@ -46,6 +46,16 @@ export class DocumentTemplateController {
     const workflow = await documentTemplateService.advanceWorkflow(req.params.workflowId);
     res.status(200).json({ status: 'success', data: workflow });
   }
+
+  async update(req: Request, res: Response) {
+    const template = await documentTemplateService.updateTemplate(req.params.id, req.body);
+    res.status(200).json({ status: 'success', data: template });
+  }
+
+  async delete(req: Request, res: Response) {
+    await documentTemplateService.deleteTemplate(req.params.id);
+    res.status(204).send();
+  }
 }
 
 export default new DocumentTemplateController();

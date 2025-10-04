@@ -92,6 +92,10 @@ export class WaitlistService {
     });
   }
 
+  async updateWaitlistEntry(id: string, data: any) {
+    return prisma.waitlist.update({ where: { id }, data });
+  }
+
   async deleteWaitlistEntry(id: string) {
     return prisma.waitlist.delete({
       where: { id },
