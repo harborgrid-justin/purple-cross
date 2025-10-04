@@ -36,9 +36,9 @@ const Appointments = () => {
     const fetchAppointments = async () => {
       try {
         setLoading(true);
-        const response = await api.appointments.getAll({
+        const response = (await api.appointments.getAll({
           limit: 50,
-        }) as { status: string; data: Appointment[] };
+        })) as { status: string; data: Appointment[] };
         setAppointments(response.data);
       } catch (err) {
         console.error('Error fetching appointments:', err);
@@ -54,22 +54,42 @@ const Appointments = () => {
   return (
     <div className="page">
       <header className="page-header">
-        <h1><span aria-hidden="true">📅</span> Appointments</h1>
+        <h1>
+          <span aria-hidden="true">📅</span> Appointments
+        </h1>
         <button className="btn-primary" aria-label="Schedule a new appointment">
           + Schedule Appointment
         </button>
       </header>
 
       <nav className="sub-nav" role="navigation" aria-label="Appointment sections">
-        <Link to="/appointments" className="sub-nav-link active">Calendar</Link>
-        <Link to="/appointments/booking" className="sub-nav-link">Booking</Link>
-        <Link to="/appointments/calendar-management" className="sub-nav-link">Calendar Management</Link>
-        <Link to="/appointments/types" className="sub-nav-link">Types & Duration</Link>
-        <Link to="/appointments/waitlist" className="sub-nav-link">Waitlist</Link>
-        <Link to="/appointments/reminders" className="sub-nav-link">Reminder System</Link>
-        <Link to="/appointments/optimization" className="sub-nav-link">Schedule Optimization</Link>
-        <Link to="/appointments/time-blocks" className="sub-nav-link">Time Block Management</Link>
-        <Link to="/appointments/analytics" className="sub-nav-link">Analytics</Link>
+        <Link to="/appointments" className="sub-nav-link active">
+          Calendar
+        </Link>
+        <Link to="/appointments/booking" className="sub-nav-link">
+          Booking
+        </Link>
+        <Link to="/appointments/calendar-management" className="sub-nav-link">
+          Calendar Management
+        </Link>
+        <Link to="/appointments/types" className="sub-nav-link">
+          Types & Duration
+        </Link>
+        <Link to="/appointments/waitlist" className="sub-nav-link">
+          Waitlist
+        </Link>
+        <Link to="/appointments/reminders" className="sub-nav-link">
+          Reminder System
+        </Link>
+        <Link to="/appointments/optimization" className="sub-nav-link">
+          Schedule Optimization
+        </Link>
+        <Link to="/appointments/time-blocks" className="sub-nav-link">
+          Time Block Management
+        </Link>
+        <Link to="/appointments/analytics" className="sub-nav-link">
+          Analytics
+        </Link>
       </nav>
 
       <div className="table-container">
@@ -118,7 +138,7 @@ const Appointments = () => {
                     Dr. {appointment.veterinarian.firstName} {appointment.veterinarian.lastName}
                   </td>
                   <td>
-                    <span 
+                    <span
                       className={`status-badge status-${appointment.status}`}
                       role="status"
                       aria-label={`Status: ${appointment.status}`}
@@ -127,14 +147,14 @@ const Appointments = () => {
                     </span>
                   </td>
                   <td>
-                    <button 
-                      className="btn-action" 
+                    <button
+                      className="btn-action"
                       aria-label={`View appointment for ${appointment.patient.name} on ${new Date(appointment.startTime).toLocaleDateString()}`}
                     >
                       View
                     </button>
-                    <button 
-                      className="btn-action" 
+                    <button
+                      className="btn-action"
                       aria-label={`Edit appointment for ${appointment.patient.name} on ${new Date(appointment.startTime).toLocaleDateString()}`}
                     >
                       Edit

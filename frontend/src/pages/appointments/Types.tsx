@@ -11,13 +11,27 @@ const Types = () => {
       </header>
 
       <div className="content-section">
-        <p>Define and manage different appointment types and their durations.</p>        
+        <p>Define and manage different appointment types and their durations.</p>
         {isLoading && <p>Loading data...</p>}
         {error && <p style={{ color: 'red' }}>Error loading data</p>}
         {!!data && <p style={{ color: 'green', fontSize: '0.9rem' }}>✓ Data loaded from API</p>}
 
-        <div className="info-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+        <div
+          className="info-cards"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '1rem',
+            marginTop: '1rem',
+          }}
+        >
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>Appointment Types</h3>
             <ul>
               <li>Wellness exams</li>
@@ -26,7 +40,13 @@ const Types = () => {
               <li>Dental cleaning</li>
             </ul>
           </div>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>Duration Settings</h3>
             <ul>
               <li>Standard durations</li>
@@ -35,7 +55,13 @@ const Types = () => {
               <li>Cleanup time</li>
             </ul>
           </div>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>Resource Requirements</h3>
             <ul>
               <li>Staff requirements</li>

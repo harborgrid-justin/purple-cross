@@ -211,12 +211,15 @@ class ApiClient {
 
   // Compliance endpoints
   compliance = {
-    getHIPAA: (params?: { page?: number; limit?: number }) =>
-      this.get('/compliance/hipaa', params),
+    getHIPAA: (params?: { page?: number; limit?: number }) => this.get('/compliance/hipaa', params),
     getLicenses: (params?: { page?: number; limit?: number; status?: string }) =>
       this.get('/compliance/licenses', params),
-    getControlledSubstances: (params?: { page?: number; limit?: number; startDate?: string; endDate?: string }) =>
-      this.get('/compliance/controlled-substances', params),
+    getControlledSubstances: (params?: {
+      page?: number;
+      limit?: number;
+      startDate?: string;
+      endDate?: string;
+    }) => this.get('/compliance/controlled-substances', params),
     getRecordRetention: () => this.get('/compliance/record-retention'),
     getIncidents: (params?: { page?: number; limit?: number; severity?: string }) =>
       this.get('/compliance/incidents', params),

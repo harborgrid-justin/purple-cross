@@ -12,7 +12,7 @@ const SSO = () => {
 
       <div className="content-section">
         <p>Enterprise SSO and identity management.</p>
-        
+
         {isLoading && <p>Loading SSO configuration...</p>}
         {error && <p style={{ color: 'red' }}>Error loading SSO configuration</p>}
         {!!ssoData && (
@@ -21,8 +21,22 @@ const SSO = () => {
           </div>
         )}
 
-        <div className="info-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+        <div
+          className="info-cards"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '1rem',
+            marginTop: '1rem',
+          }}
+        >
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>Protocols</h3>
             <ul>
               <li>SAML 2.0</li>
@@ -31,7 +45,13 @@ const SSO = () => {
               <li>LDAP</li>
             </ul>
           </div>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>Providers</h3>
             <ul>
               <li>Azure AD</li>
@@ -40,7 +60,13 @@ const SSO = () => {
               <li>Custom IdP</li>
             </ul>
           </div>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>Management</h3>
             <ul>
               <li>User provisioning</li>

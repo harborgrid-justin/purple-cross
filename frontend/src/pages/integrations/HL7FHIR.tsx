@@ -12,7 +12,7 @@ const HL7FHIR = () => {
 
       <div className="content-section">
         <p>Healthcare interoperability standards compliance.</p>
-        
+
         {isLoading && <p>Loading HL7/FHIR data...</p>}
         {error && <p style={{ color: 'red' }}>Error loading HL7/FHIR data</p>}
         {!!hl7Data && (
@@ -21,8 +21,22 @@ const HL7FHIR = () => {
           </div>
         )}
 
-        <div className="info-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+        <div
+          className="info-cards"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '1rem',
+            marginTop: '1rem',
+          }}
+        >
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>HL7 v2.x</h3>
             <ul>
               <li>Message parsing</li>
@@ -31,7 +45,13 @@ const HL7FHIR = () => {
               <li>ORU messages</li>
             </ul>
           </div>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>FHIR</h3>
             <ul>
               <li>FHIR R4</li>
@@ -40,7 +60,13 @@ const HL7FHIR = () => {
               <li>Condition resources</li>
             </ul>
           </div>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>Features</h3>
             <ul>
               <li>Bidirectional sync</li>

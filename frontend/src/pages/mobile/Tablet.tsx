@@ -12,7 +12,7 @@ const Tablet = () => {
 
       <div className="content-section">
         <p>Tablet-optimized interface and features.</p>
-        
+
         {isLoading && <p>Loading tablet devices...</p>}
         {error && <p style={{ color: 'red' }}>Error loading devices</p>}
         {!!devicesData && (
@@ -21,8 +21,22 @@ const Tablet = () => {
           </div>
         )}
 
-        <div className="info-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+        <div
+          className="info-cards"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '1rem',
+            marginTop: '1rem',
+          }}
+        >
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>Platforms</h3>
             <ul>
               <li>iPad</li>
@@ -31,7 +45,13 @@ const Tablet = () => {
               <li>Chrome OS</li>
             </ul>
           </div>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>Features</h3>
             <ul>
               <li>Split screen</li>
@@ -40,7 +60,13 @@ const Tablet = () => {
               <li>Gesture controls</li>
             </ul>
           </div>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>Use Cases</h3>
             <ul>
               <li>Exam room</li>

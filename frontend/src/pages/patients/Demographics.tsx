@@ -11,7 +11,7 @@ const PatientDemographics = () => {
       </header>
 
       <div className="content-section">
-        <p>Statistical analysis and demographic breakdowns of patient population.</p>        
+        <p>Statistical analysis and demographic breakdowns of patient population.</p>
         {isLoading && <p>Loading data...</p>}
         {error && <p style={{ color: 'red' }}>Error loading data</p>}
         {!!data && <p style={{ color: 'green', fontSize: '0.9rem' }}>✓ Data loaded from API</p>}

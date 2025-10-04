@@ -9,11 +9,12 @@ export const createUseQuery = <TData = unknown>(
   queryFn: () => Promise<TData>,
   options?: Omit<UseQueryOptions<TData>, 'queryKey' | 'queryFn'>
 ) => {
-  return () => useQuery({
-    queryKey: Array.isArray(queryKey) ? queryKey : [queryKey],
-    queryFn,
-    ...options,
-  });
+  return () =>
+    useQuery({
+      queryKey: Array.isArray(queryKey) ? queryKey : [queryKey],
+      queryFn,
+      ...options,
+    });
 };
 
 /**
@@ -97,7 +98,12 @@ export const useLicenses = (params?: { page?: number; limit?: number; status?: s
   });
 };
 
-export const useControlledSubstances = (params?: { page?: number; limit?: number; startDate?: string; endDate?: string }) => {
+export const useControlledSubstances = (params?: {
+  page?: number;
+  limit?: number;
+  startDate?: string;
+  endDate?: string;
+}) => {
   return useQuery({
     queryKey: ['compliance', 'controlled-substances', params],
     queryFn: () => api.compliance.getControlledSubstances(params),
@@ -140,7 +146,12 @@ export const useRegulatoryUpdates = (params?: { page?: number; limit?: number })
 };
 
 // Integration hooks
-export const useIntegrations = (params?: { page?: number; limit?: number; type?: string; status?: string }) => {
+export const useIntegrations = (params?: {
+  page?: number;
+  limit?: number;
+  type?: string;
+  status?: string;
+}) => {
   return useQuery({
     queryKey: ['integrations', params],
     queryFn: () => api.integrations.getAll(params),

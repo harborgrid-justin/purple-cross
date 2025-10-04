@@ -11,13 +11,27 @@ const Reminders = () => {
       </header>
 
       <div className="content-section">
-        <p>Automated appointment reminders to reduce no-shows.</p>        
+        <p>Automated appointment reminders to reduce no-shows.</p>
         {isLoading && <p>Loading data...</p>}
         {error && <p style={{ color: 'red' }}>Error loading data</p>}
         {!!data && <p style={{ color: 'green', fontSize: '0.9rem' }}>✓ Data loaded from API</p>}
 
-        <div className="info-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+        <div
+          className="info-cards"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '1rem',
+            marginTop: '1rem',
+          }}
+        >
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>Reminder Types</h3>
             <ul>
               <li>Email reminders</li>
@@ -26,7 +40,13 @@ const Reminders = () => {
               <li>Push notifications</li>
             </ul>
           </div>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>Timing</h3>
             <ul>
               <li>24-hour reminders</li>
@@ -35,7 +55,13 @@ const Reminders = () => {
               <li>Multiple reminders</li>
             </ul>
           </div>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>Confirmation</h3>
             <ul>
               <li>Confirm attendance</li>

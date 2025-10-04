@@ -12,7 +12,7 @@ const MobileReporting = () => {
 
       <div className="content-section">
         <p>Generate and view reports on mobile devices.</p>
-        
+
         {isLoading && <p>Loading mobile reports...</p>}
         {error && <p style={{ color: 'red' }}>Error loading reports</p>}
         {!!reportsData && (
@@ -21,8 +21,22 @@ const MobileReporting = () => {
           </div>
         )}
 
-        <div className="info-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+        <div
+          className="info-cards"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '1rem',
+            marginTop: '1rem',
+          }}
+        >
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>Report Types</h3>
             <ul>
               <li>Daily summaries</li>
@@ -31,7 +45,13 @@ const MobileReporting = () => {
               <li>Activity logs</li>
             </ul>
           </div>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>Features</h3>
             <ul>
               <li>Interactive charts</li>
@@ -40,7 +60,13 @@ const MobileReporting = () => {
               <li>Share reports</li>
             </ul>
           </div>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>Optimization</h3>
             <ul>
               <li>Mobile layout</li>

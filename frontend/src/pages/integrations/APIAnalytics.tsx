@@ -14,7 +14,7 @@ const APIAnalytics = () => {
 
       <div className="content-section">
         <p>Monitor and analyze API usage and performance.</p>
-        
+
         {isLoading && <p>Loading API analytics...</p>}
         {error && <p style={{ color: 'red' }}>Error loading API analytics</p>}
         {!!analyticsData && (
@@ -23,8 +23,22 @@ const APIAnalytics = () => {
           </div>
         )}
 
-        <div className="info-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+        <div
+          className="info-cards"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '1rem',
+            marginTop: '1rem',
+          }}
+        >
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>Metrics</h3>
             <ul>
               <li>Request volume</li>
@@ -33,7 +47,13 @@ const APIAnalytics = () => {
               <li>Success rates</li>
             </ul>
           </div>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>Monitoring</h3>
             <ul>
               <li>Real-time dashboard</li>
@@ -42,7 +62,13 @@ const APIAnalytics = () => {
               <li>Performance trends</li>
             </ul>
           </div>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>Reporting</h3>
             <ul>
               <li>Usage reports</li>

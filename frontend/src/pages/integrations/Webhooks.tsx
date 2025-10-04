@@ -10,17 +10,15 @@ const Webhooks = () => {
   const handleCreateWebhook = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await createWebhook.mutateAsync({ 
+      await createWebhook.mutateAsync({
         url: 'https://example.com/webhook',
-        events: ['patient.created', 'appointment.scheduled']
+        events: ['patient.created', 'appointment.scheduled'],
       });
       setShowCreateForm(false);
     } catch (err) {
       console.error('Error creating webhook:', err);
     }
   };
-
-
 
   return (
     <div className="page">
@@ -35,17 +33,47 @@ const Webhooks = () => {
         <p>Event-driven integrations with webhooks.</p>
 
         {showCreateForm && (
-          <div style={{ padding: '1rem', marginTop: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+          <div
+            style={{
+              padding: '1rem',
+              marginTop: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>Create New Webhook</h3>
             <form onSubmit={handleCreateWebhook}>
-              <button type="submit" className="btn-primary">Create</button>
-              <button type="button" className="btn-secondary" onClick={() => setShowCreateForm(false)} style={{ marginLeft: '0.5rem' }}>Cancel</button>
+              <button type="submit" className="btn-primary">
+                Create
+              </button>
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={() => setShowCreateForm(false)}
+                style={{ marginLeft: '0.5rem' }}
+              >
+                Cancel
+              </button>
             </form>
           </div>
         )}
 
-        <div className="info-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+        <div
+          className="info-cards"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '1rem',
+            marginTop: '1rem',
+          }}
+        >
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>Webhooks</h3>
             <ul>
               <li>Event subscriptions</li>
@@ -54,7 +82,13 @@ const Webhooks = () => {
               <li>Security</li>
             </ul>
           </div>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>Events</h3>
             <ul>
               <li>Patient events</li>
@@ -63,7 +97,13 @@ const Webhooks = () => {
               <li>Custom events</li>
             </ul>
           </div>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>Management</h3>
             <ul>
               <li>Create webhooks</li>

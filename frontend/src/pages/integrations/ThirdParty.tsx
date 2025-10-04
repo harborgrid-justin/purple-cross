@@ -12,7 +12,7 @@ const ThirdParty = () => {
 
       <div className="content-section">
         <p>Connect with external systems and services.</p>
-        
+
         {isLoading && <p>Loading integrations...</p>}
         {error && <p style={{ color: 'red' }}>Error loading integrations</p>}
         {!!integrationsData && (
@@ -21,8 +21,22 @@ const ThirdParty = () => {
           </div>
         )}
 
-        <div className="info-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+        <div
+          className="info-cards"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '1rem',
+            marginTop: '1rem',
+          }}
+        >
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>Categories</h3>
             <ul>
               <li>Labs</li>
@@ -31,7 +45,13 @@ const ThirdParty = () => {
               <li>Accounting</li>
             </ul>
           </div>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>Features</h3>
             <ul>
               <li>Pre-built connectors</li>
@@ -40,7 +60,13 @@ const ThirdParty = () => {
               <li>Real-time updates</li>
             </ul>
           </div>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>Management</h3>
             <ul>
               <li>Enable/disable</li>
