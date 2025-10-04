@@ -1,13 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
+import { useClients } from '../../frontend/src/hooks/useClients';
 import '../styles/Module.css';
 
 const ClientManagement: React.FC = () => {
-  const [clients] = useState([
-    { id: '1', name: 'John Smith', email: 'john@email.com', phone: '555-0101', pets: 2, status: 'Active' },
-    { id: '2', name: 'Sarah Johnson', email: 'sarah@email.com', phone: '555-0102', pets: 1, status: 'Active' },
-    { id: '3', name: 'Mike Wilson', email: 'mike@email.com', phone: '555-0103', pets: 3, status: 'VIP' },
-  ]);
+  const { data, isLoading, error } = useClients();
 
   return (
     <div className="module-container">
@@ -28,37 +25,42 @@ const ClientManagement: React.FC = () => {
             </div>
 
             <div className="content-section">
-              <div className="table-container">
-                <table className="data-table">
-                  <thead>
-                    <tr>
-                      <th>Client ID</th>
-                      <th>Name</th>
-                      <th>Email</th>
-                      <th>Phone</th>
-                      <th>Pets</th>
-                      <th>Status</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {clients.map((client) => (
-                      <tr key={client.id}>
-                        <td>{client.id}</td>
-                        <td>{client.name}</td>
-                        <td>{client.email}</td>
-                        <td>{client.phone}</td>
-                        <td>{client.pets}</td>
-                        <td><span className={`badge ${client.status === 'VIP' ? 'badge-warning' : 'badge-success'}`}>{client.status}</span></td>
-                        <td>
-                          <button className="btn-small">View</button>
-                          <button className="btn-small">Edit</button>
-                        </td>
+              {isLoading && <div className="loading">Loading clients...</div>}
+              {error && <div className="error">Error loading clients: {error instanceof Error ? error.message : 'Unknown error'}</div>}
+              
+              {data && (
+                <div className="table-container">
+                  <table className="data-table">
+                    <thead>
+                      <tr>
+                        <th>Client ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Pets</th>
+                        <th>Status</th>
+                        <th>Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {data.data?.map((client: any) => (
+                        <tr key={client.id}>
+                          <td>{client.id}</td>
+                          <td>{client.firstName} {client.lastName}</td>
+                          <td>{client.email}</td>
+                          <td>{client.phone}</td>
+                          <td>{client.patients?.length || 0}</td>
+                          <td><span className="badge badge-success">Active</span></td>
+                          <td>
+                            <button className="btn-small">View</button>
+                            <button className="btn-small">Edit</button>
+                          </td>
+                        </tr>
+                      )) || <tr><td colSpan={7}>No clients found</td></tr>}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           </>
         } />

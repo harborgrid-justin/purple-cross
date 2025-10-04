@@ -33,10 +33,10 @@ const ClientsList = () => {
     const fetchClients = async () => {
       try {
         setLoading(true);
-        const response = await api.clients.getAll({
+        const response = (await api.clients.getAll({
           search: searchTerm || undefined,
           limit: 50,
-        }) as { status: string; data: Client[] };
+        })) as { status: string; data: Client[] };
         setClients(response.data);
       } catch (err) {
         console.error('Error fetching clients:', err);
@@ -52,6 +52,46 @@ const ClientsList = () => {
 
   return (
     <>
+    <div className="page">
+      <header className="page-header">
+        <h1>
+          <span aria-hidden="true">👥</span> Clients
+        </h1>
+        <button className="btn-primary" aria-label="Add a new client">
+          + Add New Client
+        </button>
+      </header>
+
+      <nav className="sub-nav" role="navigation" aria-label="Client sections">
+        <Link to="/clients" className="sub-nav-link active">
+          All Clients
+        </Link>
+        <Link to="/clients/registration" className="sub-nav-link">
+          Registration & Profiles
+        </Link>
+        <Link to="/clients/account-management" className="sub-nav-link">
+          Account Management
+        </Link>
+        <Link to="/clients/multi-pet" className="sub-nav-link">
+          Multi-Pet Households
+        </Link>
+        <Link to="/clients/communication-history" className="sub-nav-link">
+          Communication History
+        </Link>
+        <Link to="/clients/portal-access" className="sub-nav-link">
+          Portal Access
+        </Link>
+        <Link to="/clients/loyalty" className="sub-nav-link">
+          Loyalty Programs
+        </Link>
+        <Link to="/clients/feedback" className="sub-nav-link">
+          Feedback & Surveys
+        </Link>
+        <Link to="/clients/segmentation" className="sub-nav-link">
+          Client Segmentation
+        </Link>
+      </nav>
+
       <div className="search-bar" role="search">
         <label htmlFor="client-search" className="sr-only">
           Search clients
@@ -94,12 +134,18 @@ const ClientsList = () => {
                     {client.firstName} {client.lastName}
                   </th>
                   <td>
-                    <a href={`mailto:${client.email}`} aria-label={`Email ${client.firstName} ${client.lastName}`}>
+                    <a
+                      href={`mailto:${client.email}`}
+                      aria-label={`Email ${client.firstName} ${client.lastName}`}
+                    >
                       {client.email}
                     </a>
                   </td>
                   <td>
-                    <a href={`tel:${client.phone}`} aria-label={`Call ${client.firstName} ${client.lastName}`}>
+                    <a
+                      href={`tel:${client.phone}`}
+                      aria-label={`Call ${client.firstName} ${client.lastName}`}
+                    >
                       {client.phone}
                     </a>
                   </td>
@@ -108,10 +154,16 @@ const ClientsList = () => {
                   </td>
                   <td>{client.patients?.length || 0}</td>
                   <td>
-                    <button className="btn-action" aria-label={`View details for ${client.firstName} ${client.lastName}`}>
+                    <button
+                      className="btn-action"
+                      aria-label={`View details for ${client.firstName} ${client.lastName}`}
+                    >
                       View
                     </button>
-                    <button className="btn-action" aria-label={`Edit information for ${client.firstName} ${client.lastName}`}>
+                    <button
+                      className="btn-action"
+                      aria-label={`Edit information for ${client.firstName} ${client.lastName}`}
+                    >
                       Edit
                     </button>
                   </td>

@@ -20,7 +20,10 @@ const Dashboard = () => {
     const fetchDashboardStats = async () => {
       try {
         setLoading(true);
-        const response = await api.analytics.getDashboard() as { status: string; data: DashboardStats };
+        const response = (await api.analytics.getDashboard()) as {
+          status: string;
+          data: DashboardStats;
+        };
         setStats(response.data);
         setError(null);
       } catch (err) {
@@ -75,17 +78,30 @@ const Dashboard = () => {
     <div className="page">
       <header className="page-header">
         <h1>Dashboard</h1>
-        <p className="page-subtitle">Welcome back! Here's what's happening today.</p>
-        {error && <div role="alert" className="error-message">{error}</div>}
+        <p className="page-subtitle">Welcome back! Here&apos;s what&apos;s happening today.</p>
+        {error && (
+          <div role="alert" className="error-message">
+            {error}
+          </div>
+        )}
       </header>
 
       <section aria-label="Dashboard statistics" className="stats-grid">
         {displayStats.map((stat) => (
-          <article key={stat.label} className="stat-card" role="region" aria-label={`${stat.label}: ${stat.value}`}>
-            <div className="stat-icon" aria-hidden="true">{stat.icon}</div>
+          <article
+            key={stat.label}
+            className="stat-card"
+            role="region"
+            aria-label={`${stat.label}: ${stat.value}`}
+          >
+            <div className="stat-icon" aria-hidden="true">
+              {stat.icon}
+            </div>
             <div className="stat-content">
               <div className="stat-label">{stat.label}</div>
-              <div className="stat-value" aria-live="polite">{stat.value}</div>
+              <div className="stat-value" aria-live="polite">
+                {stat.value}
+              </div>
             </div>
           </article>
         ))}
@@ -99,7 +115,10 @@ const Dashboard = () => {
               <li key={index} className="activity-item">
                 <time className="activity-time">{activity.time}</time>
                 <span className="activity-text">{activity.activity}</span>
-                <span className={`activity-badge ${activity.type}`} aria-label={`Type: ${activity.type}`}>
+                <span
+                  className={`activity-badge ${activity.type}`}
+                  aria-label={`Type: ${activity.type}`}
+                >
                   {activity.type}
                 </span>
               </li>

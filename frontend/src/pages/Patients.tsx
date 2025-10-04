@@ -35,10 +35,10 @@ const PatientsList = () => {
     const fetchPatients = async () => {
       try {
         setLoading(true);
-        const response = await api.patients.getAll({
+        const response = (await api.patients.getAll({
           search: searchTerm || undefined,
           limit: 50,
-        }) as { status: string; data: Patient[] };
+        })) as { status: string; data: Patient[] };
         setPatients(response.data);
       } catch (err) {
         console.error('Error fetching patients:', err);
@@ -109,7 +109,10 @@ const PatientsList = () => {
                     <button className="btn-action" aria-label={`View details for ${patient.name}`}>
                       View
                     </button>
-                    <button className="btn-action" aria-label={`Edit information for ${patient.name}`}>
+                    <button
+                      className="btn-action"
+                      aria-label={`Edit information for ${patient.name}`}
+                    >
                       Edit
                     </button>
                   </td>
@@ -125,29 +128,82 @@ const PatientsList = () => {
 
 const Patients = () => {
   const location = useLocation();
-  
+
   return (
     <div className="page">
       <header className="page-header">
-        <h1><span aria-hidden="true">🐕</span> Patients</h1>
+        <h1>
+          <span aria-hidden="true">🐕</span> Patients
+        </h1>
         <button className="btn-primary" aria-label="Add a new patient">
           + Add New Patient
         </button>
       </header>
 
       <nav className="sub-nav" role="navigation" aria-label="Patient sections">
-        <Link to="/patients" className={`sub-nav-link ${location.pathname === '/patients' ? 'active' : ''}`}>All Patients</Link>
-        <Link to="/patients/registration" className={`sub-nav-link ${location.pathname.includes('/registration') ? 'active' : ''}`}>Registration & Profiles</Link>
-        <Link to="/patients/search" className={`sub-nav-link ${location.pathname.includes('/search') ? 'active' : ''}`}>Search & Filtering</Link>
-        <Link to="/patients/demographics" className={`sub-nav-link ${location.pathname.includes('/demographics') ? 'active' : ''}`}>Demographics</Link>
-        <Link to="/patients/health-status" className={`sub-nav-link ${location.pathname.includes('/health-status') ? 'active' : ''}`}>Health Status</Link>
-        <Link to="/patients/lifecycle" className={`sub-nav-link ${location.pathname.includes('/lifecycle') ? 'active' : ''}`}>Lifecycle Management</Link>
-        <Link to="/patients/breed-info" className={`sub-nav-link ${location.pathname.includes('/breed-info') ? 'active' : ''}`}>Breed Information</Link>
-        <Link to="/patients/relationships" className={`sub-nav-link ${location.pathname.includes('/relationships') ? 'active' : ''}`}>Relationship Mapping</Link>
-        <Link to="/patients/reminders" className={`sub-nav-link ${location.pathname.includes('/reminders') ? 'active' : ''}`}>Reminders & Alerts</Link>
+        <Link
+          to="/patients"
+          className={`sub-nav-link ${location.pathname === '/patients' ? 'active' : ''}`}
+        >
+          All Patients
+        </Link>
+        <Link
+          to="/patients/registration"
+          className={`sub-nav-link ${location.pathname.includes('/registration') ? 'active' : ''}`}
+        >
+          Registration & Profiles
+        </Link>
+        <Link
+          to="/patients/search"
+          className={`sub-nav-link ${location.pathname.includes('/search') ? 'active' : ''}`}
+        >
+          Search & Filtering
+        </Link>
+        <Link
+          to="/patients/demographics"
+          className={`sub-nav-link ${location.pathname.includes('/demographics') ? 'active' : ''}`}
+        >
+          Demographics
+        </Link>
+        <Link
+          to="/patients/health-status"
+          className={`sub-nav-link ${location.pathname.includes('/health-status') ? 'active' : ''}`}
+        >
+          Health Status
+        </Link>
+        <Link
+          to="/patients/lifecycle"
+          className={`sub-nav-link ${location.pathname.includes('/lifecycle') ? 'active' : ''}`}
+        >
+          Lifecycle Management
+        </Link>
+        <Link
+          to="/patients/breed-info"
+          className={`sub-nav-link ${location.pathname.includes('/breed-info') ? 'active' : ''}`}
+        >
+          Breed Information
+        </Link>
+        <Link
+          to="/patients/relationships"
+          className={`sub-nav-link ${location.pathname.includes('/relationships') ? 'active' : ''}`}
+        >
+          Relationship Mapping
+        </Link>
+        <Link
+          to="/patients/reminders"
+          className={`sub-nav-link ${location.pathname.includes('/reminders') ? 'active' : ''}`}
+        >
+          Reminders & Alerts
+        </Link>
       </nav>
 
-      <Suspense fallback={<div role="status"><p>Loading...</p></div>}>
+      <Suspense
+        fallback={
+          <div role="status">
+            <p>Loading...</p>
+          </div>
+        }
+      >
         <Routes>
           <Route path="/" element={<PatientsList />} />
           <Route path="/registration" element={<Registration />} />

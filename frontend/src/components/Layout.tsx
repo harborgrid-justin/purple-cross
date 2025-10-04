@@ -50,12 +50,14 @@ const Layout = ({ children }: LayoutProps) => {
           <h1 className="app-title">🟣 Purple Cross</h1>
         </div>
         <div className="header-right">
-          <span className="user-info" aria-label="Current user: Dr. Smith">Dr. Smith</span>
+          <span className="user-info" aria-label="Current user: Dr. Smith">
+            Dr. Smith
+          </span>
         </div>
       </header>
 
       <div className="main-container">
-        <aside 
+        <aside
           id="sidebar-nav"
           className={`sidebar ${sidebarOpen ? 'open' : 'closed'}`}
           aria-hidden={!sidebarOpen}
@@ -71,7 +73,9 @@ const Layout = ({ children }: LayoutProps) => {
                 aria-current={location.pathname === item.path ? 'page' : undefined}
                 aria-label={item.name}
               >
-                <span className="nav-icon" aria-hidden="true">{item.icon}</span>
+                <span className="nav-icon" aria-hidden="true">
+                  {item.icon}
+                </span>
                 {sidebarOpen && <span className="nav-label">{item.name}</span>}
               </Link>
             ))}

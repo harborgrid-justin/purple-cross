@@ -1,8 +1,11 @@
 import React from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
+import { useDocuments } from '../../frontend/src/hooks/useDocuments';
 import '../styles/Module.css';
 
 const DocumentManagement: React.FC = () => {
+  const { data, isLoading, error } = useDocuments();
+
   return (
     <div className="module-container">
       <Routes>
@@ -25,28 +28,63 @@ const DocumentManagement: React.FC = () => {
             </div>
 
             <div className="content-section">
-              <div className="info-cards">
-                <div className="info-card">
-                  <h3>Document Repository</h3>
-                  <p>Centralized document management</p>
-                  <ul>
-                    <li>Cloud storage</li>
-                    <li>Full-text search</li>
-                    <li>Version control</li>
-                    <li>Access permissions</li>
-                  </ul>
+              {isLoading && <div className="loading">Loading documents...</div>}
+              {error && <div className="error">Error loading documents: {error instanceof Error ? error.message : 'Unknown error'}</div>}
+              
+              {data && data.data && data.data.length > 0 ? (
+                <div className="table-container">
+                  <table className="data-table">
+                    <thead>
+                      <tr>
+                        <th>Document Name</th>
+                        <th>Type</th>
+                        <th>Entity</th>
+                        <th>Upload Date</th>
+                        <th>Size</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.data.map((doc: any) => (
+                        <tr key={doc.id}>
+                          <td>{doc.fileName || doc.name}</td>
+                          <td>{doc.documentType || doc.type}</td>
+                          <td>{doc.entityType} - {doc.entityId}</td>
+                          <td>{new Date(doc.uploadDate || doc.createdAt).toLocaleDateString()}</td>
+                          <td>{doc.fileSize ? `${(doc.fileSize / 1024).toFixed(2)} KB` : 'N/A'}</td>
+                          <td>
+                            <button className="btn-small">View</button>
+                            <button className="btn-small">Download</button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-                <div className="info-card">
-                  <h3>Automation</h3>
-                  <p>Streamlined document workflows</p>
-                  <ul>
-                    <li>Document templates</li>
-                    <li>E-signature integration</li>
-                    <li>OCR scanning</li>
-                    <li>Approval workflows</li>
-                  </ul>
+              ) : (
+                <div className="info-cards">
+                  <div className="info-card">
+                    <h3>Document Repository</h3>
+                    <p>Centralized document management</p>
+                    <ul>
+                      <li>Cloud storage</li>
+                      <li>Full-text search</li>
+                      <li>Version control</li>
+                      <li>Access permissions</li>
+                    </ul>
+                  </div>
+                  <div className="info-card">
+                    <h3>Automation</h3>
+                    <p>Streamlined document workflows</p>
+                    <ul>
+                      <li>Document templates</li>
+                      <li>E-signature integration</li>
+                      <li>OCR scanning</li>
+                      <li>Approval workflows</li>
+                    </ul>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </>
         } />

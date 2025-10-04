@@ -15,7 +15,13 @@ const Audit = lazy(() => import('./medical-records/Audit'));
 const MedicalRecordsList = () => {
   const [records] = useState([
     { id: '1', patient: 'Max', date: '2024-01-15', type: 'Checkup', veterinarian: 'Dr. Smith' },
-    { id: '2', patient: 'Luna', date: '2024-01-14', type: 'Vaccination', veterinarian: 'Dr. Jones' },
+    {
+      id: '2',
+      patient: 'Luna',
+      date: '2024-01-14',
+      type: 'Vaccination',
+      veterinarian: 'Dr. Jones',
+    },
   ]);
 
   return (
@@ -59,7 +65,9 @@ const MedicalRecords = () => {
   return (
     <div className="page">
       <header className="page-header">
-        <h1><span aria-hidden="true">📋</span> Medical Records</h1>
+        <h1>
+          <span aria-hidden="true">📋</span> Medical Records
+        </h1>
         <button className="btn-primary" aria-label="Add new medical record">
           + Add Record
         </button>
@@ -75,6 +83,33 @@ const MedicalRecords = () => {
         <Link to="/medical-records/attachments" className={`sub-nav-link ${location.pathname.includes('/attachments') ? 'active' : ''}`}>Attachments</Link>
         <Link to="/medical-records/sharing" className={`sub-nav-link ${location.pathname.includes('/sharing') ? 'active' : ''}`}>Record Sharing</Link>
         <Link to="/medical-records/audit" className={`sub-nav-link ${location.pathname.includes('/audit') ? 'active' : ''}`}>Audit Trail</Link>
+        <Link to="/medical-records" className="sub-nav-link active">
+          All Records
+        </Link>
+        <Link to="/medical-records/emr" className="sub-nav-link">
+          EMR
+        </Link>
+        <Link to="/medical-records/clinical-notes" className="sub-nav-link">
+          Clinical Notes
+        </Link>
+        <Link to="/medical-records/diagnostics" className="sub-nav-link">
+          Diagnostics
+        </Link>
+        <Link to="/medical-records/treatment-history" className="sub-nav-link">
+          Treatment History
+        </Link>
+        <Link to="/medical-records/vital-signs" className="sub-nav-link">
+          Vital Signs
+        </Link>
+        <Link to="/medical-records/attachments" className="sub-nav-link">
+          Attachments
+        </Link>
+        <Link to="/medical-records/sharing" className="sub-nav-link">
+          Record Sharing
+        </Link>
+        <Link to="/medical-records/audit" className="sub-nav-link">
+          Audit Trail
+        </Link>
       </nav>
 
       <Suspense fallback={<div role="status"><p>Loading...</p></div>}>

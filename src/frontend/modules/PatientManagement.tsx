@@ -1,13 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
+import { usePatients } from '../../frontend/src/hooks/usePatients';
 import '../styles/Module.css';
 
 const PatientManagement: React.FC = () => {
-  const [patients] = useState([
-    { id: '1', name: 'Max', species: 'Dog', breed: 'Golden Retriever', owner: 'John Smith', status: 'Active' },
-    { id: '2', name: 'Luna', species: 'Cat', breed: 'Siamese', owner: 'Sarah Johnson', status: 'Active' },
-    { id: '3', name: 'Charlie', species: 'Dog', breed: 'Labrador', owner: 'Mike Wilson', status: 'Active' },
-  ]);
+  const { data, isLoading, error } = usePatients();
 
   return (
     <div className="module-container">
@@ -28,37 +25,42 @@ const PatientManagement: React.FC = () => {
             </div>
 
             <div className="content-section">
-              <div className="table-container">
-                <table className="data-table">
-                  <thead>
-                    <tr>
-                      <th>Patient ID</th>
-                      <th>Name</th>
-                      <th>Species</th>
-                      <th>Breed</th>
-                      <th>Owner</th>
-                      <th>Status</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {patients.map((patient) => (
-                      <tr key={patient.id}>
-                        <td>{patient.id}</td>
-                        <td>{patient.name}</td>
-                        <td>{patient.species}</td>
-                        <td>{patient.breed}</td>
-                        <td>{patient.owner}</td>
-                        <td><span className="badge badge-success">{patient.status}</span></td>
-                        <td>
-                          <button className="btn-small">View</button>
-                          <button className="btn-small">Edit</button>
-                        </td>
+              {isLoading && <div className="loading">Loading patients...</div>}
+              {error && <div className="error">Error loading patients: {error instanceof Error ? error.message : 'Unknown error'}</div>}
+              
+              {data && (
+                <div className="table-container">
+                  <table className="data-table">
+                    <thead>
+                      <tr>
+                        <th>Patient ID</th>
+                        <th>Name</th>
+                        <th>Species</th>
+                        <th>Breed</th>
+                        <th>Owner</th>
+                        <th>Status</th>
+                        <th>Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {data.data?.map((patient: any) => (
+                        <tr key={patient.id}>
+                          <td>{patient.id}</td>
+                          <td>{patient.name}</td>
+                          <td>{patient.species}</td>
+                          <td>{patient.breed}</td>
+                          <td>{patient.owner?.firstName} {patient.owner?.lastName}</td>
+                          <td><span className="badge badge-success">Active</span></td>
+                          <td>
+                            <button className="btn-small">View</button>
+                            <button className="btn-small">Edit</button>
+                          </td>
+                        </tr>
+                      )) || <tr><td colSpan={7}>No patients found</td></tr>}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           </>
         } />

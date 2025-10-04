@@ -23,12 +23,7 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 
 // Loading component with proper accessibility
 const LoadingFallback = () => (
-  <div 
-    className="loading-container" 
-    role="status" 
-    aria-live="polite" 
-    aria-label="Loading content"
-  >
+  <div className="loading-container" role="status" aria-live="polite" aria-label="Loading content">
     <div className="loading-spinner" aria-hidden="true"></div>
     <p className="loading-text">Loading...</p>
   </div>
