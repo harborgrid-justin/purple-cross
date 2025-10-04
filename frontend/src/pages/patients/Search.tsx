@@ -1,6 +1,8 @@
+import { useAPIQuery } from '../../hooks/useAPI';
 import '../../styles/Page.css';
 
 const PatientSearch = () => {
+  const { data, isLoading, error } = useAPIQuery('patients');
   return (
     <div className="page">
       <header className="page-header">
@@ -8,7 +10,11 @@ const PatientSearch = () => {
       </header>
 
       <div className="content-section">
-        <p>Advanced search and filtering capabilities to quickly locate patient records.</p>
+        <p>Advanced search and filtering capabilities to quickly locate patient records.</p>        
+        {isLoading && <p>Loading data...</p>}
+        {error && <p style={{ color: 'red' }}>Error loading data</p>}
+        {!!data && <p style={{ color: 'green', fontSize: '0.9rem' }}>✓ Data loaded from API</p>}
+
         <div className="search-bar" role="search" style={{ marginBottom: '2rem' }}>
           <input type="search" placeholder="Search by name, microchip, owner, or species..." style={{ flex: 1 }} />
           <button className="btn-secondary">Advanced Filters</button>
