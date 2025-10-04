@@ -177,6 +177,10 @@ export class EstimateService {
     });
   }
 
+  async updateEstimate(id: string, data: any) {
+    return prisma.estimate.update({ where: { id }, data });
+  }
+
   async deleteEstimate(id: string) {
     return prisma.estimate.delete({
       where: { id },

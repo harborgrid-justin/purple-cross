@@ -49,6 +49,14 @@ export class RefundService {
       data: { status: 'processed', processedDate: new Date() },
     });
   }
+
+  async updateRefund(id: string, data: any) {
+    return prisma.refund.update({ where: { id }, data });
+  }
+
+  async deleteRefund(id: string) {
+    return prisma.refund.delete({ where: { id } });
+  }
 }
 
 export default new RefundService();

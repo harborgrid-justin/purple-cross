@@ -38,6 +38,11 @@ export class ClientPortalController {
     res.status(200).json({ status: 'success', data: access });
   }
 
+  async update(req: Request, res: Response) {
+    const access = await clientPortalService.updatePortalAccess(req.params.id, req.body);
+    res.status(200).json({ status: 'success', data: access });
+  }
+
   async delete(req: Request, res: Response) {
     await clientPortalService.deletePortalAccess(req.params.id);
     res.status(204).send();

@@ -38,6 +38,11 @@ export class PolicyController {
     const policy = await policyService.updatePolicy(req.params.id, req.body);
     res.status(200).json({ status: 'success', data: policy });
   }
+
+  async delete(req: Request, res: Response) {
+    await policyService.deletePolicy(req.params.id);
+    res.status(204).send();
+  }
 }
 
 export default new PolicyController();

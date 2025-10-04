@@ -84,6 +84,14 @@ export class DocumentTemplateService {
       },
     });
   }
+
+  async updateTemplate(id: string, data: any) {
+    return prisma.documentTemplate.update({ where: { id }, data });
+  }
+
+  async deleteTemplate(id: string) {
+    return prisma.documentTemplate.delete({ where: { id } });
+  }
 }
 
 export default new DocumentTemplateService();

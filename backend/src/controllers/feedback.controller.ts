@@ -64,6 +64,11 @@ export class FeedbackController {
     res.status(201).json({ status: 'success', data: response });
   }
 
+  async update(req: Request, res: Response) {
+    const feedback = await feedbackService.updateFeedback(req.params.id, req.body);
+    res.status(200).json({ status: 'success', data: feedback });
+  }
+
   async delete(req: Request, res: Response) {
     await feedbackService.deleteFeedback(req.params.id);
     res.status(204).send();

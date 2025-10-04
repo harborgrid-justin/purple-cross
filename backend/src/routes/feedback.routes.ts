@@ -7,8 +7,9 @@ router.post('/', feedbackController.create);
 router.get('/', feedbackController.getAll);
 router.get('/nps', feedbackController.getNPSScore);
 router.get('/:id', feedbackController.getById);
-router.post('/:id/review', feedbackController.review);
+router.put('/:id', feedbackController.update);
 router.delete('/:id', feedbackController.delete);
+router.post('/:id/review', feedbackController.review);
 
 router.post('/surveys', feedbackController.createSurvey);
 router.get('/surveys/:id', feedbackController.getSurvey);

@@ -38,6 +38,16 @@ export class PaymentPlanController {
     const plan = await paymentPlanService.cancelPaymentPlan(req.params.id);
     res.status(200).json({ status: 'success', data: plan });
   }
+
+  async update(req: Request, res: Response) {
+    const plan = await paymentPlanService.updatePaymentPlan(req.params.id, req.body);
+    res.status(200).json({ status: 'success', data: plan });
+  }
+
+  async delete(req: Request, res: Response) {
+    await paymentPlanService.deletePaymentPlan(req.params.id);
+    res.status(204).send();
+  }
 }
 
 export default new PaymentPlanController();

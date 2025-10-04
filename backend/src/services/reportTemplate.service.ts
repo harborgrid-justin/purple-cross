@@ -93,6 +93,14 @@ export class ReportTemplateService {
       orderBy: { nextRunAt: 'asc' },
     });
   }
+
+  async updateTemplate(id: string, data: any) {
+    return prisma.reportTemplate.update({ where: { id }, data });
+  }
+
+  async deleteTemplate(id: string) {
+    return prisma.reportTemplate.delete({ where: { id } });
+  }
 }
 
 export default new ReportTemplateService();

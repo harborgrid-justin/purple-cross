@@ -127,6 +127,10 @@ export class ClientPortalService {
     });
   }
 
+  async updatePortalAccess(id: string, data: any) {
+    return prisma.clientPortalAccess.update({ where: { id }, data });
+  }
+
   async deletePortalAccess(id: string) {
     return prisma.clientPortalAccess.delete({
       where: { id },

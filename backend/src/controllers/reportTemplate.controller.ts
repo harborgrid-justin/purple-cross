@@ -39,6 +39,16 @@ export class ReportTemplateController {
     const schedules = await reportTemplateService.getScheduledReports();
     res.status(200).json({ status: 'success', data: schedules });
   }
+
+  async update(req: Request, res: Response) {
+    const template = await reportTemplateService.updateTemplate(req.params.id, req.body);
+    res.status(200).json({ status: 'success', data: template });
+  }
+
+  async delete(req: Request, res: Response) {
+    await reportTemplateService.deleteTemplate(req.params.id);
+    res.status(204).send();
+  }
 }
 
 export default new ReportTemplateController();

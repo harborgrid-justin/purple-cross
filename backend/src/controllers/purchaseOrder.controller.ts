@@ -40,6 +40,11 @@ export class PurchaseOrderController {
     res.status(200).json({ status: 'success', data: po });
   }
 
+  async update(req: Request, res: Response) {
+    const po = await purchaseOrderService.updatePurchaseOrder(req.params.id, req.body);
+    res.status(200).json({ status: 'success', data: po });
+  }
+
   async delete(req: Request, res: Response) {
     await purchaseOrderService.deletePurchaseOrder(req.params.id);
     res.status(204).send();

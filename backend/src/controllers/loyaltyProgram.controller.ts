@@ -39,6 +39,26 @@ export class LoyaltyProgramController {
     );
     res.status(200).json({ status: 'success', ...result });
   }
+
+  async getAll(req: Request, res: Response) {
+    const { tier, page, limit } = req.query;
+    const result = await loyaltyProgramService.listPrograms({
+      tier: tier as string,
+      page: page ? parseInt(page as string) : undefined,
+      limit: limit ? parseInt(limit as string) : undefined,
+    });
+    res.status(200).json({ status: 'success', ...result });
+  }
+
+  async update(req: Request, res: Response) {
+    const program = await loyaltyProgramService.updateProgram(req.params.id, req.body);
+    res.status(200).json({ status: 'success', data: program });
+  }
+
+  async delete(req: Request, res: Response) {
+    await loyaltyProgramService.deleteProgram(req.params.id);
+    res.status(204).send();
+  }
 }
 
 export default new LoyaltyProgramController();

@@ -21,6 +21,16 @@ export class RefundController {
     const refund = await refundService.processRefund(req.params.id);
     res.status(200).json({ status: 'success', data: refund });
   }
+
+  async update(req: Request, res: Response) {
+    const refund = await refundService.updateRefund(req.params.id, req.body);
+    res.status(200).json({ status: 'success', data: refund });
+  }
+
+  async delete(req: Request, res: Response) {
+    await refundService.deleteRefund(req.params.id);
+    res.status(204).send();
+  }
 }
 
 export default new RefundController();

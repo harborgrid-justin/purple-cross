@@ -38,6 +38,11 @@ export class EstimateController {
     res.status(200).json({ status: 'success', data: estimate });
   }
 
+  async update(req: Request, res: Response) {
+    const estimate = await estimateService.updateEstimate(req.params.id, req.body);
+    res.status(200).json({ status: 'success', data: estimate });
+  }
+
   async delete(req: Request, res: Response) {
     await estimateService.deleteEstimate(req.params.id);
     res.status(204).send();

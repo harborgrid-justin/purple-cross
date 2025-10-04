@@ -106,6 +106,10 @@ export class FeedbackService {
     };
   }
 
+  async updateFeedback(id: string, data: any) {
+    return prisma.clientFeedback.update({ where: { id }, data });
+  }
+
   async deleteFeedback(id: string) {
     return prisma.clientFeedback.delete({
       where: { id },
