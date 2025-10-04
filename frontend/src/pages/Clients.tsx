@@ -1,7 +1,17 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect, Suspense, lazy } from 'react';
+import { Link, Routes, Route, useLocation } from 'react-router-dom';
 import api from '../services/api';
 import '../styles/Page.css';
+
+// Lazy load subfeature pages
+const Registration = lazy(() => import('./clients/Registration'));
+const AccountManagement = lazy(() => import('./clients/AccountManagement'));
+const MultiPet = lazy(() => import('./clients/MultiPet'));
+const CommunicationHistory = lazy(() => import('./clients/CommunicationHistory'));
+const PortalAccess = lazy(() => import('./clients/PortalAccess'));
+const Loyalty = lazy(() => import('./clients/Loyalty'));
+const Feedback = lazy(() => import('./clients/Feedback'));
+const Segmentation = lazy(() => import('./clients/Segmentation'));
 
 interface Client {
   id: string;
@@ -14,7 +24,7 @@ interface Client {
   patients?: Array<{ id: string; name: string; species: string }>;
 }
 
-const Clients = () => {
+const ClientsList = () => {
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -41,6 +51,7 @@ const Clients = () => {
   }, [searchTerm]);
 
   return (
+    <>
     <div className="page">
       <header className="page-header">
         <h1>
@@ -162,6 +173,47 @@ const Clients = () => {
           </table>
         )}
       </div>
+    </>
+  );
+};
+
+const Clients = () => {
+  const location = useLocation();
+  
+  return (
+    <div className="page">
+      <header className="page-header">
+        <h1><span aria-hidden="true">👥</span> Clients</h1>
+        <button className="btn-primary" aria-label="Add a new client">
+          + Add New Client
+        </button>
+      </header>
+
+      <nav className="sub-nav" role="navigation" aria-label="Client sections">
+        <Link to="/clients" className={`sub-nav-link ${location.pathname === '/clients' ? 'active' : ''}`}>All Clients</Link>
+        <Link to="/clients/registration" className={`sub-nav-link ${location.pathname.includes('/registration') ? 'active' : ''}`}>Registration & Profiles</Link>
+        <Link to="/clients/account-management" className={`sub-nav-link ${location.pathname.includes('/account-management') ? 'active' : ''}`}>Account Management</Link>
+        <Link to="/clients/multi-pet" className={`sub-nav-link ${location.pathname.includes('/multi-pet') ? 'active' : ''}`}>Multi-Pet Households</Link>
+        <Link to="/clients/communication-history" className={`sub-nav-link ${location.pathname.includes('/communication-history') ? 'active' : ''}`}>Communication History</Link>
+        <Link to="/clients/portal-access" className={`sub-nav-link ${location.pathname.includes('/portal-access') ? 'active' : ''}`}>Portal Access</Link>
+        <Link to="/clients/loyalty" className={`sub-nav-link ${location.pathname.includes('/loyalty') ? 'active' : ''}`}>Loyalty Programs</Link>
+        <Link to="/clients/feedback" className={`sub-nav-link ${location.pathname.includes('/feedback') ? 'active' : ''}`}>Feedback & Surveys</Link>
+        <Link to="/clients/segmentation" className={`sub-nav-link ${location.pathname.includes('/segmentation') ? 'active' : ''}`}>Client Segmentation</Link>
+      </nav>
+
+      <Suspense fallback={<div role="status"><p>Loading...</p></div>}>
+        <Routes>
+          <Route path="/" element={<ClientsList />} />
+          <Route path="/registration" element={<Registration />} />
+          <Route path="/account-management" element={<AccountManagement />} />
+          <Route path="/multi-pet" element={<MultiPet />} />
+          <Route path="/communication-history" element={<CommunicationHistory />} />
+          <Route path="/portal-access" element={<PortalAccess />} />
+          <Route path="/loyalty" element={<Loyalty />} />
+          <Route path="/feedback" element={<Feedback />} />
+          <Route path="/segmentation" element={<Segmentation />} />
+        </Routes>
+      </Suspense>
     </div>
   );
 };
