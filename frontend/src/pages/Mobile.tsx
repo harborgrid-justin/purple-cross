@@ -4,29 +4,63 @@ import '../styles/Page.css';
 
 const Mobile = () => {
   const [devices] = useState([
-    { id: '1', device: 'iPhone 13 - Dr. Smith', platform: 'iOS', version: '1.2.0', lastSync: '2024-01-15', status: 'Active' },
-    { id: '2', device: 'iPad Pro - Reception', platform: 'iOS', version: '1.2.0', lastSync: '2024-01-16', status: 'Active' },
+    {
+      id: '1',
+      device: 'iPhone 13 - Dr. Smith',
+      platform: 'iOS',
+      version: '1.2.0',
+      lastSync: '2024-01-15',
+      status: 'Active',
+    },
+    {
+      id: '2',
+      device: 'iPad Pro - Reception',
+      platform: 'iOS',
+      version: '1.2.0',
+      lastSync: '2024-01-16',
+      status: 'Active',
+    },
   ]);
 
   return (
     <div className="page">
       <header className="page-header">
-        <h1><span aria-hidden="true">📱</span> Mobile & Remote Access</h1>
+        <h1>
+          <span aria-hidden="true">📱</span> Mobile & Remote Access
+        </h1>
         <button className="btn-primary" aria-label="Register new device">
           + Register Device
         </button>
       </header>
 
       <nav className="sub-nav" role="navigation" aria-label="Mobile sections">
-        <Link to="/mobile" className="sub-nav-link active">Devices</Link>
-        <Link to="/mobile/applications" className="sub-nav-link">Mobile Applications</Link>
-        <Link to="/mobile/tablet" className="sub-nav-link">Tablet Optimization</Link>
-        <Link to="/mobile/remote-desktop" className="sub-nav-link">Remote Desktop</Link>
-        <Link to="/mobile/field-service" className="sub-nav-link">Field Service</Link>
-        <Link to="/mobile/emergency-access" className="sub-nav-link">Emergency Access</Link>
-        <Link to="/mobile/offline" className="sub-nav-link">Offline Capabilities</Link>
-        <Link to="/mobile/reporting" className="sub-nav-link">Mobile Reporting</Link>
-        <Link to="/mobile/sync" className="sub-nav-link">Cross-Platform Sync</Link>
+        <Link to="/mobile" className="sub-nav-link active">
+          Devices
+        </Link>
+        <Link to="/mobile/applications" className="sub-nav-link">
+          Mobile Applications
+        </Link>
+        <Link to="/mobile/tablet" className="sub-nav-link">
+          Tablet Optimization
+        </Link>
+        <Link to="/mobile/remote-desktop" className="sub-nav-link">
+          Remote Desktop
+        </Link>
+        <Link to="/mobile/field-service" className="sub-nav-link">
+          Field Service
+        </Link>
+        <Link to="/mobile/emergency-access" className="sub-nav-link">
+          Emergency Access
+        </Link>
+        <Link to="/mobile/offline" className="sub-nav-link">
+          Offline Capabilities
+        </Link>
+        <Link to="/mobile/reporting" className="sub-nav-link">
+          Mobile Reporting
+        </Link>
+        <Link to="/mobile/sync" className="sub-nav-link">
+          Cross-Platform Sync
+        </Link>
       </nav>
 
       <div className="table-container">
@@ -49,9 +83,7 @@ const Mobile = () => {
                 <td>{device.version}</td>
                 <td>{device.lastSync}</td>
                 <td>
-                  <span className="status-badge status-confirmed">
-                    {device.status}
-                  </span>
+                  <span className="status-badge status-confirmed">{device.status}</span>
                 </td>
                 <td>
                   <button className="btn-action" aria-label={`Manage ${device.device}`}>

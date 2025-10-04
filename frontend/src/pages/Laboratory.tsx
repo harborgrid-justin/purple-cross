@@ -11,22 +11,42 @@ const Laboratory = () => {
   return (
     <div className="page">
       <header className="page-header">
-        <h1><span aria-hidden="true">🔬</span> Laboratory</h1>
+        <h1>
+          <span aria-hidden="true">🔬</span> Laboratory
+        </h1>
         <button className="btn-primary" aria-label="Order new lab test">
           + Order Test
         </button>
       </header>
 
       <nav className="sub-nav" role="navigation" aria-label="Laboratory sections">
-        <Link to="/laboratory" className="sub-nav-link active">All Tests</Link>
-        <Link to="/laboratory/in-house" className="sub-nav-link">In-House Testing</Link>
-        <Link to="/laboratory/external" className="sub-nav-link">External Lab Integration</Link>
-        <Link to="/laboratory/test-catalog" className="sub-nav-link">Test Catalog</Link>
-        <Link to="/laboratory/sample-tracking" className="sub-nav-link">Sample Tracking</Link>
-        <Link to="/laboratory/results" className="sub-nav-link">Result Interpretation</Link>
-        <Link to="/laboratory/quality-assurance" className="sub-nav-link">Quality Assurance</Link>
-        <Link to="/laboratory/equipment" className="sub-nav-link">Equipment Management</Link>
-        <Link to="/laboratory/reports" className="sub-nav-link">Lab Reports</Link>
+        <Link to="/laboratory" className="sub-nav-link active">
+          All Tests
+        </Link>
+        <Link to="/laboratory/in-house" className="sub-nav-link">
+          In-House Testing
+        </Link>
+        <Link to="/laboratory/external" className="sub-nav-link">
+          External Lab Integration
+        </Link>
+        <Link to="/laboratory/test-catalog" className="sub-nav-link">
+          Test Catalog
+        </Link>
+        <Link to="/laboratory/sample-tracking" className="sub-nav-link">
+          Sample Tracking
+        </Link>
+        <Link to="/laboratory/results" className="sub-nav-link">
+          Result Interpretation
+        </Link>
+        <Link to="/laboratory/quality-assurance" className="sub-nav-link">
+          Quality Assurance
+        </Link>
+        <Link to="/laboratory/equipment" className="sub-nav-link">
+          Equipment Management
+        </Link>
+        <Link to="/laboratory/reports" className="sub-nav-link">
+          Lab Reports
+        </Link>
       </nav>
 
       <div className="table-container">
@@ -49,15 +69,23 @@ const Laboratory = () => {
                 <td>{test.testType}</td>
                 <td>{test.date}</td>
                 <td>
-                  <span className={`status-badge status-${test.status === 'Completed' ? 'confirmed' : 'pending'}`}>
+                  <span
+                    className={`status-badge status-${test.status === 'Completed' ? 'confirmed' : 'pending'}`}
+                  >
                     {test.status}
                   </span>
                 </td>
                 <td>
-                  <button className="btn-action" aria-label={`View test results for ${test.patient}`}>
+                  <button
+                    className="btn-action"
+                    aria-label={`View test results for ${test.patient}`}
+                  >
                     View
                   </button>
-                  <button className="btn-action" aria-label={`Download results for ${test.patient}`}>
+                  <button
+                    className="btn-action"
+                    aria-label={`Download results for ${test.patient}`}
+                  >
                     Download
                   </button>
                 </td>

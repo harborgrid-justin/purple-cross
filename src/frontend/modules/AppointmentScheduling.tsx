@@ -1,13 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
+import { useAppointments } from '../../frontend/src/hooks/useAppointments';
 import '../styles/Module.css';
 
 const AppointmentScheduling: React.FC = () => {
-  const [appointments] = useState([
-    { id: '1', patient: 'Max', owner: 'John Smith', type: 'Checkup', date: '2024-01-15', time: '09:00 AM', status: 'Scheduled' },
-    { id: '2', patient: 'Luna', owner: 'Sarah Johnson', type: 'Vaccination', date: '2024-01-15', time: '10:00 AM', status: 'Confirmed' },
-    { id: '3', patient: 'Charlie', owner: 'Mike Wilson', type: 'Surgery', date: '2024-01-15', time: '02:00 PM', status: 'Scheduled' },
-  ]);
+  const { data, isLoading, error } = useAppointments();
 
   return (
     <div className="module-container">
@@ -28,40 +25,45 @@ const AppointmentScheduling: React.FC = () => {
             </div>
 
             <div className="content-section">
-              <div className="table-container">
-                <table className="data-table">
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Patient</th>
-                      <th>Owner</th>
-                      <th>Type</th>
-                      <th>Date</th>
-                      <th>Time</th>
-                      <th>Status</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {appointments.map((apt) => (
-                      <tr key={apt.id}>
-                        <td>{apt.id}</td>
-                        <td>{apt.patient}</td>
-                        <td>{apt.owner}</td>
-                        <td>{apt.type}</td>
-                        <td>{apt.date}</td>
-                        <td>{apt.time}</td>
-                        <td><span className="badge badge-info">{apt.status}</span></td>
-                        <td>
-                          <button className="btn-small">View</button>
-                          <button className="btn-small">Edit</button>
-                          <button className="btn-small">Cancel</button>
-                        </td>
+              {isLoading && <div className="loading">Loading appointments...</div>}
+              {error && <div className="error">Error loading appointments: {error instanceof Error ? error.message : 'Unknown error'}</div>}
+              
+              {data && (
+                <div className="table-container">
+                  <table className="data-table">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Patient</th>
+                        <th>Owner</th>
+                        <th>Type</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {data.data?.map((apt: any) => (
+                        <tr key={apt.id}>
+                          <td>{apt.id}</td>
+                          <td>{apt.patient?.name || 'N/A'}</td>
+                          <td>{apt.client?.firstName} {apt.client?.lastName}</td>
+                          <td>{apt.appointmentType?.name || apt.type || 'General'}</td>
+                          <td>{new Date(apt.scheduledDate || apt.date).toLocaleDateString()}</td>
+                          <td>{apt.scheduledTime || apt.time}</td>
+                          <td><span className="badge badge-info">{apt.status}</span></td>
+                          <td>
+                            <button className="btn-small">View</button>
+                            <button className="btn-small">Edit</button>
+                            <button className="btn-small">Cancel</button>
+                          </td>
+                        </tr>
+                      )) || <tr><td colSpan={8}>No appointments found</td></tr>}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           </>
         } />

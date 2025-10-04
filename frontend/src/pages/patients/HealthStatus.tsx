@@ -8,9 +8,26 @@ const PatientHealthStatus = () => {
       </header>
 
       <div className="content-section">
-        <p>Real-time monitoring and tracking of patient health status, vital signs, and chronic conditions.</p>
-        <div className="info-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+        <p>
+          Real-time monitoring and tracking of patient health status, vital signs, and chronic
+          conditions.
+        </p>
+        <div
+          className="info-cards"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '1rem',
+            marginTop: '1rem',
+          }}
+        >
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>Vital Signs Tracking</h3>
             <ul>
               <li>Temperature monitoring</li>
@@ -19,7 +36,13 @@ const PatientHealthStatus = () => {
               <li>Weight tracking</li>
             </ul>
           </div>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>Chronic Conditions</h3>
             <ul>
               <li>Diabetes management</li>
@@ -28,7 +51,13 @@ const PatientHealthStatus = () => {
               <li>Arthritis management</li>
             </ul>
           </div>
-          <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
             <h3>Health Alerts</h3>
             <ul>
               <li>Abnormal vital signs</li>

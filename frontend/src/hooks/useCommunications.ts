@@ -1,0 +1,56 @@
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { api } from '@/services/api';
+
+export const useCommunications = (params?: {
+  page?: number;
+  limit?: number;
+  clientId?: string;
+  type?: string;
+}) => {
+  return useQuery({
+    queryKey: ['communications', params],
+    queryFn: () => api.communications.getAll(params),
+  });
+};
+
+export const useCommunication = (id: string) => {
+  return useQuery({
+    queryKey: ['communication', id],
+    queryFn: () => api.communications.getById(id),
+    enabled: !!id,
+  });
+};
+
+export const useCreateCommunication = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: unknown) => api.communications.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['communications'] });
+    },
+  });
+};
+
+export const useUpdateCommunication = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: unknown }) =>
+      api.communications.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['communications'] });
+    },
+  });
+};
+
+export const useDeleteCommunication = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => api.communications.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['communications'] });
+    },
+  });
+};

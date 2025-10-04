@@ -1,8 +1,11 @@
 import React from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
+import { useInvoices } from '../../frontend/src/hooks/useInvoices';
 import '../styles/Module.css';
 
 const BillingPayment: React.FC = () => {
+  const { data, isLoading, error } = useInvoices();
+
   return (
     <div className="module-container">
       <Routes>
@@ -24,28 +27,63 @@ const BillingPayment: React.FC = () => {
             </div>
 
             <div className="content-section">
-              <div className="info-cards">
-                <div className="info-card">
-                  <h3>Invoice Management</h3>
-                  <p>Complete billing and invoicing system</p>
-                  <ul>
-                    <li>Itemized billing</li>
-                    <li>Multiple payment methods</li>
-                    <li>Payment plans</li>
-                    <li>Automated reminders</li>
-                  </ul>
+              {isLoading && <div className="loading">Loading invoices...</div>}
+              {error && <div className="error">Error loading invoices: {error instanceof Error ? error.message : 'Unknown error'}</div>}
+              
+              {data && data.data && data.data.length > 0 ? (
+                <div className="table-container">
+                  <table className="data-table">
+                    <thead>
+                      <tr>
+                        <th>Invoice #</th>
+                        <th>Client</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.data.map((invoice: any) => (
+                        <tr key={invoice.id}>
+                          <td>{invoice.invoiceNumber || invoice.id}</td>
+                          <td>{invoice.client?.firstName} {invoice.client?.lastName}</td>
+                          <td>{new Date(invoice.issueDate || invoice.createdAt).toLocaleDateString()}</td>
+                          <td>${invoice.totalAmount?.toFixed(2) || '0.00'}</td>
+                          <td><span className={`badge badge-${invoice.status === 'paid' ? 'success' : 'warning'}`}>{invoice.status}</span></td>
+                          <td>
+                            <button className="btn-small">View</button>
+                            <button className="btn-small">Edit</button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-                <div className="info-card">
-                  <h3>Insurance Integration</h3>
-                  <p>Pet insurance claim processing</p>
-                  <ul>
-                    <li>Electronic claim submission</li>
-                    <li>Real-time adjudication</li>
-                    <li>Automatic reconciliation</li>
-                    <li>Multi-provider support</li>
-                  </ul>
+              ) : (
+                <div className="info-cards">
+                  <div className="info-card">
+                    <h3>Invoice Management</h3>
+                    <p>Complete billing and invoicing system</p>
+                    <ul>
+                      <li>Itemized billing</li>
+                      <li>Multiple payment methods</li>
+                      <li>Payment plans</li>
+                      <li>Automated reminders</li>
+                    </ul>
+                  </div>
+                  <div className="info-card">
+                    <h3>Insurance Integration</h3>
+                    <p>Pet insurance claim processing</p>
+                    <ul>
+                      <li>Electronic claim submission</li>
+                      <li>Real-time adjudication</li>
+                      <li>Automatic reconciliation</li>
+                      <li>Multi-provider support</li>
+                    </ul>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </>
         } />
