@@ -7,6 +7,11 @@ import 'express-async-errors';
 import env from './config/env';
 import { logger } from './config/logger';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
+import { correlationIdMiddleware } from './middleware/correlationId';
+import { apiRateLimiter } from './middleware/rateLimiter';
+import { timeoutMiddleware } from './middleware/timeout';
+import { metricsMiddleware } from './middleware/metrics';
+import { sanitizationMiddleware } from './middleware/sanitization';
 import patientRoutes from './routes/patient.routes';
 import clientRoutes from './routes/client.routes';
 import appointmentRoutes from './routes/appointment.routes';
@@ -39,9 +44,23 @@ import marketingCampaignRoutes from './routes/marketingCampaign.routes';
 import policyRoutes from './routes/policy.routes';
 import reportTemplateRoutes from './routes/reportTemplate.routes';
 import documentTemplateRoutes from './routes/documentTemplate.routes';
+import healthRoutes from './routes/health.routes';
+import metricsRoutes from './routes/metrics.routes';
 
 export function createApp(): Application {
   const app = express();
+
+  // Trust proxy - important for rate limiting and getting correct client IP
+  app.set('trust proxy', 1);
+
+  // Correlation ID middleware - must be first to track all requests
+  app.use(correlationIdMiddleware);
+
+  // Metrics collection middleware
+  app.use(metricsMiddleware);
+
+  // Request timeout middleware
+  app.use(timeoutMiddleware(30000)); // 30 second timeout
 
   // Security middleware
   app.use(helmet());
@@ -55,6 +74,9 @@ export function createApp(): Application {
   // Body parsing middleware
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+  // Input sanitization middleware
+  app.use(sanitizationMiddleware);
 
   // Compression middleware
   app.use(compression());
@@ -70,14 +92,12 @@ export function createApp(): Application {
     );
   }
 
-  // Health check endpoint
-  app.get('/health', (_req, res) => {
-    res.status(200).json({
-      status: 'ok',
-      timestamp: new Date().toISOString(),
-      uptime: process.uptime(),
-    });
-  });
+  // Health check and metrics endpoints (before rate limiting)
+  app.use('/health', healthRoutes);
+  app.use('/metrics', metricsRoutes);
+
+  // Rate limiting middleware (after health checks)
+  app.use(apiRateLimiter);
 
   // API routes - Core modules
   app.use(`${env.apiPrefix}/patients`, patientRoutes);
