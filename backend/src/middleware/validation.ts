@@ -11,7 +11,7 @@ export const validate = (schema: Joi.ObjectSchema) => {
 
     if (error) {
       const message = error.details.map((detail) => detail.message).join(', ');
-      throw new AppError(message, 400);
+      throw new AppError(message, 400, 'VALIDATION_ERROR');
     }
 
     next();
@@ -27,7 +27,7 @@ export const validateQuery = (schema: Joi.ObjectSchema) => {
 
     if (error) {
       const message = error.details.map((detail) => detail.message).join(', ');
-      throw new AppError(message, 400);
+      throw new AppError(message, 400, 'VALIDATION_ERROR');
     }
 
     next();
@@ -42,7 +42,7 @@ export const validateParams = (schema: Joi.ObjectSchema) => {
 
     if (error) {
       const message = error.details.map((detail) => detail.message).join(', ');
-      throw new AppError(message, 400);
+      throw new AppError(message, 400, 'VALIDATION_ERROR');
     }
 
     next();
