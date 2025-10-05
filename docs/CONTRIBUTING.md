@@ -72,11 +72,16 @@ npm run setup
 
 ### TypeScript
 
-- Use TypeScript strict mode
+Purple Cross follows enterprise-grade TypeScript standards. Please refer to our comprehensive [TypeScript Guidelines](./TYPESCRIPT_GUIDELINES.md) for detailed best practices.
+
+**Key Requirements:**
+- Use TypeScript strict mode (enforced in tsconfig.json)
 - Avoid `any` types - use proper typing
+- Provide explicit type annotations for function parameters and return types
 - Use interfaces for object shapes
-- Use enums for constant values
-- Document complex types with JSDoc comments
+- Prefer string literal unions over enums for better type narrowing
+- Document public APIs with JSDoc comments
+- Handle null/undefined explicitly using optional chaining (?.) and nullish coalescing (??)
 
 ```typescript
 // ✅ Good
@@ -86,9 +91,18 @@ interface User {
   role: UserRole;
 }
 
+function getUser(id: string): Promise<User | null> {
+  // Implementation with proper error handling
+}
+
 // ❌ Bad
 const user: any = { id: '123', email: 'test@example.com' };
+function getUser(id) {
+  // Missing types
+}
 ```
+
+**See [TypeScript Guidelines](./TYPESCRIPT_GUIDELINES.md) for complete documentation.**
 
 ### File Naming
 

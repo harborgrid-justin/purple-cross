@@ -102,68 +102,6 @@ const Staff = () => {
           <Route path="/hr-documents" element={<HRDocuments />} />
         </Routes>
       </Suspense>
-        <Link to="/staff" className="sub-nav-link active">
-          All Staff
-        </Link>
-        <Link to="/staff/profiles" className="sub-nav-link">
-          Employee Profiles
-        </Link>
-        <Link to="/staff/access-control" className="sub-nav-link">
-          Access Control
-        </Link>
-        <Link to="/staff/scheduling" className="sub-nav-link">
-          Shift Scheduling
-        </Link>
-        <Link to="/staff/attendance" className="sub-nav-link">
-          Time & Attendance
-        </Link>
-        <Link to="/staff/performance" className="sub-nav-link">
-          Performance Management
-        </Link>
-        <Link to="/staff/education" className="sub-nav-link">
-          Continuing Education
-        </Link>
-        <Link to="/staff/communication" className="sub-nav-link">
-          Internal Communication
-        </Link>
-        <Link to="/staff/hr-documents" className="sub-nav-link">
-          HR Documents
-        </Link>
-      </nav>
-
-      <div className="table-container">
-        <table className="data-table" role="table" aria-label="Staff list">
-          <thead>
-            <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Role</th>
-              <th scope="col">Department</th>
-              <th scope="col">Status</th>
-              <th scope="col">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {staff.map((member) => (
-              <tr key={member.id}>
-                <th scope="row">{member.name}</th>
-                <td>{member.role}</td>
-                <td>{member.department}</td>
-                <td>
-                  <span className="status-badge status-confirmed">{member.status}</span>
-                </td>
-                <td>
-                  <button className="btn-action" aria-label={`View profile for ${member.name}`}>
-                    View
-                  </button>
-                  <button className="btn-action" aria-label={`Edit information for ${member.name}`}>
-                    Edit
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
     </div>
   );
 };
