@@ -51,7 +51,6 @@ const ClientsList = () => {
   }, [searchTerm]);
 
   return (
-    <>
     <div className="page">
       <header className="page-header">
         <h1>
@@ -173,7 +172,7 @@ const ClientsList = () => {
           </table>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

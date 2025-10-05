@@ -102,68 +102,6 @@ const Integrations = () => {
           <Route path="/analytics" element={<APIAnalytics />} />
         </Routes>
       </Suspense>
-        <Link to="/integrations" className="sub-nav-link active">
-          All Integrations
-        </Link>
-        <Link to="/integrations/third-party" className="sub-nav-link">
-          Third-Party
-        </Link>
-        <Link to="/integrations/api" className="sub-nav-link">
-          RESTful API
-        </Link>
-        <Link to="/integrations/import-export" className="sub-nav-link">
-          Data Import/Export
-        </Link>
-        <Link to="/integrations/hl7-fhir" className="sub-nav-link">
-          HL7/FHIR
-        </Link>
-        <Link to="/integrations/webhooks" className="sub-nav-link">
-          Webhooks
-        </Link>
-        <Link to="/integrations/sso" className="sub-nav-link">
-          Single Sign-On
-        </Link>
-        <Link to="/integrations/accounting" className="sub-nav-link">
-          Accounting Software
-        </Link>
-        <Link to="/integrations/analytics" className="sub-nav-link">
-          API Analytics
-        </Link>
-      </nav>
-
-      <div className="table-container">
-        <table className="data-table" role="table" aria-label="Integrations list">
-          <thead>
-            <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Type</th>
-              <th scope="col">Status</th>
-              <th scope="col">Last Sync</th>
-              <th scope="col">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {integrations.map((integration) => (
-              <tr key={integration.id}>
-                <th scope="row">{integration.name}</th>
-                <td>{integration.type}</td>
-                <td>
-                  <span className="status-badge status-confirmed">{integration.status}</span>
-                </td>
-                <td>{integration.lastSync}</td>
-                <td>
-                  <button className="btn-action" aria-label={`Configure ${integration.name}`}>
-                    Configure
-                  </button>
-                  <button className="btn-action" aria-label={`Sync ${integration.name}`}>
-                    Sync
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
     </div>
   );
 };
