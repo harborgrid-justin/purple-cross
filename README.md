@@ -161,6 +161,10 @@ Once setup completes:
 - **[Architecture Overview](./ARCHITECTURE.md)** - System design and architecture
 - **[Features Documentation](./FEATURES.md)** - Detailed feature list
 
+### Production & Operations
+- **[Enterprise Capabilities](./ENTERPRISE_CAPABILITIES.md)** - Production-grade features and best practices
+- **[Testing Guide](./TESTING.md)** - Comprehensive testing documentation
+
 ---
 
 ## 🧪 Testing
@@ -225,6 +229,40 @@ npm run prisma:seed
 - **Role-Based Access** - Fine-grained permissions
 - **Audit Logging** - Complete activity tracking
 - **Regular Updates** - Security patches and updates
+- **Enterprise Security** - Input sanitization, rate limiting, and injection protection
+
+---
+
+## 🏭 Enterprise Capabilities
+
+Purple Cross implements Google-level engineering standards for production environments:
+
+### Observability & Monitoring
+- **Correlation IDs** - Distributed request tracing across all services
+- **Structured Logging** - JSON logs with correlation IDs and metadata
+- **Metrics Collection** - Real-time performance and health metrics
+- **Health Checks** - Kubernetes-ready liveness and readiness probes
+
+### Resilience & Reliability
+- **Circuit Breakers** - Prevent cascading failures in distributed systems
+- **Retry Logic** - Exponential backoff with jitter for transient failures
+- **Request Timeouts** - Configurable timeouts prevent resource exhaustion
+- **Rate Limiting** - Per-IP throttling to prevent abuse
+
+### Security Enhancements
+- **Input Sanitization** - XSS and injection attack prevention
+- **Error Codes** - Structured error responses with correlation IDs
+- **SQL/NoSQL Injection Detection** - Pattern-based threat detection
+- **Secure Defaults** - Production-hardened configuration
+
+### Health Endpoints
+- `GET /health` - Basic health check
+- `GET /health/live` - Kubernetes liveness probe
+- `GET /health/ready` - Kubernetes readiness probe (checks dependencies)
+- `GET /health/detailed` - Comprehensive system metrics
+- `GET /metrics` - Performance and operational metrics
+
+📚 **[Complete Enterprise Capabilities Guide →](./ENTERPRISE_CAPABILITIES.md)**
 
 ---
 
