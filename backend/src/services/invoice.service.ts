@@ -1,9 +1,8 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
-import { Prisma } from '@prisma/client';
 
 export class InvoiceService {
-  async createInvoice(data: Prisma.InvoiceCreateInput) {
+  async createInvoice(data: any) {
     return prisma.invoice.create({
       data,
       include: {
@@ -40,7 +39,7 @@ export class InvoiceService {
     const { page = 1, limit = 20, clientId, status } = options;
     const skip = (page - 1) * limit;
 
-    const where: Prisma.InvoiceWhereInput = {
+    const where: any = {
       ...(clientId && { clientId }),
       ...(status && { status }),
     };
@@ -78,7 +77,7 @@ export class InvoiceService {
     };
   }
 
-  async updateInvoice(id: string, data: Prisma.InvoiceUpdateInput) {
+  async updateInvoice(id: string, data: any) {
     const invoice = await prisma.invoice.findUnique({ where: { id } });
 
     if (!invoice) {

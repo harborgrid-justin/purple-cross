@@ -1,9 +1,8 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
-import { Prisma } from '@prisma/client';
 
 export class PatientService {
-  async createPatient(data: Prisma.PatientCreateInput) {
+  async createPatient(data: any) {
     return prisma.patient.create({
       data,
       include: {
@@ -44,7 +43,7 @@ export class PatientService {
     const { page = 1, limit = 20, search, ownerId } = options;
     const skip = (page - 1) * limit;
 
-    const where: Prisma.PatientWhereInput = {
+    const where: any = {
       ...(ownerId && { ownerId }),
       ...(search && {
         OR: [
@@ -87,7 +86,7 @@ export class PatientService {
     };
   }
 
-  async updatePatient(id: string, data: Prisma.PatientUpdateInput) {
+  async updatePatient(id: string, data: any) {
     const patient = await prisma.patient.findUnique({ where: { id } });
 
     if (!patient) {

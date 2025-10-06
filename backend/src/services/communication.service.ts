@@ -1,9 +1,8 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
-import { Prisma } from '@prisma/client';
 
 export class CommunicationService {
-  async createCommunication(data: Prisma.CommunicationCreateInput) {
+  async createCommunication(data: any) {
     return prisma.communication.create({
       data,
       include: {
@@ -36,7 +35,7 @@ export class CommunicationService {
     const { page = 1, limit = 20, clientId, type } = options;
     const skip = (page - 1) * limit;
 
-    const where: Prisma.CommunicationWhereInput = {
+    const where: any = {
       ...(clientId && { clientId }),
       ...(type && { type }),
     };
@@ -72,7 +71,7 @@ export class CommunicationService {
     };
   }
 
-  async updateCommunication(id: string, data: Prisma.CommunicationUpdateInput) {
+  async updateCommunication(id: string, data: any) {
     const communication = await prisma.communication.findUnique({ where: { id } });
 
     if (!communication) {

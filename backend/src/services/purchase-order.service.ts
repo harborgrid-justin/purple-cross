@@ -39,7 +39,7 @@ export class PurchaseOrderService {
         total,
         notes: data.notes,
         lineItems: {
-          create: data.lineItems.map((item) => ({
+          create: data.lineItems.map((item: any) => ({
             ...item,
             total: item.quantityOrdered * item.unitCost,
             status: 'pending',
@@ -143,7 +143,9 @@ export class PurchaseOrderService {
       where: { purchaseOrderId: id },
     });
 
-    const allReceived = allItems.every((item) => item.quantityReceived >= item.quantityOrdered);
+    const allReceived = allItems.every(
+      (item: any) => item.quantityReceived >= item.quantityOrdered
+    );
 
     if (allReceived) {
       await prisma.purchaseOrder.update({

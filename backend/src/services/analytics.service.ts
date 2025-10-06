@@ -53,11 +53,11 @@ export class AnalyticsService {
     ]);
 
     return {
-      bySpecies: bySpecies.map((item) => ({
+      bySpecies: bySpecies.map((item: any) => ({
         species: item.species,
         count: item._count.species,
       })),
-      byStatus: byStatus.map((item) => ({
+      byStatus: byStatus.map((item: any) => ({
         status: item.status,
         count: item._count.status,
       })),
@@ -84,11 +84,11 @@ export class AnalyticsService {
     ]);
 
     return {
-      byStatus: byStatus.map((item) => ({
+      byStatus: byStatus.map((item: any) => ({
         status: item.status,
         count: item._count.status,
       })),
-      byType: byType.map((item) => ({
+      byType: byType.map((item: any) => ({
         type: item.appointmentType,
         count: item._count.appointmentType,
       })),
@@ -106,10 +106,10 @@ export class AnalyticsService {
       },
     });
 
-    const totalRevenue = invoices.reduce((sum, inv) => sum + Number(inv.total), 0);
+    const totalRevenue = invoices.reduce((sum: any, inv: any) => sum + Number(inv.total), 0);
     const totalPaid = invoices
-      .flatMap((inv) => inv.payments)
-      .reduce((sum, payment) => sum + Number(payment.amount), 0);
+      .flatMap((inv: any) => inv.payments)
+      .reduce((sum: any, payment: any) => sum + Number(payment.amount), 0);
     const totalPending = totalRevenue - totalPaid;
 
     const byStatus = await prisma.invoice.groupBy({
@@ -126,7 +126,7 @@ export class AnalyticsService {
       totalPaid,
       totalPending,
       invoiceCount: invoices.length,
-      byStatus: byStatus.map((item) => ({
+      byStatus: byStatus.map((item: any) => ({
         status: item.status,
         count: item._count.status,
         total: Number(item._sum.total || 0),
@@ -163,7 +163,7 @@ export class AnalyticsService {
       lowStockItems,
       expiringItems,
       totalItems,
-      byCategory: byCategory.map((item) => ({
+      byCategory: byCategory.map((item: any) => ({
         category: item.category,
         count: item._count.category,
         totalQuantity: item._sum.quantity || 0,
@@ -187,11 +187,11 @@ export class AnalyticsService {
 
     return {
       totalStaff,
-      byRole: byRole.map((item) => ({
+      byRole: byRole.map((item: any) => ({
         role: item.role,
         count: item._count.role,
       })),
-      byStatus: byStatus.map((item) => ({
+      byStatus: byStatus.map((item: any) => ({
         status: item.status,
         count: item._count.status,
       })),

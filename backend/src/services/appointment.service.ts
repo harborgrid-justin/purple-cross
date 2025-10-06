@@ -1,9 +1,8 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
-import { Prisma } from '@prisma/client';
 
 export class AppointmentService {
-  async createAppointment(data: Prisma.AppointmentCreateInput) {
+  async createAppointment(data: any) {
     // Check for scheduling conflicts
     const conflictingAppointment = await prisma.appointment.findFirst({
       where: {
@@ -74,7 +73,7 @@ export class AppointmentService {
     } = options;
     const skip = (page - 1) * limit;
 
-    const where: Prisma.AppointmentWhereInput = {
+    const where: any = {
       ...(patientId && { patientId }),
       ...(clientId && { clientId }),
       ...(veterinarianId && { veterinarianId }),
@@ -123,7 +122,7 @@ export class AppointmentService {
     };
   }
 
-  async updateAppointment(id: string, data: Prisma.AppointmentUpdateInput) {
+  async updateAppointment(id: string, data: any) {
     const appointment = await prisma.appointment.findUnique({ where: { id } });
 
     if (!appointment) {

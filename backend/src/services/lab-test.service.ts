@@ -1,9 +1,8 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
-import { Prisma } from '@prisma/client';
 
 export class LabTestService {
-  async createLabTest(data: Prisma.LabTestCreateInput) {
+  async createLabTest(data: any) {
     return prisma.labTest.create({
       data,
       include: {
@@ -39,7 +38,7 @@ export class LabTestService {
     const { page = 1, limit = 20, patientId, orderedById, status } = options;
     const skip = (page - 1) * limit;
 
-    const where: Prisma.LabTestWhereInput = {
+    const where: any = {
       ...(patientId && { patientId }),
       ...(orderedById && { orderedById }),
       ...(status && { status }),
@@ -74,7 +73,7 @@ export class LabTestService {
     };
   }
 
-  async updateLabTest(id: string, data: Prisma.LabTestUpdateInput) {
+  async updateLabTest(id: string, data: any) {
     const labTest = await prisma.labTest.findUnique({ where: { id } });
 
     if (!labTest) {

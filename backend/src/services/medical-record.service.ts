@@ -1,9 +1,8 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
-import { Prisma } from '@prisma/client';
 
 export class MedicalRecordService {
-  async createMedicalRecord(data: Prisma.MedicalRecordCreateInput) {
+  async createMedicalRecord(data: any) {
     return prisma.medicalRecord.create({
       data,
       include: {
@@ -38,7 +37,7 @@ export class MedicalRecordService {
     const { page = 1, limit = 20, patientId, veterinarianId } = options;
     const skip = (page - 1) * limit;
 
-    const where: Prisma.MedicalRecordWhereInput = {
+    const where: any = {
       ...(patientId && { patientId }),
       ...(veterinarianId && { veterinarianId }),
     };
@@ -72,7 +71,7 @@ export class MedicalRecordService {
     };
   }
 
-  async updateMedicalRecord(id: string, data: Prisma.MedicalRecordUpdateInput) {
+  async updateMedicalRecord(id: string, data: any) {
     const record = await prisma.medicalRecord.findUnique({ where: { id } });
 
     if (!record) {

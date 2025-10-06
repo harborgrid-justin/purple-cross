@@ -1,11 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import { randomUUID } from 'crypto';
 
-declare global {
-  namespace Express {
-    interface Request {
-      correlationId?: string;
-    }
+// Extend Express Request type to include correlationId
+declare module 'express-serve-static-core' {
+  interface Request {
+    correlationId?: string;
   }
 }
 

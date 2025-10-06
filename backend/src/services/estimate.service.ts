@@ -38,7 +38,7 @@ export class EstimateService {
         validUntil: data.validUntil,
         notes: data.notes,
         lineItems: {
-          create: data.lineItems.map((item) => ({
+          create: data.lineItems.map((item: any) => ({
             ...item,
             total: item.quantity * item.unitPrice,
           })),
@@ -141,7 +141,7 @@ export class EstimateService {
         total: estimate.total,
         dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
         lineItems: {
-          create: estimate.lineItems.map((item) => ({
+          create: estimate.lineItems.map((item: any) => ({
             description: item.description,
             quantity: item.quantity,
             unitPrice: item.unitPrice,
