@@ -61,6 +61,13 @@ web_modules/
 # TypeScript cache
 *.tsbuildinfo
 
+# TypeScript build outputs (declaration files and maps outside of dist/)
+*.d.ts
+*.d.ts.map
+*.js.map
+!jest.config.js
+!jest.e2e.config.js
+
 # Optional npm cache directory
 .npm
 

@@ -65,7 +65,7 @@ export class ReportTemplateService {
     });
   }
 
-  private calculateNextRun(frequency: string, schedule: any): Date {
+  private calculateNextRun(frequency: string, _schedule: any): Date {
     const now = new Date();
     switch (frequency) {
       case 'daily':

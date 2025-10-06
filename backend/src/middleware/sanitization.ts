@@ -75,10 +75,10 @@ export const sanitizationMiddleware = (req: Request, _res: Response, next: NextF
 export function containsSQLInjection(value: string): boolean {
   const sqlPatterns = [
     /(\b(SELECT|INSERT|UPDATE|DELETE|DROP|CREATE|ALTER|EXEC|EXECUTE)\b)/i,
-    /(;|\-\-|\/\*|\*\/)/,
+    /(;|--|\/\*|\*\/)/,
     /(\bOR\b.*=.*)/i,
     /(\bAND\b.*=.*)/i,
-    /('|"|\`).*(\bOR\b|\bAND\b).*('|"|\`)/i,
+    /('|"|`).*(\bOR\b|\bAND\b).*('|"|`)/i,
   ];
 
   return sqlPatterns.some((pattern) => pattern.test(value));
