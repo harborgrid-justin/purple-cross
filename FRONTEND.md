@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Purple Cross frontend is a complete React-based web application built with TypeScript (TSX). It provides a comprehensive user interface for all 15 enterprise modules of the veterinary practice management platform.
+The Purple Cross frontend is a complete React-based web application built with TypeScript (TSX) and Vite. It provides a comprehensive user interface for all 15 enterprise modules of the veterinary practice management platform.
 
 ---
 
@@ -10,12 +10,14 @@ The Purple Cross frontend is a complete React-based web application built with T
 
 ### Core Technologies
 - **React 18.2** - Modern React with hooks and functional components
-- **TypeScript 5.9** - Full type safety throughout the application
-- **React Router 6.20** - Client-side routing and navigation
+- **TypeScript 5.x** - Full type safety throughout the application
+- **React Router 6.x** - Client-side routing and navigation
+- **Vite** - Fast build tool and development server
 - **CSS3** - Custom styling with modular CSS files
 
 ### Build Tools
-- **TypeScript Compiler (tsc)** - Transpiles TSX/TS to JavaScript
+- **Vite** - Modern build tool with fast HMR (Hot Module Replacement)
+- **TypeScript** - Type checking and compilation
 - **npm** - Package management and build scripts
 
 ---
@@ -23,37 +25,54 @@ The Purple Cross frontend is a complete React-based web application built with T
 ## Project Structure
 
 ```
-src/frontend/
-├── App.tsx                      # Main application component with routing
-├── index.tsx                    # Application entry point
-├── components/                  # Shared components
-│   ├── Dashboard.tsx           # Main dashboard with stats and activities
-│   ├── Layout.tsx              # App layout with header and sidebar
-│   └── Navigation.tsx          # Sidebar navigation menu
-├── modules/                     # Feature modules (15 total)
-│   ├── PatientManagement.tsx
-│   ├── ClientManagement.tsx
-│   ├── AppointmentScheduling.tsx
-│   ├── MedicalRecords.tsx
-│   ├── PrescriptionManagement.tsx
-│   ├── InventoryManagement.tsx
-│   ├── BillingPayment.tsx
-│   ├── LaboratoryManagement.tsx
-│   ├── StaffManagement.tsx
-│   ├── ReportingAnalytics.tsx
-│   ├── CommunicationMessaging.tsx
-│   ├── DocumentManagement.tsx
-│   ├── ComplianceRegulatory.tsx
-│   ├── IntegrationAPI.tsx
-│   └── MobileRemoteAccess.tsx
-└── styles/                      # CSS stylesheets
-    ├── Layout.css              # Layout and header styles
-    ├── Navigation.css          # Sidebar navigation styles
-    ├── Dashboard.css           # Dashboard-specific styles
-    └── Module.css              # Shared module page styles
+frontend/
+├── src/
+│   ├── App.tsx                   # Main application component with routing
+│   ├── main.tsx                  # Application entry point
+│   ├── components/               # Shared components
+│   │   └── Layout.tsx           # App layout with header and navigation
+│   ├── pages/                    # Page components (15 modules)
+│   │   ├── Dashboard.tsx        # Main dashboard
+│   │   ├── Patients.tsx         # Patient Management
+│   │   ├── Clients.tsx          # Client Management
+│   │   ├── Appointments.tsx     # Appointment Scheduling
+│   │   ├── MedicalRecords.tsx   # Medical Records
+│   │   ├── Prescriptions.tsx    # Prescription Management
+│   │   ├── Inventory.tsx        # Inventory Management
+│   │   ├── Billing.tsx          # Billing & Payment
+│   │   ├── Laboratory.tsx       # Laboratory Management
+│   │   ├── Staff.tsx            # Staff Management
+│   │   ├── Reports.tsx          # Reporting & Analytics
+│   │   ├── Communications.tsx   # Communication & Messaging
+│   │   ├── Documents.tsx        # Document Management
+│   │   ├── Compliance.tsx       # Compliance & Regulatory
+│   │   ├── Integrations.tsx     # Integration & API
+│   │   ├── Mobile.tsx           # Mobile & Remote Access
+│   │   └── [module]/            # Sub-pages for each module
+│   ├── hooks/                    # Custom React hooks
+│   │   ├── usePatients.ts       # Patient data fetching
+│   │   ├── useClients.ts        # Client data fetching
+│   │   ├── useAppointments.ts   # Appointment data fetching
+│   │   └── ...                  # Other data fetching hooks
+│   ├── services/                 # API services
+│   │   └── api.ts               # API client configuration
+│   ├── types/                    # TypeScript type definitions
+│   │   └── index.ts             # Shared types
+│   ├── styles/                   # CSS stylesheets
+│   │   ├── index.css            # Global styles
+│   │   ├── Layout.css           # Layout styles
+│   │   └── Page.css             # Page component styles
+│   └── __tests__/                # Test files
+│       ├── components/          # Component tests
+│       ├── services/            # Service tests
+│       └── utils/               # Utility tests
+├── public/                       # Static assets
+│   └── vite.svg                 # Vite logo
+├── index.html                    # HTML entry point
+├── vite.config.ts               # Vite configuration
+├── tsconfig.json                # TypeScript configuration
+└── package.json                 # Dependencies and scripts
 
-public/
-└── index.html                   # HTML entry point
 ```
 
 ---
@@ -147,48 +166,65 @@ All 15 enterprise modules have dedicated pages with:
 
 ## Building the Frontend
 
-### Development Build
+### Development Server
 ```bash
-npm run build:frontend
+cd frontend
+npm run dev
 ```
-This compiles all TypeScript/TSX files to JavaScript in `dist/frontend/`
+This starts the Vite development server with Hot Module Replacement (HMR) at `http://localhost:5173`
 
 ### Production Build
-For production deployment, you would typically use a bundler like:
-- Webpack
-- Vite
-- Parcel
-- Create React App
+```bash
+cd frontend
+npm run build
+```
+This creates an optimized production build in `frontend/dist/`
 
 ### Build Output
 ```
-dist/frontend/
-├── App.js                   # Compiled main app
-├── index.js                 # Compiled entry point
-├── components/              # Compiled components
-├── modules/                 # Compiled modules
-└── *.d.ts / *.js.map       # Type definitions and source maps
+frontend/dist/
+├── index.html               # Optimized HTML
+├── assets/                  # Bundled and minified assets
+│   ├── index-[hash].js     # Bundled JavaScript
+│   ├── index-[hash].css    # Bundled CSS
+│   └── ...                 # Other optimized assets
+└── vite.svg                # Static files
 ```
+
+### Preview Production Build
+```bash
+cd frontend
+npm run preview
+```
+This serves the production build locally for testing before deployment.
 
 ---
 
 ## TypeScript Configuration
 
-The frontend uses a dedicated `tsconfig.frontend.json` that extends the base configuration:
+The frontend uses `frontend/tsconfig.json` for TypeScript configuration:
 
 ```json
 {
-  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "jsx": "react-jsx",              // Modern JSX transform
-    "lib": ["ES2020", "DOM"],        // Browser APIs
-    "outDir": "./dist/frontend",     // Output directory
-    "rootDir": "./src/frontend",     // Source directory
-    "module": "esnext",              // Modern ES modules
-    "moduleResolution": "bundler"    // Optimized resolution
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
   },
-  "include": ["src/frontend/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.test.tsx"]
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }
 ```
 
@@ -293,17 +329,17 @@ The frontend uses a dedicated `tsconfig.frontend.json` that extends the base con
 ### Component Structure
 ```tsx
 import React from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
-import '../styles/Module.css';
+import { Routes, Route } from 'react-router-dom';
+import '../styles/Page.css';
 
 const ModuleName: React.FC = () => {
   return (
-    <div className="module-container">
+    <div className="page-container">
       <Routes>
-        <Route path="/" element={
+        <Route index element={
           <>
-            <div className="module-header">
-              <h1 className="module-title">Module Title</h1>
+            <div className="page-header">
+              <h1 className="page-title">Module Title</h1>
               <button className="btn-primary">Action</button>
             </div>
             {/* Module content */}
@@ -315,6 +351,26 @@ const ModuleName: React.FC = () => {
 };
 
 export default ModuleName;
+```
+
+### Data Fetching with Custom Hooks
+```tsx
+import { usePatients } from '../hooks/usePatients';
+
+const PatientList: React.FC = () => {
+  const { data, loading, error } = usePatients();
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
+  return (
+    <div>
+      {data?.data.map(patient => (
+        <div key={patient.id}>{patient.name}</div>
+      ))}
+    </div>
+  );
+};
 ```
 
 ### Type Safety
@@ -366,11 +422,11 @@ export default ModuleName;
 ## Deployment
 
 ### Production Build Process
-1. Use a bundler (Webpack/Vite) for optimization
-2. Minify and compress assets
-3. Generate production builds
-4. Configure CDN for static assets
-5. Set up environment variables
+1. Run `npm run build` in frontend directory
+2. Vite automatically optimizes and minifies assets
+3. Output is generated in `frontend/dist/`
+4. Deploy `dist/` directory to hosting platform
+5. Configure environment variables via `.env` files
 
 ### Hosting Options
 - **Static Hosting**: Netlify, Vercel, GitHub Pages

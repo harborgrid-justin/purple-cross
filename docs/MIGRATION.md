@@ -63,16 +63,16 @@ The TypeScript models are still available in `src/models/` for reference, but th
 
 ### 2. Frontend Structure
 
-**Old:** Components in `src/frontend/`
-- Basic React components
+**Old:** Legacy components (removed)
+- Basic React components in `src/frontend/` (deprecated and removed)
 - No proper routing
 - Direct file compilation with TSC
 
 **New:** Complete app in `frontend/`
 - Vite build tool for fast development
 - React Router for navigation
-- React Query for data fetching
-- Proper state management
+- Custom hooks for data fetching
+- Proper component organization
 - Production-ready build process
 
 ### 3. Backend API
@@ -222,10 +222,11 @@ cd frontend && npm run build   # Frontend build
 
 These files from the old structure are preserved but may be deprecated:
 
-- `src/models/*` - TypeScript model definitions (reference only)
-- `src/frontend/*` - Old frontend components (deprecated)
+- `src/models/*` - TypeScript model definitions (reference only, consider migrating to `shared/types`)
 - `src/index.ts` - Old main entry point (deprecated)
 - `example.ts` - Example usage file (reference only)
+
+**Note:** The old `src/frontend/*` directory has been removed. Use `frontend/src/` for all frontend code.
 
 ## New Features
 
