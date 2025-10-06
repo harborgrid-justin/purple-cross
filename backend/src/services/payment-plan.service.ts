@@ -40,13 +40,13 @@ export class PaymentPlanService {
     // Create installments
     const installments = [];
     let currentDate = data.startDate;
-    
+
     for (let i = 1; i <= data.numberOfInstallments; i++) {
       currentDate = this.calculateNextPaymentDate(
         i === 1 ? data.startDate : currentDate,
         data.installmentFrequency
       );
-      
+
       installments.push({
         paymentPlanId: paymentPlan.id,
         installmentNumber: i,
@@ -64,7 +64,7 @@ export class PaymentPlanService {
 
   private calculateNextPaymentDate(currentDate: Date, frequency: string): Date {
     const date = new Date(currentDate);
-    
+
     switch (frequency) {
       case 'weekly':
         date.setDate(date.getDate() + 7);
@@ -81,7 +81,7 @@ export class PaymentPlanService {
       default:
         date.setMonth(date.getMonth() + 1);
     }
-    
+
     return date;
   }
 

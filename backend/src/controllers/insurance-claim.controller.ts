@@ -25,7 +25,11 @@ export class InsuranceClaimController {
 
   async processClaim(req: Request, res: Response) {
     const { approvedAmount, paidAmount } = req.body;
-    const claim = await insuranceClaimService.processClaim(req.params.id, approvedAmount, paidAmount);
+    const claim = await insuranceClaimService.processClaim(
+      req.params.id,
+      approvedAmount,
+      paidAmount
+    );
     res.status(200).json({ status: 'success', data: claim });
   }
 

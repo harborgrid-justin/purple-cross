@@ -20,7 +20,13 @@ export class LoyaltyProgramController {
 
   async addPoints(req: Request, res: Response) {
     const { clientId, points, description, relatedType, relatedId } = req.body;
-    const program = await loyaltyProgramService.addPoints(clientId, points, description, relatedType, relatedId);
+    const program = await loyaltyProgramService.addPoints(
+      clientId,
+      points,
+      description,
+      relatedType,
+      relatedId
+    );
     res.status(200).json({ status: 'success', data: program });
   }
 

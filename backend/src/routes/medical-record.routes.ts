@@ -32,7 +32,12 @@ const idParamSchema = Joi.object({
 router.post('/', validate(createMedicalRecordSchema), medicalRecordController.create);
 router.get('/', medicalRecordController.getAll);
 router.get('/:id', validateParams(idParamSchema), medicalRecordController.getById);
-router.put('/:id', validateParams(idParamSchema), validate(updateMedicalRecordSchema), medicalRecordController.update);
+router.put(
+  '/:id',
+  validateParams(idParamSchema),
+  validate(updateMedicalRecordSchema),
+  medicalRecordController.update
+);
 router.delete('/:id', validateParams(idParamSchema), medicalRecordController.delete);
 
 export default router;

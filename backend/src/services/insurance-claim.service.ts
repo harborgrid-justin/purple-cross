@@ -50,7 +50,13 @@ export class InsuranceClaimService {
   async processClaim(id: string, approvedAmount: number, paidAmount: number) {
     return prisma.insuranceClaim.update({
       where: { id },
-      data: { status: 'paid', approvedAmount, paidAmount, processedDate: new Date(), paidDate: new Date() },
+      data: {
+        status: 'paid',
+        approvedAmount,
+        paidAmount,
+        processedDate: new Date(),
+        paidDate: new Date(),
+      },
     });
   }
 

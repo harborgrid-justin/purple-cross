@@ -34,7 +34,15 @@ export class PatientReminderService {
     page?: number;
     limit?: number;
   }) {
-    const { patientId, reminderType, status, startDate, endDate, page = 1, limit = 20 } = filters || {};
+    const {
+      patientId,
+      reminderType,
+      status,
+      startDate,
+      endDate,
+      page = 1,
+      limit = 20,
+    } = filters || {};
     const skip = (page - 1) * limit;
 
     const where: any = {};

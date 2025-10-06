@@ -65,9 +65,7 @@ const requiredEnvVars = ['DATABASE_URL', 'JWT_SECRET'];
 const missingEnvVars = requiredEnvVars.filter((envVar) => !process.env[envVar]);
 
 if (missingEnvVars.length > 0 && env.nodeEnv === 'production') {
-  throw new Error(
-    `Missing required environment variables: ${missingEnvVars.join(', ')}`
-  );
+  throw new Error(`Missing required environment variables: ${missingEnvVars.join(', ')}`);
 }
 
 export default env;

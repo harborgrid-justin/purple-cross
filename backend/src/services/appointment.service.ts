@@ -11,16 +11,10 @@ export class AppointmentService {
         status: { not: 'cancelled' },
         OR: [
           {
-            AND: [
-              { startTime: { lte: data.startTime } },
-              { endTime: { gt: data.startTime } },
-            ],
+            AND: [{ startTime: { lte: data.startTime } }, { endTime: { gt: data.startTime } }],
           },
           {
-            AND: [
-              { startTime: { lt: data.endTime } },
-              { endTime: { gte: data.endTime } },
-            ],
+            AND: [{ startTime: { lt: data.endTime } }, { endTime: { gte: data.endTime } }],
           },
         ],
       },
@@ -158,6 +152,24 @@ export class AppointmentService {
     return prisma.appointment.update({
       where: { id },
       data: { status: 'cancelled' },
+    });
+  }
+
+  async completeAppointment(id: string) {
+    const appointment = await prisma.appointment.findUnique({ where: { id } });
+
+    if (!appointment) {
+      throw new AppError('Appointment not found', 404);
+    }
+
+    return prisma.appointment.update({
+      where: { id },
+      data: { status: 'completed' },
+      include: {
+        patient: true,
+        client: true,
+        veterinarian: true,
+      },
     });
   }
 }

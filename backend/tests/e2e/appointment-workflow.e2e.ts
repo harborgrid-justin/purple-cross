@@ -10,7 +10,7 @@ describe('Appointment Workflow (E2E)', () => {
 
     app.post('/api/appointments', (req, res) => {
       const { patientId, clientId, startTime, endTime } = req.body;
-      
+
       if (!patientId || !clientId || !startTime || !endTime) {
         return res.status(400).json({ error: 'Missing required fields' });
       }
@@ -48,23 +48,21 @@ describe('Appointment Workflow (E2E)', () => {
       endTime: new Date('2024-12-01T11:00:00Z'),
     };
 
-    const createResponse = await request(app)
-      .post('/api/appointments')
-      .send(appointmentData);
+    const createResponse = await request(app).post('/api/appointments').send(appointmentData);
 
     expect(createResponse.status).toBe(201);
     expect(createResponse.body.status).toBe('scheduled');
 
     const appointmentId = createResponse.body.id;
 
-    const getResponse = await request(app)
-      .get(`/api/appointments/${appointmentId}`);
+    const getResponse = await request(app).get(`/api/appointments/${appointmentId}`);
 
     expect(getResponse.status).toBe(200);
     expect(getResponse.body.id).toBe(appointmentId);
 
-    const completeResponse = await request(app)
-      .patch(`/api/appointments/${appointmentId}/complete`);
+    const completeResponse = await request(app).patch(
+      `/api/appointments/${appointmentId}/complete`
+    );
 
     expect(completeResponse.status).toBe(200);
     expect(completeResponse.body.status).toBe('completed');
@@ -75,9 +73,7 @@ describe('Appointment Workflow (E2E)', () => {
       patientId: 'patient-123',
     };
 
-    const response = await request(app)
-      .post('/api/appointments')
-      .send(invalidData);
+    const response = await request(app).post('/api/appointments').send(invalidData);
 
     expect(response.status).toBe(400);
     expect(response.body.error).toBeDefined();

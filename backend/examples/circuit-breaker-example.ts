@@ -114,7 +114,7 @@ function monitorCircuitBreakers() {
 
   breakers.forEach((breaker) => {
     const stats = breaker.getStats();
-    
+
     if (stats.state === 'OPEN') {
       logger.warn({
         message: 'Circuit breaker is OPEN',
@@ -131,7 +131,7 @@ setInterval(monitorCircuitBreakers, 60000);
 function resetCircuitBreaker(breakerName: string) {
   const breakers: Record<string, any> = {
     'external-api': externalApiBreaker,
-    'database': databaseBreaker,
+    database: databaseBreaker,
     'payment-gateway': paymentBreaker,
   };
 

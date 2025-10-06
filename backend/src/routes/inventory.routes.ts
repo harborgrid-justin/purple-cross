@@ -33,7 +33,12 @@ const idParamSchema = Joi.object({
 router.post('/', validate(createInventoryItemSchema), inventoryController.create);
 router.get('/', inventoryController.getAll);
 router.get('/:id', validateParams(idParamSchema), inventoryController.getById);
-router.put('/:id', validateParams(idParamSchema), validate(updateInventoryItemSchema), inventoryController.update);
+router.put(
+  '/:id',
+  validateParams(idParamSchema),
+  validate(updateInventoryItemSchema),
+  inventoryController.update
+);
 router.delete('/:id', validateParams(idParamSchema), inventoryController.delete);
 
 export default router;

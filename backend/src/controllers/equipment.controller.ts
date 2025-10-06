@@ -35,7 +35,10 @@ export class EquipmentController {
   }
 
   async completeMaintenance(req: Request, res: Response) {
-    const maintenance = await equipmentService.completeMaintenance(req.params.maintenanceId, req.body);
+    const maintenance = await equipmentService.completeMaintenance(
+      req.params.maintenanceId,
+      req.body
+    );
     res.status(200).json({ status: 'success', data: maintenance });
   }
 

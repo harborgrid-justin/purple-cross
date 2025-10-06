@@ -32,7 +32,13 @@ const idParamSchema = Joi.object({
 router.post('/', validate(createAppointmentSchema), appointmentController.create);
 router.get('/', appointmentController.getAll);
 router.get('/:id', validateParams(idParamSchema), appointmentController.getById);
-router.put('/:id', validateParams(idParamSchema), validate(updateAppointmentSchema), appointmentController.update);
+router.put(
+  '/:id',
+  validateParams(idParamSchema),
+  validate(updateAppointmentSchema),
+  appointmentController.update
+);
+router.patch('/:id/complete', validateParams(idParamSchema), appointmentController.complete);
 router.delete('/:id', validateParams(idParamSchema), appointmentController.delete);
 
 export default router;

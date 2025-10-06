@@ -28,7 +28,12 @@ const idParamSchema = Joi.object({
 router.post('/', validate(createLabTestSchema), labTestController.create);
 router.get('/', labTestController.getAll);
 router.get('/:id', validateParams(idParamSchema), labTestController.getById);
-router.put('/:id', validateParams(idParamSchema), validate(updateLabTestSchema), labTestController.update);
+router.put(
+  '/:id',
+  validateParams(idParamSchema),
+  validate(updateLabTestSchema),
+  labTestController.update
+);
 router.delete('/:id', validateParams(idParamSchema), labTestController.delete);
 
 export default router;

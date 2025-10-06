@@ -19,12 +19,9 @@ export class EstimateService {
     notes?: string;
   }) {
     const estimateNumber = await this.generateEstimateNumber();
-    
-    const subtotal = data.lineItems.reduce(
-      (sum, item) => sum + (item.quantity * item.unitPrice),
-      0
-    );
-    
+
+    const subtotal = data.lineItems.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
+
     const tax = subtotal * 0.08; // 8% tax rate
     const total = subtotal + tax;
 
@@ -41,7 +38,7 @@ export class EstimateService {
         validUntil: data.validUntil,
         notes: data.notes,
         lineItems: {
-          create: data.lineItems.map(item => ({
+          create: data.lineItems.map((item) => ({
             ...item,
             total: item.quantity * item.unitPrice,
           })),
@@ -62,7 +59,7 @@ export class EstimateService {
         },
       },
     });
-    
+
     return `EST-${year}-${String(count + 1).padStart(5, '0')}`;
   }
 
@@ -144,7 +141,7 @@ export class EstimateService {
         total: estimate.total,
         dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
         lineItems: {
-          create: estimate.lineItems.map(item => ({
+          create: estimate.lineItems.map((item) => ({
             description: item.description,
             quantity: item.quantity,
             unitPrice: item.unitPrice,

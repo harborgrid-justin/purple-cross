@@ -30,11 +30,7 @@ export class BreedInfoService {
     });
   }
 
-  async listBreedInfo(filters?: {
-    species?: string;
-    page?: number;
-    limit?: number;
-  }) {
+  async listBreedInfo(filters?: { species?: string; page?: number; limit?: number }) {
     const { species, page = 1, limit = 20 } = filters || {};
     const skip = (page - 1) * limit;
 

@@ -91,12 +91,12 @@ async function saveToDatabase(record: DatabaseRecord) {
     async () => {
       // Your database save operation
       // await prisma.record.create({ data: record });
-      
+
       logger.info({
         message: 'Database save successful',
         recordId: record.id,
       });
-      
+
       return record;
     },
     {

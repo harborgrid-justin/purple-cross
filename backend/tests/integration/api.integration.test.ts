@@ -76,9 +76,7 @@ describe('API Integration Tests', () => {
         species: 'Dog',
       };
 
-      const response = await request(app)
-        .post('/api/patients')
-        .send(newPatient);
+      const response = await request(app).post('/api/patients').send(newPatient);
 
       expect(response.status).toBe(201);
       expect(response.body.name).toBe('Buddy');
@@ -87,9 +85,7 @@ describe('API Integration Tests', () => {
     });
 
     it('should return 400 for invalid data', async () => {
-      const response = await request(app)
-        .post('/api/patients')
-        .send({ name: 'Buddy' }); // Missing species
+      const response = await request(app).post('/api/patients').send({ name: 'Buddy' }); // Missing species
 
       expect(response.status).toBe(400);
       expect(response.body.error).toBeDefined();
