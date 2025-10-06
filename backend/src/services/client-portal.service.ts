@@ -4,13 +4,9 @@ import bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 export class ClientPortalService {
-  async createPortalAccess(data: {
-    clientId: string;
-    email: string;
-    password: string;
-  }) {
+  async createPortalAccess(data: { clientId: string; email: string; password: string }) {
     const passwordHash = await bcrypt.hash(data.password, 10);
-    
+
     return prisma.clientPortalAccess.create({
       data: {
         clientId: data.clientId,
@@ -55,13 +51,13 @@ export class ClientPortalService {
 
     await this.resetLoginAttempts(access.id);
     await this.updateLastLogin(access.id);
-    
+
     return access;
   }
 
   async updatePassword(id: string, newPassword: string) {
     const passwordHash = await bcrypt.hash(newPassword, 10);
-    
+
     return prisma.clientPortalAccess.update({
       where: { id },
       data: { passwordHash },

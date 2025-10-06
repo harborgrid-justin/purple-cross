@@ -47,10 +47,7 @@ export class WaitlistService {
         where,
         skip,
         take: limit,
-        orderBy: [
-          { priority: 'desc' },
-          { createdAt: 'asc' },
-        ],
+        orderBy: [{ priority: 'desc' }, { createdAt: 'asc' }],
       }),
       prisma.waitlist.count({ where }),
     ]);

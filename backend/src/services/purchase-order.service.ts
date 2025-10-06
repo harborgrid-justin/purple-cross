@@ -17,12 +17,12 @@ export class PurchaseOrderService {
     notes?: string;
   }) {
     const poNumber = await this.generatePONumber();
-    
+
     const subtotal = data.lineItems.reduce(
-      (sum, item) => sum + (item.quantityOrdered * item.unitCost),
+      (sum, item) => sum + item.quantityOrdered * item.unitCost,
       0
     );
-    
+
     const tax = subtotal * 0.08; // 8% tax rate
     const shipping = 0;
     const total = subtotal + tax + shipping;
@@ -39,7 +39,7 @@ export class PurchaseOrderService {
         total,
         notes: data.notes,
         lineItems: {
-          create: data.lineItems.map(item => ({
+          create: data.lineItems.map((item) => ({
             ...item,
             total: item.quantityOrdered * item.unitCost,
             status: 'pending',
@@ -61,7 +61,7 @@ export class PurchaseOrderService {
         },
       },
     });
-    
+
     return `PO-${year}-${String(count + 1).padStart(5, '0')}`;
   }
 
@@ -120,10 +120,13 @@ export class PurchaseOrderService {
     });
   }
 
-  async receiveItems(id: string, itemReceipts: Array<{
-    itemId: string;
-    quantityReceived: number;
-  }>) {
+  async receiveItems(
+    id: string,
+    itemReceipts: Array<{
+      itemId: string;
+      quantityReceived: number;
+    }>
+  ) {
     const po = await this.getPurchaseOrder(id);
     if (!po) throw new Error('Purchase order not found');
 
@@ -140,9 +143,7 @@ export class PurchaseOrderService {
       where: { purchaseOrderId: id },
     });
 
-    const allReceived = allItems.every(
-      item => item.quantityReceived >= item.quantityOrdered
-    );
+    const allReceived = allItems.every((item) => item.quantityReceived >= item.quantityOrdered);
 
     if (allReceived) {
       await prisma.purchaseOrder.update({

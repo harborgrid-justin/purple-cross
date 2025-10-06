@@ -38,6 +38,7 @@ export const validateParams = (schema: Joi.ObjectSchema) => {
   return (req: Request, _res: Response, next: NextFunction) => {
     const { error } = schema.validate(req.params, {
       abortEarly: false,
+      stripUnknown: true,
     });
 
     if (error) {

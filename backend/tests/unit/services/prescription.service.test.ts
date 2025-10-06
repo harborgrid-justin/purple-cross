@@ -108,9 +108,7 @@ describe('PrescriptionService', () => {
     it('should filter prescriptions by status', async () => {
       const patientId = 'patient-123';
       const status = 'active';
-      const mockPrescriptions = [
-        { id: 'prescription-1', patientId, status: 'active' },
-      ];
+      const mockPrescriptions = [{ id: 'prescription-1', patientId, status: 'active' }];
 
       (prisma.prescription.findMany as jest.Mock).mockResolvedValue(mockPrescriptions);
 
@@ -147,6 +145,4 @@ describe('PrescriptionService', () => {
       expect(result.status).toBe('completed');
     });
   });
-
-
 });

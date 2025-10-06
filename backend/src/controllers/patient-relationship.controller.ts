@@ -13,7 +13,9 @@ export class PatientRelationshipController {
   }
 
   async getPatientRelationships(req: Request, res: Response) {
-    const relationships = await patientRelationshipService.getPatientRelationships(req.params.patientId);
+    const relationships = await patientRelationshipService.getPatientRelationships(
+      req.params.patientId
+    );
     res.status(200).json({ status: 'success', data: relationships });
   }
 
@@ -23,7 +25,10 @@ export class PatientRelationshipController {
   }
 
   async update(req: Request, res: Response) {
-    const relationship = await patientRelationshipService.updateRelationship(req.params.id, req.body);
+    const relationship = await patientRelationshipService.updateRelationship(
+      req.params.id,
+      req.body
+    );
     res.status(200).json({ status: 'success', data: relationship });
   }
 

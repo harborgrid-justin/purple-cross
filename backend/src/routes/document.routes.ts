@@ -28,7 +28,12 @@ const idParamSchema = Joi.object({
 router.post('/', validate(createDocumentSchema), documentController.create);
 router.get('/', documentController.getAll);
 router.get('/:id', validateParams(idParamSchema), documentController.getById);
-router.put('/:id', validateParams(idParamSchema), validate(updateDocumentSchema), documentController.update);
+router.put(
+  '/:id',
+  validateParams(idParamSchema),
+  validate(updateDocumentSchema),
+  documentController.update
+);
 router.delete('/:id', validateParams(idParamSchema), documentController.delete);
 
 export default router;

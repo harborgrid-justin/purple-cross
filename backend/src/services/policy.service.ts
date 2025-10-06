@@ -23,7 +23,12 @@ export class PolicyService {
     });
   }
 
-  async listPolicies(filters?: { category?: string; status?: string; page?: number; limit?: number }) {
+  async listPolicies(filters?: {
+    category?: string;
+    status?: string;
+    page?: number;
+    limit?: number;
+  }) {
     const { category, status, page = 1, limit = 20 } = filters || {};
     const skip = (page - 1) * limit;
     const where: any = {};

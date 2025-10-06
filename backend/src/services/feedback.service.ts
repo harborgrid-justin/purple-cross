@@ -91,17 +91,17 @@ export class FeedbackService {
 
     if (feedback.length === 0) return null;
 
-    const scores = feedback.map(f => f.npsScore!);
-    const promoters = scores.filter(s => s >= 9).length;
-    const detractors = scores.filter(s => s <= 6).length;
-    
+    const scores = feedback.map((f) => f.npsScore!);
+    const promoters = scores.filter((s) => s >= 9).length;
+    const detractors = scores.filter((s) => s <= 6).length;
+
     const npsScore = ((promoters - detractors) / scores.length) * 100;
 
     return {
       npsScore: Math.round(npsScore),
       totalResponses: scores.length,
       promoters,
-      passives: scores.filter(s => s === 7 || s === 8).length,
+      passives: scores.filter((s) => s === 7 || s === 8).length,
       detractors,
     };
   }
@@ -117,11 +117,7 @@ export class FeedbackService {
   }
 
   // Survey methods
-  async createSurvey(data: {
-    title: string;
-    description?: string;
-    questions: any;
-  }) {
+  async createSurvey(data: { title: string; description?: string; questions: any }) {
     return prisma.survey.create({
       data: {
         ...data,
@@ -152,11 +148,7 @@ export class FeedbackService {
     });
   }
 
-  async submitSurveyResponse(data: {
-    surveyId: string;
-    clientId?: string;
-    answers: any;
-  }) {
+  async submitSurveyResponse(data: { surveyId: string; clientId?: string; answers: any }) {
     return prisma.surveyResponse.create({
       data,
     });

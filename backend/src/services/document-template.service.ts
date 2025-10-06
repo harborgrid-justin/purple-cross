@@ -3,12 +3,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export class DocumentTemplateService {
-  async createTemplate(data: {
-    name: string;
-    category: string;
-    template: any;
-    fields?: any;
-  }) {
+  async createTemplate(data: { name: string; category: string; template: any; fields?: any }) {
     return prisma.documentTemplate.create({
       data: { ...data, status: 'active' },
     });
@@ -24,7 +19,12 @@ export class DocumentTemplateService {
     const where: any = {};
     if (category) where.category = category;
     const [items, total] = await Promise.all([
-      prisma.documentTemplate.findMany({ where, skip, take: limit, orderBy: { usageCount: 'desc' } }),
+      prisma.documentTemplate.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { usageCount: 'desc' },
+      }),
       prisma.documentTemplate.count({ where }),
     ]);
     return { items, total, page, limit, totalPages: Math.ceil(total / limit) };
@@ -71,10 +71,10 @@ export class DocumentTemplateService {
   async advanceWorkflow(id: string) {
     const workflow = await prisma.documentWorkflow.findUnique({ where: { id } });
     if (!workflow) throw new Error('Workflow not found');
-    
+
     const nextStep = workflow.currentStep + 1;
     const completed = nextStep > workflow.totalSteps;
-    
+
     return prisma.documentWorkflow.update({
       where: { id },
       data: {

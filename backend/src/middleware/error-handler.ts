@@ -76,18 +76,14 @@ export const errorHandler = (
     message,
     correlationId: req.correlationId,
     timestamp: new Date().toISOString(),
-    ...(process.env.NODE_ENV === 'development' && { 
+    ...(process.env.NODE_ENV === 'development' && {
       stack: err.stack,
       path: req.path,
     }),
   });
 };
 
-export const notFoundHandler = (
-  req: Request,
-  res: Response,
-  _next: NextFunction
-) => {
+export const notFoundHandler = (req: Request, res: Response, _next: NextFunction) => {
   logger.warn({
     message: 'Route not found',
     path: req.originalUrl,

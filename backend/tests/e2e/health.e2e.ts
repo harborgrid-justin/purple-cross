@@ -6,7 +6,7 @@ describe('Health Check API (E2E)', () => {
 
   beforeAll(() => {
     app = express();
-    
+
     app.get('/health', (_req, res) => {
       res.status(200).json({
         status: 'ok',
@@ -20,7 +20,7 @@ describe('Health Check API (E2E)', () => {
   describe('GET /health', () => {
     it('should return 200 OK', async () => {
       const response = await request(app).get('/health');
-      
+
       expect(response.status).toBe(200);
       expect(response.body.status).toBe('ok');
     });

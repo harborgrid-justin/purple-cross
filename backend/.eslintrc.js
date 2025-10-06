@@ -38,7 +38,7 @@ module.exports = {
     // Code Quality - Requirements 6, 12
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     '@typescript-eslint/prefer-readonly': 'warn',
-    '@typescript-eslint/prefer-const': 'error',
+    'prefer-const': 'error',
     '@typescript-eslint/no-non-null-assertion': 'warn',
     
     // Naming Conventions - Requirement 6

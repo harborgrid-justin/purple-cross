@@ -10,13 +10,15 @@ describe('Invoice Workflow (E2E)', () => {
 
     app.post('/api/invoices', (req, res) => {
       const { clientId, items } = req.body;
-      
+
       if (!clientId || !items || items.length === 0) {
         return res.status(400).json({ error: 'Invalid invoice data' });
       }
 
-      const subtotal = items.reduce((sum: number, item: any) => 
-        sum + (item.quantity * item.unitPrice), 0);
+      const subtotal = items.reduce(
+        (sum: number, item: any) => sum + item.quantity * item.unitPrice,
+        0
+      );
       const tax = subtotal * 0.1;
       const total = subtotal + tax;
 
@@ -34,7 +36,7 @@ describe('Invoice Workflow (E2E)', () => {
 
     app.post('/api/invoices/:id/payment', (req, res) => {
       const { amount, method } = req.body;
-      
+
       if (!amount || !method) {
         return res.status(400).json({ error: 'Invalid payment data' });
       }
@@ -58,9 +60,7 @@ describe('Invoice Workflow (E2E)', () => {
       ],
     };
 
-    const createResponse = await request(app)
-      .post('/api/invoices')
-      .send(invoiceData);
+    const createResponse = await request(app).post('/api/invoices').send(invoiceData);
 
     expect(createResponse.status).toBe(201);
     expect(createResponse.body.total).toBe(165);
@@ -91,9 +91,7 @@ describe('Invoice Workflow (E2E)', () => {
       ],
     };
 
-    const response = await request(app)
-      .post('/api/invoices')
-      .send(invoiceData);
+    const response = await request(app).post('/api/invoices').send(invoiceData);
 
     expect(response.status).toBe(201);
     expect(response.body.subtotal).toBe(100);

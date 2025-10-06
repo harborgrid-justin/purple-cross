@@ -24,7 +24,7 @@ const structuredFormat = winston.format.combine(
 const logger = winston.createLogger({
   level: logLevel,
   format: structuredFormat,
-  defaultMeta: { 
+  defaultMeta: {
     service: 'purple-cross-api',
     pid: process.pid,
   },
@@ -64,10 +64,7 @@ const logger = winston.createLogger({
 if (process.env.NODE_ENV !== 'production') {
   logger.add(
     new winston.transports.Console({
-      format: winston.format.combine(
-        winston.format.colorize(),
-        winston.format.simple()
-      ),
+      format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
     })
   );
 }

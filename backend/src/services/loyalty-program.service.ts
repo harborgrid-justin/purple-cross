@@ -47,14 +47,14 @@ export class LoyaltyProgramService {
     relatedId?: string
   ) {
     let program = await this.getProgramByClient(clientId);
-    
+
     if (!program) {
       program = await this.createProgram(clientId);
     }
 
     const newBalance = program.pointsBalance + points;
     const newLifetimePoints = program.lifetimePoints + points;
-    
+
     const tier = this.calculateTier(newLifetimePoints);
 
     const [updatedProgram] = await Promise.all([
@@ -82,13 +82,9 @@ export class LoyaltyProgramService {
     return updatedProgram;
   }
 
-  async redeemPoints(
-    clientId: string,
-    points: number,
-    description: string
-  ) {
+  async redeemPoints(clientId: string, points: number, description: string) {
     const program = await this.getProgramByClient(clientId);
-    
+
     if (!program) {
       throw new Error('Loyalty program not found');
     }
@@ -122,7 +118,7 @@ export class LoyaltyProgramService {
 
   async updateSpending(clientId: string, amount: number) {
     let program = await this.getProgramByClient(clientId);
-    
+
     if (!program) {
       program = await this.createProgram(clientId);
     }
@@ -180,7 +176,12 @@ export class LoyaltyProgramService {
     const where: any = {};
     if (tier) where.tier = tier;
     const [items, total] = await Promise.all([
-      prisma.loyaltyProgram.findMany({ where, skip, take: limit, orderBy: { lifetimePoints: 'desc' } }),
+      prisma.loyaltyProgram.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { lifetimePoints: 'desc' },
+      }),
       prisma.loyaltyProgram.count({ where }),
     ]);
     return { items, total, page, limit, totalPages: Math.ceil(total / limit) };
