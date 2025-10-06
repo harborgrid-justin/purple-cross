@@ -1,4 +1,5 @@
 {
+  "_comment": "DEPRECATED: This is the old package.json. Use the current package.json for active development. This file is kept for historical reference only.",
   "name": "purple-cross",
   "version": "1.0.0",
   "description": "Enterprise grade platform for veterinary practice management",
@@ -6,7 +7,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "build:frontend": "tsc -p tsconfig.frontend.json",
+    "build:frontend": "tsc -p tsconfig.frontend.json (DEPRECATED - file removed)",
     "test": "jest",
     "lint": "eslint src/**/*.ts src/**/*.tsx",
     "start": "node dist/index.js"
