@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { PAGINATION, SORT_ORDER, FIELDS } from '../constants';
 
 const prisma = new PrismaClient();
 
@@ -30,14 +31,26 @@ export class RefundService {
     return prisma.refund.findUnique({ where: { id } });
   }
 
-  async listRefunds(filters?: any) {
-    const { clientId, status, page = 1, limit = 20 } = filters || {};
+  async listRefunds(filters?: Record<string, unknown>) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const filtersAny = (filters as any) || {};
+    const {
+      clientId,
+      status,
+      page = PAGINATION.DEFAULT_PAGE,
+      limit = PAGINATION.DEFAULT_LIMIT,
+    } = filtersAny;
     const skip = (page - 1) * limit;
-    const where: any = {};
+    const where: Record<string, unknown> = {};
     if (clientId) where.clientId = clientId;
     if (status) where.status = status;
     const [items, total] = await Promise.all([
-      prisma.refund.findMany({ where, skip, take: limit, orderBy: { createdAt: 'desc' } }),
+      prisma.refund.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { [FIELDS.CREATED_AT]: SORT_ORDER.DESC },
+      }),
       prisma.refund.count({ where }),
     ]);
     return { items, total, page, limit, totalPages: Math.ceil(total / limit) };
@@ -50,7 +63,7 @@ export class RefundService {
     });
   }
 
-  async updateRefund(id: string, data: any) {
+  async updateRefund(id: string, data: Record<string, unknown>) {
     return prisma.refund.update({ where: { id }, data });
   }
 

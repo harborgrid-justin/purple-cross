@@ -39,7 +39,9 @@ const BillingList = () => {
               <td>${invoice.amount.toFixed(2)}</td>
               <td>{invoice.date}</td>
               <td>
-                <span className={`status-badge status-${invoice.status === 'Paid' ? 'confirmed' : 'pending'}`}>
+                <span
+                  className={`status-badge status-${invoice.status === 'Paid' ? 'confirmed' : 'pending'}`}
+                >
                   {invoice.status}
                 </span>
               </td>
@@ -61,7 +63,7 @@ const BillingList = () => {
 
 const Billing = () => {
   const location = useLocation();
-  
+
   return (
     <div className="page">
       <header className="page-header">
@@ -74,18 +76,69 @@ const Billing = () => {
       </header>
 
       <nav className="sub-nav" role="navigation" aria-label="Billing sections">
-        <Link to="/billing" className={`sub-nav-link ${location.pathname === '/billing' ? 'active' : ''}`}>Invoices</Link>
-        <Link to="/billing/invoice-generation" className={`sub-nav-link ${location.pathname.includes('/invoice-generation') ? 'active' : ''}`}>Invoice Generation</Link>
-        <Link to="/billing/payment-processing" className={`sub-nav-link ${location.pathname.includes('/payment-processing') ? 'active' : ''}`}>Payment Processing</Link>
-        <Link to="/billing/insurance-claims" className={`sub-nav-link ${location.pathname.includes('/insurance-claims') ? 'active' : ''}`}>Insurance Claims</Link>
-        <Link to="/billing/estimates" className={`sub-nav-link ${location.pathname.includes('/estimates') ? 'active' : ''}`}>Estimates & Quotes</Link>
-        <Link to="/billing/payment-plans" className={`sub-nav-link ${location.pathname.includes('/payment-plans') ? 'active' : ''}`}>Payment Plans</Link>
-        <Link to="/billing/receivables" className={`sub-nav-link ${location.pathname.includes('/receivables') ? 'active' : ''}`}>Receivables</Link>
-        <Link to="/billing/financial-reports" className={`sub-nav-link ${location.pathname.includes('/financial-reports') ? 'active' : ''}`}>Financial Reports</Link>
-        <Link to="/billing/refunds" className={`sub-nav-link ${location.pathname.includes('/refunds') ? 'active' : ''}`}>Refunds & Credits</Link>
+        <Link
+          to="/billing"
+          className={`sub-nav-link ${location.pathname === '/billing' ? 'active' : ''}`}
+        >
+          Invoices
+        </Link>
+        <Link
+          to="/billing/invoice-generation"
+          className={`sub-nav-link ${location.pathname.includes('/invoice-generation') ? 'active' : ''}`}
+        >
+          Invoice Generation
+        </Link>
+        <Link
+          to="/billing/payment-processing"
+          className={`sub-nav-link ${location.pathname.includes('/payment-processing') ? 'active' : ''}`}
+        >
+          Payment Processing
+        </Link>
+        <Link
+          to="/billing/insurance-claims"
+          className={`sub-nav-link ${location.pathname.includes('/insurance-claims') ? 'active' : ''}`}
+        >
+          Insurance Claims
+        </Link>
+        <Link
+          to="/billing/estimates"
+          className={`sub-nav-link ${location.pathname.includes('/estimates') ? 'active' : ''}`}
+        >
+          Estimates & Quotes
+        </Link>
+        <Link
+          to="/billing/payment-plans"
+          className={`sub-nav-link ${location.pathname.includes('/payment-plans') ? 'active' : ''}`}
+        >
+          Payment Plans
+        </Link>
+        <Link
+          to="/billing/receivables"
+          className={`sub-nav-link ${location.pathname.includes('/receivables') ? 'active' : ''}`}
+        >
+          Receivables
+        </Link>
+        <Link
+          to="/billing/financial-reports"
+          className={`sub-nav-link ${location.pathname.includes('/financial-reports') ? 'active' : ''}`}
+        >
+          Financial Reports
+        </Link>
+        <Link
+          to="/billing/refunds"
+          className={`sub-nav-link ${location.pathname.includes('/refunds') ? 'active' : ''}`}
+        >
+          Refunds & Credits
+        </Link>
       </nav>
 
-      <Suspense fallback={<div role="status"><p>Loading...</p></div>}>
+      <Suspense
+        fallback={
+          <div role="status">
+            <p>Loading...</p>
+          </div>
+        }
+      >
         <Routes>
           <Route path="/" element={<BillingList />} />
           <Route path="/invoice-generation" element={<InvoiceGeneration />} />

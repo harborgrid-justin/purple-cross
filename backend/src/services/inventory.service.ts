@@ -1,8 +1,16 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
+import {
+  HTTP_STATUS,
+  ERROR_MESSAGES,
+  PAGINATION,
+  QUERY_MODE,
+  SORT_ORDER,
+  FIELDS,
+} from '../constants';
 
 export class InventoryService {
-  async createInventoryItem(data: any) {
+  async createInventoryItem(data: Record<string, unknown>) {
     return prisma.inventoryItem.create({
       data,
     });
@@ -14,7 +22,7 @@ export class InventoryService {
     });
 
     if (!item) {
-      throw new AppError('Inventory item not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Inventory item'), HTTP_STATUS.NOT_FOUND);
     }
 
     return item;
@@ -27,15 +35,21 @@ export class InventoryService {
     search?: string;
     lowStock?: boolean;
   }) {
-    const { page = 1, limit = 20, category, search, lowStock } = options;
+    const {
+      page = PAGINATION.DEFAULT_PAGE,
+      limit = PAGINATION.DEFAULT_LIMIT,
+      category,
+      search,
+      lowStock,
+    } = options;
     const skip = (page - 1) * limit;
 
-    const where: any = {
+    const where: Record<string, unknown> = {
       ...(category && { category }),
       ...(search && {
         OR: [
-          { name: { contains: search, mode: 'insensitive' } },
-          { sku: { contains: search, mode: 'insensitive' } },
+          { name: { contains: search, mode: QUERY_MODE.INSENSITIVE } },
+          { sku: { contains: search, mode: QUERY_MODE.INSENSITIVE } },
         ],
       }),
       ...(lowStock && {
@@ -48,7 +62,7 @@ export class InventoryService {
         where,
         skip,
         take: limit,
-        orderBy: { name: 'asc' },
+        orderBy: { [FIELDS.NAME]: SORT_ORDER.ASC },
       }),
       prisma.inventoryItem.count({ where }),
     ]);
@@ -64,11 +78,11 @@ export class InventoryService {
     };
   }
 
-  async updateInventoryItem(id: string, data: any) {
+  async updateInventoryItem(id: string, data: Record<string, unknown>) {
     const item = await prisma.inventoryItem.findUnique({ where: { id } });
 
     if (!item) {
-      throw new AppError('Inventory item not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Inventory item'), HTTP_STATUS.NOT_FOUND);
     }
 
     return prisma.inventoryItem.update({
@@ -81,7 +95,7 @@ export class InventoryService {
     const item = await prisma.inventoryItem.findUnique({ where: { id } });
 
     if (!item) {
-      throw new AppError('Inventory item not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Inventory item'), HTTP_STATUS.NOT_FOUND);
     }
 
     return prisma.inventoryItem.delete({

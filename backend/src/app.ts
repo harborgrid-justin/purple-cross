@@ -12,6 +12,7 @@ import { apiRateLimiter } from './middleware/rate-limiter';
 import { timeoutMiddleware } from './middleware/timeout';
 import { metricsMiddleware } from './middleware/metrics';
 import { sanitizationMiddleware } from './middleware/sanitization';
+import { FILE_UPLOAD } from './constants';
 import patientRoutes from './routes/patient.routes';
 import clientRoutes from './routes/client.routes';
 import appointmentRoutes from './routes/appointment.routes';
@@ -60,7 +61,7 @@ export function createApp(): Application {
   app.use(metricsMiddleware);
 
   // Request timeout middleware
-  app.use(timeoutMiddleware(30000)); // 30 second timeout
+  app.use(timeoutMiddleware()); // Uses default timeout from constants
 
   // Security middleware
   app.use(helmet());
@@ -72,8 +73,8 @@ export function createApp(): Application {
   );
 
   // Body parsing middleware
-  app.use(express.json({ limit: '10mb' }));
-  app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+  app.use(express.json({ limit: FILE_UPLOAD.BODY_LIMIT }));
+  app.use(express.urlencoded({ extended: true, limit: FILE_UPLOAD.BODY_LIMIT }));
 
   // Input sanitization middleware
   app.use(sanitizationMiddleware);

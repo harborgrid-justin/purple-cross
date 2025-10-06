@@ -1,8 +1,9 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
+import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION } from '../constants';
 
 export class PrescriptionService {
-  async createPrescription(data: any) {
+  async createPrescription(data: Record<string, unknown>) {
     return prisma.prescription.create({
       data,
       include: {
@@ -24,7 +25,7 @@ export class PrescriptionService {
     });
 
     if (!prescription) {
-      throw new AppError('Prescription not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Prescription'), HTTP_STATUS.NOT_FOUND);
     }
 
     return prescription;
@@ -37,10 +38,16 @@ export class PrescriptionService {
     prescribedById?: string;
     status?: string;
   }) {
-    const { page = 1, limit = 20, patientId, prescribedById, status } = options;
+    const {
+      page = PAGINATION.DEFAULT_PAGE,
+      limit = PAGINATION.DEFAULT_LIMIT,
+      patientId,
+      prescribedById,
+      status,
+    } = options;
     const skip = (page - 1) * limit;
 
-    const where: any = {
+    const where: Record<string, unknown> = {
       ...(patientId && { patientId }),
       ...(prescribedById && { prescribedById }),
       ...(status && { status }),
@@ -78,11 +85,11 @@ export class PrescriptionService {
     };
   }
 
-  async updatePrescription(id: string, data: any) {
+  async updatePrescription(id: string, data: Record<string, unknown>) {
     const prescription = await prisma.prescription.findUnique({ where: { id } });
 
     if (!prescription) {
-      throw new AppError('Prescription not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Prescription'), HTTP_STATUS.NOT_FOUND);
     }
 
     return prisma.prescription.update({
@@ -100,7 +107,7 @@ export class PrescriptionService {
     const prescription = await prisma.prescription.findUnique({ where: { id } });
 
     if (!prescription) {
-      throw new AppError('Prescription not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Prescription'), HTTP_STATUS.NOT_FOUND);
     }
 
     return prisma.prescription.delete({

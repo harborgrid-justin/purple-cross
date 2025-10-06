@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { PAGINATION, SORT_ORDER, FIELDS } from '../constants';
 
 const prisma = new PrismaClient();
 
@@ -34,10 +35,17 @@ export class FeedbackService {
     page?: number;
     limit?: number;
   }) {
-    const { clientId, feedbackType, rating, status, page = 1, limit = 20 } = filters || {};
+    const {
+      clientId,
+      feedbackType,
+      rating,
+      status,
+      page = PAGINATION.DEFAULT_PAGE,
+      limit = PAGINATION.DEFAULT_LIMIT,
+    } = filters || {};
     const skip = (page - 1) * limit;
 
-    const where: any = {};
+    const where: Record<string, unknown> = {};
     if (clientId) where.clientId = clientId;
     if (feedbackType) where.feedbackType = feedbackType;
     if (rating) where.rating = rating;
@@ -48,7 +56,7 @@ export class FeedbackService {
         where,
         skip,
         take: limit,
-        orderBy: { createdAt: 'desc' },
+        orderBy: { [FIELDS.CREATED_AT]: SORT_ORDER.DESC },
       }),
       prisma.clientFeedback.count({ where }),
     ]);
@@ -74,14 +82,15 @@ export class FeedbackService {
   }
 
   async getNPSScore(startDate?: Date, endDate?: Date) {
-    const where: any = {
+    const where: Record<string, unknown> = {
       npsScore: { not: null },
     };
 
     if (startDate || endDate) {
-      where.createdAt = {};
-      if (startDate) where.createdAt.gte = startDate;
-      if (endDate) where.createdAt.lte = endDate;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (where as any).createdAt = {};
+      if (startDate) (where as any).createdAt.gte = startDate;
+      if (endDate) (where as any).createdAt.lte = endDate;
     }
 
     const feedback = await prisma.clientFeedback.findMany({
@@ -106,7 +115,7 @@ export class FeedbackService {
     };
   }
 
-  async updateFeedback(id: string, data: any) {
+  async updateFeedback(id: string, data: Record<string, unknown>) {
     return prisma.clientFeedback.update({ where: { id }, data });
   }
 

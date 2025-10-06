@@ -108,7 +108,7 @@ const AppointmentsList = () => {
                   Dr. {appointment.veterinarian.firstName} {appointment.veterinarian.lastName}
                 </td>
                 <td>
-                  <span 
+                  <span
                     className={`status-badge status-${appointment.status}`}
                     role="status"
                     aria-label={`Status: ${appointment.status}`}
@@ -117,14 +117,14 @@ const AppointmentsList = () => {
                   </span>
                 </td>
                 <td>
-                  <button 
-                    className="btn-action" 
+                  <button
+                    className="btn-action"
                     aria-label={`View appointment for ${appointment.patient.name} on ${new Date(appointment.startTime).toLocaleDateString()}`}
                   >
                     View
                   </button>
-                  <button 
-                    className="btn-action" 
+                  <button
+                    className="btn-action"
                     aria-label={`Edit appointment for ${appointment.patient.name} on ${new Date(appointment.startTime).toLocaleDateString()}`}
                   >
                     Edit
@@ -141,7 +141,7 @@ const AppointmentsList = () => {
 
 const Appointments = () => {
   const location = useLocation();
-  
+
   return (
     <div className="page">
       <header className="page-header">
@@ -154,18 +154,69 @@ const Appointments = () => {
       </header>
 
       <nav className="sub-nav" role="navigation" aria-label="Appointment sections">
-        <Link to="/appointments" className={`sub-nav-link ${location.pathname === '/appointments' ? 'active' : ''}`}>Calendar</Link>
-        <Link to="/appointments/booking" className={`sub-nav-link ${location.pathname.includes('/booking') ? 'active' : ''}`}>Booking</Link>
-        <Link to="/appointments/calendar-management" className={`sub-nav-link ${location.pathname.includes('/calendar-management') ? 'active' : ''}`}>Calendar Management</Link>
-        <Link to="/appointments/types" className={`sub-nav-link ${location.pathname.includes('/types') ? 'active' : ''}`}>Types & Duration</Link>
-        <Link to="/appointments/waitlist" className={`sub-nav-link ${location.pathname.includes('/waitlist') ? 'active' : ''}`}>Waitlist</Link>
-        <Link to="/appointments/reminders" className={`sub-nav-link ${location.pathname.includes('/reminders') ? 'active' : ''}`}>Reminder System</Link>
-        <Link to="/appointments/optimization" className={`sub-nav-link ${location.pathname.includes('/optimization') ? 'active' : ''}`}>Schedule Optimization</Link>
-        <Link to="/appointments/time-blocks" className={`sub-nav-link ${location.pathname.includes('/time-blocks') ? 'active' : ''}`}>Time Block Management</Link>
-        <Link to="/appointments/analytics" className={`sub-nav-link ${location.pathname.includes('/analytics') ? 'active' : ''}`}>Analytics</Link>
+        <Link
+          to="/appointments"
+          className={`sub-nav-link ${location.pathname === '/appointments' ? 'active' : ''}`}
+        >
+          Calendar
+        </Link>
+        <Link
+          to="/appointments/booking"
+          className={`sub-nav-link ${location.pathname.includes('/booking') ? 'active' : ''}`}
+        >
+          Booking
+        </Link>
+        <Link
+          to="/appointments/calendar-management"
+          className={`sub-nav-link ${location.pathname.includes('/calendar-management') ? 'active' : ''}`}
+        >
+          Calendar Management
+        </Link>
+        <Link
+          to="/appointments/types"
+          className={`sub-nav-link ${location.pathname.includes('/types') ? 'active' : ''}`}
+        >
+          Types & Duration
+        </Link>
+        <Link
+          to="/appointments/waitlist"
+          className={`sub-nav-link ${location.pathname.includes('/waitlist') ? 'active' : ''}`}
+        >
+          Waitlist
+        </Link>
+        <Link
+          to="/appointments/reminders"
+          className={`sub-nav-link ${location.pathname.includes('/reminders') ? 'active' : ''}`}
+        >
+          Reminder System
+        </Link>
+        <Link
+          to="/appointments/optimization"
+          className={`sub-nav-link ${location.pathname.includes('/optimization') ? 'active' : ''}`}
+        >
+          Schedule Optimization
+        </Link>
+        <Link
+          to="/appointments/time-blocks"
+          className={`sub-nav-link ${location.pathname.includes('/time-blocks') ? 'active' : ''}`}
+        >
+          Time Block Management
+        </Link>
+        <Link
+          to="/appointments/analytics"
+          className={`sub-nav-link ${location.pathname.includes('/analytics') ? 'active' : ''}`}
+        >
+          Analytics
+        </Link>
       </nav>
 
-      <Suspense fallback={<div role="status"><p>Loading...</p></div>}>
+      <Suspense
+        fallback={
+          <div role="status">
+            <p>Loading...</p>
+          </div>
+        }
+      >
         <Routes>
           <Route path="/" element={<AppointmentsList />} />
           <Route path="/booking" element={<Booking />} />

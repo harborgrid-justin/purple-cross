@@ -39,7 +39,9 @@ const LaboratoryList = () => {
               <td>{test.testType}</td>
               <td>{test.date}</td>
               <td>
-                <span className={`status-badge status-${test.status === 'Completed' ? 'confirmed' : 'pending'}`}>
+                <span
+                  className={`status-badge status-${test.status === 'Completed' ? 'confirmed' : 'pending'}`}
+                >
                   {test.status}
                 </span>
               </td>
@@ -61,7 +63,7 @@ const LaboratoryList = () => {
 
 const Laboratory = () => {
   const location = useLocation();
-  
+
   return (
     <div className="page">
       <header className="page-header">
@@ -74,18 +76,69 @@ const Laboratory = () => {
       </header>
 
       <nav className="sub-nav" role="navigation" aria-label="Laboratory sections">
-        <Link to="/laboratory" className={`sub-nav-link ${location.pathname === '/laboratory' ? 'active' : ''}`}>All Tests</Link>
-        <Link to="/laboratory/in-house" className={`sub-nav-link ${location.pathname.includes('/in-house') ? 'active' : ''}`}>In-House Testing</Link>
-        <Link to="/laboratory/external" className={`sub-nav-link ${location.pathname.includes('/external') ? 'active' : ''}`}>External Lab Integration</Link>
-        <Link to="/laboratory/test-catalog" className={`sub-nav-link ${location.pathname.includes('/test-catalog') ? 'active' : ''}`}>Test Catalog</Link>
-        <Link to="/laboratory/sample-tracking" className={`sub-nav-link ${location.pathname.includes('/sample-tracking') ? 'active' : ''}`}>Sample Tracking</Link>
-        <Link to="/laboratory/results" className={`sub-nav-link ${location.pathname.includes('/results') ? 'active' : ''}`}>Result Interpretation</Link>
-        <Link to="/laboratory/quality-assurance" className={`sub-nav-link ${location.pathname.includes('/quality-assurance') ? 'active' : ''}`}>Quality Assurance</Link>
-        <Link to="/laboratory/equipment" className={`sub-nav-link ${location.pathname.includes('/equipment') ? 'active' : ''}`}>Equipment Management</Link>
-        <Link to="/laboratory/reports" className={`sub-nav-link ${location.pathname.includes('/reports') ? 'active' : ''}`}>Lab Reports</Link>
+        <Link
+          to="/laboratory"
+          className={`sub-nav-link ${location.pathname === '/laboratory' ? 'active' : ''}`}
+        >
+          All Tests
+        </Link>
+        <Link
+          to="/laboratory/in-house"
+          className={`sub-nav-link ${location.pathname.includes('/in-house') ? 'active' : ''}`}
+        >
+          In-House Testing
+        </Link>
+        <Link
+          to="/laboratory/external"
+          className={`sub-nav-link ${location.pathname.includes('/external') ? 'active' : ''}`}
+        >
+          External Lab Integration
+        </Link>
+        <Link
+          to="/laboratory/test-catalog"
+          className={`sub-nav-link ${location.pathname.includes('/test-catalog') ? 'active' : ''}`}
+        >
+          Test Catalog
+        </Link>
+        <Link
+          to="/laboratory/sample-tracking"
+          className={`sub-nav-link ${location.pathname.includes('/sample-tracking') ? 'active' : ''}`}
+        >
+          Sample Tracking
+        </Link>
+        <Link
+          to="/laboratory/results"
+          className={`sub-nav-link ${location.pathname.includes('/results') ? 'active' : ''}`}
+        >
+          Result Interpretation
+        </Link>
+        <Link
+          to="/laboratory/quality-assurance"
+          className={`sub-nav-link ${location.pathname.includes('/quality-assurance') ? 'active' : ''}`}
+        >
+          Quality Assurance
+        </Link>
+        <Link
+          to="/laboratory/equipment"
+          className={`sub-nav-link ${location.pathname.includes('/equipment') ? 'active' : ''}`}
+        >
+          Equipment Management
+        </Link>
+        <Link
+          to="/laboratory/reports"
+          className={`sub-nav-link ${location.pathname.includes('/reports') ? 'active' : ''}`}
+        >
+          Lab Reports
+        </Link>
       </nav>
 
-      <Suspense fallback={<div role="status"><p>Loading...</p></div>}>
+      <Suspense
+        fallback={
+          <div role="status">
+            <p>Loading...</p>
+          </div>
+        }
+      >
         <Routes>
           <Route path="/" element={<LaboratoryList />} />
           <Route path="/in-house" element={<InHouse />} />

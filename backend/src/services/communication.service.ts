@@ -1,8 +1,9 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
+import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION } from '../constants';
 
 export class CommunicationService {
-  async createCommunication(data: any) {
+  async createCommunication(data: Record<string, unknown>) {
     return prisma.communication.create({
       data,
       include: {
@@ -20,7 +21,7 @@ export class CommunicationService {
     });
 
     if (!communication) {
-      throw new AppError('Communication record not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Communication record'), HTTP_STATUS.NOT_FOUND);
     }
 
     return communication;
@@ -32,10 +33,15 @@ export class CommunicationService {
     clientId?: string;
     type?: string;
   }) {
-    const { page = 1, limit = 20, clientId, type } = options;
+    const {
+      page = PAGINATION.DEFAULT_PAGE,
+      limit = PAGINATION.DEFAULT_LIMIT,
+      clientId,
+      type,
+    } = options;
     const skip = (page - 1) * limit;
 
-    const where: any = {
+    const where: Record<string, unknown> = {
       ...(clientId && { clientId }),
       ...(type && { type }),
     };
@@ -71,11 +77,11 @@ export class CommunicationService {
     };
   }
 
-  async updateCommunication(id: string, data: any) {
+  async updateCommunication(id: string, data: Record<string, unknown>) {
     const communication = await prisma.communication.findUnique({ where: { id } });
 
     if (!communication) {
-      throw new AppError('Communication record not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Communication record'), HTTP_STATUS.NOT_FOUND);
     }
 
     return prisma.communication.update({
@@ -91,7 +97,7 @@ export class CommunicationService {
     const communication = await prisma.communication.findUnique({ where: { id } });
 
     if (!communication) {
-      throw new AppError('Communication record not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Communication record'), HTTP_STATUS.NOT_FOUND);
     }
 
     return prisma.communication.delete({

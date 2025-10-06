@@ -1,18 +1,19 @@
 import { Request, Response } from 'express';
 import patientReminderService from '../services/patient-reminder.service';
+import { HTTP_STATUS } from '../constants';
 
 export class PatientReminderController {
-  async create(req: Request, res: Response) {
+  async create(req: Request, res: Response): Promise<void> {
     const reminder = await patientReminderService.createReminder(req.body);
-    res.status(201).json({ status: 'success', data: reminder });
+    res.status(HTTP_STATUS.CREATED).json({ status: 'success', data: reminder });
   }
 
-  async getById(req: Request, res: Response) {
+  async getById(req: Request, res: Response): Promise<void> {
     const reminder = await patientReminderService.getReminder(req.params.id);
-    res.status(200).json({ status: 'success', data: reminder });
+    res.status(HTTP_STATUS.OK).json({ status: 'success', data: reminder });
   }
 
-  async getAll(req: Request, res: Response) {
+  async getAll(req: Request, res: Response): Promise<void> {
     const { patientId, reminderType, status, startDate, endDate, page, limit } = req.query;
     const result = await patientReminderService.listReminders({
       patientId: patientId as string,
@@ -23,27 +24,27 @@ export class PatientReminderController {
       page: page ? parseInt(page as string) : undefined,
       limit: limit ? parseInt(limit as string) : undefined,
     });
-    res.status(200).json({ status: 'success', ...result });
+    res.status(HTTP_STATUS.OK).json({ status: 'success', ...result });
   }
 
   async getDue(_req: Request, res: Response) {
     const reminders = await patientReminderService.getDueReminders();
-    res.status(200).json({ status: 'success', data: reminders });
+    res.status(HTTP_STATUS.OK).json({ status: 'success', data: reminders });
   }
 
-  async complete(req: Request, res: Response) {
+  async complete(req: Request, res: Response): Promise<void> {
     const reminder = await patientReminderService.completeReminder(req.params.id);
-    res.status(200).json({ status: 'success', data: reminder });
+    res.status(HTTP_STATUS.OK).json({ status: 'success', data: reminder });
   }
 
-  async update(req: Request, res: Response) {
+  async update(req: Request, res: Response): Promise<void> {
     const reminder = await patientReminderService.updateReminder(req.params.id, req.body);
-    res.status(200).json({ status: 'success', data: reminder });
+    res.status(HTTP_STATUS.OK).json({ status: 'success', data: reminder });
   }
 
-  async delete(req: Request, res: Response) {
+  async delete(req: Request, res: Response): Promise<void> {
     await patientReminderService.deleteReminder(req.params.id);
-    res.status(204).send();
+    res.status(HTTP_STATUS.NO_CONTENT).send();
   }
 }
 

@@ -42,9 +42,7 @@ const IntegrationsList = () => {
               <th scope="row">{integration.name}</th>
               <td>{integration.type}</td>
               <td>
-                <span className="status-badge status-confirmed">
-                  {integration.status}
-                </span>
+                <span className="status-badge status-confirmed">{integration.status}</span>
               </td>
               <td>{integration.lastSync}</td>
               <td>
@@ -65,7 +63,7 @@ const IntegrationsList = () => {
 
 const Integrations = () => {
   const location = useLocation();
-  
+
   return (
     <div className="page">
       <header className="page-header">
@@ -78,18 +76,69 @@ const Integrations = () => {
       </header>
 
       <nav className="sub-nav" role="navigation" aria-label="Integrations sections">
-        <Link to="/integrations" className={`sub-nav-link ${location.pathname === '/integrations' ? 'active' : ''}`}>All Integrations</Link>
-        <Link to="/integrations/third-party" className={`sub-nav-link ${location.pathname.includes('/third-party') ? 'active' : ''}`}>Third-Party</Link>
-        <Link to="/integrations/api" className={`sub-nav-link ${location.pathname.includes('/api') ? 'active' : ''}`}>RESTful API</Link>
-        <Link to="/integrations/import-export" className={`sub-nav-link ${location.pathname.includes('/import-export') ? 'active' : ''}`}>Data Import/Export</Link>
-        <Link to="/integrations/hl7-fhir" className={`sub-nav-link ${location.pathname.includes('/hl7-fhir') ? 'active' : ''}`}>HL7/FHIR</Link>
-        <Link to="/integrations/webhooks" className={`sub-nav-link ${location.pathname.includes('/webhooks') ? 'active' : ''}`}>Webhooks</Link>
-        <Link to="/integrations/sso" className={`sub-nav-link ${location.pathname.includes('/sso') ? 'active' : ''}`}>Single Sign-On</Link>
-        <Link to="/integrations/accounting" className={`sub-nav-link ${location.pathname.includes('/accounting') ? 'active' : ''}`}>Accounting Software</Link>
-        <Link to="/integrations/analytics" className={`sub-nav-link ${location.pathname.includes('/analytics') ? 'active' : ''}`}>API Analytics</Link>
+        <Link
+          to="/integrations"
+          className={`sub-nav-link ${location.pathname === '/integrations' ? 'active' : ''}`}
+        >
+          All Integrations
+        </Link>
+        <Link
+          to="/integrations/third-party"
+          className={`sub-nav-link ${location.pathname.includes('/third-party') ? 'active' : ''}`}
+        >
+          Third-Party
+        </Link>
+        <Link
+          to="/integrations/api"
+          className={`sub-nav-link ${location.pathname.includes('/api') ? 'active' : ''}`}
+        >
+          RESTful API
+        </Link>
+        <Link
+          to="/integrations/import-export"
+          className={`sub-nav-link ${location.pathname.includes('/import-export') ? 'active' : ''}`}
+        >
+          Data Import/Export
+        </Link>
+        <Link
+          to="/integrations/hl7-fhir"
+          className={`sub-nav-link ${location.pathname.includes('/hl7-fhir') ? 'active' : ''}`}
+        >
+          HL7/FHIR
+        </Link>
+        <Link
+          to="/integrations/webhooks"
+          className={`sub-nav-link ${location.pathname.includes('/webhooks') ? 'active' : ''}`}
+        >
+          Webhooks
+        </Link>
+        <Link
+          to="/integrations/sso"
+          className={`sub-nav-link ${location.pathname.includes('/sso') ? 'active' : ''}`}
+        >
+          Single Sign-On
+        </Link>
+        <Link
+          to="/integrations/accounting"
+          className={`sub-nav-link ${location.pathname.includes('/accounting') ? 'active' : ''}`}
+        >
+          Accounting Software
+        </Link>
+        <Link
+          to="/integrations/analytics"
+          className={`sub-nav-link ${location.pathname.includes('/analytics') ? 'active' : ''}`}
+        >
+          API Analytics
+        </Link>
       </nav>
 
-      <Suspense fallback={<div role="status"><p>Loading...</p></div>}>
+      <Suspense
+        fallback={
+          <div role="status">
+            <p>Loading...</p>
+          </div>
+        }
+      >
         <Routes>
           <Route path="/" element={<IntegrationsList />} />
           <Route path="/third-party" element={<ThirdParty />} />

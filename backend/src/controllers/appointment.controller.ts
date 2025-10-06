@@ -1,24 +1,25 @@
 import { Request, Response } from 'express';
 import appointmentService from '../services/appointment.service';
+import { HTTP_STATUS } from '../constants';
 
 export class AppointmentController {
-  async create(req: Request, res: Response) {
+  async create(req: Request, res: Response): Promise<void> {
     const appointment = await appointmentService.createAppointment(req.body);
-    res.status(201).json({
+    res.status(HTTP_STATUS.CREATED).json({
       status: 'success',
       data: appointment,
     });
   }
 
-  async getById(req: Request, res: Response) {
+  async getById(req: Request, res: Response): Promise<void> {
     const appointment = await appointmentService.getAppointmentById(req.params.id);
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       status: 'success',
       data: appointment,
     });
   }
 
-  async getAll(req: Request, res: Response) {
+  async getAll(req: Request, res: Response): Promise<void> {
     const { page, limit, patientId, clientId, veterinarianId, status, startDate, endDate } =
       req.query;
     const result = await appointmentService.getAllAppointments({
@@ -31,28 +32,28 @@ export class AppointmentController {
       startDate: startDate ? new Date(startDate as string) : undefined,
       endDate: endDate ? new Date(endDate as string) : undefined,
     });
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       status: 'success',
       ...result,
     });
   }
 
-  async update(req: Request, res: Response) {
+  async update(req: Request, res: Response): Promise<void> {
     const appointment = await appointmentService.updateAppointment(req.params.id, req.body);
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       status: 'success',
       data: appointment,
     });
   }
 
-  async delete(req: Request, res: Response) {
+  async delete(req: Request, res: Response): Promise<void> {
     await appointmentService.deleteAppointment(req.params.id);
-    res.status(204).send();
+    res.status(HTTP_STATUS.NO_CONTENT).send();
   }
 
-  async complete(req: Request, res: Response) {
+  async complete(req: Request, res: Response): Promise<void> {
     const appointment = await appointmentService.completeAppointment(req.params.id);
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       status: 'success',
       data: appointment,
     });

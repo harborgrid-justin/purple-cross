@@ -1,25 +1,32 @@
 import axios, { AxiosInstance, AxiosError } from 'axios';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api/v1';
+import {
+  API_CONFIG,
+  HTTP_STATUS,
+  STORAGE_KEYS,
+  ROUTES,
+  HTTP_HEADERS,
+  CONTENT_TYPE,
+  API_ENDPOINTS,
+} from '../constants';
 
 class ApiClient {
   private client: AxiosInstance;
 
   constructor() {
     this.client = axios.create({
-      baseURL: API_BASE_URL,
-      timeout: 10000,
+      baseURL: API_CONFIG.BASE_URL,
+      timeout: API_CONFIG.TIMEOUT,
       headers: {
-        'Content-Type': 'application/json',
+        [HTTP_HEADERS.CONTENT_TYPE]: CONTENT_TYPE.JSON,
       },
     });
 
     // Request interceptor for adding auth token
     this.client.interceptors.request.use(
       (config) => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
         if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
+          config.headers.Authorization = `${HTTP_HEADERS.BEARER_PREFIX} ${token}`;
         }
         return config;
       },
@@ -30,10 +37,10 @@ class ApiClient {
     this.client.interceptors.response.use(
       (response) => response,
       (error: AxiosError) => {
-        if (error.response?.status === 401) {
+        if (error.response?.status === HTTP_STATUS.UNAUTHORIZED) {
           // Handle unauthorized - redirect to login
-          localStorage.removeItem('token');
-          window.location.href = '/login';
+          localStorage.removeItem(STORAGE_KEYS.TOKEN);
+          window.location.href = ROUTES.LOGIN;
         }
         return Promise.reject(error);
       }
@@ -69,31 +76,31 @@ class ApiClient {
   // Patient endpoints
   patients = {
     getAll: (params?: { page?: number; limit?: number; search?: string; ownerId?: string }) =>
-      this.get('/patients', params),
-    getById: (id: string) => this.get(`/patients/${id}`),
-    create: (data: unknown) => this.post('/patients', data),
-    update: (id: string, data: unknown) => this.put(`/patients/${id}`, data),
-    delete: (id: string) => this.delete(`/patients/${id}`),
+      this.get(API_ENDPOINTS.PATIENTS, params),
+    getById: (id: string) => this.get(API_ENDPOINTS.PATIENT_BY_ID(id)),
+    create: (data: unknown) => this.post(API_ENDPOINTS.PATIENTS, data),
+    update: (id: string, data: unknown) => this.put(API_ENDPOINTS.PATIENT_BY_ID(id), data),
+    delete: (id: string) => this.delete(API_ENDPOINTS.PATIENT_BY_ID(id)),
   };
 
   // Client endpoints
   clients = {
     getAll: (params?: { page?: number; limit?: number; search?: string }) =>
-      this.get('/clients', params),
-    getById: (id: string) => this.get(`/clients/${id}`),
-    create: (data: unknown) => this.post('/clients', data),
-    update: (id: string, data: unknown) => this.put(`/clients/${id}`, data),
-    delete: (id: string) => this.delete(`/clients/${id}`),
+      this.get(API_ENDPOINTS.CLIENTS, params),
+    getById: (id: string) => this.get(API_ENDPOINTS.CLIENT_BY_ID(id)),
+    create: (data: unknown) => this.post(API_ENDPOINTS.CLIENTS, data),
+    update: (id: string, data: unknown) => this.put(API_ENDPOINTS.CLIENT_BY_ID(id), data),
+    delete: (id: string) => this.delete(API_ENDPOINTS.CLIENT_BY_ID(id)),
   };
 
   // Appointment endpoints
   appointments = {
     getAll: (params?: { page?: number; limit?: number; date?: string }) =>
-      this.get('/appointments', params),
-    getById: (id: string) => this.get(`/appointments/${id}`),
-    create: (data: unknown) => this.post('/appointments', data),
-    update: (id: string, data: unknown) => this.put(`/appointments/${id}`, data),
-    delete: (id: string) => this.delete(`/appointments/${id}`),
+      this.get(API_ENDPOINTS.APPOINTMENTS, params),
+    getById: (id: string) => this.get(API_ENDPOINTS.APPOINTMENT_BY_ID(id)),
+    create: (data: unknown) => this.post(API_ENDPOINTS.APPOINTMENTS, data),
+    update: (id: string, data: unknown) => this.put(API_ENDPOINTS.APPOINTMENT_BY_ID(id), data),
+    delete: (id: string) => this.delete(API_ENDPOINTS.APPOINTMENT_BY_ID(id)),
   };
 
   // Medical Records endpoints
@@ -213,8 +220,7 @@ class ApiClient {
 
   // Patient Reminder endpoints
   patientReminders = {
-    getAll: (params?: { page?: number; limit?: number }) =>
-      this.get('/patient-reminders', params),
+    getAll: (params?: { page?: number; limit?: number }) => this.get('/patient-reminders', params),
     getById: (id: string) => this.get(`/patient-reminders/${id}`),
     getDue: () => this.get('/patient-reminders/due'),
     create: (data: unknown) => this.post('/patient-reminders', data),
@@ -240,8 +246,7 @@ class ApiClient {
 
   // Loyalty Program endpoints
   loyaltyPrograms = {
-    getAll: (params?: { page?: number; limit?: number }) =>
-      this.get('/loyalty-programs', params),
+    getAll: (params?: { page?: number; limit?: number }) => this.get('/loyalty-programs', params),
     getById: (id: string) => this.get(`/loyalty-programs/${id}`),
     getByClient: (clientId: string) => this.get(`/loyalty-programs/client/${clientId}`),
     getTransactions: (loyaltyProgramId: string) =>
@@ -278,7 +283,8 @@ class ApiClient {
     create: (data: unknown) => this.post('/waitlist', data),
     update: (id: string, data: unknown) => this.put(`/waitlist/${id}`, data),
     notify: (id: string) => this.post(`/waitlist/${id}/notify`),
-    book: (id: string, appointmentData: unknown) => this.post(`/waitlist/${id}/book`, appointmentData),
+    book: (id: string, appointmentData: unknown) =>
+      this.post(`/waitlist/${id}/book`, appointmentData),
     cancel: (id: string) => this.post(`/waitlist/${id}/cancel`),
     delete: (id: string) => this.delete(`/waitlist/${id}`),
   };
@@ -308,8 +314,7 @@ class ApiClient {
   paymentPlans = {
     getAll: (params?: { page?: number; limit?: number }) => this.get('/payment-plans', params),
     getById: (id: string) => this.get(`/payment-plans/${id}`),
-    getDueInstallments: (clientId: string) =>
-      this.get(`/payment-plans/client/${clientId}/due`),
+    getDueInstallments: (clientId: string) => this.get(`/payment-plans/client/${clientId}/due`),
     create: (data: unknown) => this.post('/payment-plans', data),
     update: (id: string, data: unknown) => this.put(`/payment-plans/${id}`, data),
     recordPayment: (paymentData: unknown) => this.post('/payment-plans/payment', paymentData),
@@ -396,8 +401,7 @@ class ApiClient {
 
   // Report Template endpoints
   reportTemplates = {
-    getAll: (params?: { page?: number; limit?: number }) =>
-      this.get('/report-templates', params),
+    getAll: (params?: { page?: number; limit?: number }) => this.get('/report-templates', params),
     getById: (id: string) => this.get(`/report-templates/${id}`),
     getScheduledReports: () => this.get('/report-templates/schedule/due'),
     create: (data: unknown) => this.post('/report-templates', data),
@@ -410,8 +414,7 @@ class ApiClient {
 
   // Document Template endpoints
   documentTemplates = {
-    getAll: (params?: { page?: number; limit?: number }) =>
-      this.get('/document-templates', params),
+    getAll: (params?: { page?: number; limit?: number }) => this.get('/document-templates', params),
     getById: (id: string) => this.get(`/document-templates/${id}`),
     getDocumentSignatures: (documentId: string) =>
       this.get(`/document-templates/documents/${documentId}/signatures`),

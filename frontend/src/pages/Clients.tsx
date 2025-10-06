@@ -178,29 +178,82 @@ const ClientsList = () => {
 
 const Clients = () => {
   const location = useLocation();
-  
+
   return (
     <div className="page">
       <header className="page-header">
-        <h1><span aria-hidden="true">👥</span> Clients</h1>
+        <h1>
+          <span aria-hidden="true">👥</span> Clients
+        </h1>
         <button className="btn-primary" aria-label="Add a new client">
           + Add New Client
         </button>
       </header>
 
       <nav className="sub-nav" role="navigation" aria-label="Client sections">
-        <Link to="/clients" className={`sub-nav-link ${location.pathname === '/clients' ? 'active' : ''}`}>All Clients</Link>
-        <Link to="/clients/registration" className={`sub-nav-link ${location.pathname.includes('/registration') ? 'active' : ''}`}>Registration & Profiles</Link>
-        <Link to="/clients/account-management" className={`sub-nav-link ${location.pathname.includes('/account-management') ? 'active' : ''}`}>Account Management</Link>
-        <Link to="/clients/multi-pet" className={`sub-nav-link ${location.pathname.includes('/multi-pet') ? 'active' : ''}`}>Multi-Pet Households</Link>
-        <Link to="/clients/communication-history" className={`sub-nav-link ${location.pathname.includes('/communication-history') ? 'active' : ''}`}>Communication History</Link>
-        <Link to="/clients/portal-access" className={`sub-nav-link ${location.pathname.includes('/portal-access') ? 'active' : ''}`}>Portal Access</Link>
-        <Link to="/clients/loyalty" className={`sub-nav-link ${location.pathname.includes('/loyalty') ? 'active' : ''}`}>Loyalty Programs</Link>
-        <Link to="/clients/feedback" className={`sub-nav-link ${location.pathname.includes('/feedback') ? 'active' : ''}`}>Feedback & Surveys</Link>
-        <Link to="/clients/segmentation" className={`sub-nav-link ${location.pathname.includes('/segmentation') ? 'active' : ''}`}>Client Segmentation</Link>
+        <Link
+          to="/clients"
+          className={`sub-nav-link ${location.pathname === '/clients' ? 'active' : ''}`}
+        >
+          All Clients
+        </Link>
+        <Link
+          to="/clients/registration"
+          className={`sub-nav-link ${location.pathname.includes('/registration') ? 'active' : ''}`}
+        >
+          Registration & Profiles
+        </Link>
+        <Link
+          to="/clients/account-management"
+          className={`sub-nav-link ${location.pathname.includes('/account-management') ? 'active' : ''}`}
+        >
+          Account Management
+        </Link>
+        <Link
+          to="/clients/multi-pet"
+          className={`sub-nav-link ${location.pathname.includes('/multi-pet') ? 'active' : ''}`}
+        >
+          Multi-Pet Households
+        </Link>
+        <Link
+          to="/clients/communication-history"
+          className={`sub-nav-link ${location.pathname.includes('/communication-history') ? 'active' : ''}`}
+        >
+          Communication History
+        </Link>
+        <Link
+          to="/clients/portal-access"
+          className={`sub-nav-link ${location.pathname.includes('/portal-access') ? 'active' : ''}`}
+        >
+          Portal Access
+        </Link>
+        <Link
+          to="/clients/loyalty"
+          className={`sub-nav-link ${location.pathname.includes('/loyalty') ? 'active' : ''}`}
+        >
+          Loyalty Programs
+        </Link>
+        <Link
+          to="/clients/feedback"
+          className={`sub-nav-link ${location.pathname.includes('/feedback') ? 'active' : ''}`}
+        >
+          Feedback & Surveys
+        </Link>
+        <Link
+          to="/clients/segmentation"
+          className={`sub-nav-link ${location.pathname.includes('/segmentation') ? 'active' : ''}`}
+        >
+          Client Segmentation
+        </Link>
       </nav>
 
-      <Suspense fallback={<div role="status"><p>Loading...</p></div>}>
+      <Suspense
+        fallback={
+          <div role="status">
+            <p>Loading...</p>
+          </div>
+        }
+      >
         <Routes>
           <Route path="/" element={<ClientsList />} />
           <Route path="/registration" element={<Registration />} />

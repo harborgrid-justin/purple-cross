@@ -43,7 +43,9 @@ const DocumentsList = () => {
               <td>{doc.type}</td>
               <td>{doc.date}</td>
               <td>
-                <span className={`status-badge status-${doc.status === 'Signed' ? 'confirmed' : 'pending'}`}>
+                <span
+                  className={`status-badge status-${doc.status === 'Signed' ? 'confirmed' : 'pending'}`}
+                >
                   {doc.status}
                 </span>
               </td>
@@ -65,7 +67,7 @@ const DocumentsList = () => {
 
 const Documents = () => {
   const location = useLocation();
-  
+
   return (
     <div className="page">
       <header className="page-header">
@@ -78,18 +80,69 @@ const Documents = () => {
       </header>
 
       <nav className="sub-nav" role="navigation" aria-label="Documents sections">
-        <Link to="/documents" className={`sub-nav-link ${location.pathname === '/documents' ? 'active' : ''}`}>All Documents</Link>
-        <Link to="/documents/storage" className={`sub-nav-link ${location.pathname.includes('/storage') ? 'active' : ''}`}>Document Storage</Link>
-        <Link to="/documents/templates" className={`sub-nav-link ${location.pathname.includes('/templates') ? 'active' : ''}`}>Templates</Link>
-        <Link to="/documents/e-signature" className={`sub-nav-link ${location.pathname.includes('/e-signature') ? 'active' : ''}`}>E-Signature</Link>
-        <Link to="/documents/scanning" className={`sub-nav-link ${location.pathname.includes('/scanning') ? 'active' : ''}`}>Document Scanning</Link>
-        <Link to="/documents/workflow" className={`sub-nav-link ${location.pathname.includes('/workflow') ? 'active' : ''}`}>Workflow</Link>
-        <Link to="/documents/search" className={`sub-nav-link ${location.pathname.includes('/search') ? 'active' : ''}`}>Search & Retrieval</Link>
-        <Link to="/documents/access-control" className={`sub-nav-link ${location.pathname.includes('/access-control') ? 'active' : ''}`}>Access Control</Link>
-        <Link to="/documents/analytics" className={`sub-nav-link ${location.pathname.includes('/analytics') ? 'active' : ''}`}>Analytics</Link>
+        <Link
+          to="/documents"
+          className={`sub-nav-link ${location.pathname === '/documents' ? 'active' : ''}`}
+        >
+          All Documents
+        </Link>
+        <Link
+          to="/documents/storage"
+          className={`sub-nav-link ${location.pathname.includes('/storage') ? 'active' : ''}`}
+        >
+          Document Storage
+        </Link>
+        <Link
+          to="/documents/templates"
+          className={`sub-nav-link ${location.pathname.includes('/templates') ? 'active' : ''}`}
+        >
+          Templates
+        </Link>
+        <Link
+          to="/documents/e-signature"
+          className={`sub-nav-link ${location.pathname.includes('/e-signature') ? 'active' : ''}`}
+        >
+          E-Signature
+        </Link>
+        <Link
+          to="/documents/scanning"
+          className={`sub-nav-link ${location.pathname.includes('/scanning') ? 'active' : ''}`}
+        >
+          Document Scanning
+        </Link>
+        <Link
+          to="/documents/workflow"
+          className={`sub-nav-link ${location.pathname.includes('/workflow') ? 'active' : ''}`}
+        >
+          Workflow
+        </Link>
+        <Link
+          to="/documents/search"
+          className={`sub-nav-link ${location.pathname.includes('/search') ? 'active' : ''}`}
+        >
+          Search & Retrieval
+        </Link>
+        <Link
+          to="/documents/access-control"
+          className={`sub-nav-link ${location.pathname.includes('/access-control') ? 'active' : ''}`}
+        >
+          Access Control
+        </Link>
+        <Link
+          to="/documents/analytics"
+          className={`sub-nav-link ${location.pathname.includes('/analytics') ? 'active' : ''}`}
+        >
+          Analytics
+        </Link>
       </nav>
 
-      <Suspense fallback={<div role="status"><p>Loading...</p></div>}>
+      <Suspense
+        fallback={
+          <div role="status">
+            <p>Loading...</p>
+          </div>
+        }
+      >
         <Routes>
           <Route path="/" element={<DocumentsList />} />
           <Route path="/storage" element={<Storage />} />

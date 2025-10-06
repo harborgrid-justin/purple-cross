@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { PAGINATION } from '../constants';
 
 const prisma = new PrismaClient();
 
@@ -29,9 +30,16 @@ export class ReportTemplateService {
     page?: number;
     limit?: number;
   }) {
-    const { reportType, category, createdBy, isPublic, page = 1, limit = 20 } = filters || {};
+    const {
+      reportType,
+      category,
+      createdBy,
+      isPublic,
+      page = PAGINATION.DEFAULT_PAGE,
+      limit = PAGINATION.DEFAULT_LIMIT,
+    } = filters || {};
     const skip = (page - 1) * limit;
-    const where: any = {};
+    const where: Record<string, unknown> = {};
     if (reportType) where.reportType = reportType;
     if (category) where.category = category;
     if (createdBy) where.createdBy = createdBy;
@@ -83,7 +91,7 @@ export class ReportTemplateService {
     return now;
   }
 
-  async updateSchedule(id: string, data: any) {
+  async updateSchedule(id: string, data: Record<string, unknown>) {
     return prisma.reportSchedule.update({ where: { id }, data });
   }
 
@@ -94,7 +102,7 @@ export class ReportTemplateService {
     });
   }
 
-  async updateTemplate(id: string, data: any) {
+  async updateTemplate(id: string, data: Record<string, unknown>) {
     return prisma.reportTemplate.update({ where: { id }, data });
   }
 

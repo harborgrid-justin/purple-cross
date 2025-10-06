@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { SORT_ORDER, FIELDS } from '../constants';
 
 const prisma = new PrismaClient();
 
@@ -25,7 +26,7 @@ export class PatientRelationshipService {
       where: {
         OR: [{ patientId }, { relatedPatientId: patientId }],
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { [FIELDS.CREATED_AT]: SORT_ORDER.DESC },
     });
   }
 

@@ -1,8 +1,9 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
+import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION, SORT_ORDER, FIELDS } from '../constants';
 
 export class MedicalRecordService {
-  async createMedicalRecord(data: any) {
+  async createMedicalRecord(data: Record<string, unknown>) {
     return prisma.medicalRecord.create({
       data,
       include: {
@@ -22,7 +23,7 @@ export class MedicalRecordService {
     });
 
     if (!record) {
-      throw new AppError('Medical record not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Medical record'), HTTP_STATUS.NOT_FOUND);
     }
 
     return record;
@@ -34,10 +35,15 @@ export class MedicalRecordService {
     patientId?: string;
     veterinarianId?: string;
   }) {
-    const { page = 1, limit = 20, patientId, veterinarianId } = options;
+    const {
+      page = PAGINATION.DEFAULT_PAGE,
+      limit = PAGINATION.DEFAULT_LIMIT,
+      patientId,
+      veterinarianId,
+    } = options;
     const skip = (page - 1) * limit;
 
-    const where: any = {
+    const where: Record<string, unknown> = {
       ...(patientId && { patientId }),
       ...(veterinarianId && { veterinarianId }),
     };
@@ -55,7 +61,7 @@ export class MedicalRecordService {
             select: { id: true, firstName: true, lastName: true },
           },
         },
-        orderBy: { visitDate: 'desc' },
+        orderBy: { [FIELDS.VISIT_DATE]: SORT_ORDER.DESC },
       }),
       prisma.medicalRecord.count({ where }),
     ]);
@@ -71,11 +77,11 @@ export class MedicalRecordService {
     };
   }
 
-  async updateMedicalRecord(id: string, data: any) {
+  async updateMedicalRecord(id: string, data: Record<string, unknown>) {
     const record = await prisma.medicalRecord.findUnique({ where: { id } });
 
     if (!record) {
-      throw new AppError('Medical record not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Medical record'), HTTP_STATUS.NOT_FOUND);
     }
 
     return prisma.medicalRecord.update({
@@ -92,7 +98,7 @@ export class MedicalRecordService {
     const record = await prisma.medicalRecord.findUnique({ where: { id } });
 
     if (!record) {
-      throw new AppError('Medical record not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Medical record'), HTTP_STATUS.NOT_FOUND);
     }
 
     return prisma.medicalRecord.delete({

@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { PAGINATION } from '../constants';
 
 const prisma = new PrismaClient();
 
@@ -40,19 +41,20 @@ export class PatientReminderService {
       status,
       startDate,
       endDate,
-      page = 1,
-      limit = 20,
+      page = PAGINATION.DEFAULT_PAGE,
+      limit = PAGINATION.DEFAULT_LIMIT,
     } = filters || {};
     const skip = (page - 1) * limit;
 
-    const where: any = {};
+    const where: Record<string, unknown> = {};
     if (patientId) where.patientId = patientId;
     if (reminderType) where.reminderType = reminderType;
     if (status) where.status = status;
     if (startDate || endDate) {
-      where.reminderDate = {};
-      if (startDate) where.reminderDate.gte = startDate;
-      if (endDate) where.reminderDate.lte = endDate;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (where as any).reminderDate = {};
+      if (startDate) (where as any).reminderDate.gte = startDate;
+      if (endDate) (where as any).reminderDate.lte = endDate;
     }
 
     const [items, total] = await Promise.all([

@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { PAGINATION, SORT_ORDER, FIELDS } from '../constants';
 
 const prisma = new PrismaClient();
 
@@ -78,10 +79,15 @@ export class EstimateService {
     page?: number;
     limit?: number;
   }) {
-    const { clientId, status, page = 1, limit = 20 } = filters || {};
+    const {
+      clientId,
+      status,
+      page = PAGINATION.DEFAULT_PAGE,
+      limit = PAGINATION.DEFAULT_LIMIT,
+    } = filters || {};
     const skip = (page - 1) * limit;
 
-    const where: any = {};
+    const where: Record<string, unknown> = {};
     if (clientId) where.clientId = clientId;
     if (status) where.status = status;
 
@@ -93,7 +99,7 @@ export class EstimateService {
         include: {
           lineItems: true,
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy: { [FIELDS.CREATED_AT]: SORT_ORDER.DESC },
       }),
       prisma.estimate.count({ where }),
     ]);
@@ -174,7 +180,7 @@ export class EstimateService {
     });
   }
 
-  async updateEstimate(id: string, data: any) {
+  async updateEstimate(id: string, data: Record<string, unknown>) {
     return prisma.estimate.update({ where: { id }, data });
   }
 

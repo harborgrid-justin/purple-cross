@@ -18,8 +18,10 @@ describe('PatientList Component', () => {
       { id: '3', name: 'Buddy', species: 'Dog' },
     ];
 
-    const filterBySpecies = (list: any[], species: string) => 
-      list.filter(p => p.species === species);
+    const filterBySpecies = (
+      list: Array<{ id: string; name: string; species: string }>,
+      species: string
+    ) => list.filter((p) => p.species === species);
 
     const dogs = filterBySpecies(patients, 'Dog');
     expect(dogs).toHaveLength(2);
@@ -33,15 +35,15 @@ describe('PatientList Component', () => {
     ];
 
     const sorted = [...patients].sort((a, b) => a.name.localeCompare(b.name));
-    
+
     expect(sorted[0].name).toBe('Buddy');
     expect(sorted[1].name).toBe('Luna');
     expect(sorted[2].name).toBe('Max');
   });
 
   it('should handle empty patient list', () => {
-    const patients: any[] = [];
-    
+    const patients: Array<{ id: string; name: string; species: string }> = [];
+
     expect(patients).toHaveLength(0);
     expect(Array.isArray(patients)).toBe(true);
   });

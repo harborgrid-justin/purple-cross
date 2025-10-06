@@ -1,15 +1,16 @@
 import { Request, Response } from 'express';
 import clientPortalService from '../services/client-portal.service';
+import { HTTP_STATUS } from '../constants';
 
 export class ClientPortalController {
-  async create(req: Request, res: Response) {
+  async create(req: Request, res: Response): Promise<void> {
     const access = await clientPortalService.createPortalAccess(req.body);
-    res.status(201).json({ status: 'success', data: access });
+    res.status(HTTP_STATUS.CREATED).json({ status: 'success', data: access });
   }
 
-  async getById(req: Request, res: Response) {
+  async getById(req: Request, res: Response): Promise<void> {
     const access = await clientPortalService.getPortalAccess(req.params.id);
-    res.status(200).json({ status: 'success', data: access });
+    res.status(HTTP_STATUS.OK).json({ status: 'success', data: access });
   }
 
   async login(req: Request, res: Response): Promise<void> {
@@ -19,34 +20,34 @@ export class ClientPortalController {
       res.status(401).json({ status: 'error', message: 'Invalid credentials' });
       return;
     }
-    res.status(200).json({ status: 'success', data: access });
+    res.status(HTTP_STATUS.OK).json({ status: 'success', data: access });
   }
 
-  async updatePassword(req: Request, res: Response) {
+  async updatePassword(req: Request, res: Response): Promise<void> {
     const { newPassword } = req.body;
     const access = await clientPortalService.updatePassword(req.params.id, newPassword);
-    res.status(200).json({ status: 'success', data: access });
+    res.status(HTTP_STATUS.OK).json({ status: 'success', data: access });
   }
 
-  async enableTwoFactor(req: Request, res: Response) {
+  async enableTwoFactor(req: Request, res: Response): Promise<void> {
     const { secret } = req.body;
     const access = await clientPortalService.enableTwoFactor(req.params.id, secret);
-    res.status(200).json({ status: 'success', data: access });
+    res.status(HTTP_STATUS.OK).json({ status: 'success', data: access });
   }
 
-  async disableTwoFactor(req: Request, res: Response) {
+  async disableTwoFactor(req: Request, res: Response): Promise<void> {
     const access = await clientPortalService.disableTwoFactor(req.params.id);
-    res.status(200).json({ status: 'success', data: access });
+    res.status(HTTP_STATUS.OK).json({ status: 'success', data: access });
   }
 
-  async update(req: Request, res: Response) {
+  async update(req: Request, res: Response): Promise<void> {
     const access = await clientPortalService.updatePortalAccess(req.params.id, req.body);
-    res.status(200).json({ status: 'success', data: access });
+    res.status(HTTP_STATUS.OK).json({ status: 'success', data: access });
   }
 
-  async delete(req: Request, res: Response) {
+  async delete(req: Request, res: Response): Promise<void> {
     await clientPortalService.deletePortalAccess(req.params.id);
-    res.status(204).send();
+    res.status(HTTP_STATUS.NO_CONTENT).send();
   }
 }
 

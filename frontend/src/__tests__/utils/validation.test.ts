@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 describe('Form Validation', () => {
   describe('validatePatientForm', () => {
     it('should validate required fields', () => {
-      const validateRequired = (value: any) => {
+      const validateRequired = (value: unknown) => {
         return value !== undefined && value !== null && value !== '';
       };
 
@@ -65,11 +65,9 @@ describe('Form Validation', () => {
 
   describe('validateInvoiceForm', () => {
     it('should validate invoice items', () => {
-      const validateInvoiceItems = (items: any[]) => {
+      const validateInvoiceItems = (items: Array<{ quantity: number; unitPrice: number }>) => {
         if (items.length === 0) return false;
-        return items.every(item => 
-          item.quantity > 0 && item.unitPrice > 0
-        );
+        return items.every((item) => item.quantity > 0 && item.unitPrice > 0);
       };
 
       const validItems = [
@@ -77,9 +75,7 @@ describe('Form Validation', () => {
         { quantity: 1, unitPrice: 100 },
       ];
 
-      const invalidItems = [
-        { quantity: 0, unitPrice: 50 },
-      ];
+      const invalidItems = [{ quantity: 0, unitPrice: 50 }];
 
       expect(validateInvoiceItems(validItems)).toBe(true);
       expect(validateInvoiceItems(invalidItems)).toBe(false);
@@ -87,10 +83,8 @@ describe('Form Validation', () => {
     });
 
     it('should calculate invoice total correctly', () => {
-      const calculateTotal = (items: any[]) => {
-        return items.reduce((sum, item) => 
-          sum + (item.quantity * item.unitPrice), 0
-        );
+      const calculateTotal = (items: Array<{ quantity: number; unitPrice: number }>) => {
+        return items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
       };
 
       const items = [

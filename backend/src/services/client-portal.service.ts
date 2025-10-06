@@ -123,7 +123,7 @@ export class ClientPortalService {
     });
   }
 
-  async updatePortalAccess(id: string, data: any) {
+  async updatePortalAccess(id: string, data: Record<string, unknown>) {
     return prisma.clientPortalAccess.update({ where: { id }, data });
   }
 

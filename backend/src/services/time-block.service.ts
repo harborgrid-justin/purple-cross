@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { PAGINATION } from '../constants';
 
 const prisma = new PrismaClient();
 
@@ -28,15 +29,22 @@ export class TimeBlockService {
     page?: number;
     limit?: number;
   }) {
-    const { staffId, blockType, startDate, endDate, page = 1, limit = 20 } = filters || {};
+    const {
+      staffId,
+      blockType,
+      startDate,
+      endDate,
+      page = PAGINATION.DEFAULT_PAGE,
+      limit = PAGINATION.DEFAULT_LIMIT,
+    } = filters || {};
     const skip = (page - 1) * limit;
-    const where: any = {};
+    const where: Record<string, unknown> = {};
     if (staffId) where.staffId = staffId;
     if (blockType) where.blockType = blockType;
     if (startDate || endDate) {
-      where.startTime = {};
-      if (startDate) where.startTime.gte = startDate;
-      if (endDate) where.startTime.lte = endDate;
+      (where as any).startTime = {};
+      if (startDate) (where as any).startTime.gte = startDate;
+      if (endDate) (where as any).startTime.lte = endDate;
     }
     const [items, total] = await Promise.all([
       prisma.timeBlock.findMany({ where, skip, take: limit, orderBy: { startTime: 'asc' } }),
@@ -45,7 +53,7 @@ export class TimeBlockService {
     return { items, total, page, limit, totalPages: Math.ceil(total / limit) };
   }
 
-  async updateTimeBlock(id: string, data: any) {
+  async updateTimeBlock(id: string, data: Record<string, unknown>) {
     return prisma.timeBlock.update({ where: { id }, data });
   }
 

@@ -1,15 +1,27 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
+import {
+  HTTP_STATUS,
+  ERROR_MESSAGES,
+  PAGINATION,
+  QUERY_MODE,
+  SORT_ORDER,
+  FIELDS,
+  QUERY_LIMITS,
+} from '../constants';
 
 export class StaffService {
-  async createStaff(data: any) {
+  async createStaff(data: Record<string, unknown>) {
     // Check if email already exists
     const existing = await prisma.staff.findUnique({
       where: { email: data.email },
     });
 
     if (existing) {
-      throw new AppError('Staff with this email already exists', 400);
+      throw new AppError(
+        ERROR_MESSAGES.ALREADY_EXISTS('Staff with this email'),
+        HTTP_STATUS.BAD_REQUEST
+      );
     }
 
     return prisma.staff.create({
@@ -22,18 +34,18 @@ export class StaffService {
       where: { id },
       include: {
         veterinarianAppointments: {
-          take: 5,
-          orderBy: { startTime: 'desc' },
+          take: QUERY_LIMITS.APPOINTMENTS,
+          orderBy: { [FIELDS.START_TIME]: SORT_ORDER.DESC },
         },
         schedules: {
-          take: 10,
+          take: QUERY_LIMITS.RECENT_ITEMS,
           orderBy: { shiftDate: 'desc' },
         },
       },
     });
 
     if (!staff) {
-      throw new AppError('Staff member not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Staff member'), HTTP_STATUS.NOT_FOUND);
     }
 
     return staff;
@@ -46,17 +58,23 @@ export class StaffService {
     status?: string;
     search?: string;
   }) {
-    const { page = 1, limit = 20, role, status, search } = options;
+    const {
+      page = PAGINATION.DEFAULT_PAGE,
+      limit = PAGINATION.DEFAULT_LIMIT,
+      role,
+      status,
+      search,
+    } = options;
     const skip = (page - 1) * limit;
 
-    const where: any = {
+    const where: Record<string, unknown> = {
       ...(role && { role }),
       ...(status && { status }),
       ...(search && {
         OR: [
-          { firstName: { contains: search, mode: 'insensitive' } },
-          { lastName: { contains: search, mode: 'insensitive' } },
-          { email: { contains: search, mode: 'insensitive' } },
+          { firstName: { contains: search, mode: QUERY_MODE.INSENSITIVE } },
+          { lastName: { contains: search, mode: QUERY_MODE.INSENSITIVE } },
+          { email: { contains: search, mode: QUERY_MODE.INSENSITIVE } },
         ],
       }),
     };
@@ -82,11 +100,11 @@ export class StaffService {
     };
   }
 
-  async updateStaff(id: string, data: any) {
+  async updateStaff(id: string, data: Record<string, unknown>) {
     const staff = await prisma.staff.findUnique({ where: { id } });
 
     if (!staff) {
-      throw new AppError('Staff member not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Staff member'), HTTP_STATUS.NOT_FOUND);
     }
 
     return prisma.staff.update({
@@ -99,7 +117,7 @@ export class StaffService {
     const staff = await prisma.staff.findUnique({ where: { id } });
 
     if (!staff) {
-      throw new AppError('Staff member not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Staff member'), HTTP_STATUS.NOT_FOUND);
     }
 
     // Soft delete by updating status

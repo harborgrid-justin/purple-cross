@@ -1,8 +1,9 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
+import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION, SORT_ORDER, FIELDS } from '../constants';
 
 export class InvoiceService {
-  async createInvoice(data: any) {
+  async createInvoice(data: Record<string, unknown>) {
     return prisma.invoice.create({
       data,
       include: {
@@ -24,7 +25,7 @@ export class InvoiceService {
     });
 
     if (!invoice) {
-      throw new AppError('Invoice not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Invoice'), HTTP_STATUS.NOT_FOUND);
     }
 
     return invoice;
@@ -36,10 +37,15 @@ export class InvoiceService {
     clientId?: string;
     status?: string;
   }) {
-    const { page = 1, limit = 20, clientId, status } = options;
+    const {
+      page = PAGINATION.DEFAULT_PAGE,
+      limit = PAGINATION.DEFAULT_LIMIT,
+      clientId,
+      status,
+    } = options;
     const skip = (page - 1) * limit;
 
-    const where: any = {
+    const where: Record<string, unknown> = {
       ...(clientId && { clientId }),
       ...(status && { status }),
     };
@@ -61,7 +67,7 @@ export class InvoiceService {
           lineItems: true,
           payments: true,
         },
-        orderBy: { invoiceDate: 'desc' },
+        orderBy: { [FIELDS.INVOICE_DATE]: SORT_ORDER.DESC },
       }),
       prisma.invoice.count({ where }),
     ]);
@@ -77,11 +83,11 @@ export class InvoiceService {
     };
   }
 
-  async updateInvoice(id: string, data: any) {
+  async updateInvoice(id: string, data: Record<string, unknown>) {
     const invoice = await prisma.invoice.findUnique({ where: { id } });
 
     if (!invoice) {
-      throw new AppError('Invoice not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Invoice'), HTTP_STATUS.NOT_FOUND);
     }
 
     return prisma.invoice.update({
@@ -99,7 +105,7 @@ export class InvoiceService {
     const invoice = await prisma.invoice.findUnique({ where: { id } });
 
     if (!invoice) {
-      throw new AppError('Invoice not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Invoice'), HTTP_STATUS.NOT_FOUND);
     }
 
     return prisma.invoice.delete({

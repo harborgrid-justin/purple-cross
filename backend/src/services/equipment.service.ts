@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { PAGINATION, SORT_ORDER, FIELDS, QUERY_LIMITS } from '../constants';
 
 const prisma = new PrismaClient();
 
@@ -28,7 +29,7 @@ export class EquipmentService {
       include: {
         maintenanceRecords: {
           orderBy: { scheduledDate: 'desc' },
-          take: 10,
+          take: QUERY_LIMITS.RECENT_ITEMS,
         },
       },
     });
@@ -41,10 +42,16 @@ export class EquipmentService {
     page?: number;
     limit?: number;
   }) {
-    const { category, status, location, page = 1, limit = 20 } = filters || {};
+    const {
+      category,
+      status,
+      location,
+      page = PAGINATION.DEFAULT_PAGE,
+      limit = PAGINATION.DEFAULT_LIMIT,
+    } = filters || {};
     const skip = (page - 1) * limit;
 
-    const where: any = {};
+    const where: Record<string, unknown> = {};
     if (category) where.category = category;
     if (status) where.status = status;
     if (location) where.location = location;
@@ -61,7 +68,7 @@ export class EquipmentService {
             take: 1,
           },
         },
-        orderBy: { name: 'asc' },
+        orderBy: { [FIELDS.NAME]: SORT_ORDER.ASC },
       }),
       prisma.equipment.count({ where }),
     ]);
@@ -138,16 +145,24 @@ export class EquipmentService {
     page?: number;
     limit?: number;
   }) {
-    const { equipmentId, status, startDate, endDate, page = 1, limit = 20 } = filters || {};
+    const {
+      equipmentId,
+      status,
+      startDate,
+      endDate,
+      page = PAGINATION.DEFAULT_PAGE,
+      limit = PAGINATION.DEFAULT_LIMIT,
+    } = filters || {};
     const skip = (page - 1) * limit;
 
-    const where: any = {};
+    const where: Record<string, unknown> = {};
     if (equipmentId) where.equipmentId = equipmentId;
     if (status) where.status = status;
     if (startDate || endDate) {
-      where.scheduledDate = {};
-      if (startDate) where.scheduledDate.gte = startDate;
-      if (endDate) where.scheduledDate.lte = endDate;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (where as any).scheduledDate = {};
+      if (startDate) (where as any).scheduledDate.gte = startDate;
+      if (endDate) (where as any).scheduledDate.lte = endDate;
     }
 
     const [items, total] = await Promise.all([

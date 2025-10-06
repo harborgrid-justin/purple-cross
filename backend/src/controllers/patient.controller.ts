@@ -1,10 +1,11 @@
 import { Request, Response } from 'express';
 import patientService from '../services/patient.service';
+import { HTTP_STATUS } from '../constants';
 
 export class PatientController {
   async create(req: Request, res: Response): Promise<void> {
     const patient = await patientService.createPatient(req.body);
-    res.status(201).json({
+    res.status(HTTP_STATUS.CREATED).json({
       status: 'success',
       data: patient,
     });
@@ -12,7 +13,7 @@ export class PatientController {
 
   async getById(req: Request, res: Response): Promise<void> {
     const patient = await patientService.getPatientById(req.params.id);
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       status: 'success',
       data: patient,
     });
@@ -26,7 +27,7 @@ export class PatientController {
       search: search as string,
       ownerId: ownerId as string,
     });
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       status: 'success',
       ...result,
     });
@@ -34,7 +35,7 @@ export class PatientController {
 
   async update(req: Request, res: Response): Promise<void> {
     const patient = await patientService.updatePatient(req.params.id, req.body);
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       status: 'success',
       data: patient,
     });
@@ -42,7 +43,7 @@ export class PatientController {
 
   async delete(req: Request, res: Response): Promise<void> {
     await patientService.deletePatient(req.params.id);
-    res.status(204).send();
+    res.status(HTTP_STATUS.NO_CONTENT).send();
   }
 }
 

@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { PAGINATION } from '../constants';
 
 const prisma = new PrismaClient();
 
@@ -35,10 +36,16 @@ export class WaitlistService {
     page?: number;
     limit?: number;
   }) {
-    const { appointmentType, urgency, status = 'active', page = 1, limit = 20 } = filters || {};
+    const {
+      appointmentType,
+      urgency,
+      status = 'active',
+      page = PAGINATION.DEFAULT_PAGE,
+      limit = PAGINATION.DEFAULT_LIMIT,
+    } = filters || {};
     const skip = (page - 1) * limit;
 
-    const where: any = { status };
+    const where: Record<string, unknown> = { status };
     if (appointmentType) where.appointmentType = appointmentType;
     if (urgency) where.urgency = urgency;
 
@@ -89,7 +96,7 @@ export class WaitlistService {
     });
   }
 
-  async updateWaitlistEntry(id: string, data: any) {
+  async updateWaitlistEntry(id: string, data: Record<string, unknown>) {
     return prisma.waitlist.update({ where: { id }, data });
   }
 

@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { PAGINATION, SORT_ORDER, FIELDS } from '../constants';
 
 const prisma = new PrismaClient();
 
@@ -33,10 +34,15 @@ export class MarketingCampaignService {
     page?: number;
     limit?: number;
   }) {
-    const { status, campaignType, page = 1, limit = 20 } = filters || {};
+    const {
+      status,
+      campaignType,
+      page = PAGINATION.DEFAULT_PAGE,
+      limit = PAGINATION.DEFAULT_LIMIT,
+    } = filters || {};
     const skip = (page - 1) * limit;
 
-    const where: any = {};
+    const where: Record<string, unknown> = {};
     if (status) where.status = status;
     if (campaignType) where.campaignType = campaignType;
 
@@ -45,7 +51,7 @@ export class MarketingCampaignService {
         where,
         skip,
         take: limit,
-        orderBy: { createdAt: 'desc' },
+        orderBy: { [FIELDS.CREATED_AT]: SORT_ORDER.DESC },
       }),
       prisma.marketingCampaign.count({ where }),
     ]);
@@ -86,7 +92,7 @@ export class MarketingCampaignService {
     });
   }
 
-  async updateCampaign(id: string, data: any) {
+  async updateCampaign(id: string, data: Record<string, unknown>) {
     return prisma.marketingCampaign.update({ where: { id }, data });
   }
 

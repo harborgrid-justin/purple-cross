@@ -53,9 +53,7 @@ const MobileList = () => {
               <td>{device.version}</td>
               <td>{device.lastSync}</td>
               <td>
-                <span className="status-badge status-confirmed">
-                  {device.status}
-                </span>
+                <span className="status-badge status-confirmed">{device.status}</span>
               </td>
               <td>
                 <button className="btn-action" aria-label={`Manage ${device.device}`}>
@@ -75,7 +73,7 @@ const MobileList = () => {
 
 const Mobile = () => {
   const location = useLocation();
-  
+
   return (
     <div className="page">
       <header className="page-header">
@@ -88,18 +86,69 @@ const Mobile = () => {
       </header>
 
       <nav className="sub-nav" role="navigation" aria-label="Mobile sections">
-        <Link to="/mobile" className={`sub-nav-link ${location.pathname === '/mobile' ? 'active' : ''}`}>Devices</Link>
-        <Link to="/mobile/applications" className={`sub-nav-link ${location.pathname.includes('/applications') ? 'active' : ''}`}>Mobile Applications</Link>
-        <Link to="/mobile/tablet" className={`sub-nav-link ${location.pathname.includes('/tablet') ? 'active' : ''}`}>Tablet Optimization</Link>
-        <Link to="/mobile/remote-desktop" className={`sub-nav-link ${location.pathname.includes('/remote-desktop') ? 'active' : ''}`}>Remote Desktop</Link>
-        <Link to="/mobile/field-service" className={`sub-nav-link ${location.pathname.includes('/field-service') ? 'active' : ''}`}>Field Service</Link>
-        <Link to="/mobile/emergency-access" className={`sub-nav-link ${location.pathname.includes('/emergency-access') ? 'active' : ''}`}>Emergency Access</Link>
-        <Link to="/mobile/offline" className={`sub-nav-link ${location.pathname.includes('/offline') ? 'active' : ''}`}>Offline Capabilities</Link>
-        <Link to="/mobile/reporting" className={`sub-nav-link ${location.pathname.includes('/reporting') ? 'active' : ''}`}>Mobile Reporting</Link>
-        <Link to="/mobile/sync" className={`sub-nav-link ${location.pathname.includes('/sync') ? 'active' : ''}`}>Cross-Platform Sync</Link>
+        <Link
+          to="/mobile"
+          className={`sub-nav-link ${location.pathname === '/mobile' ? 'active' : ''}`}
+        >
+          Devices
+        </Link>
+        <Link
+          to="/mobile/applications"
+          className={`sub-nav-link ${location.pathname.includes('/applications') ? 'active' : ''}`}
+        >
+          Mobile Applications
+        </Link>
+        <Link
+          to="/mobile/tablet"
+          className={`sub-nav-link ${location.pathname.includes('/tablet') ? 'active' : ''}`}
+        >
+          Tablet Optimization
+        </Link>
+        <Link
+          to="/mobile/remote-desktop"
+          className={`sub-nav-link ${location.pathname.includes('/remote-desktop') ? 'active' : ''}`}
+        >
+          Remote Desktop
+        </Link>
+        <Link
+          to="/mobile/field-service"
+          className={`sub-nav-link ${location.pathname.includes('/field-service') ? 'active' : ''}`}
+        >
+          Field Service
+        </Link>
+        <Link
+          to="/mobile/emergency-access"
+          className={`sub-nav-link ${location.pathname.includes('/emergency-access') ? 'active' : ''}`}
+        >
+          Emergency Access
+        </Link>
+        <Link
+          to="/mobile/offline"
+          className={`sub-nav-link ${location.pathname.includes('/offline') ? 'active' : ''}`}
+        >
+          Offline Capabilities
+        </Link>
+        <Link
+          to="/mobile/reporting"
+          className={`sub-nav-link ${location.pathname.includes('/reporting') ? 'active' : ''}`}
+        >
+          Mobile Reporting
+        </Link>
+        <Link
+          to="/mobile/sync"
+          className={`sub-nav-link ${location.pathname.includes('/sync') ? 'active' : ''}`}
+        >
+          Cross-Platform Sync
+        </Link>
       </nav>
 
-      <Suspense fallback={<div role="status"><p>Loading...</p></div>}>
+      <Suspense
+        fallback={
+          <div role="status">
+            <p>Loading...</p>
+          </div>
+        }
+      >
         <Routes>
           <Route path="/" element={<MobileList />} />
           <Route path="/applications" element={<Applications />} />

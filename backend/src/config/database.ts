@@ -1,6 +1,23 @@
 import { PrismaClient } from '@prisma/client';
 import { logger } from './logger';
 
+// Prisma event types
+interface QueryEvent {
+  query: string;
+  duration: number;
+  timestamp: Date;
+}
+
+interface ErrorEvent {
+  message: string;
+  target: string;
+}
+
+interface WarnEvent {
+  message: string;
+  target: string;
+}
+
 const prisma = new PrismaClient({
   log: [
     { level: 'query', emit: 'event' },
@@ -11,21 +28,21 @@ const prisma = new PrismaClient({
 
 // Log queries in development
 if (process.env.NODE_ENV === 'development') {
-  prisma.$on('query', (e: any) => {
+  prisma.$on('query', (e: QueryEvent) => {
     logger.debug('Query: ' + e.query);
     logger.debug('Duration: ' + e.duration + 'ms');
   });
 }
 
-prisma.$on('error', (e: any) => {
+prisma.$on('error', (e: ErrorEvent) => {
   logger.error('Database error:', e);
 });
 
-prisma.$on('warn', (e: any) => {
+prisma.$on('warn', (e: WarnEvent) => {
   logger.warn('Database warning:', e);
 });
 
-export async function connectDatabase() {
+export async function connectDatabase(): Promise<void> {
   try {
     await prisma.$connect();
     logger.info('Database connected successfully');
@@ -35,7 +52,7 @@ export async function connectDatabase() {
   }
 }
 
-export async function disconnectDatabase() {
+export async function disconnectDatabase(): Promise<void> {
   await prisma.$disconnect();
   logger.info('Database disconnected');
 }

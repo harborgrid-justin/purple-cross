@@ -49,7 +49,9 @@ const ComplianceList = () => {
               <th scope="row">{item.name}</th>
               <td>{item.expiry || item.date}</td>
               <td>
-                <span className={`status-badge status-${item.status === 'Active' || item.status === 'Completed' ? 'confirmed' : 'pending'}`}>
+                <span
+                  className={`status-badge status-${item.status === 'Active' || item.status === 'Completed' ? 'confirmed' : 'pending'}`}
+                >
                   {item.status}
                 </span>
               </td>
@@ -71,7 +73,7 @@ const ComplianceList = () => {
 
 const Compliance = () => {
   const location = useLocation();
-  
+
   return (
     <div className="page">
       <header className="page-header">
@@ -84,18 +86,69 @@ const Compliance = () => {
       </header>
 
       <nav className="sub-nav" role="navigation" aria-label="Compliance sections">
-        <Link to="/compliance" className={`sub-nav-link ${location.pathname === '/compliance' ? 'active' : ''}`}>Overview</Link>
-        <Link to="/compliance/hipaa" className={`sub-nav-link ${location.pathname.includes('/hipaa') ? 'active' : ''}`}>HIPAA Compliance</Link>
-        <Link to="/compliance/licenses" className={`sub-nav-link ${location.pathname.includes('/licenses') ? 'active' : ''}`}>License Tracking</Link>
-        <Link to="/compliance/controlled-substances" className={`sub-nav-link ${location.pathname.includes('/controlled-substances') ? 'active' : ''}`}>Controlled Substances</Link>
-        <Link to="/compliance/record-retention" className={`sub-nav-link ${location.pathname.includes('/record-retention') ? 'active' : ''}`}>Record Retention</Link>
-        <Link to="/compliance/incident-reporting" className={`sub-nav-link ${location.pathname.includes('/incident-reporting') ? 'active' : ''}`}>Incident Reporting</Link>
-        <Link to="/compliance/policies" className={`sub-nav-link ${location.pathname.includes('/policies') ? 'active' : ''}`}>Policy Management</Link>
-        <Link to="/compliance/audit-prep" className={`sub-nav-link ${location.pathname.includes('/audit-prep') ? 'active' : ''}`}>Audit Preparation</Link>
-        <Link to="/compliance/updates" className={`sub-nav-link ${location.pathname.includes('/updates') ? 'active' : ''}`}>Regulatory Updates</Link>
+        <Link
+          to="/compliance"
+          className={`sub-nav-link ${location.pathname === '/compliance' ? 'active' : ''}`}
+        >
+          Overview
+        </Link>
+        <Link
+          to="/compliance/hipaa"
+          className={`sub-nav-link ${location.pathname.includes('/hipaa') ? 'active' : ''}`}
+        >
+          HIPAA Compliance
+        </Link>
+        <Link
+          to="/compliance/licenses"
+          className={`sub-nav-link ${location.pathname.includes('/licenses') ? 'active' : ''}`}
+        >
+          License Tracking
+        </Link>
+        <Link
+          to="/compliance/controlled-substances"
+          className={`sub-nav-link ${location.pathname.includes('/controlled-substances') ? 'active' : ''}`}
+        >
+          Controlled Substances
+        </Link>
+        <Link
+          to="/compliance/record-retention"
+          className={`sub-nav-link ${location.pathname.includes('/record-retention') ? 'active' : ''}`}
+        >
+          Record Retention
+        </Link>
+        <Link
+          to="/compliance/incident-reporting"
+          className={`sub-nav-link ${location.pathname.includes('/incident-reporting') ? 'active' : ''}`}
+        >
+          Incident Reporting
+        </Link>
+        <Link
+          to="/compliance/policies"
+          className={`sub-nav-link ${location.pathname.includes('/policies') ? 'active' : ''}`}
+        >
+          Policy Management
+        </Link>
+        <Link
+          to="/compliance/audit-prep"
+          className={`sub-nav-link ${location.pathname.includes('/audit-prep') ? 'active' : ''}`}
+        >
+          Audit Preparation
+        </Link>
+        <Link
+          to="/compliance/updates"
+          className={`sub-nav-link ${location.pathname.includes('/updates') ? 'active' : ''}`}
+        >
+          Regulatory Updates
+        </Link>
       </nav>
 
-      <Suspense fallback={<div role="status"><p>Loading...</p></div>}>
+      <Suspense
+        fallback={
+          <div role="status">
+            <p>Loading...</p>
+          </div>
+        }
+      >
         <Routes>
           <Route path="/" element={<ComplianceList />} />
           <Route path="/hipaa" element={<HIPAA />} />

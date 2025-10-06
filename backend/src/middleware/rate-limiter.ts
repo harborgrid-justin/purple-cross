@@ -1,6 +1,7 @@
 import rateLimit from 'express-rate-limit';
 import env from '../config/env';
 import { logger } from '../config/logger';
+import { HTTP_STATUS, ERROR_MESSAGES, TIME, RATE_LIMIT, HEALTH_PATHS } from '../constants';
 
 /**
  * Rate limiting middleware to prevent abuse
@@ -13,8 +14,8 @@ export const apiRateLimiter = rateLimit({
   legacyHeaders: false, // Disable `X-RateLimit-*` headers
   message: {
     status: 'error',
-    statusCode: 429,
-    message: 'Too many requests from this IP, please try again later.',
+    statusCode: HTTP_STATUS.TOO_MANY_REQUESTS,
+    message: ERROR_MESSAGES.RATE_LIMIT_EXCEEDED,
   },
   handler: (req, res) => {
     logger.warn({
@@ -23,15 +24,19 @@ export const apiRateLimiter = rateLimit({
       path: req.path,
       correlationId: req.correlationId,
     });
-    res.status(429).json({
+    res.status(HTTP_STATUS.TOO_MANY_REQUESTS).json({
       status: 'error',
-      statusCode: 429,
-      message: 'Too many requests from this IP, please try again later.',
+      statusCode: HTTP_STATUS.TOO_MANY_REQUESTS,
+      message: ERROR_MESSAGES.RATE_LIMIT_EXCEEDED,
     });
   },
   skip: (req) => {
     // Skip rate limiting for health checks
-    return req.path === '/health' || req.path === '/health/ready' || req.path === '/health/live';
+    return (
+      req.path === HEALTH_PATHS.HEALTH ||
+      req.path === HEALTH_PATHS.READY ||
+      req.path === HEALTH_PATHS.LIVE
+    );
   },
 });
 
@@ -39,12 +44,12 @@ export const apiRateLimiter = rateLimit({
  * Stricter rate limiting for authentication endpoints
  */
 export const authRateLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // Limit each IP to 5 requests per windowMs
-  skipSuccessfulRequests: true, // Don't count successful requests
+  windowMs: TIME.AUTH_RATE_LIMIT_WINDOW,
+  max: RATE_LIMIT.AUTH_MAX_REQUESTS,
+  skipSuccessfulRequests: RATE_LIMIT.AUTH_SKIP_SUCCESSFUL,
   message: {
     status: 'error',
-    statusCode: 429,
-    message: 'Too many authentication attempts, please try again later.',
+    statusCode: HTTP_STATUS.TOO_MANY_REQUESTS,
+    message: ERROR_MESSAGES.AUTH_RATE_LIMIT_EXCEEDED,
   },
 });

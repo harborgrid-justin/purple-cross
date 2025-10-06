@@ -53,15 +53,16 @@ const CommunicationsList = () => {
               <td>{message.subject}</td>
               <td>{message.date}</td>
               <td>
-                <span className="status-badge status-confirmed">
-                  {message.status}
-                </span>
+                <span className="status-badge status-confirmed">{message.status}</span>
               </td>
               <td>
                 <button className="btn-action" aria-label={`View message to ${message.recipient}`}>
                   View
                 </button>
-                <button className="btn-action" aria-label={`Resend message to ${message.recipient}`}>
+                <button
+                  className="btn-action"
+                  aria-label={`Resend message to ${message.recipient}`}
+                >
                   Resend
                 </button>
               </td>
@@ -75,7 +76,7 @@ const CommunicationsList = () => {
 
 const Communications = () => {
   const location = useLocation();
-  
+
   return (
     <div className="page">
       <header className="page-header">
@@ -88,18 +89,69 @@ const Communications = () => {
       </header>
 
       <nav className="sub-nav" role="navigation" aria-label="Communications sections">
-        <Link to="/communications" className={`sub-nav-link ${location.pathname === '/communications' ? 'active' : ''}`}>All Messages</Link>
-        <Link to="/communications/client-portal" className={`sub-nav-link ${location.pathname.includes('/client-portal') ? 'active' : ''}`}>Client Portal</Link>
-        <Link to="/communications/sms" className={`sub-nav-link ${location.pathname.includes('/sms') ? 'active' : ''}`}>SMS Messaging</Link>
-        <Link to="/communications/email" className={`sub-nav-link ${location.pathname.includes('/email') ? 'active' : ''}`}>Email Communication</Link>
-        <Link to="/communications/voice" className={`sub-nav-link ${location.pathname.includes('/voice') ? 'active' : ''}`}>Voice Calling</Link>
-        <Link to="/communications/telemedicine" className={`sub-nav-link ${location.pathname.includes('/telemedicine') ? 'active' : ''}`}>Video Telemedicine</Link>
-        <Link to="/communications/notifications" className={`sub-nav-link ${location.pathname.includes('/notifications') ? 'active' : ''}`}>Push Notifications</Link>
-        <Link to="/communications/social-media" className={`sub-nav-link ${location.pathname.includes('/social-media') ? 'active' : ''}`}>Social Media</Link>
-        <Link to="/communications/marketing" className={`sub-nav-link ${location.pathname.includes('/marketing') ? 'active' : ''}`}>Marketing Automation</Link>
+        <Link
+          to="/communications"
+          className={`sub-nav-link ${location.pathname === '/communications' ? 'active' : ''}`}
+        >
+          All Messages
+        </Link>
+        <Link
+          to="/communications/client-portal"
+          className={`sub-nav-link ${location.pathname.includes('/client-portal') ? 'active' : ''}`}
+        >
+          Client Portal
+        </Link>
+        <Link
+          to="/communications/sms"
+          className={`sub-nav-link ${location.pathname.includes('/sms') ? 'active' : ''}`}
+        >
+          SMS Messaging
+        </Link>
+        <Link
+          to="/communications/email"
+          className={`sub-nav-link ${location.pathname.includes('/email') ? 'active' : ''}`}
+        >
+          Email Communication
+        </Link>
+        <Link
+          to="/communications/voice"
+          className={`sub-nav-link ${location.pathname.includes('/voice') ? 'active' : ''}`}
+        >
+          Voice Calling
+        </Link>
+        <Link
+          to="/communications/telemedicine"
+          className={`sub-nav-link ${location.pathname.includes('/telemedicine') ? 'active' : ''}`}
+        >
+          Video Telemedicine
+        </Link>
+        <Link
+          to="/communications/notifications"
+          className={`sub-nav-link ${location.pathname.includes('/notifications') ? 'active' : ''}`}
+        >
+          Push Notifications
+        </Link>
+        <Link
+          to="/communications/social-media"
+          className={`sub-nav-link ${location.pathname.includes('/social-media') ? 'active' : ''}`}
+        >
+          Social Media
+        </Link>
+        <Link
+          to="/communications/marketing"
+          className={`sub-nav-link ${location.pathname.includes('/marketing') ? 'active' : ''}`}
+        >
+          Marketing Automation
+        </Link>
       </nav>
 
-      <Suspense fallback={<div role="status"><p>Loading...</p></div>}>
+      <Suspense
+        fallback={
+          <div role="status">
+            <p>Loading...</p>
+          </div>
+        }
+      >
         <Routes>
           <Route path="/" element={<CommunicationsList />} />
           <Route path="/client-portal" element={<ClientPortal />} />

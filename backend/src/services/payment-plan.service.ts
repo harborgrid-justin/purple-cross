@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { PAGINATION, SORT_ORDER, FIELDS } from '../constants';
 
 const prisma = new PrismaClient();
 
@@ -102,10 +103,15 @@ export class PaymentPlanService {
     page?: number;
     limit?: number;
   }) {
-    const { clientId, status, page = 1, limit = 20 } = filters || {};
+    const {
+      clientId,
+      status,
+      page = PAGINATION.DEFAULT_PAGE,
+      limit = PAGINATION.DEFAULT_LIMIT,
+    } = filters || {};
     const skip = (page - 1) * limit;
 
-    const where: any = {};
+    const where: Record<string, unknown> = {};
     if (clientId) where.clientId = clientId;
     if (status) where.status = status;
 
@@ -117,7 +123,7 @@ export class PaymentPlanService {
         include: {
           installments: true,
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy: { [FIELDS.CREATED_AT]: SORT_ORDER.DESC },
       }),
       prisma.paymentPlan.count({ where }),
     ]);
@@ -201,7 +207,7 @@ export class PaymentPlanService {
     });
   }
 
-  async updatePaymentPlan(id: string, data: any) {
+  async updatePaymentPlan(id: string, data: Record<string, unknown>) {
     return prisma.paymentPlan.update({ where: { id }, data });
   }
 

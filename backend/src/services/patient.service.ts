@@ -1,8 +1,17 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
+import {
+  HTTP_STATUS,
+  ERROR_MESSAGES,
+  PAGINATION,
+  QUERY_LIMITS,
+  QUERY_MODE,
+  SORT_ORDER,
+  FIELDS,
+} from '../constants';
 
 export class PatientService {
-  async createPatient(data: any) {
+  async createPatient(data: Record<string, unknown>) {
     return prisma.patient.create({
       data,
       include: {
@@ -17,18 +26,18 @@ export class PatientService {
       include: {
         owner: true,
         medicalRecords: {
-          orderBy: { visitDate: 'desc' },
-          take: 10,
+          orderBy: { [FIELDS.VISIT_DATE]: SORT_ORDER.DESC },
+          take: QUERY_LIMITS.MEDICAL_RECORDS,
         },
         appointments: {
-          orderBy: { startTime: 'desc' },
-          take: 5,
+          orderBy: { [FIELDS.START_TIME]: SORT_ORDER.DESC },
+          take: QUERY_LIMITS.APPOINTMENTS,
         },
       },
     });
 
     if (!patient) {
-      throw new AppError('Patient not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Patient'), HTTP_STATUS.NOT_FOUND);
     }
 
     return patient;
@@ -40,16 +49,21 @@ export class PatientService {
     search?: string;
     ownerId?: string;
   }) {
-    const { page = 1, limit = 20, search, ownerId } = options;
+    const {
+      page = PAGINATION.DEFAULT_PAGE,
+      limit = PAGINATION.DEFAULT_LIMIT,
+      search,
+      ownerId,
+    } = options;
     const skip = (page - 1) * limit;
 
-    const where: any = {
+    const where: Record<string, unknown> = {
       ...(ownerId && { ownerId }),
       ...(search && {
         OR: [
-          { name: { contains: search, mode: 'insensitive' } },
-          { microchipId: { contains: search, mode: 'insensitive' } },
-          { owner: { email: { contains: search, mode: 'insensitive' } } },
+          { name: { contains: search, mode: QUERY_MODE.INSENSITIVE } },
+          { microchipId: { contains: search, mode: QUERY_MODE.INSENSITIVE } },
+          { owner: { email: { contains: search, mode: QUERY_MODE.INSENSITIVE } } },
         ],
       }),
     };
@@ -70,7 +84,7 @@ export class PatientService {
             },
           },
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy: { [FIELDS.CREATED_AT]: SORT_ORDER.DESC },
       }),
       prisma.patient.count({ where }),
     ]);
@@ -86,11 +100,11 @@ export class PatientService {
     };
   }
 
-  async updatePatient(id: string, data: any) {
+  async updatePatient(id: string, data: Record<string, unknown>) {
     const patient = await prisma.patient.findUnique({ where: { id } });
 
     if (!patient) {
-      throw new AppError('Patient not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Patient'), HTTP_STATUS.NOT_FOUND);
     }
 
     return prisma.patient.update({
@@ -106,7 +120,7 @@ export class PatientService {
     const patient = await prisma.patient.findUnique({ where: { id } });
 
     if (!patient) {
-      throw new AppError('Patient not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Patient'), HTTP_STATUS.NOT_FOUND);
     }
 
     // Soft delete by updating status

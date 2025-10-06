@@ -18,7 +18,7 @@ module.exports = {
       jsx: true,
     },
   },
-  plugins: ['react-refresh', 'prettier'],
+  plugins: ['react-refresh', '@typescript-eslint', 'prettier'],
   rules: {
     // React specific
     'react-refresh/only-export-components': [
@@ -34,7 +34,6 @@ module.exports = {
     
     // Code Quality - Requirements 6, 12
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-    '@typescript-eslint/prefer-const': 'error',
     '@typescript-eslint/no-non-null-assertion': 'warn',
     
     // Naming Conventions - Requirement 6

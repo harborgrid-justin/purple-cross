@@ -1,26 +1,32 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
+import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION, STATUS } from '../constants';
 
 export class AppointmentService {
-  async createAppointment(data: any) {
+  async createAppointment(data: Record<string, unknown>) {
     // Check for scheduling conflicts
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const dataAny = data as any;
     const conflictingAppointment = await prisma.appointment.findFirst({
       where: {
-        veterinarianId: data.veterinarian.connect?.id,
-        status: { not: 'cancelled' },
+        veterinarianId: dataAny.veterinarian.connect?.id,
+        status: { not: STATUS.CANCELLED },
         OR: [
           {
-            AND: [{ startTime: { lte: data.startTime } }, { endTime: { gt: data.startTime } }],
+            AND: [
+              { startTime: { lte: dataAny.startTime } },
+              { endTime: { gt: dataAny.startTime } },
+            ],
           },
           {
-            AND: [{ startTime: { lt: data.endTime } }, { endTime: { gte: data.endTime } }],
+            AND: [{ startTime: { lt: dataAny.endTime } }, { endTime: { gte: dataAny.endTime } }],
           },
         ],
       },
     });
 
     if (conflictingAppointment) {
-      throw new AppError('Time slot already booked', 409);
+      throw new AppError(ERROR_MESSAGES.TIME_SLOT_BOOKED, HTTP_STATUS.CONFLICT);
     }
 
     return prisma.appointment.create({
@@ -45,7 +51,7 @@ export class AppointmentService {
     });
 
     if (!appointment) {
-      throw new AppError('Appointment not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Appointment'), HTTP_STATUS.NOT_FOUND);
     }
 
     return appointment;
@@ -62,8 +68,8 @@ export class AppointmentService {
     endDate?: Date;
   }) {
     const {
-      page = 1,
-      limit = 20,
+      page = PAGINATION.DEFAULT_PAGE,
+      limit = PAGINATION.DEFAULT_LIMIT,
       patientId,
       clientId,
       veterinarianId,
@@ -73,7 +79,7 @@ export class AppointmentService {
     } = options;
     const skip = (page - 1) * limit;
 
-    const where: any = {
+    const where: Record<string, unknown> = {
       ...(patientId && { patientId }),
       ...(clientId && { clientId }),
       ...(veterinarianId && { veterinarianId }),
@@ -122,11 +128,11 @@ export class AppointmentService {
     };
   }
 
-  async updateAppointment(id: string, data: any) {
+  async updateAppointment(id: string, data: Record<string, unknown>) {
     const appointment = await prisma.appointment.findUnique({ where: { id } });
 
     if (!appointment) {
-      throw new AppError('Appointment not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Appointment'), HTTP_STATUS.NOT_FOUND);
     }
 
     return prisma.appointment.update({
@@ -144,7 +150,7 @@ export class AppointmentService {
     const appointment = await prisma.appointment.findUnique({ where: { id } });
 
     if (!appointment) {
-      throw new AppError('Appointment not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Appointment'), HTTP_STATUS.NOT_FOUND);
     }
 
     // Soft delete by updating status
@@ -158,7 +164,7 @@ export class AppointmentService {
     const appointment = await prisma.appointment.findUnique({ where: { id } });
 
     if (!appointment) {
-      throw new AppError('Appointment not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Appointment'), HTTP_STATUS.NOT_FOUND);
     }
 
     return prisma.appointment.update({

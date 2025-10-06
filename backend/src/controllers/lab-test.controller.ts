@@ -1,24 +1,25 @@
 import { Request, Response } from 'express';
 import labTestService from '../services/lab-test.service';
+import { HTTP_STATUS } from '../constants';
 
 export class LabTestController {
-  async create(req: Request, res: Response) {
+  async create(req: Request, res: Response): Promise<void> {
     const labTest = await labTestService.createLabTest(req.body);
-    res.status(201).json({
+    res.status(HTTP_STATUS.CREATED).json({
       status: 'success',
       data: labTest,
     });
   }
 
-  async getById(req: Request, res: Response) {
+  async getById(req: Request, res: Response): Promise<void> {
     const labTest = await labTestService.getLabTestById(req.params.id);
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       status: 'success',
       data: labTest,
     });
   }
 
-  async getAll(req: Request, res: Response) {
+  async getAll(req: Request, res: Response): Promise<void> {
     const { page, limit, patientId, orderedById, status } = req.query;
     const result = await labTestService.getAllLabTests({
       page: page ? parseInt(page as string) : undefined,
@@ -27,23 +28,23 @@ export class LabTestController {
       orderedById: orderedById as string,
       status: status as string,
     });
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       status: 'success',
       ...result,
     });
   }
 
-  async update(req: Request, res: Response) {
+  async update(req: Request, res: Response): Promise<void> {
     const labTest = await labTestService.updateLabTest(req.params.id, req.body);
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       status: 'success',
       data: labTest,
     });
   }
 
-  async delete(req: Request, res: Response) {
+  async delete(req: Request, res: Response): Promise<void> {
     await labTestService.deleteLabTest(req.params.id);
-    res.status(204).send();
+    res.status(HTTP_STATUS.NO_CONTENT).send();
   }
 }
 

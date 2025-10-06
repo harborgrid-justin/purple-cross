@@ -1,8 +1,9 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
+import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION } from '../constants';
 
 export class LabTestService {
-  async createLabTest(data: any) {
+  async createLabTest(data: Record<string, unknown>) {
     return prisma.labTest.create({
       data,
       include: {
@@ -22,7 +23,7 @@ export class LabTestService {
     });
 
     if (!labTest) {
-      throw new AppError('Lab test not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Lab test'), HTTP_STATUS.NOT_FOUND);
     }
 
     return labTest;
@@ -35,10 +36,16 @@ export class LabTestService {
     orderedById?: string;
     status?: string;
   }) {
-    const { page = 1, limit = 20, patientId, orderedById, status } = options;
+    const {
+      page = PAGINATION.DEFAULT_PAGE,
+      limit = PAGINATION.DEFAULT_LIMIT,
+      patientId,
+      orderedById,
+      status,
+    } = options;
     const skip = (page - 1) * limit;
 
-    const where: any = {
+    const where: Record<string, unknown> = {
       ...(patientId && { patientId }),
       ...(orderedById && { orderedById }),
       ...(status && { status }),
@@ -73,11 +80,11 @@ export class LabTestService {
     };
   }
 
-  async updateLabTest(id: string, data: any) {
+  async updateLabTest(id: string, data: Record<string, unknown>) {
     const labTest = await prisma.labTest.findUnique({ where: { id } });
 
     if (!labTest) {
-      throw new AppError('Lab test not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Lab test'), HTTP_STATUS.NOT_FOUND);
     }
 
     return prisma.labTest.update({
@@ -94,7 +101,7 @@ export class LabTestService {
     const labTest = await prisma.labTest.findUnique({ where: { id } });
 
     if (!labTest) {
-      throw new AppError('Lab test not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Lab test'), HTTP_STATUS.NOT_FOUND);
     }
 
     return prisma.labTest.delete({

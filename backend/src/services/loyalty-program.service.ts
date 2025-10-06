@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { PAGINATION, QUERY_LIMITS } from '../constants';
 
 const prisma = new PrismaClient();
 
@@ -21,7 +22,7 @@ export class LoyaltyProgramService {
       include: {
         transactions: {
           orderBy: { transactionDate: 'desc' },
-          take: 10,
+          take: QUERY_LIMITS.RECENT_ITEMS,
         },
       },
     });
@@ -33,7 +34,7 @@ export class LoyaltyProgramService {
       include: {
         transactions: {
           orderBy: { transactionDate: 'desc' },
-          take: 10,
+          take: QUERY_LIMITS.RECENT_ITEMS,
         },
       },
     });
@@ -146,7 +147,11 @@ export class LoyaltyProgramService {
     return 'bronze';
   }
 
-  async getTransactions(loyaltyProgramId: string, page = 1, limit = 20) {
+  async getTransactions(
+    loyaltyProgramId: string,
+    page: number = PAGINATION.DEFAULT_PAGE,
+    limit: number = PAGINATION.DEFAULT_LIMIT
+  ) {
     const skip = (page - 1) * limit;
 
     const [items, total] = await Promise.all([
@@ -171,9 +176,13 @@ export class LoyaltyProgramService {
   }
 
   async listPrograms(filters?: { tier?: string; page?: number; limit?: number }) {
-    const { tier, page = 1, limit = 20 } = filters || {};
+    const {
+      tier,
+      page = PAGINATION.DEFAULT_PAGE,
+      limit = PAGINATION.DEFAULT_LIMIT,
+    } = filters || {};
     const skip = (page - 1) * limit;
-    const where: any = {};
+    const where: Record<string, unknown> = {};
     if (tier) where.tier = tier;
     const [items, total] = await Promise.all([
       prisma.loyaltyProgram.findMany({
@@ -187,7 +196,7 @@ export class LoyaltyProgramService {
     return { items, total, page, limit, totalPages: Math.ceil(total / limit) };
   }
 
-  async updateProgram(id: string, data: any) {
+  async updateProgram(id: string, data: Record<string, unknown>) {
     return prisma.loyaltyProgram.update({ where: { id }, data });
   }
 

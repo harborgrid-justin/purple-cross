@@ -1,24 +1,25 @@
 import { Request, Response } from 'express';
 import inventoryService from '../services/inventory.service';
+import { HTTP_STATUS } from '../constants';
 
 export class InventoryController {
-  async create(req: Request, res: Response) {
+  async create(req: Request, res: Response): Promise<void> {
     const item = await inventoryService.createInventoryItem(req.body);
-    res.status(201).json({
+    res.status(HTTP_STATUS.CREATED).json({
       status: 'success',
       data: item,
     });
   }
 
-  async getById(req: Request, res: Response) {
+  async getById(req: Request, res: Response): Promise<void> {
     const item = await inventoryService.getInventoryItemById(req.params.id);
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       status: 'success',
       data: item,
     });
   }
 
-  async getAll(req: Request, res: Response) {
+  async getAll(req: Request, res: Response): Promise<void> {
     const { page, limit, category, search, lowStock } = req.query;
     const result = await inventoryService.getAllInventoryItems({
       page: page ? parseInt(page as string) : undefined,
@@ -27,23 +28,23 @@ export class InventoryController {
       search: search as string,
       lowStock: lowStock === 'true',
     });
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       status: 'success',
       ...result,
     });
   }
 
-  async update(req: Request, res: Response) {
+  async update(req: Request, res: Response): Promise<void> {
     const item = await inventoryService.updateInventoryItem(req.params.id, req.body);
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       status: 'success',
       data: item,
     });
   }
 
-  async delete(req: Request, res: Response) {
+  async delete(req: Request, res: Response): Promise<void> {
     await inventoryService.deleteInventoryItem(req.params.id);
-    res.status(204).send();
+    res.status(HTTP_STATUS.NO_CONTENT).send();
   }
 }
 

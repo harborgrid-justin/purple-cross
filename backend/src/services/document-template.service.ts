@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { PAGINATION } from '../constants';
 
 const prisma = new PrismaClient();
 
@@ -14,9 +15,13 @@ export class DocumentTemplateService {
   }
 
   async listTemplates(filters?: { category?: string; page?: number; limit?: number }) {
-    const { category, page = 1, limit = 20 } = filters || {};
+    const {
+      category,
+      page = PAGINATION.DEFAULT_PAGE,
+      limit = PAGINATION.DEFAULT_LIMIT,
+    } = filters || {};
     const skip = (page - 1) * limit;
-    const where: any = {};
+    const where: Record<string, unknown> = {};
     if (category) where.category = category;
     const [items, total] = await Promise.all([
       prisma.documentTemplate.findMany({
@@ -85,7 +90,7 @@ export class DocumentTemplateService {
     });
   }
 
-  async updateTemplate(id: string, data: any) {
+  async updateTemplate(id: string, data: Record<string, unknown>) {
     return prisma.documentTemplate.update({ where: { id }, data });
   }
 

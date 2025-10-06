@@ -61,7 +61,7 @@ const MedicalRecordsList = () => {
 
 const MedicalRecords = () => {
   const location = useLocation();
-  
+
   return (
     <div className="page">
       <header className="page-header">
@@ -74,15 +74,60 @@ const MedicalRecords = () => {
       </header>
 
       <nav className="sub-nav" role="navigation" aria-label="Medical Records sections">
-        <Link to="/medical-records" className={`sub-nav-link ${location.pathname === '/medical-records' ? 'active' : ''}`}>All Records</Link>
-        <Link to="/medical-records/emr" className={`sub-nav-link ${location.pathname.includes('/emr') ? 'active' : ''}`}>EMR</Link>
-        <Link to="/medical-records/clinical-notes" className={`sub-nav-link ${location.pathname.includes('/clinical-notes') ? 'active' : ''}`}>Clinical Notes</Link>
-        <Link to="/medical-records/diagnostics" className={`sub-nav-link ${location.pathname.includes('/diagnostics') ? 'active' : ''}`}>Diagnostics</Link>
-        <Link to="/medical-records/treatment-history" className={`sub-nav-link ${location.pathname.includes('/treatment-history') ? 'active' : ''}`}>Treatment History</Link>
-        <Link to="/medical-records/vital-signs" className={`sub-nav-link ${location.pathname.includes('/vital-signs') ? 'active' : ''}`}>Vital Signs</Link>
-        <Link to="/medical-records/attachments" className={`sub-nav-link ${location.pathname.includes('/attachments') ? 'active' : ''}`}>Attachments</Link>
-        <Link to="/medical-records/sharing" className={`sub-nav-link ${location.pathname.includes('/sharing') ? 'active' : ''}`}>Record Sharing</Link>
-        <Link to="/medical-records/audit" className={`sub-nav-link ${location.pathname.includes('/audit') ? 'active' : ''}`}>Audit Trail</Link>
+        <Link
+          to="/medical-records"
+          className={`sub-nav-link ${location.pathname === '/medical-records' ? 'active' : ''}`}
+        >
+          All Records
+        </Link>
+        <Link
+          to="/medical-records/emr"
+          className={`sub-nav-link ${location.pathname.includes('/emr') ? 'active' : ''}`}
+        >
+          EMR
+        </Link>
+        <Link
+          to="/medical-records/clinical-notes"
+          className={`sub-nav-link ${location.pathname.includes('/clinical-notes') ? 'active' : ''}`}
+        >
+          Clinical Notes
+        </Link>
+        <Link
+          to="/medical-records/diagnostics"
+          className={`sub-nav-link ${location.pathname.includes('/diagnostics') ? 'active' : ''}`}
+        >
+          Diagnostics
+        </Link>
+        <Link
+          to="/medical-records/treatment-history"
+          className={`sub-nav-link ${location.pathname.includes('/treatment-history') ? 'active' : ''}`}
+        >
+          Treatment History
+        </Link>
+        <Link
+          to="/medical-records/vital-signs"
+          className={`sub-nav-link ${location.pathname.includes('/vital-signs') ? 'active' : ''}`}
+        >
+          Vital Signs
+        </Link>
+        <Link
+          to="/medical-records/attachments"
+          className={`sub-nav-link ${location.pathname.includes('/attachments') ? 'active' : ''}`}
+        >
+          Attachments
+        </Link>
+        <Link
+          to="/medical-records/sharing"
+          className={`sub-nav-link ${location.pathname.includes('/sharing') ? 'active' : ''}`}
+        >
+          Record Sharing
+        </Link>
+        <Link
+          to="/medical-records/audit"
+          className={`sub-nav-link ${location.pathname.includes('/audit') ? 'active' : ''}`}
+        >
+          Audit Trail
+        </Link>
         <Link to="/medical-records" className="sub-nav-link active">
           All Records
         </Link>
@@ -112,7 +157,13 @@ const MedicalRecords = () => {
         </Link>
       </nav>
 
-      <Suspense fallback={<div role="status"><p>Loading...</p></div>}>
+      <Suspense
+        fallback={
+          <div role="status">
+            <p>Loading...</p>
+          </div>
+        }
+      >
         <Routes>
           <Route path="/" element={<MedicalRecordsList />} />
           <Route path="/emr" element={<EMR />} />

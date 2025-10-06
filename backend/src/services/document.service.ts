@@ -1,8 +1,9 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
+import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION } from '../constants';
 
 export class DocumentService {
-  async createDocument(data: any) {
+  async createDocument(data: Record<string, unknown>) {
     return prisma.document.create({
       data,
     });
@@ -14,7 +15,7 @@ export class DocumentService {
     });
 
     if (!document) {
-      throw new AppError('Document not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Document'), HTTP_STATUS.NOT_FOUND);
     }
 
     return document;
@@ -27,10 +28,16 @@ export class DocumentService {
     entityId?: string;
     category?: string;
   }) {
-    const { page = 1, limit = 20, entityType, entityId, category } = options;
+    const {
+      page = PAGINATION.DEFAULT_PAGE,
+      limit = PAGINATION.DEFAULT_LIMIT,
+      entityType,
+      entityId,
+      category,
+    } = options;
     const skip = (page - 1) * limit;
 
-    const where: any = {
+    const where: Record<string, unknown> = {
       ...(entityType && { entityType }),
       ...(entityId && { entityId }),
       ...(category && { category }),
@@ -57,11 +64,11 @@ export class DocumentService {
     };
   }
 
-  async updateDocument(id: string, data: any) {
+  async updateDocument(id: string, data: Record<string, unknown>) {
     const document = await prisma.document.findUnique({ where: { id } });
 
     if (!document) {
-      throw new AppError('Document not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Document'), HTTP_STATUS.NOT_FOUND);
     }
 
     return prisma.document.update({
@@ -74,7 +81,7 @@ export class DocumentService {
     const document = await prisma.document.findUnique({ where: { id } });
 
     if (!document) {
-      throw new AppError('Document not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Document'), HTTP_STATUS.NOT_FOUND);
     }
 
     return prisma.document.delete({

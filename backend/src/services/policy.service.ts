@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { PAGINATION, QUERY_LIMITS } from '../constants';
 
 const prisma = new PrismaClient();
 
@@ -19,7 +20,9 @@ export class PolicyService {
   async getPolicy(id: string) {
     return prisma.policy.findUnique({
       where: { id },
-      include: { acknowledgments: { orderBy: { acknowledgedAt: 'desc' }, take: 10 } },
+      include: {
+        acknowledgments: { orderBy: { acknowledgedAt: 'desc' }, take: QUERY_LIMITS.RECENT_ITEMS },
+      },
     });
   }
 
@@ -29,9 +32,14 @@ export class PolicyService {
     page?: number;
     limit?: number;
   }) {
-    const { category, status, page = 1, limit = 20 } = filters || {};
+    const {
+      category,
+      status,
+      page = PAGINATION.DEFAULT_PAGE,
+      limit = PAGINATION.DEFAULT_LIMIT,
+    } = filters || {};
     const skip = (page - 1) * limit;
-    const where: any = {};
+    const where: Record<string, unknown> = {};
     if (category) where.category = category;
     if (status) where.status = status;
     const [items, total] = await Promise.all([
@@ -55,7 +63,7 @@ export class PolicyService {
     });
   }
 
-  async updatePolicy(id: string, data: any) {
+  async updatePolicy(id: string, data: Record<string, unknown>) {
     return prisma.policy.update({ where: { id }, data });
   }
 

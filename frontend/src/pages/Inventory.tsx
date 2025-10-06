@@ -37,7 +37,9 @@ const InventoryList = () => {
               <td>{item.quantity}</td>
               <td>{item.reorderLevel}</td>
               <td>
-                <span className={`status-badge status-${item.status === 'Low Stock' ? 'warning' : 'confirmed'}`}>
+                <span
+                  className={`status-badge status-${item.status === 'Low Stock' ? 'warning' : 'confirmed'}`}
+                >
                   {item.status}
                 </span>
               </td>
@@ -59,7 +61,7 @@ const InventoryList = () => {
 
 const Inventory = () => {
   const location = useLocation();
-  
+
   return (
     <div className="page">
       <header className="page-header">
@@ -72,18 +74,69 @@ const Inventory = () => {
       </header>
 
       <nav className="sub-nav" role="navigation" aria-label="Inventory sections">
-        <Link to="/inventory" className={`sub-nav-link ${location.pathname === '/inventory' ? 'active' : ''}`}>Stock Levels</Link>
-        <Link to="/inventory/stock-monitoring" className={`sub-nav-link ${location.pathname.includes('/stock-monitoring') ? 'active' : ''}`}>Stock Monitoring</Link>
-        <Link to="/inventory/auto-reorder" className={`sub-nav-link ${location.pathname.includes('/auto-reorder') ? 'active' : ''}`}>Auto Reordering</Link>
-        <Link to="/inventory/vendors" className={`sub-nav-link ${location.pathname.includes('/vendors') ? 'active' : ''}`}>Vendors</Link>
-        <Link to="/inventory/purchase-orders" className={`sub-nav-link ${location.pathname.includes('/purchase-orders') ? 'active' : ''}`}>Purchase Orders</Link>
-        <Link to="/inventory/valuation" className={`sub-nav-link ${location.pathname.includes('/valuation') ? 'active' : ''}`}>Valuation</Link>
-        <Link to="/inventory/analytics" className={`sub-nav-link ${location.pathname.includes('/analytics') ? 'active' : ''}`}>Usage Analytics</Link>
-        <Link to="/inventory/barcode" className={`sub-nav-link ${location.pathname.includes('/barcode') ? 'active' : ''}`}>Barcode/RFID</Link>
-        <Link to="/inventory/equipment" className={`sub-nav-link ${location.pathname.includes('/equipment') ? 'active' : ''}`}>Equipment & Assets</Link>
+        <Link
+          to="/inventory"
+          className={`sub-nav-link ${location.pathname === '/inventory' ? 'active' : ''}`}
+        >
+          Stock Levels
+        </Link>
+        <Link
+          to="/inventory/stock-monitoring"
+          className={`sub-nav-link ${location.pathname.includes('/stock-monitoring') ? 'active' : ''}`}
+        >
+          Stock Monitoring
+        </Link>
+        <Link
+          to="/inventory/auto-reorder"
+          className={`sub-nav-link ${location.pathname.includes('/auto-reorder') ? 'active' : ''}`}
+        >
+          Auto Reordering
+        </Link>
+        <Link
+          to="/inventory/vendors"
+          className={`sub-nav-link ${location.pathname.includes('/vendors') ? 'active' : ''}`}
+        >
+          Vendors
+        </Link>
+        <Link
+          to="/inventory/purchase-orders"
+          className={`sub-nav-link ${location.pathname.includes('/purchase-orders') ? 'active' : ''}`}
+        >
+          Purchase Orders
+        </Link>
+        <Link
+          to="/inventory/valuation"
+          className={`sub-nav-link ${location.pathname.includes('/valuation') ? 'active' : ''}`}
+        >
+          Valuation
+        </Link>
+        <Link
+          to="/inventory/analytics"
+          className={`sub-nav-link ${location.pathname.includes('/analytics') ? 'active' : ''}`}
+        >
+          Usage Analytics
+        </Link>
+        <Link
+          to="/inventory/barcode"
+          className={`sub-nav-link ${location.pathname.includes('/barcode') ? 'active' : ''}`}
+        >
+          Barcode/RFID
+        </Link>
+        <Link
+          to="/inventory/equipment"
+          className={`sub-nav-link ${location.pathname.includes('/equipment') ? 'active' : ''}`}
+        >
+          Equipment & Assets
+        </Link>
       </nav>
 
-      <Suspense fallback={<div role="status"><p>Loading...</p></div>}>
+      <Suspense
+        fallback={
+          <div role="status">
+            <p>Loading...</p>
+          </div>
+        }
+      >
         <Routes>
           <Route path="/" element={<InventoryList />} />
           <Route path="/stock-monitoring" element={<StockMonitoring />} />

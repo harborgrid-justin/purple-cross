@@ -10,12 +10,12 @@ describe('API Service', () => {
       const baseURL = 'http://localhost:3000';
       const endpoint = '/api/patients';
       const fullURL = `${baseURL}${endpoint}`;
-      
+
       expect(fullURL).toBe('http://localhost:3000/api/patients');
     });
 
     it('should handle query parameters', () => {
-      const buildURL = (base: string, params: Record<string, any>) => {
+      const buildURL = (base: string, params: Record<string, string | number>) => {
         const url = new URL(base);
         Object.entries(params).forEach(([key, value]) => {
           url.searchParams.append(key, String(value));
@@ -60,7 +60,7 @@ describe('API Service', () => {
     it('should include authorization header when token present', () => {
       const token = 'test-token-123';
       const headers = {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       };
 

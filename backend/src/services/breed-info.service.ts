@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { PAGINATION } from '../constants';
 
 const prisma = new PrismaClient();
 
@@ -31,10 +32,14 @@ export class BreedInfoService {
   }
 
   async listBreedInfo(filters?: { species?: string; page?: number; limit?: number }) {
-    const { species, page = 1, limit = 20 } = filters || {};
+    const {
+      species,
+      page = PAGINATION.DEFAULT_PAGE,
+      limit = PAGINATION.DEFAULT_LIMIT,
+    } = filters || {};
     const skip = (page - 1) * limit;
 
-    const where: any = {};
+    const where: Record<string, unknown> = {};
     if (species) where.species = species;
 
     const [items, total] = await Promise.all([

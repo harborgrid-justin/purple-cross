@@ -1,10 +1,11 @@
 import { Request, Response } from 'express';
 import analyticsService from '../services/analytics.service';
+import { HTTP_STATUS } from '../constants';
 
 export class AnalyticsController {
   async getDashboardStats(_req: Request, res: Response) {
     const stats = await analyticsService.getDashboardStats();
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       status: 'success',
       data: stats,
     });
@@ -12,31 +13,31 @@ export class AnalyticsController {
 
   async getPatientDemographics(_req: Request, res: Response) {
     const demographics = await analyticsService.getPatientDemographics();
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       status: 'success',
       data: demographics,
     });
   }
 
-  async getAppointmentAnalytics(req: Request, res: Response) {
+  async getAppointmentAnalytics(req: Request, res: Response): Promise<void> {
     const { startDate, endDate } = req.query;
     const analytics = await analyticsService.getAppointmentAnalytics(
       startDate ? new Date(startDate as string) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
       endDate ? new Date(endDate as string) : new Date()
     );
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       status: 'success',
       data: analytics,
     });
   }
 
-  async getFinancialReport(req: Request, res: Response) {
+  async getFinancialReport(req: Request, res: Response): Promise<void> {
     const { startDate, endDate } = req.query;
     const report = await analyticsService.getFinancialReport(
       startDate ? new Date(startDate as string) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
       endDate ? new Date(endDate as string) : new Date()
     );
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       status: 'success',
       data: report,
     });
@@ -44,7 +45,7 @@ export class AnalyticsController {
 
   async getInventoryReport(_req: Request, res: Response) {
     const report = await analyticsService.getInventoryReport();
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       status: 'success',
       data: report,
     });
@@ -52,7 +53,7 @@ export class AnalyticsController {
 
   async getStaffAnalytics(_req: Request, res: Response) {
     const analytics = await analyticsService.getStaffAnalytics();
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       status: 'success',
       data: analytics,
     });

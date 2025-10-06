@@ -43,9 +43,7 @@ const StaffList = () => {
               <td>{member.role}</td>
               <td>{member.department}</td>
               <td>
-                <span className="status-badge status-confirmed">
-                  {member.status}
-                </span>
+                <span className="status-badge status-confirmed">{member.status}</span>
               </td>
               <td>
                 <button className="btn-action" aria-label={`View profile for ${member.name}`}>
@@ -65,7 +63,7 @@ const StaffList = () => {
 
 const Staff = () => {
   const location = useLocation();
-  
+
   return (
     <div className="page">
       <header className="page-header">
@@ -78,18 +76,69 @@ const Staff = () => {
       </header>
 
       <nav className="sub-nav" role="navigation" aria-label="Staff sections">
-        <Link to="/staff" className={`sub-nav-link ${location.pathname === '/staff' ? 'active' : ''}`}>All Staff</Link>
-        <Link to="/staff/profiles" className={`sub-nav-link ${location.pathname.includes('/profiles') ? 'active' : ''}`}>Employee Profiles</Link>
-        <Link to="/staff/access-control" className={`sub-nav-link ${location.pathname.includes('/access-control') ? 'active' : ''}`}>Access Control</Link>
-        <Link to="/staff/scheduling" className={`sub-nav-link ${location.pathname.includes('/scheduling') ? 'active' : ''}`}>Shift Scheduling</Link>
-        <Link to="/staff/attendance" className={`sub-nav-link ${location.pathname.includes('/attendance') ? 'active' : ''}`}>Time & Attendance</Link>
-        <Link to="/staff/performance" className={`sub-nav-link ${location.pathname.includes('/performance') ? 'active' : ''}`}>Performance Management</Link>
-        <Link to="/staff/education" className={`sub-nav-link ${location.pathname.includes('/education') ? 'active' : ''}`}>Continuing Education</Link>
-        <Link to="/staff/communication" className={`sub-nav-link ${location.pathname.includes('/communication') ? 'active' : ''}`}>Internal Communication</Link>
-        <Link to="/staff/hr-documents" className={`sub-nav-link ${location.pathname.includes('/hr-documents') ? 'active' : ''}`}>HR Documents</Link>
+        <Link
+          to="/staff"
+          className={`sub-nav-link ${location.pathname === '/staff' ? 'active' : ''}`}
+        >
+          All Staff
+        </Link>
+        <Link
+          to="/staff/profiles"
+          className={`sub-nav-link ${location.pathname.includes('/profiles') ? 'active' : ''}`}
+        >
+          Employee Profiles
+        </Link>
+        <Link
+          to="/staff/access-control"
+          className={`sub-nav-link ${location.pathname.includes('/access-control') ? 'active' : ''}`}
+        >
+          Access Control
+        </Link>
+        <Link
+          to="/staff/scheduling"
+          className={`sub-nav-link ${location.pathname.includes('/scheduling') ? 'active' : ''}`}
+        >
+          Shift Scheduling
+        </Link>
+        <Link
+          to="/staff/attendance"
+          className={`sub-nav-link ${location.pathname.includes('/attendance') ? 'active' : ''}`}
+        >
+          Time & Attendance
+        </Link>
+        <Link
+          to="/staff/performance"
+          className={`sub-nav-link ${location.pathname.includes('/performance') ? 'active' : ''}`}
+        >
+          Performance Management
+        </Link>
+        <Link
+          to="/staff/education"
+          className={`sub-nav-link ${location.pathname.includes('/education') ? 'active' : ''}`}
+        >
+          Continuing Education
+        </Link>
+        <Link
+          to="/staff/communication"
+          className={`sub-nav-link ${location.pathname.includes('/communication') ? 'active' : ''}`}
+        >
+          Internal Communication
+        </Link>
+        <Link
+          to="/staff/hr-documents"
+          className={`sub-nav-link ${location.pathname.includes('/hr-documents') ? 'active' : ''}`}
+        >
+          HR Documents
+        </Link>
       </nav>
 
-      <Suspense fallback={<div role="status"><p>Loading...</p></div>}>
+      <Suspense
+        fallback={
+          <div role="status">
+            <p>Loading...</p>
+          </div>
+        }
+      >
         <Routes>
           <Route path="/" element={<StaffList />} />
           <Route path="/profiles" element={<Profiles />} />

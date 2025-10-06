@@ -1,15 +1,27 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
+import {
+  HTTP_STATUS,
+  ERROR_MESSAGES,
+  PAGINATION,
+  QUERY_MODE,
+  SORT_ORDER,
+  FIELDS,
+  QUERY_LIMITS,
+} from '../constants';
 
 export class ClientService {
-  async createClient(data: any) {
+  async createClient(data: Record<string, unknown>) {
     // Check if email already exists
     const existing = await prisma.client.findUnique({
       where: { email: data.email },
     });
 
     if (existing) {
-      throw new AppError('Client with this email already exists', 400);
+      throw new AppError(
+        ERROR_MESSAGES.ALREADY_EXISTS('Client with this email'),
+        HTTP_STATUS.BAD_REQUEST
+      );
     }
 
     return prisma.client.create({
@@ -25,21 +37,21 @@ export class ClientService {
       where: { id },
       include: {
         patients: {
-          orderBy: { name: 'asc' },
+          orderBy: { [FIELDS.NAME]: SORT_ORDER.ASC },
         },
         appointments: {
-          orderBy: { startTime: 'desc' },
-          take: 10,
+          orderBy: { [FIELDS.START_TIME]: SORT_ORDER.DESC },
+          take: QUERY_LIMITS.RECENT_ITEMS,
         },
         invoices: {
-          orderBy: { createdAt: 'desc' },
-          take: 10,
+          orderBy: { [FIELDS.CREATED_AT]: SORT_ORDER.DESC },
+          take: QUERY_LIMITS.INVOICES,
         },
       },
     });
 
     if (!client) {
-      throw new AppError('Client not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Client'), HTTP_STATUS.NOT_FOUND);
     }
 
     return client;
@@ -51,17 +63,22 @@ export class ClientService {
     search?: string;
     status?: string;
   }) {
-    const { page = 1, limit = 20, search, status } = options;
+    const {
+      page = PAGINATION.DEFAULT_PAGE,
+      limit = PAGINATION.DEFAULT_LIMIT,
+      search,
+      status,
+    } = options;
     const skip = (page - 1) * limit;
 
-    const where: any = {
+    const where: Record<string, unknown> = {
       ...(status && { status }),
       ...(search && {
         OR: [
-          { firstName: { contains: search, mode: 'insensitive' } },
-          { lastName: { contains: search, mode: 'insensitive' } },
-          { email: { contains: search, mode: 'insensitive' } },
-          { phone: { contains: search, mode: 'insensitive' } },
+          { firstName: { contains: search, mode: QUERY_MODE.INSENSITIVE } },
+          { lastName: { contains: search, mode: QUERY_MODE.INSENSITIVE } },
+          { email: { contains: search, mode: QUERY_MODE.INSENSITIVE } },
+          { phone: { contains: search, mode: QUERY_MODE.INSENSITIVE } },
         ],
       }),
     };
@@ -80,7 +97,7 @@ export class ClientService {
             },
           },
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy: { [FIELDS.CREATED_AT]: SORT_ORDER.DESC },
       }),
       prisma.client.count({ where }),
     ]);
@@ -96,11 +113,11 @@ export class ClientService {
     };
   }
 
-  async updateClient(id: string, data: any) {
+  async updateClient(id: string, data: Record<string, unknown>) {
     const client = await prisma.client.findUnique({ where: { id } });
 
     if (!client) {
-      throw new AppError('Client not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Client'), HTTP_STATUS.NOT_FOUND);
     }
 
     return prisma.client.update({
@@ -116,7 +133,7 @@ export class ClientService {
     const client = await prisma.client.findUnique({ where: { id } });
 
     if (!client) {
-      throw new AppError('Client not found', 404);
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Client'), HTTP_STATUS.NOT_FOUND);
     }
 
     // Soft delete by updating status

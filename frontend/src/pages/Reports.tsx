@@ -49,7 +49,9 @@ const ReportsList = () => {
               <td>{report.type}</td>
               <td>{report.date}</td>
               <td>
-                <span className={`status-badge status-${report.status === 'Ready' ? 'confirmed' : 'pending'}`}>
+                <span
+                  className={`status-badge status-${report.status === 'Ready' ? 'confirmed' : 'pending'}`}
+                >
                   {report.status}
                 </span>
               </td>
@@ -71,7 +73,7 @@ const ReportsList = () => {
 
 const Reports = () => {
   const location = useLocation();
-  
+
   return (
     <div className="page">
       <header className="page-header">
@@ -84,18 +86,69 @@ const Reports = () => {
       </header>
 
       <nav className="sub-nav" role="navigation" aria-label="Reports sections">
-        <Link to="/reports" className={`sub-nav-link ${location.pathname === '/reports' ? 'active' : ''}`}>All Reports</Link>
-        <Link to="/reports/financial" className={`sub-nav-link ${location.pathname.includes('/financial') ? 'active' : ''}`}>Financial Reports</Link>
-        <Link to="/reports/operational" className={`sub-nav-link ${location.pathname.includes('/operational') ? 'active' : ''}`}>Operational Reports</Link>
-        <Link to="/reports/clinical" className={`sub-nav-link ${location.pathname.includes('/clinical') ? 'active' : ''}`}>Clinical Analytics</Link>
-        <Link to="/reports/builder" className={`sub-nav-link ${location.pathname.includes('/builder') ? 'active' : ''}`}>Custom Report Builder</Link>
-        <Link to="/reports/dashboard" className={`sub-nav-link ${location.pathname.includes('/dashboard') ? 'active' : ''}`}>Dashboard & KPIs</Link>
-        <Link to="/reports/trends" className={`sub-nav-link ${location.pathname.includes('/trends') ? 'active' : ''}`}>Trend Analysis</Link>
-        <Link to="/reports/client-analytics" className={`sub-nav-link ${location.pathname.includes('/client-analytics') ? 'active' : ''}`}>Client Analytics</Link>
-        <Link to="/reports/export" className={`sub-nav-link ${location.pathname.includes('/export') ? 'active' : ''}`}>Export & Scheduling</Link>
+        <Link
+          to="/reports"
+          className={`sub-nav-link ${location.pathname === '/reports' ? 'active' : ''}`}
+        >
+          All Reports
+        </Link>
+        <Link
+          to="/reports/financial"
+          className={`sub-nav-link ${location.pathname.includes('/financial') ? 'active' : ''}`}
+        >
+          Financial Reports
+        </Link>
+        <Link
+          to="/reports/operational"
+          className={`sub-nav-link ${location.pathname.includes('/operational') ? 'active' : ''}`}
+        >
+          Operational Reports
+        </Link>
+        <Link
+          to="/reports/clinical"
+          className={`sub-nav-link ${location.pathname.includes('/clinical') ? 'active' : ''}`}
+        >
+          Clinical Analytics
+        </Link>
+        <Link
+          to="/reports/builder"
+          className={`sub-nav-link ${location.pathname.includes('/builder') ? 'active' : ''}`}
+        >
+          Custom Report Builder
+        </Link>
+        <Link
+          to="/reports/dashboard"
+          className={`sub-nav-link ${location.pathname.includes('/dashboard') ? 'active' : ''}`}
+        >
+          Dashboard & KPIs
+        </Link>
+        <Link
+          to="/reports/trends"
+          className={`sub-nav-link ${location.pathname.includes('/trends') ? 'active' : ''}`}
+        >
+          Trend Analysis
+        </Link>
+        <Link
+          to="/reports/client-analytics"
+          className={`sub-nav-link ${location.pathname.includes('/client-analytics') ? 'active' : ''}`}
+        >
+          Client Analytics
+        </Link>
+        <Link
+          to="/reports/export"
+          className={`sub-nav-link ${location.pathname.includes('/export') ? 'active' : ''}`}
+        >
+          Export & Scheduling
+        </Link>
       </nav>
 
-      <Suspense fallback={<div role="status"><p>Loading...</p></div>}>
+      <Suspense
+        fallback={
+          <div role="status">
+            <p>Loading...</p>
+          </div>
+        }
+      >
         <Routes>
           <Route path="/" element={<ReportsList />} />
           <Route path="/financial" element={<Financial />} />

@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { PAGINATION, QUERY_MODE, SORT_ORDER, FIELDS } from '../constants';
 
 const prisma = new PrismaClient();
 
@@ -80,12 +81,17 @@ export class PurchaseOrderService {
     page?: number;
     limit?: number;
   }) {
-    const { status, vendor, page = 1, limit = 20 } = filters || {};
+    const {
+      status,
+      vendor,
+      page = PAGINATION.DEFAULT_PAGE,
+      limit = PAGINATION.DEFAULT_LIMIT,
+    } = filters || {};
     const skip = (page - 1) * limit;
 
-    const where: any = {};
+    const where: Record<string, unknown> = {};
     if (status) where.status = status;
-    if (vendor) where.vendor = { contains: vendor, mode: 'insensitive' };
+    if (vendor) where.vendor = { contains: vendor, mode: QUERY_MODE.INSENSITIVE };
 
     const [items, total] = await Promise.all([
       prisma.purchaseOrder.findMany({
@@ -95,7 +101,7 @@ export class PurchaseOrderService {
         include: {
           lineItems: true,
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy: { [FIELDS.CREATED_AT]: SORT_ORDER.DESC },
       }),
       prisma.purchaseOrder.count({ where }),
     ]);
@@ -169,7 +175,7 @@ export class PurchaseOrderService {
     });
   }
 
-  async updatePurchaseOrder(id: string, data: any) {
+  async updatePurchaseOrder(id: string, data: Record<string, unknown>) {
     return prisma.purchaseOrder.update({ where: { id }, data });
   }
 

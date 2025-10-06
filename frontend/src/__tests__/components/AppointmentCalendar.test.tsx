@@ -8,17 +8,20 @@ describe('AppointmentCalendar Component', () => {
       { id: '3', date: '2024-12-02', time: '09:00' },
     ];
 
-    const groupByDate = (appts: any[]) => {
-      return appts.reduce((groups: any, appt) => {
-        const date = appt.date;
-        if (!groups[date]) groups[date] = [];
-        groups[date].push(appt);
-        return groups;
-      }, {});
+    const groupByDate = (appts: Array<{ id: string; date: string; time: string }>) => {
+      return appts.reduce(
+        (groups: Record<string, Array<{ id: string; date: string; time: string }>>, appt) => {
+          const date = appt.date;
+          if (!groups[date]) groups[date] = [];
+          groups[date].push(appt);
+          return groups;
+        },
+        {}
+      );
     };
 
     const grouped = groupByDate(appointments);
-    
+
     expect(Object.keys(grouped)).toHaveLength(2);
     expect(grouped['2024-12-01']).toHaveLength(2);
     expect(grouped['2024-12-02']).toHaveLength(1);
