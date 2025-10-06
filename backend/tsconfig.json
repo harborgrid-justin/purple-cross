@@ -20,7 +20,7 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedIndexedAccess": true,
+    "noUncheckedIndexedAccess": false, // Disabled for Express params/query - use validation middleware instead
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": false,
     

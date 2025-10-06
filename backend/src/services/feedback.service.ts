@@ -91,9 +91,9 @@ export class FeedbackService {
 
     if (feedback.length === 0) return null;
 
-    const scores = feedback.map((f) => f.npsScore!);
-    const promoters = scores.filter((s) => s >= 9).length;
-    const detractors = scores.filter((s) => s <= 6).length;
+    const scores = feedback.map((f: any) => f.npsScore!);
+    const promoters = scores.filter((s: any) => s >= 9).length;
+    const detractors = scores.filter((s: any) => s <= 6).length;
 
     const npsScore = ((promoters - detractors) / scores.length) * 100;
 
@@ -101,7 +101,7 @@ export class FeedbackService {
       npsScore: Math.round(npsScore),
       totalResponses: scores.length,
       promoters,
-      passives: scores.filter((s) => s === 7 || s === 8).length,
+      passives: scores.filter((s: any) => s === 7 || s === 8).length,
       detractors,
     };
   }

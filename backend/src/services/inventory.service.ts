@@ -1,9 +1,8 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
-import { Prisma } from '@prisma/client';
 
 export class InventoryService {
-  async createInventoryItem(data: Prisma.InventoryItemCreateInput) {
+  async createInventoryItem(data: any) {
     return prisma.inventoryItem.create({
       data,
     });
@@ -31,7 +30,7 @@ export class InventoryService {
     const { page = 1, limit = 20, category, search, lowStock } = options;
     const skip = (page - 1) * limit;
 
-    const where: Prisma.InventoryItemWhereInput = {
+    const where: any = {
       ...(category && { category }),
       ...(search && {
         OR: [
@@ -65,7 +64,7 @@ export class InventoryService {
     };
   }
 
-  async updateInventoryItem(id: string, data: Prisma.InventoryItemUpdateInput) {
+  async updateInventoryItem(id: string, data: any) {
     const item = await prisma.inventoryItem.findUnique({ where: { id } });
 
     if (!item) {

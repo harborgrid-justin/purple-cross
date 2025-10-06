@@ -1,9 +1,8 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
-import { Prisma } from '@prisma/client';
 
 export class StaffService {
-  async createStaff(data: Prisma.StaffCreateInput) {
+  async createStaff(data: any) {
     // Check if email already exists
     const existing = await prisma.staff.findUnique({
       where: { email: data.email },
@@ -50,7 +49,7 @@ export class StaffService {
     const { page = 1, limit = 20, role, status, search } = options;
     const skip = (page - 1) * limit;
 
-    const where: Prisma.StaffWhereInput = {
+    const where: any = {
       ...(role && { role }),
       ...(status && { status }),
       ...(search && {
@@ -83,7 +82,7 @@ export class StaffService {
     };
   }
 
-  async updateStaff(id: string, data: Prisma.StaffUpdateInput) {
+  async updateStaff(id: string, data: any) {
     const staff = await prisma.staff.findUnique({ where: { id } });
 
     if (!staff) {

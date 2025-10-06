@@ -12,11 +12,12 @@ export class ClientPortalController {
     res.status(200).json({ status: 'success', data: access });
   }
 
-  async login(req: Request, res: Response) {
+  async login(req: Request, res: Response): Promise<void> {
     const { email, password } = req.body;
     const access = await clientPortalService.validateCredentials(email, password);
     if (!access) {
-      return res.status(401).json({ status: 'error', message: 'Invalid credentials' });
+      res.status(401).json({ status: 'error', message: 'Invalid credentials' });
+      return;
     }
     res.status(200).json({ status: 'success', data: access });
   }

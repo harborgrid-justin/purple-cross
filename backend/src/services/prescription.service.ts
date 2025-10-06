@@ -1,9 +1,8 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
-import { Prisma } from '@prisma/client';
 
 export class PrescriptionService {
-  async createPrescription(data: Prisma.PrescriptionCreateInput) {
+  async createPrescription(data: any) {
     return prisma.prescription.create({
       data,
       include: {
@@ -41,7 +40,7 @@ export class PrescriptionService {
     const { page = 1, limit = 20, patientId, prescribedById, status } = options;
     const skip = (page - 1) * limit;
 
-    const where: Prisma.PrescriptionWhereInput = {
+    const where: any = {
       ...(patientId && { patientId }),
       ...(prescribedById && { prescribedById }),
       ...(status && { status }),
@@ -79,7 +78,7 @@ export class PrescriptionService {
     };
   }
 
-  async updatePrescription(id: string, data: Prisma.PrescriptionUpdateInput) {
+  async updatePrescription(id: string, data: any) {
     const prescription = await prisma.prescription.findUnique({ where: { id } });
 
     if (!prescription) {

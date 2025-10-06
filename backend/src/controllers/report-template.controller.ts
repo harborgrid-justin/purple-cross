@@ -35,7 +35,7 @@ export class ReportTemplateController {
     res.status(201).json({ status: 'success', data: schedule });
   }
 
-  async getScheduledReports(req: Request, res: Response) {
+  async getScheduledReports(_req: Request, res: Response) {
     const schedules = await reportTemplateService.getScheduledReports();
     res.status(200).json({ status: 'success', data: schedules });
   }

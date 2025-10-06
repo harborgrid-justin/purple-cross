@@ -26,7 +26,7 @@ export class PatientReminderController {
     res.status(200).json({ status: 'success', ...result });
   }
 
-  async getDue(req: Request, res: Response) {
+  async getDue(_req: Request, res: Response) {
     const reminders = await patientReminderService.getDueReminders();
     res.status(200).json({ status: 'success', data: reminders });
   }

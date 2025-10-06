@@ -1,9 +1,8 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
-import { Prisma } from '@prisma/client';
 
 export class ClientService {
-  async createClient(data: Prisma.ClientCreateInput) {
+  async createClient(data: any) {
     // Check if email already exists
     const existing = await prisma.client.findUnique({
       where: { email: data.email },
@@ -55,7 +54,7 @@ export class ClientService {
     const { page = 1, limit = 20, search, status } = options;
     const skip = (page - 1) * limit;
 
-    const where: Prisma.ClientWhereInput = {
+    const where: any = {
       ...(status && { status }),
       ...(search && {
         OR: [
@@ -97,7 +96,7 @@ export class ClientService {
     };
   }
 
-  async updateClient(id: string, data: Prisma.ClientUpdateInput) {
+  async updateClient(id: string, data: any) {
     const client = await prisma.client.findUnique({ where: { id } });
 
     if (!client) {

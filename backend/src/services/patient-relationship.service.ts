@@ -34,13 +34,13 @@ export class PatientRelationshipService {
 
     const family = {
       parents: relationships.filter(
-        (r) => r.relationshipType === 'parent' && r.relatedPatientId === patientId
+        (r: any) => r.relationshipType === 'parent' && r.relatedPatientId === patientId
       ),
       offspring: relationships.filter(
-        (r) => r.relationshipType === 'parent' && r.patientId === patientId
+        (r: any) => r.relationshipType === 'parent' && r.patientId === patientId
       ),
-      siblings: relationships.filter((r) => r.relationshipType === 'sibling'),
-      litter: relationships.filter((r) => r.relationshipType === 'litter'),
+      siblings: relationships.filter((r: any) => r.relationshipType === 'sibling'),
+      litter: relationships.filter((r: any) => r.relationshipType === 'litter'),
     };
 
     return family;

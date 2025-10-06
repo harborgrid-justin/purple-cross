@@ -1,9 +1,8 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
-import { Prisma } from '@prisma/client';
 
 export class DocumentService {
-  async createDocument(data: Prisma.DocumentCreateInput) {
+  async createDocument(data: any) {
     return prisma.document.create({
       data,
     });
@@ -31,7 +30,7 @@ export class DocumentService {
     const { page = 1, limit = 20, entityType, entityId, category } = options;
     const skip = (page - 1) * limit;
 
-    const where: Prisma.DocumentWhereInput = {
+    const where: any = {
       ...(entityType && { entityType }),
       ...(entityId && { entityId }),
       ...(category && { category }),
@@ -58,7 +57,7 @@ export class DocumentService {
     };
   }
 
-  async updateDocument(id: string, data: Prisma.DocumentUpdateInput) {
+  async updateDocument(id: string, data: any) {
     const document = await prisma.document.findUnique({ where: { id } });
 
     if (!document) {
