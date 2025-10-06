@@ -1,5 +1,5 @@
 import { prisma } from '../config/database';
-import { AppError } from '../middleware/errorHandler';
+import { AppError } from '../middleware/error-handler';
 import { Prisma } from '@prisma/client';
 
 export class InvoiceService {

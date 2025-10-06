@@ -138,7 +138,7 @@ async function uploadFile(filePath: string, destination: string) {
 }
 
 // Example 6: Combining Retry with Circuit Breaker
-import { createCircuitBreaker } from '../src/utils/circuitBreaker';
+import { createCircuitBreaker } from '../src/utils/circuit-breaker';
 
 const apiBreaker = createCircuitBreaker('resilient-api');
 

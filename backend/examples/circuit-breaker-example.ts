@@ -3,7 +3,7 @@
  * Demonstrates how to use the circuit breaker pattern for resilient external service calls
  */
 
-import { createCircuitBreaker } from '../src/utils/circuitBreaker';
+import { createCircuitBreaker } from '../src/utils/circuit-breaker';
 import { logger } from '../src/config/logger';
 
 // Example 1: Basic Circuit Breaker for External API
