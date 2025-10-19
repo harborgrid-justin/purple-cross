@@ -1,0 +1,648 @@
+{
+  "results": {
+    "01-dashboard.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 9825,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 130680
+    },
+    "02-patients-list.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 7115,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 79847
+    },
+    "03-patients-registration.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 7048,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 116628
+    },
+    "04-patients-search.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 7748,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 113757
+    },
+    "05-patients-demographics.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 8507,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 102955
+    },
+    "06-patients-health-status.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6877,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 113954
+    },
+    "07-patients-lifecycle.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6952,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 112963
+    },
+    "08-patients-relationships.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6858,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 109128
+    },
+    "09-patients-reminders.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6892,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 114988
+    },
+    "10-patients-breed-info.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6865,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 114400
+    },
+    "11-clients-list.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6828,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 97576
+    },
+    "12-clients-registration.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6879,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 111169
+    },
+    "13-clients-account-management.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6813,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 110198
+    },
+    "14-clients-multi-pet.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6858,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 112063
+    },
+    "15-clients-communication-history.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6730,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 105844
+    },
+    "16-clients-portal-access.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6708,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 105034
+    },
+    "17-clients-loyalty.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6781,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 104288
+    },
+    "18-clients-feedback.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6803,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 109170
+    },
+    "19-clients-segmentation.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6527,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 104595
+    },
+    "20-appointments-list.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6555,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 76538
+    },
+    "21-appointments-booking.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6620,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 108436
+    },
+    "22-appointments-calendar-management.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6880,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 109012
+    },
+    "23-appointments-types.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6781,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 111257
+    },
+    "24-appointments-reminders.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6733,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 106565
+    },
+    "25-appointments-waitlist.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6680,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 107864
+    },
+    "26-appointments-time-blocks.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6775,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 109572
+    },
+    "27-appointments-optimization.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6813,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 111521
+    },
+    "28-appointments-analytics.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6687,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 106242
+    },
+    "29-medical-records-list.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6884,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 83663
+    },
+    "30-medical-records-emr.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6438,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 104880
+    },
+    "31-medical-records-clinical-notes.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6558,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 105640
+    },
+    "32-medical-records-vital-signs.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6475,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 104561
+    },
+    "33-medical-records-diagnostics.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6468,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 103559
+    },
+    "34-medical-records-treatment-history.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6525,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 105169
+    },
+    "35-medical-records-attachments.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6518,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 101158
+    },
+    "36-medical-records-sharing.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6624,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 104920
+    },
+    "37-medical-records-audit.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6494,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 105983
+    },
+    "38-prescriptions-list.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 7140,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 84568
+    },
+    "39-prescriptions-e-prescribing.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6466,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 102423
+    },
+    "40-prescriptions-medication-database.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6706,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 107114
+    },
+    "41-prescriptions-dosage-calculator.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6684,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 106706
+    },
+    "42-prescriptions-drug-interactions.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6591,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 102929
+    },
+    "43-prescriptions-controlled-substances.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6712,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 107567
+    },
+    "44-prescriptions-history.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6400,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 100744
+    },
+    "45-prescriptions-medication-reminders.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 5239,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 66808
+    },
+    "46-prescriptions-compounding.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6571,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 107382
+    },
+    "47-inventory-list.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 7017,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 84735
+    },
+    "48-inventory-stock-management.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 5096,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 65894
+    },
+    "49-inventory-ordering.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 5096,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 65894
+    },
+    "50-inventory-receiving.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 5096,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 65894
+    },
+    "51-inventory-vendors.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6484,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 102480
+    },
+    "52-billing-list.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 7332,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 88524
+    },
+    "53-billing-invoice-generation.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6602,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 105748
+    },
+    "54-billing-payment-processing.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6674,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 104450
+    },
+    "55-laboratory-list.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 7560,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 87334
+    },
+    "56-laboratory-in-house.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6580,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 102690
+    },
+    "57-laboratory-external.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6584,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 100239
+    },
+    "58-staff-list.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 7214,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 87607
+    },
+    "59-staff-profiles.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6679,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 104383
+    },
+    "60-staff-scheduling.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6727,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 103901
+    },
+    "61-reports-list.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 7705,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 94445
+    },
+    "62-reports-dashboard.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6744,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 109063
+    },
+    "63-reports-financial.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6663,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 106824
+    },
+    "64-communications-list.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 7635,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 91542
+    },
+    "65-communications-email.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6628,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 102969
+    },
+    "66-communications-sms.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6699,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 104313
+    },
+    "67-documents-list.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 7131,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 86487
+    },
+    "68-documents-templates.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 6343,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 101452
+    },
+    "69-compliance-list.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 7453,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 93131
+    },
+    "70-integrations-list.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 7574,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 91492
+    },
+    "71-mobile-list.png": {
+      "width": 1920,
+      "height": 1080,
+      "total_pixels": 2073600,
+      "unique_colors": 7375,
+      "is_likely_blank": false,
+      "is_likely_error": false,
+      "filesize": 95183
+    }
+  },
+  "issues": [],
+  "summary": {
+    "total": 71,
+    "issues": 0
+  }
+}
