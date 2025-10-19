@@ -36,7 +36,7 @@ export function validateEmail(email: string): boolean {
  */
 export function validatePhoneNumber(phone: string): boolean {
   // Matches formats: (123) 456-7890, 123-456-7890, 1234567890
-  const phoneRegex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
+  const phoneRegex = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/;
   return phoneRegex.test(phone);
 }
 
@@ -58,11 +58,7 @@ export function validateDateRange(date: Date, minDate: Date, maxDate: Date): boo
 /**
  * Validate string length
  */
-export function validateStringLength(
-  str: string,
-  min: number,
-  max: number
-): boolean {
+export function validateStringLength(str: string, min: number, max: number): boolean {
   const length = str.length;
   return length >= min && length <= max;
 }
@@ -78,8 +74,7 @@ export function validatePositiveNumber(num: number): boolean {
  * Validate UUID format
  */
 export function validateUUID(uuid: string): boolean {
-  const uuidRegex =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   return uuidRegex.test(uuid);
 }
 
@@ -93,13 +88,15 @@ export function validateEnumValue<T>(value: string, enumObj: T): boolean {
 /**
  * Sanitize and validate pagination parameters
  */
-export function validatePagination(page?: number, limit?: number): {
+export function validatePagination(
+  page?: number,
+  limit?: number
+): {
   page: number;
   limit: number;
 } {
   const validPage = page && page > 0 ? Math.floor(page) : 1;
-  const validLimit =
-    limit && limit > 0 && limit <= 100 ? Math.floor(limit) : 10;
+  const validLimit = limit && limit > 0 && limit <= 100 ? Math.floor(limit) : 10;
 
   return { page: validPage, limit: validLimit };
 }
