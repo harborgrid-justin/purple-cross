@@ -4,7 +4,7 @@ import { prisma } from '../../../src/config/database';
 // Mock Prisma
 jest.mock('../../../src/config/database', () => ({
   prisma: {
-    employee: {
+    staff: {
       create: jest.fn(),
       findUnique: jest.fn(),
       findMany: jest.fn(),
@@ -22,9 +22,9 @@ describe('StaffService', () => {
     jest.clearAllMocks();
   });
 
-  describe('createEmployee', () => {
-    it('should create an employee successfully', async () => {
-      const employeeData = {
+  describe('createStaff', () => {
+    it('should create a staff member successfully', async () => {
+      const staffData = {
         firstName: 'Jane',
         lastName: 'Smith',
         email: 'jane.smith@purplecross.com',
@@ -34,99 +34,99 @@ describe('StaffService', () => {
       };
 
       const expectedResult = {
-        id: 'employee-123',
-        ...employeeData,
+        id: 'staff-123',
+        ...staffData,
       };
 
-      (prisma.employee.findUnique as jest.Mock).mockResolvedValue(null);
-      (prisma.employee.create as jest.Mock).mockResolvedValue(expectedResult);
+      (prisma.staff.findUnique as jest.Mock).mockResolvedValue(null);
+      (prisma.staff.create as jest.Mock).mockResolvedValue(expectedResult);
 
-      const result = await staffService.createEmployee(employeeData);
+      const result = await staffService.createStaff(staffData);
 
       expect(result).toEqual(expectedResult);
     });
 
     it('should throw error when email already exists', async () => {
-      const employeeData = {
+      const staffData = {
         email: 'existing@purplecross.com',
       };
 
-      (prisma.employee.findUnique as jest.Mock).mockResolvedValue({ id: 'existing' });
+      (prisma.staff.findUnique as jest.Mock).mockResolvedValue({ id: 'existing' });
 
-      await expect(staffService.createEmployee(employeeData)).rejects.toThrow(
-        'Employee with this email already exists'
+      await expect(staffService.createStaff(staffData)).rejects.toThrow(
+        'Staff with this email already exists'
       );
     });
   });
 
-  describe('getEmployeeById', () => {
-    it('should return an employee when found', async () => {
-      const employeeId = 'employee-123';
-      const expectedEmployee = {
-        id: employeeId,
+  describe('getStaffById', () => {
+    it('should return a staff member when found', async () => {
+      const staffId = 'staff-123';
+      const expectedStaff = {
+        id: staffId,
         firstName: 'Jane',
         lastName: 'Smith',
         role: 'veterinarian',
       };
 
-      (prisma.employee.findUnique as jest.Mock).mockResolvedValue(expectedEmployee);
+      (prisma.staff.findUnique as jest.Mock).mockResolvedValue(expectedStaff);
 
-      const result = await staffService.getEmployeeById(employeeId);
+      const result = await staffService.getStaffById(staffId);
 
-      expect(result).toEqual(expectedEmployee);
+      expect(result).toEqual(expectedStaff);
     });
 
-    it('should throw error when employee not found', async () => {
-      const employeeId = 'non-existent';
+    it('should throw error when staff member not found', async () => {
+      const staffId = 'non-existent';
 
-      (prisma.employee.findUnique as jest.Mock).mockResolvedValue(null);
+      (prisma.staff.findUnique as jest.Mock).mockResolvedValue(null);
 
-      await expect(staffService.getEmployeeById(employeeId)).rejects.toThrow('Employee not found');
+      await expect(staffService.getStaffById(staffId)).rejects.toThrow('Staff member not found');
     });
   });
 
-  describe('getAllEmployees', () => {
-    it('should return all employees with pagination', async () => {
-      const mockEmployees = [
-        { id: 'employee-1', firstName: 'Jane', role: 'veterinarian' },
-        { id: 'employee-2', firstName: 'John', role: 'technician' },
+  describe('getAllStaff', () => {
+    it('should return all staff members with pagination', async () => {
+      const mockStaff = [
+        { id: 'staff-1', firstName: 'Jane', role: 'veterinarian' },
+        { id: 'staff-2', firstName: 'John', role: 'technician' },
       ];
 
-      (prisma.employee.findMany as jest.Mock).mockResolvedValue(mockEmployees);
-      (prisma.employee.count as jest.Mock).mockResolvedValue(2);
+      (prisma.staff.findMany as jest.Mock).mockResolvedValue(mockStaff);
+      (prisma.staff.count as jest.Mock).mockResolvedValue(2);
 
-      const result = await staffService.getAllEmployees({});
+      const result = await staffService.getAllStaff({});
 
-      expect(result.data).toEqual(mockEmployees);
+      expect(result.data).toEqual(mockStaff);
       expect(result.pagination.total).toBe(2);
     });
 
-    it('should filter employees by role', async () => {
+    it('should filter staff by role', async () => {
       const role = 'veterinarian';
-      const mockEmployees = [{ id: 'employee-1', role }];
+      const mockStaff = [{ id: 'staff-1', role }];
 
-      (prisma.employee.findMany as jest.Mock).mockResolvedValue(mockEmployees);
-      (prisma.employee.count as jest.Mock).mockResolvedValue(1);
+      (prisma.staff.findMany as jest.Mock).mockResolvedValue(mockStaff);
+      (prisma.staff.count as jest.Mock).mockResolvedValue(1);
 
-      await staffService.getAllEmployees({ role });
+      await staffService.getAllStaff({ role });
 
-      expect(prisma.employee.findMany).toHaveBeenCalledWith(
+      expect(prisma.staff.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           where: expect.objectContaining({ role }),
         })
       );
     });
 
-    it('should filter employees by status', async () => {
+    it('should filter staff by status', async () => {
       const status = 'active';
-      const mockEmployees = [{ id: 'employee-1', status }];
+      const mockStaff = [{ id: 'staff-1', status }];
 
-      (prisma.employee.findMany as jest.Mock).mockResolvedValue(mockEmployees);
-      (prisma.employee.count as jest.Mock).mockResolvedValue(1);
+      (prisma.staff.findMany as jest.Mock).mockResolvedValue(mockStaff);
+      (prisma.staff.count as jest.Mock).mockResolvedValue(1);
 
-      await staffService.getAllEmployees({ status });
+      await staffService.getAllStaff({ status });
 
-      expect(prisma.employee.findMany).toHaveBeenCalledWith(
+      expect(prisma.staff.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           where: expect.objectContaining({ status }),
         })
@@ -134,32 +134,32 @@ describe('StaffService', () => {
     });
   });
 
-  describe('updateEmployee', () => {
-    it('should update an employee successfully', async () => {
-      const employeeId = 'employee-123';
+  describe('updateStaff', () => {
+    it('should update a staff member successfully', async () => {
+      const staffId = 'staff-123';
       const updateData = { role: 'senior-veterinarian' };
-      const existingEmployee = { id: employeeId, role: 'veterinarian' };
-      const updatedEmployee = { ...existingEmployee, ...updateData };
+      const existingStaff = { id: staffId, role: 'veterinarian' };
+      const updatedStaff = { ...existingStaff, ...updateData };
 
-      (prisma.employee.findUnique as jest.Mock).mockResolvedValue(existingEmployee);
-      (prisma.employee.update as jest.Mock).mockResolvedValue(updatedEmployee);
+      (prisma.staff.findUnique as jest.Mock).mockResolvedValue(existingStaff);
+      (prisma.staff.update as jest.Mock).mockResolvedValue(updatedStaff);
 
-      const result = await staffService.updateEmployee(employeeId, updateData);
+      const result = await staffService.updateStaff(staffId, updateData);
 
       expect(result.role).toBe('senior-veterinarian');
     });
   });
 
-  describe('deactivateEmployee', () => {
-    it('should deactivate an employee successfully', async () => {
-      const employeeId = 'employee-123';
-      const existingEmployee = { id: employeeId, status: 'active' };
-      const deactivatedEmployee = { ...existingEmployee, status: 'inactive' };
+  describe('deleteStaff', () => {
+    it('should delete a staff member successfully', async () => {
+      const staffId = 'staff-123';
+      const existingStaff = { id: staffId, status: 'active' };
+      const deletedStaff = { ...existingStaff, status: 'inactive' };
 
-      (prisma.employee.findUnique as jest.Mock).mockResolvedValue(existingEmployee);
-      (prisma.employee.update as jest.Mock).mockResolvedValue(deactivatedEmployee);
+      (prisma.staff.findUnique as jest.Mock).mockResolvedValue(existingStaff);
+      (prisma.staff.update as jest.Mock).mockResolvedValue(deletedStaff);
 
-      const result = await staffService.deactivateEmployee(employeeId);
+      const result = await staffService.deleteStaff(staffId);
 
       expect(result.status).toBe('inactive');
     });

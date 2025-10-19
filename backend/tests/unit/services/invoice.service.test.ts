@@ -48,7 +48,8 @@ describe('InvoiceService', () => {
         data: invoiceData,
         include: {
           client: true,
-          items: true,
+          lineItems: true,
+          payments: true,
         },
       });
       expect(result).toEqual(expectedResult);
@@ -97,7 +98,8 @@ describe('InvoiceService', () => {
         data: updateData,
         include: {
           client: true,
-          items: true,
+          lineItems: true,
+          payments: true,
         },
       });
       expect(result.status).toBe('paid');

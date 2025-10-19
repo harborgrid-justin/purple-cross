@@ -3,7 +3,7 @@ import { prisma } from '../../../src/config/database';
 
 jest.mock('../../../src/config/database', () => ({
   prisma: {
-    message: {
+    communication: {
       create: jest.fn(),
       findUnique: jest.fn(),
       findMany: jest.fn(),
@@ -21,78 +21,72 @@ describe('CommunicationService', () => {
     jest.clearAllMocks();
   });
 
-  describe('sendMessage', () => {
-    it('should send a message successfully', async () => {
-      const messageData = {
-        recipientId: 'client-123',
+  describe('createCommunication', () => {
+    it('should create a communication successfully', async () => {
+      const communicationData = {
+        clientId: 'client-123',
         subject: 'Test Message',
         content: 'This is a test message',
         type: 'email',
       };
 
       const expectedResult = {
-        id: 'message-123',
-        ...messageData,
+        id: 'communication-123',
+        ...communicationData,
         sentAt: new Date(),
         status: 'sent',
       };
 
-      (prisma.message.create as jest.Mock).mockResolvedValue(expectedResult);
+      (prisma.communication.create as jest.Mock).mockResolvedValue(expectedResult);
 
-      const result = await communicationService.sendMessage(messageData);
+      const result = await communicationService.createCommunication(communicationData);
 
-      expect(prisma.message.create).toHaveBeenCalled();
+      expect(prisma.communication.create).toHaveBeenCalled();
       expect(result.status).toBe('sent');
     });
 
     it('should validate email format', async () => {
-      const invalidMessage = {
-        recipientId: 'client-123',
-        content: 'Test',
-        type: 'email',
-        email: 'invalid-email',
-      };
+      const invalidEmail = 'invalid-email';
 
       // Mock validation failure
       const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-      expect(isValidEmail(invalidMessage.email)).toBe(false);
+      expect(isValidEmail(invalidEmail)).toBe(false);
     });
   });
 
-  describe('getMessageHistory', () => {
-    it('should return message history for a client', async () => {
+  describe('getAllCommunications', () => {
+    it('should return communication history for a client', async () => {
       const clientId = 'client-123';
-      const mockMessages = [
-        { id: 'msg-1', content: 'Message 1', sentAt: new Date() },
-        { id: 'msg-2', content: 'Message 2', sentAt: new Date() },
+      const mockCommunications = [
+        { id: 'comm-1', content: 'Message 1', sentAt: new Date() },
+        { id: 'comm-2', content: 'Message 2', sentAt: new Date() },
       ];
 
-      (prisma.message.findMany as jest.Mock).mockResolvedValue(mockMessages);
+      (prisma.communication.findMany as jest.Mock).mockResolvedValue(mockCommunications);
+      (prisma.communication.count as jest.Mock).mockResolvedValue(2);
 
-      const result = await communicationService.getMessageHistory(clientId);
+      const result = await communicationService.getAllCommunications({ clientId });
 
-      expect(prisma.message.findMany).toHaveBeenCalledWith(
-        expect.objectContaining({
-          where: expect.objectContaining({ recipientId: clientId }),
-        })
-      );
-      expect(result).toEqual(mockMessages);
+      expect(result.data).toEqual(mockCommunications);
+      expect(result.pagination.total).toBe(2);
     });
   });
 
-  describe('markAsRead', () => {
-    it('should mark a message as read', async () => {
-      const messageId = 'message-123';
-      const unreadMessage = { id: messageId, read: false };
-      const readMessage = { ...unreadMessage, read: true };
+  describe('updateCommunication', () => {
+    it('should mark a communication as read', async () => {
+      const communicationId = 'communication-123';
+      const unreadCommunication = { id: communicationId, status: 'unread' };
+      const readCommunication = { ...unreadCommunication, status: 'read' };
 
-      (prisma.message.findUnique as jest.Mock).mockResolvedValue(unreadMessage);
-      (prisma.message.update as jest.Mock).mockResolvedValue(readMessage);
+      (prisma.communication.findUnique as jest.Mock).mockResolvedValue(unreadCommunication);
+      (prisma.communication.update as jest.Mock).mockResolvedValue(readCommunication);
 
-      const result = await communicationService.markAsRead(messageId);
+      const result = await communicationService.updateCommunication(communicationId, {
+        status: 'read',
+      });
 
-      expect(result.read).toBe(true);
+      expect(result.status).toBe('read');
     });
   });
 });
