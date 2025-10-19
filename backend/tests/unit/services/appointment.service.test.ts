@@ -8,6 +8,7 @@ jest.mock('../../../src/config/database', () => ({
       create: jest.fn(),
       findUnique: jest.fn(),
       findMany: jest.fn(),
+      findFirst: jest.fn(),
       count: jest.fn(),
       update: jest.fn(),
       delete: jest.fn(),
@@ -26,19 +27,28 @@ describe('AppointmentService', () => {
   describe('createAppointment', () => {
     it('should create an appointment successfully', async () => {
       const appointmentData = {
-        patientId: 'patient-123',
-        clientId: 'client-123',
+        patient: { connect: { id: 'patient-123' } },
+        client: { connect: { id: 'client-123' } },
+        veterinarian: { connect: { id: 'vet-123' } },
         startTime: new Date('2024-12-01T10:00:00Z'),
         endTime: new Date('2024-12-01T11:00:00Z'),
-        type: 'checkup',
+        appointmentType: 'checkup',
         status: 'scheduled',
       };
 
       const expectedResult = {
         id: 'appointment-123',
-        ...appointmentData,
+        patientId: 'patient-123',
+        clientId: 'client-123',
+        veterinarianId: 'vet-123',
+        startTime: new Date('2024-12-01T10:00:00Z'),
+        endTime: new Date('2024-12-01T11:00:00Z'),
+        appointmentType: 'checkup',
+        status: 'scheduled',
       };
 
+      // Mock findFirst to return no conflicts
+      (prisma.appointment.findFirst as jest.Mock).mockResolvedValue(null);
       (prisma.appointment.create as jest.Mock).mockResolvedValue(expectedResult);
 
       const result = await appointmentService.createAppointment(appointmentData);
@@ -48,7 +58,7 @@ describe('AppointmentService', () => {
         include: {
           patient: true,
           client: true,
-          staff: true,
+          veterinarian: true,
         },
       });
       expect(result).toEqual(expectedResult);
@@ -119,6 +129,8 @@ describe('AppointmentService', () => {
           where: expect.objectContaining({
             startTime: {
               gte: startDate,
+            },
+            endTime: {
               lte: endDate,
             },
           }),
@@ -161,7 +173,7 @@ describe('AppointmentService', () => {
         include: {
           patient: true,
           client: true,
-          staff: true,
+          veterinarian: true,
         },
       });
       expect(result.status).toBe('completed');

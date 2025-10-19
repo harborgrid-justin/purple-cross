@@ -10,6 +10,7 @@ jest.mock('../../../src/config/database', () => ({
       findMany: jest.fn(),
       count: jest.fn(),
       update: jest.fn(),
+      delete: jest.fn(),
     },
   },
 }));

@@ -156,17 +156,14 @@ describe('retryWithJitter', () => {
   });
 
   it('should add randomness to delay (jitter)', async () => {
-    const mockFn = jest
-      .fn()
-      .mockRejectedValueOnce(new Error('failure'))
-      .mockResolvedValue('success');
-
     const durations: number[] = [];
 
     // Run multiple times to check for variance
     for (let i = 0; i < 5; i++) {
-      mockFn.mockClear();
-      mockFn.mockRejectedValueOnce(new Error('failure')).mockResolvedValue('success');
+      const mockFn = jest
+        .fn()
+        .mockRejectedValueOnce(new Error('failure'))
+        .mockResolvedValue('success');
 
       const startTime = Date.now();
       await retryWithJitter(mockFn, {

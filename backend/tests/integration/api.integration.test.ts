@@ -28,7 +28,8 @@ describe('API Integration Tests', () => {
     app.post('/api/patients', (req, res) => {
       const { name, species } = req.body;
       if (!name || !species) {
-        return res.status(400).json({ error: 'Missing required fields' });
+        res.status(400).json({ error: 'Missing required fields' });
+        return;
       }
       res.status(201).json({
         id: '3',
@@ -40,7 +41,8 @@ describe('API Integration Tests', () => {
     app.get('/api/patients/:id', (req, res) => {
       const { id } = req.params;
       if (id === '999') {
-        return res.status(404).json({ error: 'Patient not found' });
+        res.status(404).json({ error: 'Patient not found' });
+        return;
       }
       res.status(200).json({
         id,

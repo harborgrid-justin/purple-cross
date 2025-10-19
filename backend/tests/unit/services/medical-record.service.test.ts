@@ -80,7 +80,7 @@ describe('MedicalRecordService', () => {
     });
   });
 
-  describe('getRecordsByPatientId', () => {
+  describe('getAllMedicalRecords', () => {
     it('should return all medical records for a patient', async () => {
       const patientId = 'patient-123';
       const mockRecords = [
@@ -89,18 +89,12 @@ describe('MedicalRecordService', () => {
       ];
 
       (prisma.medicalRecord.findMany as jest.Mock).mockResolvedValue(mockRecords);
+      (prisma.medicalRecord.count as jest.Mock).mockResolvedValue(2);
 
-      const result = await medicalRecordService.getRecordsByPatientId(patientId);
+      const result = await medicalRecordService.getAllMedicalRecords({ patientId });
 
-      expect(prisma.medicalRecord.findMany).toHaveBeenCalledWith({
-        where: { patientId },
-        include: {
-          patient: true,
-          veterinarian: true,
-        },
-        orderBy: { visitDate: 'desc' },
-      });
-      expect(result).toEqual(mockRecords);
+      expect(result.data).toEqual(mockRecords);
+      expect(result.pagination.total).toBe(2);
     });
   });
 

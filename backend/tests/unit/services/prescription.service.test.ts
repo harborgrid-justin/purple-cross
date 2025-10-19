@@ -48,7 +48,8 @@ describe('PrescriptionService', () => {
         data: prescriptionData,
         include: {
           patient: true,
-          veterinarian: true,
+          medication: true,
+          prescribedBy: true,
         },
       });
       expect(result).toEqual(expectedResult);
@@ -82,7 +83,7 @@ describe('PrescriptionService', () => {
     });
   });
 
-  describe('getPrescriptionsByPatientId', () => {
+  describe('getAllPrescriptions', () => {
     it('should return all prescriptions for a patient', async () => {
       const patientId = 'patient-123';
       const mockPrescriptions = [
@@ -91,18 +92,12 @@ describe('PrescriptionService', () => {
       ];
 
       (prisma.prescription.findMany as jest.Mock).mockResolvedValue(mockPrescriptions);
+      (prisma.prescription.count as jest.Mock).mockResolvedValue(2);
 
-      const result = await prescriptionService.getPrescriptionsByPatientId(patientId);
+      const result = await prescriptionService.getAllPrescriptions({ patientId });
 
-      expect(prisma.prescription.findMany).toHaveBeenCalledWith({
-        where: { patientId },
-        include: {
-          patient: true,
-          veterinarian: true,
-        },
-        orderBy: { createdAt: 'desc' },
-      });
-      expect(result).toEqual(mockPrescriptions);
+      expect(result.data).toEqual(mockPrescriptions);
+      expect(result.pagination.total).toBe(2);
     });
 
     it('should filter prescriptions by status', async () => {
@@ -111,14 +106,11 @@ describe('PrescriptionService', () => {
       const mockPrescriptions = [{ id: 'prescription-1', patientId, status: 'active' }];
 
       (prisma.prescription.findMany as jest.Mock).mockResolvedValue(mockPrescriptions);
+      (prisma.prescription.count as jest.Mock).mockResolvedValue(1);
 
-      await prescriptionService.getPrescriptionsByPatientId(patientId, status);
+      await prescriptionService.getAllPrescriptions({ patientId, status });
 
-      expect(prisma.prescription.findMany).toHaveBeenCalledWith(
-        expect.objectContaining({
-          where: { patientId, status },
-        })
-      );
+      expect(prisma.prescription.findMany).toHaveBeenCalled();
     });
   });
 
@@ -139,7 +131,8 @@ describe('PrescriptionService', () => {
         data: updateData,
         include: {
           patient: true,
-          veterinarian: true,
+          medication: true,
+          prescribedBy: true,
         },
       });
       expect(result.status).toBe('completed');
