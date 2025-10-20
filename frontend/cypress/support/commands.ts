@@ -166,6 +166,46 @@ declare global {
        * @example cy.waitForStaff()
        */
       waitForStaff(): Chainable<void>;
+
+      /**
+       * Custom command to navigate to appointments page
+       * @example cy.visitAppointments()
+       */
+      visitAppointments(): Chainable<void>;
+
+      /**
+       * Custom command to navigate to a specific appointments subpage
+       * @param subpage - The appointments subpage to navigate to
+       * @example cy.visitAppointmentsPage('scheduling')
+       */
+      visitAppointmentsPage(subpage: string): Chainable<void>;
+
+      /**
+       * Custom command to search for appointments
+       * @param searchTerm - The search term to use
+       * @example cy.searchAppointments('Buddy')
+       */
+      searchAppointments(searchTerm: string): Chainable<void>;
+
+      /**
+       * Custom command to mock appointments data
+       * @param appointments - Array of appointment objects
+       * @example cy.mockAppointments([{ id: '1', patientId: '1', startTime: '2024-01-20T09:00:00.000Z' }])
+       */
+      mockAppointments(appointments: unknown[]): Chainable<void>;
+
+      /**
+       * Custom command to mock a single appointment
+       * @param appointment - Appointment object
+       * @example cy.mockAppointment({ id: '1', patientId: '1', startTime: '2024-01-20T09:00:00.000Z' })
+       */
+      mockAppointment(appointment: unknown): Chainable<void>;
+
+      /**
+       * Custom command to wait for appointments API calls
+       * @example cy.waitForAppointments()
+       */
+      waitForAppointments(): Chainable<void>;
     }
   }
 }
@@ -352,6 +392,49 @@ Cypress.Commands.add('mockStaffMember', (staffMember: unknown) => {
 // Wait for staff API calls
 Cypress.Commands.add('waitForStaff', () => {
   cy.wait('@getStaff');
+});
+
+// Navigate to appointments page
+Cypress.Commands.add('visitAppointments', () => {
+  cy.visit('/appointments');
+});
+
+// Navigate to a specific appointments subpage
+Cypress.Commands.add('visitAppointmentsPage', (subpage: string) => {
+  cy.visit(`/appointments/${subpage}`);
+});
+
+// Search for appointments
+Cypress.Commands.add('searchAppointments', (searchTerm: string) => {
+  cy.get('input[id="appointment-search"]').clear().type(searchTerm);
+});
+
+// Mock appointments data
+Cypress.Commands.add('mockAppointments', (appointments: unknown[]) => {
+  cy.intercept('GET', '/api/appointments*', {
+    statusCode: 200,
+    body: {
+      status: 'success',
+      data: appointments,
+    },
+  }).as('getAppointmentsData');
+});
+
+// Mock a single appointment
+Cypress.Commands.add('mockAppointment', (appointment: unknown) => {
+  const appointmentId = (appointment as { id: string }).id;
+  cy.intercept('GET', `/api/appointments/${appointmentId}`, {
+    statusCode: 200,
+    body: {
+      status: 'success',
+      data: appointment,
+    },
+  }).as('getAppointmentData');
+});
+
+// Wait for appointments API calls
+Cypress.Commands.add('waitForAppointments', () => {
+  cy.wait('@getAppointments');
 });
 
 export {};
