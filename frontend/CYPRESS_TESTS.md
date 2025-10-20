@@ -137,7 +137,7 @@ npx cypress run --spec "cypress/e2e/patient-management/02-patient-registration.c
 
 ### Configuration
 - **File:** `frontend/cypress.config.ts`
-- **Base URL:** http://localhost:5174 (Vite dev server)
+- **Base URL:** http://localhost:5173 (Vite dev server)
 - **Viewport:** 1280x720
 - **Video:** Disabled
 - **Screenshots:** On failure only
