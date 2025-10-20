@@ -5,28 +5,22 @@ describe('Document Sharing', () => {
     cy.visitDocuments();
   });
 
-  it.skip('should display share button for a document',
-
-
-  // Skipped: Advanced document management feature not yet fully implemented () => {
+  it.skip('should display share button for a document', () => {
+    // Skipped: Advanced document management feature not yet fully implemented 
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.btn-share').should('be.visible');
   });
 
-  it.skip('should open share dialog with sharing options',
-
-
-  // Skipped: Advanced document management feature not yet fully implemented () => {
+  it.skip('should open share dialog with sharing options', () => {
+    // Skipped: Advanced document management feature not yet fully implemented 
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.btn-share').click();
     cy.get('.share-dialog').should('be.visible');
     cy.get('.share-options').should('be.visible');
   });
 
-  it.skip('should allow sharing with specific staff members',
-
-
-  // Skipped: Advanced document management feature not yet fully implemented () => {
+  it.skip('should allow sharing with specific staff members', () => {
+    // Skipped: Advanced document management feature not yet fully implemented 
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.btn-share').click();
     cy.get('#share-with-staff').type('Emily');
@@ -36,10 +30,8 @@ describe('Document Sharing', () => {
     cy.get('.success-message').should('contain', 'Document shared');
   });
 
-  it.skip('should allow setting permission levels when sharing',
-
-
-  // Skipped: Advanced document management feature not yet fully implemented () => {
+  it.skip('should allow setting permission levels when sharing', () => {
+    // Skipped: Advanced document management feature not yet fully implemented 
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.btn-share').click();
     cy.get('#share-with-staff').type('John');
@@ -49,10 +41,8 @@ describe('Document Sharing', () => {
     cy.get('.success-message').should('be.visible');
   });
 
-  it.skip('should generate a shareable link',
-
-
-  // Skipped: Advanced document management feature not yet fully implemented () => {
+  it.skip('should generate a shareable link', () => {
+    // Skipped: Advanced document management feature not yet fully implemented 
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.btn-share').click();
     cy.get('.generate-link-tab').click();
@@ -61,10 +51,8 @@ describe('Document Sharing', () => {
     cy.get('.btn-copy-link').should('be.enabled');
   });
 
-  it.skip('should allow setting expiration date for shared links',
-
-
-  // Skipped: Advanced document management feature not yet fully implemented () => {
+  it.skip('should allow setting expiration date for shared links', () => {
+    // Skipped: Advanced document management feature not yet fully implemented 
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.btn-share').click();
     cy.get('.generate-link-tab').click();
@@ -74,20 +62,16 @@ describe('Document Sharing', () => {
     cy.get('.link-expires').should('contain', '2024-12-31');
   });
 
-  it.skip('should display list of people who have access',
-
-
-  // Skipped: Advanced document management feature not yet fully implemented () => {
+  it.skip('should display list of people who have access', () => {
+    // Skipped: Advanced document management feature not yet fully implemented 
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.access-list-tab').click();
     cy.get('.access-list').should('be.visible');
     cy.get('.access-item').should('have.length.at.least', 1);
   });
 
-  it.skip('should allow revoking access from shared users',
-
-
-  // Skipped: Advanced document management feature not yet fully implemented () => {
+  it.skip('should allow revoking access from shared users', () => {
+    // Skipped: Advanced document management feature not yet fully implemented 
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.access-list-tab').click();
     cy.get('.access-item').first().find('.btn-revoke').click();
@@ -96,10 +80,8 @@ describe('Document Sharing', () => {
     cy.get('.success-message').should('contain', 'Access revoked');
   });
 
-  it.skip('should send notification when document is shared',
-
-
-  // Skipped: Advanced document management feature not yet fully implemented () => {
+  it.skip('should send notification when document is shared', () => {
+    // Skipped: Advanced document management feature not yet fully implemented 
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.btn-share').click();
     cy.get('#share-with-staff').type('Emily');
@@ -109,10 +91,8 @@ describe('Document Sharing', () => {
     cy.get('.success-message').should('contain', 'notification sent');
   });
 
-  it.skip('should track document access history',
-
-
-  // Skipped: Advanced document management feature not yet fully implemented () => {
+  it.skip('should track document access history', () => {
+    // Skipped: Advanced document management feature not yet fully implemented 
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.activity-log-tab').click();
     cy.get('.access-history').should('be.visible');

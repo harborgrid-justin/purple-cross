@@ -5,29 +5,23 @@ describe('Staff Reviews and Evaluations', () => {
     cy.visitStaff();
   });
 
-  it.skip('should display performance reviews section',
-
-
-  // Skipped: Advanced staff management feature not yet fully implemented () => {
+  it.skip('should display performance reviews section', () => {
+    // Skipped: Advanced staff management feature not yet fully implemented 
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.reviews-tab').click();
     cy.get('.reviews-section').should('be.visible');
   });
 
-  it.skip('should show past performance reviews',
-
-
-  // Skipped: Advanced staff management feature not yet fully implemented () => {
+  it.skip('should show past performance reviews', () => {
+    // Skipped: Advanced staff management feature not yet fully implemented 
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.reviews-tab').click();
     cy.get('.review-history').should('be.visible');
     cy.get('.review-item').should('have.length.at.least', 1);
   });
 
-  it.skip('should display review dates and ratings',
-
-
-  // Skipped: Advanced staff management feature not yet fully implemented () => {
+  it.skip('should display review dates and ratings', () => {
+    // Skipped: Advanced staff management feature not yet fully implemented 
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.reviews-tab').click();
     cy.get('.review-item')
@@ -38,10 +32,8 @@ describe('Staff Reviews and Evaluations', () => {
       });
   });
 
-  it.skip('should allow creating new performance review',
-
-
-  // Skipped: Advanced staff management feature not yet fully implemented () => {
+  it.skip('should allow creating new performance review', () => {
+    // Skipped: Advanced staff management feature not yet fully implemented 
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.reviews-tab').click();
     cy.get('.btn-create-review').click();
@@ -53,10 +45,8 @@ describe('Staff Reviews and Evaluations', () => {
     cy.get('.success-message').should('contain', 'Review saved');
   });
 
-  it.skip('should show competency ratings',
-
-
-  // Skipped: Advanced staff management feature not yet fully implemented () => {
+  it.skip('should show competency ratings', () => {
+    // Skipped: Advanced staff management feature not yet fully implemented 
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.reviews-tab').click();
     cy.get('.review-item').first().find('.btn-view-details').click();
@@ -64,20 +54,16 @@ describe('Staff Reviews and Evaluations', () => {
     cy.get('.competency-item').should('have.length.at.least', 3);
   });
 
-  it.skip('should display goals and objectives',
-
-
-  // Skipped: Advanced staff management feature not yet fully implemented () => {
+  it.skip('should display goals and objectives', () => {
+    // Skipped: Advanced staff management feature not yet fully implemented 
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.goals-tab').click();
     cy.get('.goals-list').should('be.visible');
     cy.get('.goal-item').should('have.length.at.least', 2);
   });
 
-  it.skip('should allow setting new goals',
-
-
-  // Skipped: Advanced staff management feature not yet fully implemented () => {
+  it.skip('should allow setting new goals', () => {
+    // Skipped: Advanced staff management feature not yet fully implemented 
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.goals-tab').click();
     cy.get('.btn-add-goal').click();
@@ -88,10 +74,8 @@ describe('Staff Reviews and Evaluations', () => {
     cy.get('.success-message').should('contain', 'Goal added');
   });
 
-  it.skip('should track goal progress',
-
-
-  // Skipped: Advanced staff management feature not yet fully implemented () => {
+  it.skip('should track goal progress', () => {
+    // Skipped: Advanced staff management feature not yet fully implemented 
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.goals-tab').click();
     cy.get('.goal-item')
@@ -102,19 +86,15 @@ describe('Staff Reviews and Evaluations', () => {
       });
   });
 
-  it.skip('should show development plans',
-
-
-  // Skipped: Advanced staff management feature not yet fully implemented () => {
+  it.skip('should show development plans', () => {
+    // Skipped: Advanced staff management feature not yet fully implemented 
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.development-tab').click();
     cy.get('.development-plan').should('be.visible');
   });
 
-  it.skip('should display 360-degree feedback',
-
-
-  // Skipped: Advanced staff management feature not yet fully implemented () => {
+  it.skip('should display 360-degree feedback', () => {
+    // Skipped: Advanced staff management feature not yet fully implemented 
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.reviews-tab').click();
     cy.get('.review-item').first().find('.btn-view-details').click();

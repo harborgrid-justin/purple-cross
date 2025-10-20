@@ -1,26 +1,21 @@
 /// <reference types="cypress" />
 
 describe('Document Workflow', () => {
-  it.skip('should display the workflow page title',
-
-  // Skipped: Advanced document management feature not yet fully implemented () => {
+  it.skip('should display the workflow page title', () => {
+    // Skipped: Advanced document management feature not yet fully implemented 
     cy.visitDocumentsPage('workflow');
     cy.get('.page-header h1').should('contain', 'Document Workflow');
   });
 
-  it.skip('should display workflow information cards',
-
-
-  // Skipped: Advanced document management feature not yet fully implemented () => {
+  it.skip('should display workflow information cards', () => {
+    // Skipped: Advanced document management feature not yet fully implemented 
     cy.visitDocumentsPage('workflow');
     cy.get('.info-cards').should('be.visible');
     cy.get('.info-cards > div').should('have.length', 3);
   });
 
-  it.skip('should display workflows features card',
-
-
-  // Skipped: Advanced document management feature not yet fully implemented () => {
+  it.skip('should display workflows features card', () => {
+    // Skipped: Advanced document management feature not yet fully implemented 
     cy.visitDocumentsPage('workflow');
     cy.contains('h3', 'Workflows').should('be.visible');
     cy.contains('Approval routing').should('be.visible');
@@ -29,10 +24,8 @@ describe('Document Workflow', () => {
     cy.contains('Conditional routing').should('be.visible');
   });
 
-  it.skip('should display automation features card',
-
-
-  // Skipped: Advanced document management feature not yet fully implemented () => {
+  it.skip('should display automation features card', () => {
+    // Skipped: Advanced document management feature not yet fully implemented 
     cy.visitDocumentsPage('workflow');
     cy.contains('h3', 'Automation').should('be.visible');
     cy.contains('Auto-routing').should('be.visible');
@@ -41,10 +34,8 @@ describe('Document Workflow', () => {
     cy.contains('Escalations').should('be.visible');
   });
 
-  it.skip('should display tracking features card',
-
-
-  // Skipped: Advanced document management feature not yet fully implemented () => {
+  it.skip('should display tracking features card', () => {
+    // Skipped: Advanced document management feature not yet fully implemented 
     cy.visitDocumentsPage('workflow');
     cy.contains('h3', 'Tracking').should('be.visible');
     cy.contains('Status tracking').should('be.visible');
@@ -53,20 +44,16 @@ describe('Document Workflow', () => {
     cy.contains('Bottleneck analysis').should('be.visible');
   });
 
-  it.skip('should have proper page structure',
-
-
-  // Skipped: Advanced document management feature not yet fully implemented () => {
+  it.skip('should have proper page structure', () => {
+    // Skipped: Advanced document management feature not yet fully implemented 
     cy.visitDocumentsPage('workflow');
     cy.get('.page').should('exist');
     cy.get('.page-header').should('exist');
     cy.get('.content-section').should('exist');
   });
 
-  it.skip('should display content section description',
-
-
-  // Skipped: Advanced document management feature not yet fully implemented () => {
+  it.skip('should display content section description', () => {
+    // Skipped: Advanced document management feature not yet fully implemented 
     cy.visitDocumentsPage('workflow');
     cy.get('.content-section p').should(
       'contain',
@@ -74,37 +61,29 @@ describe('Document Workflow', () => {
     );
   });
 
-  it.skip('should have cards with proper styling',
-
-
-  // Skipped: Advanced document management feature not yet fully implemented () => {
+  it.skip('should have cards with proper styling', () => {
+    // Skipped: Advanced document management feature not yet fully implemented 
     cy.visitDocumentsPage('workflow');
     cy.get('.info-cards > div').first().should('have.css', 'padding');
     cy.get('.info-cards > div').first().should('have.css', 'background-color');
     cy.get('.info-cards > div').first().should('have.css', 'border-radius');
   });
 
-  it.skip('should display all feature items in lists',
-
-
-  // Skipped: Advanced document management feature not yet fully implemented () => {
+  it.skip('should display all feature items in lists', () => {
+    // Skipped: Advanced document management feature not yet fully implemented 
     cy.visitDocumentsPage('workflow');
     cy.get('.info-cards ul li').should('have.length', 12); // 4 + 4 + 4
   });
 
-  it.skip('should navigate back to documents from workflow page',
-
-
-  // Skipped: Advanced document management feature not yet fully implemented () => {
+  it.skip('should navigate back to documents from workflow page', () => {
+    // Skipped: Advanced document management feature not yet fully implemented 
     cy.visitDocumentsPage('workflow');
     cy.visit('/documents');
     cy.url().should('include', '/documents');
   });
 
-  it.skip('should maintain consistent layout across viewport sizes',
-
-
-  // Skipped: Advanced document management feature not yet fully implemented () => {
+  it.skip('should maintain consistent layout across viewport sizes', () => {
+    // Skipped: Advanced document management feature not yet fully implemented 
     cy.visitDocumentsPage('workflow');
     cy.viewport(1280, 720);
     cy.get('.info-cards').should('be.visible');
@@ -112,10 +91,8 @@ describe('Document Workflow', () => {
     cy.get('.info-cards').should('be.visible');
   });
 
-  it.skip('should display proper semantic HTML structure',
-
-
-  // Skipped: Advanced document management feature not yet fully implemented () => {
+  it.skip('should display proper semantic HTML structure', () => {
+    // Skipped: Advanced document management feature not yet fully implemented 
     cy.visitDocumentsPage('workflow');
     cy.get('header.page-header').should('exist');
     cy.get('h1').should('exist');
