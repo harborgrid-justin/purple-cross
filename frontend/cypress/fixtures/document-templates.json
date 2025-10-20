@@ -1,0 +1,92 @@
+[
+  {
+    "id": "template-001",
+    "name": "Surgical Consent Form",
+    "category": "consent-forms",
+    "template": {
+      "title": "Surgical Consent Form",
+      "sections": [
+        {"type": "text", "label": "Patient Name", "required": true},
+        {"type": "text", "label": "Procedure", "required": true},
+        {"type": "date", "label": "Date", "required": true},
+        {"type": "signature", "label": "Owner Signature", "required": true}
+      ]
+    },
+    "fields": {
+      "patientName": "text",
+      "procedure": "text",
+      "date": "date",
+      "signature": "signature"
+    },
+    "usageCount": 45,
+    "lastUsedAt": "2024-01-15T10:30:00Z",
+    "status": "active"
+  },
+  {
+    "id": "template-002",
+    "name": "Treatment Plan Template",
+    "category": "treatment-plans",
+    "template": {
+      "title": "Treatment Plan",
+      "sections": [
+        {"type": "text", "label": "Patient Name", "required": true},
+        {"type": "textarea", "label": "Diagnosis", "required": true},
+        {"type": "textarea", "label": "Treatment Plan", "required": true},
+        {"type": "date", "label": "Start Date", "required": true}
+      ]
+    },
+    "fields": {
+      "patientName": "text",
+      "diagnosis": "textarea",
+      "treatmentPlan": "textarea",
+      "startDate": "date"
+    },
+    "usageCount": 38,
+    "lastUsedAt": "2024-01-14T14:20:00Z",
+    "status": "active"
+  },
+  {
+    "id": "template-003",
+    "name": "Discharge Instructions",
+    "category": "instructions",
+    "template": {
+      "title": "Discharge Instructions",
+      "sections": [
+        {"type": "text", "label": "Patient Name", "required": true},
+        {"type": "textarea", "label": "Care Instructions", "required": true},
+        {"type": "textarea", "label": "Medications", "required": false},
+        {"type": "date", "label": "Follow-up Date", "required": false}
+      ]
+    },
+    "fields": {
+      "patientName": "text",
+      "careInstructions": "textarea",
+      "medications": "textarea",
+      "followUpDate": "date"
+    },
+    "usageCount": 52,
+    "lastUsedAt": "2024-01-13T15:00:00Z",
+    "status": "active"
+  },
+  {
+    "id": "template-004",
+    "name": "Client Communication Letter",
+    "category": "communications",
+    "template": {
+      "title": "Client Communication",
+      "sections": [
+        {"type": "text", "label": "Client Name", "required": true},
+        {"type": "text", "label": "Subject", "required": true},
+        {"type": "textarea", "label": "Message", "required": true}
+      ]
+    },
+    "fields": {
+      "clientName": "text",
+      "subject": "text",
+      "message": "textarea"
+    },
+    "usageCount": 28,
+    "lastUsedAt": "2024-01-12T09:15:00Z",
+    "status": "active"
+  }
+]

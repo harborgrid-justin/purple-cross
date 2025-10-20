@@ -86,6 +86,46 @@ declare global {
        * @example cy.waitForMedicalRecords()
        */
       waitForMedicalRecords(): Chainable<void>;
+
+      /**
+       * Custom command to navigate to documents page
+       * @example cy.visitDocuments()
+       */
+      visitDocuments(): Chainable<void>;
+
+      /**
+       * Custom command to navigate to a specific documents subpage
+       * @param subpage - The documents subpage to navigate to
+       * @example cy.visitDocumentsPage('storage')
+       */
+      visitDocumentsPage(subpage: string): Chainable<void>;
+
+      /**
+       * Custom command to mock documents data
+       * @param documents - Array of document objects
+       * @example cy.mockDocuments([{ id: '1', title: 'Consent Form', category: 'consent-forms' }])
+       */
+      mockDocuments(documents: unknown[]): Chainable<void>;
+
+      /**
+       * Custom command to mock a single document
+       * @param document - Document object
+       * @example cy.mockDocument({ id: '1', title: 'Consent Form', category: 'consent-forms' })
+       */
+      mockDocument(document: unknown): Chainable<void>;
+
+      /**
+       * Custom command to mock document templates
+       * @param templates - Array of document template objects
+       * @example cy.mockDocumentTemplates([{ id: '1', name: 'Surgical Consent', category: 'consent-forms' }])
+       */
+      mockDocumentTemplates(templates: unknown[]): Chainable<void>;
+
+      /**
+       * Custom command to wait for documents API calls
+       * @example cy.waitForDocuments()
+       */
+      waitForDocuments(): Chainable<void>;
     }
   }
 }
@@ -180,6 +220,55 @@ Cypress.Commands.add('mockMedicalRecord', (record: unknown) => {
 // Wait for medical records API calls
 Cypress.Commands.add('waitForMedicalRecords', () => {
   cy.wait('@getMedicalRecords');
+});
+
+// Navigate to documents page
+Cypress.Commands.add('visitDocuments', () => {
+  cy.visit('/documents');
+});
+
+// Navigate to a specific documents subpage
+Cypress.Commands.add('visitDocumentsPage', (subpage: string) => {
+  cy.visit(`/documents/${subpage}`);
+});
+
+// Mock documents data
+Cypress.Commands.add('mockDocuments', (documents: unknown[]) => {
+  cy.intercept('GET', '/api/documents*', {
+    statusCode: 200,
+    body: {
+      status: 'success',
+      data: documents,
+    },
+  }).as('getDocumentsData');
+});
+
+// Mock a single document
+Cypress.Commands.add('mockDocument', (document: unknown) => {
+  const documentId = (document as { id: string }).id;
+  cy.intercept('GET', `/api/documents/${documentId}`, {
+    statusCode: 200,
+    body: {
+      status: 'success',
+      data: document,
+    },
+  }).as('getDocumentData');
+});
+
+// Mock document templates
+Cypress.Commands.add('mockDocumentTemplates', (templates: unknown[]) => {
+  cy.intercept('GET', '/api/document-templates*', {
+    statusCode: 200,
+    body: {
+      status: 'success',
+      items: templates,
+    },
+  }).as('getDocumentTemplatesData');
+});
+
+// Wait for documents API calls
+Cypress.Commands.add('waitForDocuments', () => {
+  cy.wait('@getDocuments');
 });
 
 export {};
