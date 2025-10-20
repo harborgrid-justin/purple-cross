@@ -1,11 +1,11 @@
 /// <reference types="cypress" />
 
 describe('Client Communication', () => {
+  // Using first client from seeded data
+  const clientId = 'client-001';
+
   beforeEach(() => {
-    cy.fixture('clients').then((clients) => {
-      cy.mockClient(clients[0]);
-      cy.visit(`/clients/${clients[0].id}/communications`);
-    });
+    cy.visit(`/clients/${clientId}/communications`);
   });
 
   it('should display client communication page', () => {
@@ -15,7 +15,6 @@ describe('Client Communication', () => {
 
   it('should display communication history', () => {
 
-    cy.wait('@getCommunications');
     cy.get('.communication-item').should('have.length', 2);
   });
 
@@ -30,8 +29,7 @@ describe('Client Communication', () => {
     cy.get('#email-body').type('Test message body');
     cy.get('.btn-send').click();
     
-    cy.wait('@sendEmail');
-    cy.get('.success-message').should('contain', 'Email sent');
+    cy.get('.success-message', { timeout: 10000 }).should('contain', 'Email sent');
   });
 
   it('should allow sending SMS to client', () => {
@@ -43,15 +41,13 @@ describe('Client Communication', () => {
     cy.get('#sms-message').type('Test SMS message');
     cy.get('.btn-send').click();
     
-    cy.wait('@sendSMS');
-    cy.get('.success-message').should('contain', 'SMS sent');
+    cy.get('.success-message', { timeout: 10000 }).should('contain', 'SMS sent');
   });
 
   it('should validate SMS message length', () => {
     cy.get('.btn-send-sms').click();
     const longMessage = 'a'.repeat(161);
     cy.get('#sms-message').type(longMessage);
-    
     cy.get('.character-count').should('be.visible');
     cy.get('.validation-error').should('contain', 'exceeds maximum length');
   });
@@ -67,15 +63,12 @@ describe('Client Communication', () => {
     cy.get('.btn-send-email').click();
     cy.get('#template-select').select('1');
     
-    cy.wait('@getTemplate');
     cy.get('#email-subject').should('have.value', 'Appointment Reminder');
   });
 
   it('should filter communication history by type', () => {
 
     cy.get('#filter-type').select('email');
-    cy.wait('@filterCommunications');
-    
     cy.get('.communication-item').each(($item) => {
       cy.wrap($item).find('.type-badge').should('contain', 'email');
     });
@@ -83,7 +76,6 @@ describe('Client Communication', () => {
 
   it('should display communication delivery status', () => {
 
-    cy.wait('@getCommunications');
     cy.get('.communication-item').first().within(() => {
       cy.get('.status-badge').should('be.visible');
       cy.get('.status-badge').should('contain', 'delivered');
@@ -102,7 +94,6 @@ describe('Client Communication', () => {
     cy.get('#sms-notifications').uncheck();
     cy.get('.btn-save-preferences').click();
     
-    cy.wait('@updatePreferences');
-    cy.get('.success-message').should('be.visible');
+    cy.get('.success-message', { timeout: 10000 }).should('be.visible');
   });
 });

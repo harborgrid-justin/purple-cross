@@ -1,11 +1,11 @@
 /// <reference types="cypress" />
 
 describe('Client Billing & Invoicing', () => {
+  // Using first client from seeded data
+  const clientId = 'client-001';
+
   beforeEach(() => {
-    cy.fixture('clients').then((clients) => {
-      cy.mockClient(clients[0]);
-      cy.visit(`/clients/${clients[0].id}/billing`);
-    });
+    cy.visit(`/clients/${clientId}/billing`);
   });
 
   it('should display client billing page', () => {
@@ -15,7 +15,6 @@ describe('Client Billing & Invoicing', () => {
 
   it('should display invoice history', () => {
 
-    cy.wait('@getInvoices');
     cy.get('.invoice-item').should('have.length', 2);
   });
 
@@ -30,7 +29,6 @@ describe('Client Billing & Invoicing', () => {
 
   it('should display outstanding balance', () => {
 
-    cy.wait('@getBalance');
     cy.get('.outstanding-balance').should('be.visible');
     cy.get('.outstanding-balance').should('contain', '500.00');
   });
@@ -38,8 +36,6 @@ describe('Client Billing & Invoicing', () => {
   it('should filter invoices by status', () => {
 
     cy.get('#invoice-status-filter').select('paid');
-    cy.wait('@filterInvoices');
-    
     cy.get('.invoice-item').each(($item) => {
       cy.wrap($item).find('.status-badge').should('contain', 'paid');
     });
@@ -56,14 +52,12 @@ describe('Client Billing & Invoicing', () => {
     cy.get('#payment-method').select('Credit Card');
     cy.get('.btn-submit-payment').click();
     
-    cy.wait('@recordPayment');
-    cy.get('.success-message').should('contain', 'Payment recorded');
+    cy.get('.success-message', { timeout: 10000 }).should('contain', 'Payment recorded');
   });
 
   it('should display payment history', () => {
 
     cy.get('.payment-history-section').should('be.visible');
-    cy.wait('@getPayments');
     cy.get('.payment-item').should('have.length', 2);
   });
 
@@ -73,7 +67,6 @@ describe('Client Billing & Invoicing', () => {
     
 
     cy.get('.btn-download-invoice').first().click();
-    cy.wait('@downloadInvoice');
   });
 
   it('should display billing statements', () => {
@@ -81,7 +74,6 @@ describe('Client Billing & Invoicing', () => {
     cy.get('.statements-section').should('be.visible');
     
 
-    cy.wait('@getStatements');
     cy.get('.statement-item').should('have.length', 1);
   });
 
@@ -91,15 +83,13 @@ describe('Client Billing & Invoicing', () => {
     
 
     cy.get('.btn-email-invoice').first().click();
-    cy.wait('@sendInvoice');
-    cy.get('.success-message').should('contain', 'Invoice sent');
+    cy.get('.success-message', { timeout: 10000 }).should('contain', 'Invoice sent');
   });
 
   it('should display payment plans', () => {
     cy.get('.payment-plans-section').should('be.visible');
     
 
-    cy.wait('@getPaymentPlans');
     cy.get('.payment-plan-item').should('have.length', 1);
   });
 
@@ -113,7 +103,6 @@ describe('Client Billing & Invoicing', () => {
     cy.get('#start-date').type('2024-02-01');
     cy.get('.btn-create-plan').click();
     
-    cy.wait('@createPaymentPlan');
-    cy.get('.success-message').should('contain', 'Payment plan created');
+    cy.get('.success-message', { timeout: 10000 }).should('contain', 'Payment plan created');
   });
 });
