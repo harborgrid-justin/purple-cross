@@ -14,31 +14,12 @@ describe('Client Appointment History', () => {
   });
 
   it('should display appointment history', () => {
-    cy.intercept('GET', '/api/clients/client-001/appointments', {
-      statusCode: 200,
-      body: {
-        status: 'success',
-        data: [
-          { id: 'apt-001', patientName: 'Buddy', startTime: '2024-01-15T10:00:00Z', status: 'completed' },
-          { id: 'apt-002', patientName: 'Max', startTime: '2024-01-20T14:00:00Z', status: 'scheduled' },
-        ],
-      },
-    }).as('getAppointments');
 
     cy.wait('@getAppointments');
     cy.get('.appointment-item').should('have.length', 2);
   });
 
   it('should display upcoming appointments', () => {
-    cy.intercept('GET', '/api/clients/client-001/appointments?status=scheduled', {
-      statusCode: 200,
-      body: {
-        status: 'success',
-        data: [
-          { id: 'apt-002', patientName: 'Max', startTime: '2024-12-20T14:00:00Z', status: 'scheduled' },
-        ],
-      },
-    }).as('getUpcoming');
 
     cy.get('#appointment-filter').select('upcoming');
     cy.wait('@getUpcoming');
@@ -46,15 +27,6 @@ describe('Client Appointment History', () => {
   });
 
   it('should display past appointments', () => {
-    cy.intercept('GET', '/api/clients/client-001/appointments?status=completed', {
-      statusCode: 200,
-      body: {
-        status: 'success',
-        data: [
-          { id: 'apt-001', patientName: 'Buddy', startTime: '2024-01-15T10:00:00Z', status: 'completed' },
-        ],
-      },
-    }).as('getPast');
 
     cy.get('#appointment-filter').select('past');
     cy.wait('@getPast');
@@ -70,18 +42,6 @@ describe('Client Appointment History', () => {
   });
 
   it('should display appointment statistics', () => {
-    cy.intercept('GET', '/api/clients/client-001/appointments/statistics', {
-      statusCode: 200,
-      body: {
-        status: 'success',
-        data: {
-          totalAppointments: 25,
-          completedAppointments: 20,
-          cancelledAppointments: 3,
-          noShowAppointments: 2,
-        },
-      },
-    }).as('getStatistics');
 
     cy.get('.appointment-statistics').should('be.visible');
     cy.wait('@getStatistics');
@@ -97,10 +57,6 @@ describe('Client Appointment History', () => {
   it('should allow updating scheduling preferences', () => {
     cy.get('.btn-edit-preferences').click();
     
-    cy.intercept('PUT', '/api/clients/client-001/scheduling-preferences', {
-      statusCode: 200,
-      body: { status: 'success' },
-    }).as('updatePreferences');
 
     cy.get('#preferred-day').select('Monday');
     cy.get('#preferred-time').select('Morning');

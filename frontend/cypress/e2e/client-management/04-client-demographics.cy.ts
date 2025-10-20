@@ -33,13 +33,6 @@ describe('Client Demographics Management', () => {
     cy.get('#edit-email').should('be.visible');
     cy.get('#edit-phone').should('be.visible');
     
-    cy.intercept('PUT', '/api/clients/client-001', {
-      statusCode: 200,
-      body: {
-        status: 'success',
-        data: { id: 'client-001', email: 'newemail@example.com' },
-      },
-    }).as('updateClient');
 
     cy.get('#edit-email').clear().type('newemail@example.com');
     cy.get('.btn-save-contact').click();
@@ -55,13 +48,6 @@ describe('Client Demographics Management', () => {
     cy.get('#edit-state').should('be.visible');
     cy.get('#edit-zipCode').should('be.visible');
     
-    cy.intercept('PUT', '/api/clients/client-001', {
-      statusCode: 200,
-      body: {
-        status: 'success',
-        data: { id: 'client-001', address: '456 New St' },
-      },
-    }).as('updateAddress');
 
     cy.get('#edit-address').clear().type('456 New St');
     cy.get('.btn-save-address').click();

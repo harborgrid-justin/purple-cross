@@ -19,10 +19,6 @@ describe('Client Portal Management', () => {
   });
 
   it('should allow enabling portal access', () => {
-    cy.intercept('POST', '/api/clients/client-001/portal/enable', {
-      statusCode: 200,
-      body: { status: 'success', data: { portalEnabled: true } },
-    }).as('enablePortal');
 
     cy.get('.btn-enable-portal').click();
     cy.wait('@enablePortal');
@@ -30,10 +26,6 @@ describe('Client Portal Management', () => {
   });
 
   it('should allow disabling portal access', () => {
-    cy.intercept('POST', '/api/clients/client-001/portal/disable', {
-      statusCode: 200,
-      body: { status: 'success', data: { portalEnabled: false } },
-    }).as('disablePortal');
 
     cy.get('.btn-disable-portal').click();
     cy.get('.confirm-modal').should('be.visible');
@@ -44,10 +36,6 @@ describe('Client Portal Management', () => {
   });
 
   it('should send portal invitation email', () => {
-    cy.intercept('POST', '/api/clients/client-001/portal/send-invitation', {
-      statusCode: 200,
-      body: { status: 'success', message: 'Invitation sent' },
-    }).as('sendInvitation');
 
     cy.get('.btn-send-invitation').click();
     cy.wait('@sendInvitation');
@@ -60,10 +48,6 @@ describe('Client Portal Management', () => {
   });
 
   it('should allow resetting portal password', () => {
-    cy.intercept('POST', '/api/clients/client-001/portal/reset-password', {
-      statusCode: 200,
-      body: { status: 'success', message: 'Password reset email sent' },
-    }).as('resetPassword');
 
     cy.get('.btn-reset-password').click();
     cy.get('.confirm-modal').should('be.visible');

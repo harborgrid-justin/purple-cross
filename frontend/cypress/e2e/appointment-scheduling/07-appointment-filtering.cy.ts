@@ -2,17 +2,10 @@
 
 describe('Appointment Filtering', () => {
   it('should filter appointments by status', () => {
-    cy.fixture('appointments').then((appointments) => {
-      cy.intercept('GET', '/api/appointments*', {
-        statusCode: 200,
-        body: { status: 'success', data: appointments },
-      });
       cy.visitAppointments();
-      
       cy.get('#status-filter').should('be.visible');
       cy.get('#status-filter').select('scheduled');
       cy.get('#status-filter').should('have.value', 'scheduled');
-    });
   });
 
   it('should filter appointments by date range', () => {

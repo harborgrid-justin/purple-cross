@@ -14,13 +14,6 @@ describe('Client Loyalty Programs', () => {
   });
 
   it('should display loyalty points balance', () => {
-    cy.intercept('GET', '/api/clients/client-001/loyalty', {
-      statusCode: 200,
-      body: {
-        status: 'success',
-        data: { points: 250, tier: 'Silver', nextTierPoints: 500 },
-      },
-    }).as('getLoyalty');
 
     cy.wait('@getLoyalty');
     cy.get('.points-balance').should('be.visible');
@@ -28,13 +21,6 @@ describe('Client Loyalty Programs', () => {
   });
 
   it('should display loyalty tier information', () => {
-    cy.intercept('GET', '/api/clients/client-001/loyalty', {
-      statusCode: 200,
-      body: {
-        status: 'success',
-        data: { points: 250, tier: 'Silver', nextTierPoints: 500 },
-      },
-    }).as('getLoyalty');
 
     cy.wait('@getLoyalty');
     cy.get('.tier-badge').should('be.visible');
@@ -42,32 +28,12 @@ describe('Client Loyalty Programs', () => {
   });
 
   it('should display points earning history', () => {
-    cy.intercept('GET', '/api/clients/client-001/loyalty/history', {
-      statusCode: 200,
-      body: {
-        status: 'success',
-        data: [
-          { id: 1, points: 50, reason: 'Visit completed', date: '2024-01-15' },
-          { id: 2, points: 100, reason: 'Referral bonus', date: '2024-01-10' },
-        ],
-      },
-    }).as('getHistory');
 
     cy.wait('@getHistory');
     cy.get('.points-history-item').should('have.length', 2);
   });
 
   it('should display available rewards', () => {
-    cy.intercept('GET', '/api/loyalty/rewards', {
-      statusCode: 200,
-      body: {
-        status: 'success',
-        data: [
-          { id: 'reward-001', name: '10% Discount', pointsCost: 100, description: 'Save 10% on next visit' },
-          { id: 'reward-002', name: 'Free Exam', pointsCost: 200, description: 'One free wellness exam' },
-        ],
-      },
-    }).as('getRewards');
 
     cy.get('.rewards-section').should('be.visible');
     cy.wait('@getRewards');
@@ -75,30 +41,10 @@ describe('Client Loyalty Programs', () => {
   });
 
   it('should allow redeeming rewards', () => {
-    cy.intercept('GET', '/api/loyalty/rewards', {
-      statusCode: 200,
-      body: {
-        status: 'success',
-        data: [
-          { id: 'reward-001', name: '10% Discount', pointsCost: 100 },
-        ],
-      },
-    });
 
-    cy.intercept('GET', '/api/clients/client-001/loyalty', {
-      statusCode: 200,
-      body: {
-        status: 'success',
-        data: { points: 250, tier: 'Silver' },
-      },
-    });
 
     cy.visit(`/clients/client-001/loyalty`);
     
-    cy.intercept('POST', '/api/clients/client-001/loyalty/redeem', {
-      statusCode: 200,
-      body: { status: 'success', message: 'Reward redeemed' },
-    }).as('redeemReward');
 
     cy.get('.btn-redeem-reward').first().click();
     cy.get('.confirm-modal').should('be.visible');
@@ -109,13 +55,6 @@ describe('Client Loyalty Programs', () => {
   });
 
   it('should display tier progression', () => {
-    cy.intercept('GET', '/api/clients/client-001/loyalty', {
-      statusCode: 200,
-      body: {
-        status: 'success',
-        data: { points: 250, tier: 'Silver', nextTierPoints: 500 },
-      },
-    }).as('getLoyalty');
 
     cy.wait('@getLoyalty');
     cy.get('.tier-progress').should('be.visible');
@@ -131,10 +70,6 @@ describe('Client Loyalty Programs', () => {
     cy.get('.btn-add-points').click();
     cy.get('.add-points-modal').should('be.visible');
     
-    cy.intercept('POST', '/api/clients/client-001/loyalty/add-points', {
-      statusCode: 200,
-      body: { status: 'success', data: { newBalance: 350 } },
-    }).as('addPoints');
 
     cy.get('#points-amount').type('100');
     cy.get('#points-reason').type('Special promotion');
@@ -145,15 +80,6 @@ describe('Client Loyalty Programs', () => {
   });
 
   it('should display redeemed rewards history', () => {
-    cy.intercept('GET', '/api/clients/client-001/loyalty/redeemed', {
-      statusCode: 200,
-      body: {
-        status: 'success',
-        data: [
-          { id: 1, rewardName: '10% Discount', pointsCost: 100, redeemedDate: '2024-01-15' },
-        ],
-      },
-    }).as('getRedeemedRewards');
 
     cy.get('.redeemed-rewards-section').should('be.visible');
     cy.wait('@getRedeemedRewards');

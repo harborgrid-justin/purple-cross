@@ -1,14 +1,9 @@
 /// <reference types="cypress" />
 
 describe('Appointment Cancellation', () => {
+    cy.visitAppointments();
+
   beforeEach(() => {
-    cy.fixture('appointments').then((appointments) => {
-      const appointment = appointments[0];
-      cy.intercept('GET', `/api/appointments/${appointment.id}`, {
-        statusCode: 200,
-        body: { status: 'success', data: appointment },
-      });
-    });
   });
 
   it('should display cancel button on appointment details page', () => {
@@ -60,18 +55,9 @@ describe('Appointment Cancellation', () => {
   });
 
   it('should show cancelled appointments with appropriate styling', () => {
-    cy.fixture('appointments').then((appointments) => {
-      const cancelledAppts = appointments.filter(a => a.status === 'cancelled');
-      cy.intercept('GET', '/api/appointments*', {
-        statusCode: 200,
-        body: { status: 'success', data: cancelledAppts },
-      });
       cy.visitAppointments();
-      
       cy.get('.data-table tbody tr', { timeout: 10000 }).first().within(() => {
         cy.get('.status-badge').should('contain', 'cancelled');
-      });
-    });
   });
 
   it('should have accessible cancellation modal', () => {

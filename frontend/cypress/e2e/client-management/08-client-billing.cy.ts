@@ -14,31 +14,12 @@ describe('Client Billing & Invoicing', () => {
   });
 
   it('should display invoice history', () => {
-    cy.intercept('GET', '/api/clients/client-001/invoices', {
-      statusCode: 200,
-      body: {
-        status: 'success',
-        data: [
-          { id: 'inv-001', invoiceNumber: 'INV-2024-001', amount: 150.00, status: 'paid', date: '2024-01-15' },
-          { id: 'inv-002', invoiceNumber: 'INV-2024-002', amount: 200.00, status: 'pending', date: '2024-01-20' },
-        ],
-      },
-    }).as('getInvoices');
 
     cy.wait('@getInvoices');
     cy.get('.invoice-item').should('have.length', 2);
   });
 
   it('should display invoice details', () => {
-    cy.intercept('GET', '/api/clients/client-001/invoices', {
-      statusCode: 200,
-      body: {
-        status: 'success',
-        data: [
-          { id: 'inv-001', invoiceNumber: 'INV-2024-001', amount: 150.00, status: 'paid' },
-        ],
-      },
-    });
 
     cy.visit(`/clients/client-001/billing`);
     cy.get('.invoice-item').first().click();
@@ -48,13 +29,6 @@ describe('Client Billing & Invoicing', () => {
   });
 
   it('should display outstanding balance', () => {
-    cy.intercept('GET', '/api/clients/client-001/balance', {
-      statusCode: 200,
-      body: {
-        status: 'success',
-        data: { outstandingBalance: 500.00 },
-      },
-    }).as('getBalance');
 
     cy.wait('@getBalance');
     cy.get('.outstanding-balance').should('be.visible');
@@ -62,15 +36,6 @@ describe('Client Billing & Invoicing', () => {
   });
 
   it('should filter invoices by status', () => {
-    cy.intercept('GET', '/api/clients/client-001/invoices*', {
-      statusCode: 200,
-      body: {
-        status: 'success',
-        data: [
-          { id: 'inv-001', status: 'paid', amount: 150.00 },
-        ],
-      },
-    }).as('filterInvoices');
 
     cy.get('#invoice-status-filter').select('paid');
     cy.wait('@filterInvoices');
@@ -81,24 +46,11 @@ describe('Client Billing & Invoicing', () => {
   });
 
   it('should allow recording a payment', () => {
-    cy.intercept('GET', '/api/clients/client-001/invoices', {
-      statusCode: 200,
-      body: {
-        status: 'success',
-        data: [
-          { id: 'inv-001', invoiceNumber: 'INV-2024-001', amount: 150.00, status: 'pending' },
-        ],
-      },
-    });
 
     cy.visit(`/clients/client-001/billing`);
     cy.get('.btn-record-payment').first().click();
     cy.get('.payment-modal').should('be.visible');
     
-    cy.intercept('POST', '/api/invoices/inv-001/payments', {
-      statusCode: 201,
-      body: { status: 'success', data: { paymentId: 'pay-001' } },
-    }).as('recordPayment');
 
     cy.get('#payment-amount').type('150.00');
     cy.get('#payment-method').select('Credit Card');
@@ -109,16 +61,6 @@ describe('Client Billing & Invoicing', () => {
   });
 
   it('should display payment history', () => {
-    cy.intercept('GET', '/api/clients/client-001/payments', {
-      statusCode: 200,
-      body: {
-        status: 'success',
-        data: [
-          { id: 'pay-001', amount: 150.00, method: 'Credit Card', date: '2024-01-15' },
-          { id: 'pay-002', amount: 200.00, method: 'Cash', date: '2024-01-20' },
-        ],
-      },
-    }).as('getPayments');
 
     cy.get('.payment-history-section').should('be.visible');
     cy.wait('@getPayments');
@@ -126,22 +68,9 @@ describe('Client Billing & Invoicing', () => {
   });
 
   it('should generate and download invoice PDF', () => {
-    cy.intercept('GET', '/api/clients/client-001/invoices', {
-      statusCode: 200,
-      body: {
-        status: 'success',
-        data: [
-          { id: 'inv-001', invoiceNumber: 'INV-2024-001', amount: 150.00 },
-        ],
-      },
-    });
 
     cy.visit(`/clients/client-001/billing`);
     
-    cy.intercept('GET', '/api/invoices/inv-001/pdf', {
-      statusCode: 200,
-      body: { status: 'success', url: 'https://example.com/invoice.pdf' },
-    }).as('downloadInvoice');
 
     cy.get('.btn-download-invoice').first().click();
     cy.wait('@downloadInvoice');
@@ -151,37 +80,15 @@ describe('Client Billing & Invoicing', () => {
     cy.get('.btn-view-statements').click();
     cy.get('.statements-section').should('be.visible');
     
-    cy.intercept('GET', '/api/clients/client-001/statements', {
-      statusCode: 200,
-      body: {
-        status: 'success',
-        data: [
-          { id: 'stmt-001', period: '2024-01', totalBilled: 500.00, totalPaid: 350.00 },
-        ],
-      },
-    }).as('getStatements');
 
     cy.wait('@getStatements');
     cy.get('.statement-item').should('have.length', 1);
   });
 
   it('should send invoice via email', () => {
-    cy.intercept('GET', '/api/clients/client-001/invoices', {
-      statusCode: 200,
-      body: {
-        status: 'success',
-        data: [
-          { id: 'inv-001', invoiceNumber: 'INV-2024-001', amount: 150.00 },
-        ],
-      },
-    });
 
     cy.visit(`/clients/client-001/billing`);
     
-    cy.intercept('POST', '/api/invoices/inv-001/send-email', {
-      statusCode: 200,
-      body: { status: 'success', message: 'Invoice sent' },
-    }).as('sendInvoice');
 
     cy.get('.btn-email-invoice').first().click();
     cy.wait('@sendInvoice');
@@ -191,15 +98,6 @@ describe('Client Billing & Invoicing', () => {
   it('should display payment plans', () => {
     cy.get('.payment-plans-section').should('be.visible');
     
-    cy.intercept('GET', '/api/clients/client-001/payment-plans', {
-      statusCode: 200,
-      body: {
-        status: 'success',
-        data: [
-          { id: 'plan-001', totalAmount: 1000.00, monthlyPayment: 100.00, remainingBalance: 600.00 },
-        ],
-      },
-    }).as('getPaymentPlans');
 
     cy.wait('@getPaymentPlans');
     cy.get('.payment-plan-item').should('have.length', 1);
@@ -209,10 +107,6 @@ describe('Client Billing & Invoicing', () => {
     cy.get('.btn-setup-payment-plan').click();
     cy.get('.payment-plan-modal').should('be.visible');
     
-    cy.intercept('POST', '/api/clients/client-001/payment-plans', {
-      statusCode: 201,
-      body: { status: 'success', data: { planId: 'plan-002' } },
-    }).as('createPaymentPlan');
 
     cy.get('#total-amount').type('1000');
     cy.get('#monthly-payment').type('100');
