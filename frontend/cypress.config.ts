@@ -8,11 +8,13 @@ export default defineConfig({
     viewportHeight: 720,
     video: false,
     screenshotOnRunFailure: true,
-    setupNodeEvents(on, config) {
+    setupNodeEvents(on) {
       // Add task to seed database
       on('task', {
         seedDatabase() {
-          execSync('cd ../backend && npx ts-node --transpile-only prisma/seeds/cypress-seed.ts', { stdio: 'inherit' });
+          execSync('cd ../backend && npx ts-node --transpile-only prisma/seeds/cypress-seed.ts', {
+            stdio: 'inherit',
+          });
           return null;
         },
       });

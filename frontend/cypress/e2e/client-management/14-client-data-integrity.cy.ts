@@ -7,7 +7,7 @@ describe('Client Data Integrity', () => {
 
   it('should handle duplicate client email validation during registration', () => {
     cy.visitClientsPage('registration');
-    
+
     // Attempt to register with an existing email
     cy.get('#firstName').type('Duplicate');
     cy.get('#lastName').type('Client');
@@ -17,9 +17,9 @@ describe('Client Data Integrity', () => {
     cy.get('#city').type('Springfield');
     cy.get('#state').select('IL');
     cy.get('#zipCode').type('62701');
-    
+
     cy.get('.btn-submit').click();
-    
+
     cy.get('.error-message').should('be.visible');
     cy.get('.error-message').should('contain', 'already exists');
   });
@@ -28,7 +28,7 @@ describe('Client Data Integrity', () => {
     const maliciousInput = "'; DROP TABLE clients; --";
     cy.get('#client-search').type(maliciousInput);
     cy.get('.search-button').click();
-    
+
     // Should safely handle the input without errors
     cy.get('.data-table').should('be.visible');
     cy.get('.error-message').should('not.exist');
@@ -36,15 +36,15 @@ describe('Client Data Integrity', () => {
 
   it('should sanitize XSS attempts in client notes', () => {
     cy.visitClientsPage('registration');
-    
+
     cy.get('#firstName').type('Test');
     cy.get('#lastName').type('XSS');
     cy.get('#email').type('test.xss@email.com');
     cy.get('#phone').type('555-0199');
     cy.get('#notes').type('<script>alert("XSS")</script>');
-    
+
     cy.get('.btn-submit').click();
-    
+
     // Verify the script is escaped and not executed
     cy.on('window:alert', () => {
       throw new Error('XSS vulnerability detected!');
@@ -53,7 +53,7 @@ describe('Client Data Integrity', () => {
 
   it('should handle special characters in client names correctly', () => {
     cy.visitClientsPage('registration');
-    
+
     cy.get('#firstName').type("O'Connor");
     cy.get('#lastName').type('José-María');
     cy.get('#email').type('special.chars@email.com');
@@ -62,15 +62,15 @@ describe('Client Data Integrity', () => {
     cy.get('#city').type('Springfield');
     cy.get('#state').select('IL');
     cy.get('#zipCode').type('62701');
-    
+
     cy.get('.btn-submit').click();
-    
+
     cy.get('.success-message').should('be.visible');
   });
 
   it('should validate phone number uniqueness when required', () => {
     cy.visitClientsPage('registration');
-    
+
     cy.get('#firstName').type('Jane');
     cy.get('#lastName').type('Smith');
     cy.get('#email').type('unique.email@test.com');
@@ -79,9 +79,9 @@ describe('Client Data Integrity', () => {
     cy.get('#city').type('Springfield');
     cy.get('#state').select('IL');
     cy.get('#zipCode').type('62702');
-    
+
     cy.get('.btn-submit').click();
-    
+
     // Should either succeed or show appropriate warning
     cy.get('.warning-message, .success-message').should('be.visible');
   });
@@ -89,19 +89,19 @@ describe('Client Data Integrity', () => {
   it('should maintain data consistency across client updates', () => {
     // Navigate to first client details
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
-    
+
     // Store original client data
     cy.get('.client-email').invoke('text').as('originalEmail');
-    
+
     // Navigate to edit
     cy.get('.btn-edit').click();
-    
+
     // Update only the phone number
     cy.get('#phone').clear().type('555-9999');
     cy.get('.btn-submit').click();
-    
+
     cy.get('.success-message').should('be.visible');
-    
+
     // Verify email remained unchanged
     cy.get('@originalEmail').then((originalEmail) => {
       cy.get('.client-email').should('contain', originalEmail);

@@ -20,7 +20,7 @@ before(() => {
 beforeEach(() => {
   // Clear localStorage before each test
   cy.clearLocalStorage();
-  
+
   // Set up API interceptors for common endpoints (for aliasing only, not mocking)
   cy.intercept('GET', '/api/v1/patients*').as('getPatients');
   cy.intercept('POST', '/api/v1/patients').as('createPatient');
@@ -41,7 +41,7 @@ beforeEach(() => {
 });
 
 // Prevent Cypress from failing tests on uncaught exceptions
-Cypress.on('uncaught:exception', (err, runnable) => {
+Cypress.on('uncaught:exception', (err) => {
   // Returning false here prevents Cypress from failing the test
   // You may want to log the error for debugging
   console.error('Uncaught exception:', err);

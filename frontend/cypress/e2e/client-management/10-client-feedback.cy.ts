@@ -14,12 +14,10 @@ describe('Client Feedback Management', () => {
   });
 
   it('should display feedback history', () => {
-
     cy.get('.feedback-item').should('have.length', 2);
   });
 
   it('should display average rating', () => {
-
     cy.get('.average-rating').should('be.visible');
     cy.get('.average-rating').should('contain', '4.5');
   });
@@ -27,16 +25,14 @@ describe('Client Feedback Management', () => {
   it('should allow sending feedback survey', () => {
     cy.get('.btn-send-survey').click();
     cy.get('.survey-modal').should('be.visible');
-    
 
     cy.get('#survey-template').select('Visit Satisfaction');
     cy.get('.btn-send').click();
-    
+
     cy.get('.success-message', { timeout: 10000 }).should('contain', 'Survey sent');
   });
 
   it('should display feedback details', () => {
-
     cy.visit(`/clients/client-001/feedback`);
     cy.get('.feedback-item').first().click();
     cy.get('.feedback-details-modal').should('be.visible');
@@ -45,20 +41,17 @@ describe('Client Feedback Management', () => {
   });
 
   it('should allow responding to feedback', () => {
-
     cy.visit(`/clients/client-001/feedback`);
     cy.get('.btn-respond').first().click();
     cy.get('.response-modal').should('be.visible');
-    
 
     cy.get('#response-text').type('Thank you for your feedback. We will improve.');
     cy.get('.btn-submit-response').click();
-    
+
     cy.get('.success-message', { timeout: 10000 }).should('contain', 'Response sent');
   });
 
   it('should filter feedback by type', () => {
-
     cy.get('#feedback-type-filter').select('review');
     cy.get('.feedback-item').each(($item) => {
       cy.wrap($item).find('.type-badge').should('contain', 'review');

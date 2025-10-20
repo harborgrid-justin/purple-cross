@@ -65,7 +65,7 @@ describe('Clinical Note Templates', () => {
 
   it('should display comprehensive clinical notes features', () => {
     cy.visitMedicalRecordsPage('clinical-notes');
-    
+
     const expectedFeatures = [
       'SOAP notes',
       'Progress notes',
@@ -78,10 +78,10 @@ describe('Clinical Note Templates', () => {
       'Voice dictation',
       'Auto-complete',
       'Copy forward',
-      'Smart templates'
+      'Smart templates',
     ];
-    
-    expectedFeatures.forEach(feature => {
+
+    expectedFeatures.forEach((feature) => {
       cy.contains(feature).should('be.visible');
     });
   });

@@ -4,8 +4,7 @@ describe('Appointment Updates', () => {
   // Using first appointment from seeded data
   const appointmentId = 'appt-001';
 
-  beforeEach(() => {
-  });
+  beforeEach(() => {});
 
   it('should display the edit appointment page title', () => {
     cy.visit(`/appointments/${appointmentId}/edit`);

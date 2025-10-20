@@ -65,7 +65,7 @@ describe('Medical Record Sharing', () => {
 
   it('should display comprehensive sharing features', () => {
     cy.visitMedicalRecordsPage('sharing');
-    
+
     const expectedFeatures = [
       'Email',
       'Fax',
@@ -78,10 +78,10 @@ describe('Medical Record Sharing', () => {
       'Sent records',
       'Received records',
       'Access history',
-      'Audit trail'
+      'Audit trail',
     ];
-    
-    expectedFeatures.forEach(feature => {
+
+    expectedFeatures.forEach((feature) => {
       cy.contains(feature).should('be.visible');
     });
   });

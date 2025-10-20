@@ -15,11 +15,13 @@ describe('Document Versioning', () => {
   it('should show version number and timestamp', () => {
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.version-history-tab').click();
-    cy.get('.version-item').first().within(() => {
-      cy.get('.version-number').should('contain', 'v');
-      cy.get('.version-date').should('be.visible');
-      cy.get('.version-author').should('be.visible');
-    });
+    cy.get('.version-item')
+      .first()
+      .within(() => {
+        cy.get('.version-number').should('contain', 'v');
+        cy.get('.version-date').should('be.visible');
+        cy.get('.version-author').should('be.visible');
+      });
   });
 
   it('should allow comparing two versions', () => {

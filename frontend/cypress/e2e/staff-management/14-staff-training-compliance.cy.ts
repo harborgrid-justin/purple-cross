@@ -15,18 +15,22 @@ describe('Staff Training and Compliance', () => {
   it('should show training completion status', () => {
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.training-tab').click();
-    cy.get('.training-item').first().within(() => {
-      cy.get('.completion-status').should('exist');
-      cy.get('.completion-badge').should('be.visible');
-    });
+    cy.get('.training-item')
+      .first()
+      .within(() => {
+        cy.get('.completion-status').should('exist');
+        cy.get('.completion-badge').should('be.visible');
+      });
   });
 
   it('should display training due dates', () => {
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.training-tab').click();
-    cy.get('.training-item').first().within(() => {
-      cy.get('.due-date').should('be.visible');
-    });
+    cy.get('.training-item')
+      .first()
+      .within(() => {
+        cy.get('.due-date').should('be.visible');
+      });
   });
 
   it('should highlight overdue training', () => {

@@ -36,10 +36,12 @@ describe('Patient Appointments History', () => {
   it('should display appointment types and reasons', () => {
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.appointments-tab').click();
-    cy.get('.appointment-item').first().within(() => {
-      cy.get('.appointment-type').should('be.visible');
-      cy.get('.appointment-reason').should('exist');
-    });
+    cy.get('.appointment-item')
+      .first()
+      .within(() => {
+        cy.get('.appointment-type').should('be.visible');
+        cy.get('.appointment-reason').should('exist');
+      });
   });
 
   it('should show cancelled appointments separately', () => {

@@ -22,11 +22,13 @@ describe('Medical Records - Lab Results', () => {
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.lab-results-tab').click();
     cy.get('.completed-results').should('be.visible');
-    cy.get('.lab-result-item').first().within(() => {
-      cy.get('.test-name').should('be.visible');
-      cy.get('.test-value').should('be.visible');
-      cy.get('.test-date').should('be.visible');
-    });
+    cy.get('.lab-result-item')
+      .first()
+      .within(() => {
+        cy.get('.test-name').should('be.visible');
+        cy.get('.test-value').should('be.visible');
+        cy.get('.test-date').should('be.visible');
+      });
   });
 
   it('should highlight abnormal lab values', () => {
@@ -39,10 +41,12 @@ describe('Medical Records - Lab Results', () => {
   it('should show reference ranges for lab tests', () => {
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.lab-results-tab').click();
-    cy.get('.lab-result-item').first().within(() => {
-      cy.get('.reference-range').should('be.visible');
-      cy.get('.reference-range').should('contain', '-');
-    });
+    cy.get('.lab-result-item')
+      .first()
+      .within(() => {
+        cy.get('.reference-range').should('be.visible');
+        cy.get('.reference-range').should('contain', '-');
+      });
   });
 
   it('should allow ordering new lab tests', () => {

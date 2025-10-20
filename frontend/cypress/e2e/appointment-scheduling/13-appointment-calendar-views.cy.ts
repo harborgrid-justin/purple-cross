@@ -65,7 +65,8 @@ describe('Appointment Calendar Views', () => {
 
   it('should allow drag-and-drop appointment rescheduling', () => {
     cy.get('.view-option[data-view="week"]').click();
-    cy.get('.appointment-block').first()
+    cy.get('.appointment-block')
+      .first()
       .trigger('mousedown')
       .trigger('mousemove', { clientX: 100, clientY: 200 })
       .trigger('mouseup');

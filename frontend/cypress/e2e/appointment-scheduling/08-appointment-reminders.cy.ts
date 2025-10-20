@@ -44,9 +44,11 @@ describe('Appointment Reminders', () => {
   it('should show reminder delivery status', () => {
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.reminders-tab').click();
-    cy.get('.reminder-item').first().within(() => {
-      cy.get('.delivery-status').should('exist');
-    });
+    cy.get('.reminder-item')
+      .first()
+      .within(() => {
+        cy.get('.delivery-status').should('exist');
+      });
   });
 
   it('should allow sending manual reminder', () => {

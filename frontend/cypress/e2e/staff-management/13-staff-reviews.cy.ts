@@ -21,10 +21,12 @@ describe('Staff Reviews and Evaluations', () => {
   it('should display review dates and ratings', () => {
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.reviews-tab').click();
-    cy.get('.review-item').first().within(() => {
-      cy.get('.review-date').should('be.visible');
-      cy.get('.overall-rating').should('be.visible');
-    });
+    cy.get('.review-item')
+      .first()
+      .within(() => {
+        cy.get('.review-date').should('be.visible');
+        cy.get('.overall-rating').should('be.visible');
+      });
   });
 
   it('should allow creating new performance review', () => {
@@ -68,10 +70,12 @@ describe('Staff Reviews and Evaluations', () => {
   it('should track goal progress', () => {
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.goals-tab').click();
-    cy.get('.goal-item').first().within(() => {
-      cy.get('.progress-bar').should('be.visible');
-      cy.get('.progress-percentage').should('exist');
-    });
+    cy.get('.goal-item')
+      .first()
+      .within(() => {
+        cy.get('.progress-bar').should('be.visible');
+        cy.get('.progress-percentage').should('exist');
+      });
   });
 
   it('should show development plans', () => {

@@ -58,14 +58,9 @@ describe('Time & Attendance', () => {
 
   it('should display all time tracking features', () => {
     cy.visitStaffPage('attendance');
-    
-    const expectedFeatures = [
-      'Clock in/out',
-      'Break tracking',
-      'Overtime',
-      'PTO tracking'
-    ];
-    
+
+    const expectedFeatures = ['Clock in/out', 'Break tracking', 'Overtime', 'PTO tracking'];
+
     expectedFeatures.forEach((feature) => {
       cy.contains(feature).should('be.visible');
     });
@@ -73,14 +68,14 @@ describe('Time & Attendance', () => {
 
   it('should display all reporting features', () => {
     cy.visitStaffPage('attendance');
-    
+
     const expectedFeatures = [
       'Timesheet reports',
       'Attendance reports',
       'Absence tracking',
-      'Tardiness reports'
+      'Tardiness reports',
     ];
-    
+
     expectedFeatures.forEach((feature) => {
       cy.contains(feature).should('be.visible');
     });

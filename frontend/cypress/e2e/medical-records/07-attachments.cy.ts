@@ -65,7 +65,7 @@ describe('Medical Attachments', () => {
 
   it('should display comprehensive attachments features', () => {
     cy.visitMedicalRecordsPage('attachments');
-    
+
     const expectedFeatures = [
       'Images',
       'PDFs',
@@ -78,10 +78,10 @@ describe('Medical Attachments', () => {
       'Built-in viewer',
       'Annotations',
       'Zoom',
-      'Compare images'
+      'Compare images',
     ];
-    
-    expectedFeatures.forEach(feature => {
+
+    expectedFeatures.forEach((feature) => {
       cy.contains(feature).should('be.visible');
     });
   });

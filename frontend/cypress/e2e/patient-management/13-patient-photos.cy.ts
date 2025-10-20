@@ -34,10 +34,12 @@ describe('Patient Photos and Media', () => {
   it('should show photo timestamps and captions', () => {
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.photos-tab').click();
-    cy.get('.photo-item').first().within(() => {
-      cy.get('.photo-date').should('be.visible');
-      cy.get('.photo-caption').should('exist');
-    });
+    cy.get('.photo-item')
+      .first()
+      .within(() => {
+        cy.get('.photo-date').should('be.visible');
+        cy.get('.photo-caption').should('exist');
+      });
   });
 
   it('should allow adding captions to photos', () => {

@@ -48,7 +48,10 @@ describe('Document Storage', () => {
 
   it('should display content section description', () => {
     cy.visitDocumentsPage('storage');
-    cy.get('.content-section p').should('contain', 'Secure cloud-based document storage and management');
+    cy.get('.content-section p').should(
+      'contain',
+      'Secure cloud-based document storage and management'
+    );
   });
 
   it('should have cards with proper styling', () => {

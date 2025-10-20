@@ -39,9 +39,11 @@ describe('Medical Records - Prescriptions Integration', () => {
   it('should show prescription refill requests', () => {
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.prescriptions-tab').click();
-    cy.get('.prescription-item').first().within(() => {
-      cy.get('.refill-status').should('be.visible');
-    });
+    cy.get('.prescription-item')
+      .first()
+      .within(() => {
+        cy.get('.refill-status').should('be.visible');
+      });
   });
 
   it('should alert for drug interactions', () => {
@@ -54,16 +56,20 @@ describe('Medical Records - Prescriptions Integration', () => {
   it('should display dosage instructions clearly', () => {
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.prescriptions-tab').click();
-    cy.get('.prescription-item').first().within(() => {
-      cy.get('.dosage-instructions').should('not.be.empty');
-    });
+    cy.get('.prescription-item')
+      .first()
+      .within(() => {
+        cy.get('.dosage-instructions').should('not.be.empty');
+      });
   });
 
   it('should track prescription compliance', () => {
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.prescriptions-tab').click();
-    cy.get('.prescription-item').first().within(() => {
-      cy.get('.compliance-indicator').should('exist');
-    });
+    cy.get('.prescription-item')
+      .first()
+      .within(() => {
+        cy.get('.compliance-indicator').should('exist');
+      });
   });
 });

@@ -21,11 +21,13 @@ describe('Patient Insurance Management', () => {
   it('should display insurance provider details', () => {
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.insurance-tab').click();
-    cy.get('.policy-item').first().within(() => {
-      cy.get('.provider-name').should('not.be.empty');
-      cy.get('.policy-number').should('be.visible');
-      cy.get('.coverage-level').should('be.visible');
-    });
+    cy.get('.policy-item')
+      .first()
+      .within(() => {
+        cy.get('.provider-name').should('not.be.empty');
+        cy.get('.policy-number').should('be.visible');
+        cy.get('.coverage-level').should('be.visible');
+      });
   });
 
   it('should allow adding new insurance policy', () => {
@@ -43,10 +45,12 @@ describe('Patient Insurance Management', () => {
   it('should show coverage limits and deductibles', () => {
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.insurance-tab').click();
-    cy.get('.policy-item').first().within(() => {
-      cy.get('.coverage-limit').should('be.visible');
-      cy.get('.deductible-amount').should('be.visible');
-    });
+    cy.get('.policy-item')
+      .first()
+      .within(() => {
+        cy.get('.coverage-limit').should('be.visible');
+        cy.get('.deductible-amount').should('be.visible');
+      });
   });
 
   it('should display coverage verification status', () => {

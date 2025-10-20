@@ -4,8 +4,7 @@ describe('Appointment Cancellation', () => {
   // Using first appointment from seeded data
   const appointmentId = 'appt-001';
 
-  beforeEach(() => {
-  });
+  beforeEach(() => {});
 
   it('should display cancel button on appointment details page', () => {
     cy.visit(`/appointments/${appointmentId}`);
@@ -42,9 +41,11 @@ describe('Appointment Cancellation', () => {
 
   it('should show cancelled appointments with appropriate styling', () => {
     cy.visitAppointments();
-    cy.get('.data-table tbody tr', { timeout: 10000 }).first().within(() => {
-      cy.get('.status-badge').should('contain', 'cancelled');
-    });
+    cy.get('.data-table tbody tr', { timeout: 10000 })
+      .first()
+      .within(() => {
+        cy.get('.status-badge').should('contain', 'cancelled');
+      });
   });
 
   it('should have accessible cancellation modal', () => {

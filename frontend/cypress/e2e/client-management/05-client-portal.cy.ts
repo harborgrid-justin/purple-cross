@@ -27,7 +27,7 @@ describe('Client Portal Management', () => {
     cy.get('.btn-disable-portal').click();
     cy.get('.confirm-modal').should('be.visible');
     cy.get('.btn-confirm').click();
-    
+
     cy.get('.success-message', { timeout: 10000 }).should('contain', 'Portal access disabled');
   });
 
@@ -45,7 +45,7 @@ describe('Client Portal Management', () => {
     cy.get('.btn-reset-password').click();
     cy.get('.confirm-modal').should('be.visible');
     cy.get('.btn-confirm').click();
-    
+
     cy.get('.success-message', { timeout: 10000 }).should('contain', 'Password reset email sent');
   });
 });

@@ -28,16 +28,20 @@ describe('Appointment Waitlist Management', () => {
 
   it('should display waitlist priority', () => {
     cy.visitAppointmentsPage('waitlist');
-    cy.get('.waitlist-item').first().within(() => {
-      cy.get('.priority-indicator').should('be.visible');
-    });
+    cy.get('.waitlist-item')
+      .first()
+      .within(() => {
+        cy.get('.priority-indicator').should('be.visible');
+      });
   });
 
   it('should show time on waitlist', () => {
     cy.visitAppointmentsPage('waitlist');
-    cy.get('.waitlist-item').first().within(() => {
-      cy.get('.wait-time').should('be.visible');
-    });
+    cy.get('.waitlist-item')
+      .first()
+      .within(() => {
+        cy.get('.wait-time').should('be.visible');
+      });
   });
 
   it('should allow removing from waitlist', () => {

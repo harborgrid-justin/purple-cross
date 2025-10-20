@@ -21,11 +21,13 @@ describe('Staff Credentials Management', () => {
   it('should display license details with expiration dates', () => {
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.credentials-tab').click();
-    cy.get('.license-item').first().within(() => {
-      cy.get('.license-type').should('be.visible');
-      cy.get('.license-number').should('be.visible');
-      cy.get('.expiration-date').should('be.visible');
-    });
+    cy.get('.license-item')
+      .first()
+      .within(() => {
+        cy.get('.license-type').should('be.visible');
+        cy.get('.license-number').should('be.visible');
+        cy.get('.expiration-date').should('be.visible');
+      });
   });
 
   it('should alert for expiring licenses', () => {

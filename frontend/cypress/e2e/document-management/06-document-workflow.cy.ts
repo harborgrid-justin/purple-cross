@@ -48,7 +48,10 @@ describe('Document Workflow', () => {
 
   it('should display content section description', () => {
     cy.visitDocumentsPage('workflow');
-    cy.get('.content-section p').should('contain', 'Automated document routing and approval workflows');
+    cy.get('.content-section p').should(
+      'contain',
+      'Automated document routing and approval workflows'
+    );
   });
 
   it('should have cards with proper styling', () => {

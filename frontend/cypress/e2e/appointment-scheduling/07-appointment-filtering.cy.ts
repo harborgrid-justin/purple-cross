@@ -2,10 +2,10 @@
 
 describe('Appointment Filtering', () => {
   it('should filter appointments by status', () => {
-      cy.visitAppointments();
-      cy.get('#status-filter').should('be.visible');
-      cy.get('#status-filter').select('scheduled');
-      cy.get('#status-filter').should('have.value', 'scheduled');
+    cy.visitAppointments();
+    cy.get('#status-filter').should('be.visible');
+    cy.get('#status-filter').select('scheduled');
+    cy.get('#status-filter').should('have.value', 'scheduled');
   });
 
   it('should filter appointments by date range', () => {

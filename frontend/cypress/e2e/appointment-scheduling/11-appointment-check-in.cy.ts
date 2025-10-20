@@ -6,9 +6,11 @@ describe('Appointment Check-in Process', () => {
   });
 
   it('should display check-in button for upcoming appointments', () => {
-    cy.get('.data-table tbody tr').first().within(() => {
-      cy.get('.btn-check-in').should('be.visible');
-    });
+    cy.get('.data-table tbody tr')
+      .first()
+      .within(() => {
+        cy.get('.btn-check-in').should('be.visible');
+      });
   });
 
   it('should open check-in dialog', () => {
@@ -53,9 +55,11 @@ describe('Appointment Check-in Process', () => {
 
   it('should display wait time for checked-in patients', () => {
     cy.visitAppointmentsPage('waiting-room');
-    cy.get('.waiting-patient').first().within(() => {
-      cy.get('.wait-duration').should('be.visible');
-    });
+    cy.get('.waiting-patient')
+      .first()
+      .within(() => {
+        cy.get('.wait-duration').should('be.visible');
+      });
   });
 
   it('should allow notifying patient when ready', () => {

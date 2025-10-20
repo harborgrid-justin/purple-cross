@@ -14,7 +14,6 @@ describe('Client Communication', () => {
   });
 
   it('should display communication history', () => {
-
     cy.get('.communication-item').should('have.length', 2);
   });
 
@@ -23,12 +22,11 @@ describe('Client Communication', () => {
     cy.get('.email-compose-modal').should('be.visible');
     cy.get('#email-subject').should('be.visible');
     cy.get('#email-body').should('be.visible');
-    
 
     cy.get('#email-subject').type('Test Subject');
     cy.get('#email-body').type('Test message body');
     cy.get('.btn-send').click();
-    
+
     cy.get('.success-message', { timeout: 10000 }).should('contain', 'Email sent');
   });
 
@@ -36,11 +34,10 @@ describe('Client Communication', () => {
     cy.get('.btn-send-sms').click();
     cy.get('.sms-compose-modal').should('be.visible');
     cy.get('#sms-message').should('be.visible');
-    
 
     cy.get('#sms-message').type('Test SMS message');
     cy.get('.btn-send').click();
-    
+
     cy.get('.success-message', { timeout: 10000 }).should('contain', 'SMS sent');
   });
 
@@ -59,15 +56,13 @@ describe('Client Communication', () => {
   });
 
   it('should populate email from template', () => {
-
     cy.get('.btn-send-email').click();
     cy.get('#template-select').select('1');
-    
+
     cy.get('#email-subject').should('have.value', 'Appointment Reminder');
   });
 
   it('should filter communication history by type', () => {
-
     cy.get('#filter-type').select('email');
     cy.get('.communication-item').each(($item) => {
       cy.wrap($item).find('.type-badge').should('contain', 'email');
@@ -75,11 +70,12 @@ describe('Client Communication', () => {
   });
 
   it('should display communication delivery status', () => {
-
-    cy.get('.communication-item').first().within(() => {
-      cy.get('.status-badge').should('be.visible');
-      cy.get('.status-badge').should('contain', 'delivered');
-    });
+    cy.get('.communication-item')
+      .first()
+      .within(() => {
+        cy.get('.status-badge').should('be.visible');
+        cy.get('.status-badge').should('contain', 'delivered');
+      });
   });
 
   it('should display notification preferences', () => {
@@ -89,11 +85,10 @@ describe('Client Communication', () => {
   });
 
   it('should allow updating notification preferences', () => {
-
     cy.get('#email-notifications').check();
     cy.get('#sms-notifications').uncheck();
     cy.get('.btn-save-preferences').click();
-    
+
     cy.get('.success-message', { timeout: 10000 }).should('be.visible');
   });
 });
