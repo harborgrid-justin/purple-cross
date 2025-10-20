@@ -1,5 +1,6 @@
-import { useState, Suspense, lazy } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
 import { Link, Routes, Route, useLocation } from 'react-router-dom';
+import api from '../services/api';
 import '../styles/Page.css';
 
 // Lazy load subfeature pages
@@ -12,44 +13,111 @@ const Education = lazy(() => import('./staff/Education'));
 const Communication = lazy(() => import('./staff/Communication'));
 const HRDocuments = lazy(() => import('./staff/HRDocuments'));
 
+interface StaffMember {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+  department?: string;
+  phone?: string;
+}
+
 const StaffList = () => {
-  const [staff] = useState([
-    {
-      id: '1',
-      name: 'Dr. Emily Smith',
-      role: 'Veterinarian',
-      department: 'Surgery',
-      status: 'Active',
-    },
-    { id: '2', name: 'John Doe', role: 'Vet Tech', department: 'General Care', status: 'Active' },
-  ]);
+  const [staff, setStaff] = useState<StaffMember[]>([]);
+  const [filteredStaff, setFilteredStaff] = useState<StaffMember[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStaff = async () => {
+      try {
+        setLoading(true);
+        const response = (await api.staff.getAll({
+          limit: 50,
+        })) as { status: string; data: StaffMember[] };
+        setStaff(response.data);
+        setFilteredStaff(response.data);
+      } catch (err) {
+        console.error('Error fetching staff:', err);
+        setStaff([]);
+        setFilteredStaff([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStaff();
+  }, []);
+
+  useEffect(() => {
+    if (!searchTerm) {
+      setFilteredStaff(staff);
+      return;
+    }
+
+    const filtered = staff.filter((member) => {
+      const searchLower = searchTerm.toLowerCase();
+      return (
+        member.firstName.toLowerCase().includes(searchLower) ||
+        member.lastName.toLowerCase().includes(searchLower) ||
+        member.email.toLowerCase().includes(searchLower) ||
+        (member.role && member.role.toLowerCase().includes(searchLower)) ||
+        (member.department && member.department.toLowerCase().includes(searchLower))
+      );
+    });
+    setFilteredStaff(filtered);
+  }, [searchTerm, staff]);
 
   return (
     <div className="table-container">
-      <table className="data-table" role="table" aria-label="Staff list">
+      <div className="search-container" style={{ marginBottom: '1rem' }}>
+        <input
+          type="text"
+          id="staff-search"
+          placeholder="Search staff by name, email, role, or department..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{
+            width: '100%',
+            padding: '0.5rem',
+            fontSize: '1rem',
+            border: '1px solid #ddd',
+            borderRadius: '4px',
+          }}
+        />
+      </div>
+      {loading ? (
+        <div role="status" aria-live="polite">
+          <p>Loading staff...</p>
+        </div>
+      ) : filteredStaff.length === 0 ? (
+        <div role="status" aria-live="polite">
+          <p>No staff members found.</p>
+        </div>
+      ) : (
+        <table className="data-table" role="table" aria-label="Staff list">
         <thead>
           <tr>
             <th scope="col">Name</th>
+            <th scope="col">Email</th>
             <th scope="col">Role</th>
             <th scope="col">Department</th>
-            <th scope="col">Status</th>
             <th scope="col">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {staff.map((member) => (
+          {filteredStaff.map((member) => (
             <tr key={member.id}>
-              <th scope="row">{member.name}</th>
-              <td>{member.role}</td>
-              <td>{member.department}</td>
+              <th scope="row">{member.firstName} {member.lastName}</th>
+              <td>{member.email}</td>
+              <td>{member.role || 'N/A'}</td>
+              <td>{member.department || 'N/A'}</td>
               <td>
-                <span className="status-badge status-confirmed">{member.status}</span>
-              </td>
-              <td>
-                <button className="btn-action" aria-label={`View profile for ${member.name}`}>
+                <button className="btn-action" aria-label={`View profile for ${member.firstName} ${member.lastName}`}>
                   View
                 </button>
-                <button className="btn-action" aria-label={`Edit information for ${member.name}`}>
+                <button className="btn-action" aria-label={`Edit information for ${member.firstName} ${member.lastName}`}>
                   Edit
                 </button>
               </td>
@@ -57,6 +125,7 @@ const StaffList = () => {
           ))}
         </tbody>
       </table>
+      )}
     </div>
   );
 };
