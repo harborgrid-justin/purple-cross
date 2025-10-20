@@ -1,14 +1,9 @@
 /// <reference types="cypress" />
 
 describe('Appointment Details View', () => {
+    cy.visitAppointments();
+
   beforeEach(() => {
-    cy.fixture('appointments').then((appointments) => {
-      const appointment = appointments[0];
-      cy.intercept('GET', `/api/appointments/${appointment.id}`, {
-        statusCode: 200,
-        body: { status: 'success', data: appointment },
-      });
-    });
   });
 
   it('should display the appointment details page title', () => {

@@ -14,16 +14,6 @@ describe('Client Relationships Management', () => {
   });
 
   it('should display patient ownership section', () => {
-    cy.intercept('GET', '/api/clients/client-001/patients', {
-      statusCode: 200,
-      body: {
-        status: 'success',
-        data: [
-          { id: 'pet-001', name: 'Buddy', species: 'Dog', breed: 'Golden Retriever' },
-          { id: 'pet-002', name: 'Max', species: 'Cat', breed: 'Siamese' },
-        ],
-      },
-    }).as('getPatients');
 
     cy.get('.patient-ownership-section').should('be.visible');
     cy.wait('@getPatients');
@@ -34,13 +24,6 @@ describe('Client Relationships Management', () => {
     cy.get('.btn-add-pet').click();
     cy.get('.add-pet-modal').should('be.visible');
     
-    cy.intercept('POST', '/api/patients', {
-      statusCode: 201,
-      body: {
-        status: 'success',
-        data: { id: 'pet-003', name: 'Luna', ownerId: 'client-001' },
-      },
-    }).as('addPet');
 
     cy.get('#pet-name').type('Luna');
     cy.get('#pet-species').select('Dog');
@@ -61,13 +44,6 @@ describe('Client Relationships Management', () => {
     cy.get('#family-member-name').should('be.visible');
     cy.get('#family-relationship').should('be.visible');
     
-    cy.intercept('POST', '/api/clients/client-001/family-members', {
-      statusCode: 201,
-      body: {
-        status: 'success',
-        data: { id: 'family-001', name: 'Jane Smith', relationship: 'Spouse' },
-      },
-    }).as('addFamilyMember');
 
     cy.get('#family-member-name').type('Jane Smith');
     cy.get('#family-relationship').select('Spouse');
@@ -78,15 +54,6 @@ describe('Client Relationships Management', () => {
   });
 
   it('should display emergency contacts', () => {
-    cy.intercept('GET', '/api/clients/client-001/emergency-contacts', {
-      statusCode: 200,
-      body: {
-        status: 'success',
-        data: [
-          { id: 1, name: 'Emergency Person', phone: '555-9999', relationship: 'Friend' },
-        ],
-      },
-    }).as('getEmergencyContacts');
 
     cy.get('.emergency-contacts-section').should('be.visible');
     cy.wait('@getEmergencyContacts');

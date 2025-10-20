@@ -14,16 +14,6 @@ describe('Client Communication', () => {
   });
 
   it('should display communication history', () => {
-    cy.intercept('GET', '/api/clients/client-001/communications', {
-      statusCode: 200,
-      body: {
-        status: 'success',
-        data: [
-          { id: 1, type: 'email', subject: 'Appointment reminder', date: '2024-01-15' },
-          { id: 2, type: 'sms', subject: 'Test results', date: '2024-01-10' },
-        ],
-      },
-    }).as('getCommunications');
 
     cy.wait('@getCommunications');
     cy.get('.communication-item').should('have.length', 2);
@@ -35,10 +25,6 @@ describe('Client Communication', () => {
     cy.get('#email-subject').should('be.visible');
     cy.get('#email-body').should('be.visible');
     
-    cy.intercept('POST', '/api/communications/email', {
-      statusCode: 200,
-      body: { status: 'success', message: 'Email sent' },
-    }).as('sendEmail');
 
     cy.get('#email-subject').type('Test Subject');
     cy.get('#email-body').type('Test message body');
@@ -53,10 +39,6 @@ describe('Client Communication', () => {
     cy.get('.sms-compose-modal').should('be.visible');
     cy.get('#sms-message').should('be.visible');
     
-    cy.intercept('POST', '/api/communications/sms', {
-      statusCode: 200,
-      body: { status: 'success', message: 'SMS sent' },
-    }).as('sendSMS');
 
     cy.get('#sms-message').type('Test SMS message');
     cy.get('.btn-send').click();
@@ -81,17 +63,6 @@ describe('Client Communication', () => {
   });
 
   it('should populate email from template', () => {
-    cy.intercept('GET', '/api/communications/templates/1', {
-      statusCode: 200,
-      body: {
-        status: 'success',
-        data: {
-          id: 1,
-          subject: 'Appointment Reminder',
-          body: 'Dear {{clientName}}, this is a reminder...',
-        },
-      },
-    }).as('getTemplate');
 
     cy.get('.btn-send-email').click();
     cy.get('#template-select').select('1');
@@ -101,15 +72,6 @@ describe('Client Communication', () => {
   });
 
   it('should filter communication history by type', () => {
-    cy.intercept('GET', '/api/clients/client-001/communications*', {
-      statusCode: 200,
-      body: {
-        status: 'success',
-        data: [
-          { id: 1, type: 'email', subject: 'Email 1', date: '2024-01-15' },
-        ],
-      },
-    }).as('filterCommunications');
 
     cy.get('#filter-type').select('email');
     cy.wait('@filterCommunications');
@@ -120,15 +82,6 @@ describe('Client Communication', () => {
   });
 
   it('should display communication delivery status', () => {
-    cy.intercept('GET', '/api/clients/client-001/communications', {
-      statusCode: 200,
-      body: {
-        status: 'success',
-        data: [
-          { id: 1, type: 'email', subject: 'Test', status: 'delivered' },
-        ],
-      },
-    }).as('getCommunications');
 
     cy.wait('@getCommunications');
     cy.get('.communication-item').first().within(() => {
@@ -144,10 +97,6 @@ describe('Client Communication', () => {
   });
 
   it('should allow updating notification preferences', () => {
-    cy.intercept('PUT', '/api/clients/client-001/notification-preferences', {
-      statusCode: 200,
-      body: { status: 'success' },
-    }).as('updatePreferences');
 
     cy.get('#email-notifications').check();
     cy.get('#sms-notifications').uncheck();

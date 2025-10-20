@@ -47,23 +47,6 @@ describe('Client Registration', () => {
   });
 
   it('should successfully register a new client with valid data', () => {
-    cy.intercept('POST', '/api/clients', {
-      statusCode: 201,
-      body: {
-        status: 'success',
-        data: {
-          id: 'client-new',
-          firstName: 'Jane',
-          lastName: 'Doe',
-          email: 'jane.doe@email.com',
-          phone: '555-0199',
-          address: '100 New St',
-          city: 'Springfield',
-          state: 'IL',
-          zipCode: '62701',
-        },
-      },
-    }).as('createClient');
 
     cy.get('#firstName').type('Jane');
     cy.get('#lastName').type('Doe');
@@ -81,13 +64,6 @@ describe('Client Registration', () => {
   });
 
   it('should display error message on registration failure', () => {
-    cy.intercept('POST', '/api/clients', {
-      statusCode: 400,
-      body: {
-        status: 'error',
-        message: 'Email already exists',
-      },
-    }).as('createClientError');
 
     cy.get('#firstName').type('Jane');
     cy.get('#lastName').type('Doe');
@@ -136,18 +112,6 @@ describe('Client Registration', () => {
   });
 
   it('should allow registration with minimal required fields only', () => {
-    cy.intercept('POST', '/api/clients', {
-      statusCode: 201,
-      body: {
-        status: 'success',
-        data: {
-          id: 'client-minimal',
-          firstName: 'John',
-          lastName: 'Minimal',
-          email: 'john.minimal@email.com',
-        },
-      },
-    }).as('createMinimalClient');
 
     cy.get('#firstName').type('John');
     cy.get('#lastName').type('Minimal');
