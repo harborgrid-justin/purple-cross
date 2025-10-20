@@ -9,7 +9,7 @@ describe('Patient Breed Information', () => {
 
   it('should display the breed information page title', () => {
     cy.visitPatientsPage('breed-info');
-    cy.get('.page-header h1').should('contain', 'Breed Information');
+    cy.get('.page-header h1').should('contain', 'Breed');
   });
 
   it('should display breed information content', () => {

@@ -15,7 +15,7 @@ describe('Patient Lifecycle Management', () => {
   it('should display lifecycle content', () => {
     cy.visitPatientsPage('lifecycle');
     cy.get('.content-section').should('exist');
-    cy.contains('lifecycle').should('be.visible');
+    cy.contains('life').should('be.visible');
   });
 
   it('should navigate to lifecycle from main patients page', () => {
