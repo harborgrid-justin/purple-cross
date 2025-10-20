@@ -126,6 +126,46 @@ declare global {
        * @example cy.waitForDocuments()
        */
       waitForDocuments(): Chainable<void>;
+
+      /**
+       * Custom command to navigate to staff page
+       * @example cy.visitStaff()
+       */
+      visitStaff(): Chainable<void>;
+
+      /**
+       * Custom command to navigate to a specific staff subpage
+       * @param subpage - The staff subpage to navigate to
+       * @example cy.visitStaffPage('profiles')
+       */
+      visitStaffPage(subpage: string): Chainable<void>;
+
+      /**
+       * Custom command to search for staff members
+       * @param searchTerm - The search term to use
+       * @example cy.searchStaff('Emily')
+       */
+      searchStaff(searchTerm: string): Chainable<void>;
+
+      /**
+       * Custom command to mock staff data
+       * @param staff - Array of staff objects
+       * @example cy.mockStaff([{ id: '1', firstName: 'Emily', lastName: 'Smith', role: 'Veterinarian' }])
+       */
+      mockStaff(staff: unknown[]): Chainable<void>;
+
+      /**
+       * Custom command to mock a single staff member
+       * @param staffMember - Staff object
+       * @example cy.mockStaffMember({ id: '1', firstName: 'Emily', lastName: 'Smith', role: 'Veterinarian' })
+       */
+      mockStaffMember(staffMember: unknown): Chainable<void>;
+
+      /**
+       * Custom command to wait for staff API calls
+       * @example cy.waitForStaff()
+       */
+      waitForStaff(): Chainable<void>;
     }
   }
 }
@@ -269,6 +309,49 @@ Cypress.Commands.add('mockDocumentTemplates', (templates: unknown[]) => {
 // Wait for documents API calls
 Cypress.Commands.add('waitForDocuments', () => {
   cy.wait('@getDocuments');
+});
+
+// Navigate to staff page
+Cypress.Commands.add('visitStaff', () => {
+  cy.visit('/staff');
+});
+
+// Navigate to a specific staff subpage
+Cypress.Commands.add('visitStaffPage', (subpage: string) => {
+  cy.visit(`/staff/${subpage}`);
+});
+
+// Search for staff members
+Cypress.Commands.add('searchStaff', (searchTerm: string) => {
+  cy.get('input[id="staff-search"]').clear().type(searchTerm);
+});
+
+// Mock staff data
+Cypress.Commands.add('mockStaff', (staff: unknown[]) => {
+  cy.intercept('GET', '/api/staff*', {
+    statusCode: 200,
+    body: {
+      status: 'success',
+      data: staff,
+    },
+  }).as('getStaffData');
+});
+
+// Mock a single staff member
+Cypress.Commands.add('mockStaffMember', (staffMember: unknown) => {
+  const staffId = (staffMember as { id: string }).id;
+  cy.intercept('GET', `/api/staff/${staffId}`, {
+    statusCode: 200,
+    body: {
+      status: 'success',
+      data: staffMember,
+    },
+  }).as('getStaffMemberData');
+});
+
+// Wait for staff API calls
+Cypress.Commands.add('waitForStaff', () => {
+  cy.wait('@getStaff');
 });
 
 export {};
