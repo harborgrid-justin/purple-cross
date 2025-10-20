@@ -1,0 +1,282 @@
+[
+  {
+    "id": "appt-001",
+    "patientId": "patient-001",
+    "patient": {
+      "id": "patient-001",
+      "name": "Buddy",
+      "species": "Dog",
+      "breed": "Golden Retriever"
+    },
+    "clientId": "client-001",
+    "client": {
+      "id": "client-001",
+      "firstName": "John",
+      "lastName": "Smith",
+      "email": "john.smith@example.com",
+      "phone": "+1 (555) 100-1001"
+    },
+    "veterinarianId": "staff-001",
+    "veterinarian": {
+      "id": "staff-001",
+      "firstName": "Emily",
+      "lastName": "Smith",
+      "role": "Veterinarian",
+      "specialization": "Surgery"
+    },
+    "appointmentType": "Routine Checkup",
+    "startTime": "2024-01-20T09:00:00.000Z",
+    "endTime": "2024-01-20T09:30:00.000Z",
+    "status": "scheduled",
+    "reason": "Annual wellness exam",
+    "notes": "Patient is healthy and active",
+    "roomId": "room-01",
+    "createdAt": "2024-01-10T08:00:00.000Z",
+    "updatedAt": "2024-01-10T08:00:00.000Z"
+  },
+  {
+    "id": "appt-002",
+    "patientId": "patient-002",
+    "patient": {
+      "id": "patient-002",
+      "name": "Whiskers",
+      "species": "Cat",
+      "breed": "Siamese"
+    },
+    "clientId": "client-002",
+    "client": {
+      "id": "client-002",
+      "firstName": "Sarah",
+      "lastName": "Johnson",
+      "email": "sarah.johnson@example.com",
+      "phone": "+1 (555) 200-2002"
+    },
+    "veterinarianId": "staff-004",
+    "veterinarian": {
+      "id": "staff-004",
+      "firstName": "Michael",
+      "lastName": "Chen",
+      "role": "Veterinarian",
+      "specialization": "Internal Medicine"
+    },
+    "appointmentType": "Vaccination",
+    "startTime": "2024-01-20T10:00:00.000Z",
+    "endTime": "2024-01-20T10:15:00.000Z",
+    "status": "scheduled",
+    "reason": "Rabies vaccine booster",
+    "notes": null,
+    "roomId": "room-02",
+    "createdAt": "2024-01-11T10:30:00.000Z",
+    "updatedAt": "2024-01-11T10:30:00.000Z"
+  },
+  {
+    "id": "appt-003",
+    "patientId": "patient-003",
+    "patient": {
+      "id": "patient-003",
+      "name": "Max",
+      "species": "Dog",
+      "breed": "Labrador Retriever"
+    },
+    "clientId": "client-003",
+    "client": {
+      "id": "client-003",
+      "firstName": "Michael",
+      "lastName": "Brown",
+      "email": "michael.brown@example.com",
+      "phone": "+1 (555) 300-3003"
+    },
+    "veterinarianId": "staff-001",
+    "veterinarian": {
+      "id": "staff-001",
+      "firstName": "Emily",
+      "lastName": "Smith",
+      "role": "Veterinarian",
+      "specialization": "Surgery"
+    },
+    "appointmentType": "Surgery",
+    "startTime": "2024-01-21T14:00:00.000Z",
+    "endTime": "2024-01-21T16:00:00.000Z",
+    "status": "confirmed",
+    "reason": "Neutering procedure",
+    "notes": "Pre-op bloodwork completed",
+    "roomId": "surgery-01",
+    "createdAt": "2024-01-08T15:00:00.000Z",
+    "updatedAt": "2024-01-15T09:00:00.000Z"
+  },
+  {
+    "id": "appt-004",
+    "patientId": "patient-004",
+    "patient": {
+      "id": "patient-004",
+      "name": "Luna",
+      "species": "Cat",
+      "breed": "Persian"
+    },
+    "clientId": "client-004",
+    "client": {
+      "id": "client-004",
+      "firstName": "Emily",
+      "lastName": "Davis",
+      "email": "emily.davis@example.com",
+      "phone": "+1 (555) 400-4004"
+    },
+    "veterinarianId": "staff-004",
+    "veterinarian": {
+      "id": "staff-004",
+      "firstName": "Michael",
+      "lastName": "Chen",
+      "role": "Veterinarian",
+      "specialization": "Internal Medicine"
+    },
+    "appointmentType": "Follow-up",
+    "startTime": "2024-01-22T11:00:00.000Z",
+    "endTime": "2024-01-22T11:30:00.000Z",
+    "status": "completed",
+    "reason": "Post-treatment checkup",
+    "notes": "Recovery is progressing well",
+    "roomId": "room-01",
+    "createdAt": "2024-01-05T12:00:00.000Z",
+    "updatedAt": "2024-01-18T11:35:00.000Z"
+  },
+  {
+    "id": "appt-005",
+    "patientId": "patient-005",
+    "patient": {
+      "id": "patient-005",
+      "name": "Charlie",
+      "species": "Dog",
+      "breed": "Beagle"
+    },
+    "clientId": "client-005",
+    "client": {
+      "id": "client-005",
+      "firstName": "David",
+      "lastName": "Wilson",
+      "email": "david.wilson@example.com",
+      "phone": "+1 (555) 500-5005"
+    },
+    "veterinarianId": "staff-001",
+    "veterinarian": {
+      "id": "staff-001",
+      "firstName": "Emily",
+      "lastName": "Smith",
+      "role": "Veterinarian",
+      "specialization": "Surgery"
+    },
+    "appointmentType": "Emergency",
+    "startTime": "2024-01-19T16:30:00.000Z",
+    "endTime": "2024-01-19T17:30:00.000Z",
+    "status": "completed",
+    "reason": "Ingested foreign object",
+    "notes": "X-ray performed, object passed naturally",
+    "roomId": "room-03",
+    "createdAt": "2024-01-19T16:15:00.000Z",
+    "updatedAt": "2024-01-19T17:45:00.000Z"
+  },
+  {
+    "id": "appt-006",
+    "patientId": "patient-006",
+    "patient": {
+      "id": "patient-006",
+      "name": "Bella",
+      "species": "Dog",
+      "breed": "French Bulldog"
+    },
+    "clientId": "client-006",
+    "client": {
+      "id": "client-006",
+      "firstName": "Jennifer",
+      "lastName": "Martinez",
+      "email": "jennifer.martinez@example.com",
+      "phone": "+1 (555) 600-6006"
+    },
+    "veterinarianId": "staff-004",
+    "veterinarian": {
+      "id": "staff-004",
+      "firstName": "Michael",
+      "lastName": "Chen",
+      "role": "Veterinarian",
+      "specialization": "Internal Medicine"
+    },
+    "appointmentType": "Dental Cleaning",
+    "startTime": "2024-01-23T08:00:00.000Z",
+    "endTime": "2024-01-23T09:00:00.000Z",
+    "status": "scheduled",
+    "reason": "Routine dental cleaning",
+    "notes": "Patient requires fasting after midnight",
+    "roomId": "dental-01",
+    "createdAt": "2024-01-12T14:00:00.000Z",
+    "updatedAt": "2024-01-12T14:00:00.000Z"
+  },
+  {
+    "id": "appt-007",
+    "patientId": "patient-001",
+    "patient": {
+      "id": "patient-001",
+      "name": "Buddy",
+      "species": "Dog",
+      "breed": "Golden Retriever"
+    },
+    "clientId": "client-001",
+    "client": {
+      "id": "client-001",
+      "firstName": "John",
+      "lastName": "Smith",
+      "email": "john.smith@example.com",
+      "phone": "+1 (555) 100-1001"
+    },
+    "veterinarianId": "staff-001",
+    "veterinarian": {
+      "id": "staff-001",
+      "firstName": "Emily",
+      "lastName": "Smith",
+      "role": "Veterinarian",
+      "specialization": "Surgery"
+    },
+    "appointmentType": "Grooming",
+    "startTime": "2024-01-18T13:00:00.000Z",
+    "endTime": "2024-01-18T14:00:00.000Z",
+    "status": "cancelled",
+    "reason": "Grooming session",
+    "notes": "Cancelled by client - rescheduled",
+    "roomId": null,
+    "createdAt": "2024-01-07T11:00:00.000Z",
+    "updatedAt": "2024-01-17T10:00:00.000Z"
+  },
+  {
+    "id": "appt-008",
+    "patientId": "patient-002",
+    "patient": {
+      "id": "patient-002",
+      "name": "Whiskers",
+      "species": "Cat",
+      "breed": "Siamese"
+    },
+    "clientId": "client-002",
+    "client": {
+      "id": "client-002",
+      "firstName": "Sarah",
+      "lastName": "Johnson",
+      "email": "sarah.johnson@example.com",
+      "phone": "+1 (555) 200-2002"
+    },
+    "veterinarianId": "staff-004",
+    "veterinarian": {
+      "id": "staff-004",
+      "firstName": "Michael",
+      "lastName": "Chen",
+      "role": "Veterinarian",
+      "specialization": "Internal Medicine"
+    },
+    "appointmentType": "Consultation",
+    "startTime": "2024-01-24T15:00:00.000Z",
+    "endTime": "2024-01-24T15:45:00.000Z",
+    "status": "scheduled",
+    "reason": "Behavioral consultation",
+    "notes": "Owner reports increased aggression",
+    "roomId": "room-02",
+    "createdAt": "2024-01-13T09:00:00.000Z",
+    "updatedAt": "2024-01-13T09:00:00.000Z"
+  }
+]
