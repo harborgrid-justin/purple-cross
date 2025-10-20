@@ -1,0 +1,176 @@
+[
+  {
+    "id": "record-001",
+    "patientId": "patient-001",
+    "patient": {
+      "id": "patient-001",
+      "name": "Buddy",
+      "species": "Dog"
+    },
+    "veterinarianId": "vet-001",
+    "veterinarian": {
+      "id": "vet-001",
+      "firstName": "Sarah",
+      "lastName": "Smith"
+    },
+    "visitDate": "2024-01-15T10:00:00.000Z",
+    "chiefComplaint": "Annual wellness check",
+    "diagnosis": "Healthy, minor dental tartar",
+    "treatment": "Dental cleaning recommended, vaccinations updated",
+    "notes": "Patient presented in good health. Weight stable. Recommend dental cleaning in next 3 months.",
+    "vitalSigns": {
+      "temperature": 101.5,
+      "heartRate": 90,
+      "respiratoryRate": 22,
+      "bloodPressure": "120/80",
+      "weight": 32.5
+    },
+    "createdAt": "2024-01-15T10:30:00.000Z",
+    "updatedAt": "2024-01-15T10:30:00.000Z"
+  },
+  {
+    "id": "record-002",
+    "patientId": "patient-002",
+    "patient": {
+      "id": "patient-002",
+      "name": "Whiskers",
+      "species": "Cat"
+    },
+    "veterinarianId": "vet-002",
+    "veterinarian": {
+      "id": "vet-002",
+      "firstName": "Michael",
+      "lastName": "Jones"
+    },
+    "visitDate": "2024-01-14T14:00:00.000Z",
+    "chiefComplaint": "Vaccination appointment",
+    "diagnosis": "Healthy, no concerns",
+    "treatment": "FVRCP and rabies vaccines administered",
+    "notes": "Patient cooperative during examination. No adverse reactions to vaccines.",
+    "vitalSigns": {
+      "temperature": 101.8,
+      "heartRate": 180,
+      "respiratoryRate": 28,
+      "bloodPressure": "110/70",
+      "weight": 4.2
+    },
+    "createdAt": "2024-01-14T14:30:00.000Z",
+    "updatedAt": "2024-01-14T14:30:00.000Z"
+  },
+  {
+    "id": "record-003",
+    "patientId": "patient-003",
+    "patient": {
+      "id": "patient-003",
+      "name": "Max",
+      "species": "Dog"
+    },
+    "veterinarianId": "vet-001",
+    "veterinarian": {
+      "id": "vet-001",
+      "firstName": "Sarah",
+      "lastName": "Smith"
+    },
+    "visitDate": "2024-01-12T09:00:00.000Z",
+    "chiefComplaint": "Limping on right front leg",
+    "diagnosis": "Mild sprain, no fracture detected",
+    "treatment": "Rest, anti-inflammatory medication prescribed, recheck in 2 weeks",
+    "notes": "X-rays show no fractures. Prescribed Rimadyl 75mg twice daily for 7 days. Owner advised to restrict activity.",
+    "vitalSigns": {
+      "temperature": 101.2,
+      "heartRate": 95,
+      "respiratoryRate": 24,
+      "bloodPressure": "125/85",
+      "weight": 28.0
+    },
+    "createdAt": "2024-01-12T09:45:00.000Z",
+    "updatedAt": "2024-01-12T09:45:00.000Z"
+  },
+  {
+    "id": "record-004",
+    "patientId": "patient-004",
+    "patient": {
+      "id": "patient-004",
+      "name": "Luna",
+      "species": "Cat"
+    },
+    "veterinarianId": "vet-003",
+    "veterinarian": {
+      "id": "vet-003",
+      "firstName": "Emily",
+      "lastName": "Brown"
+    },
+    "visitDate": "2024-01-10T11:00:00.000Z",
+    "chiefComplaint": "Decreased appetite, lethargy",
+    "diagnosis": "Upper respiratory infection",
+    "treatment": "Antibiotics prescribed, supportive care",
+    "notes": "Patient dehydrated. Started on subcutaneous fluids. Prescribed Clavamox 62.5mg twice daily for 10 days. Recheck in 5 days.",
+    "vitalSigns": {
+      "temperature": 103.2,
+      "heartRate": 200,
+      "respiratoryRate": 35,
+      "bloodPressure": "105/65",
+      "weight": 3.8
+    },
+    "createdAt": "2024-01-10T11:30:00.000Z",
+    "updatedAt": "2024-01-10T11:30:00.000Z"
+  },
+  {
+    "id": "record-005",
+    "patientId": "patient-005",
+    "patient": {
+      "id": "patient-005",
+      "name": "Charlie",
+      "species": "Dog"
+    },
+    "veterinarianId": "vet-002",
+    "veterinarian": {
+      "id": "vet-002",
+      "firstName": "Michael",
+      "lastName": "Jones"
+    },
+    "visitDate": "2024-01-08T15:00:00.000Z",
+    "chiefComplaint": "Ear infection follow-up",
+    "diagnosis": "Ear infection resolving well",
+    "treatment": "Continue current medication for 3 more days",
+    "notes": "Ear canals show significant improvement. Owner reports decreased scratching. Continue Zymox otic solution once daily for 3 more days.",
+    "vitalSigns": {
+      "temperature": 101.3,
+      "heartRate": 88,
+      "respiratoryRate": 20,
+      "bloodPressure": "118/75",
+      "weight": 12.3
+    },
+    "createdAt": "2024-01-08T15:20:00.000Z",
+    "updatedAt": "2024-01-08T15:20:00.000Z"
+  },
+  {
+    "id": "record-006",
+    "patientId": "patient-006",
+    "patient": {
+      "id": "patient-006",
+      "name": "Bella",
+      "species": "Dog"
+    },
+    "veterinarianId": "vet-001",
+    "veterinarian": {
+      "id": "vet-001",
+      "firstName": "Sarah",
+      "lastName": "Smith"
+    },
+    "visitDate": "2024-01-05T10:00:00.000Z",
+    "chiefComplaint": "Skin allergy examination",
+    "diagnosis": "Atopic dermatitis",
+    "treatment": "Apoquel prescribed, hypoallergenic diet recommended",
+    "notes": "Moderate skin inflammation on ventral abdomen and paws. Started Apoquel 16mg once daily. Recommend Hill's z/d diet trial. Recheck in 4 weeks.",
+    "vitalSigns": {
+      "temperature": 101.4,
+      "heartRate": 92,
+      "respiratoryRate": 22,
+      "bloodPressure": "120/78",
+      "weight": 11.5
+    },
+    "createdAt": "2024-01-05T10:30:00.000Z",
+    "updatedAt": "2024-01-05T10:30:00.000Z"
+  }
+]

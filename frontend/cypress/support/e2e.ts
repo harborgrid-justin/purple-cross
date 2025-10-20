@@ -22,6 +22,10 @@ beforeEach(() => {
   cy.intercept('PUT', '/api/patients/*').as('updatePatient');
   cy.intercept('DELETE', '/api/patients/*').as('deletePatient');
   cy.intercept('GET', '/api/clients*').as('getClients');
+  cy.intercept('GET', '/api/medical-records*').as('getMedicalRecords');
+  cy.intercept('POST', '/api/medical-records').as('createMedicalRecord');
+  cy.intercept('PUT', '/api/medical-records/*').as('updateMedicalRecord');
+  cy.intercept('DELETE', '/api/medical-records/*').as('deleteMedicalRecord');
 });
 
 // Prevent Cypress from failing tests on uncaught exceptions
