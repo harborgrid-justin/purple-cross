@@ -73,7 +73,9 @@ describe('DocumentService', () => {
 
       (prisma.document.findUnique as jest.Mock).mockResolvedValue(null);
 
-      await expect(documentService.getDocumentById(documentId)).rejects.toThrow('Document not found');
+      await expect(documentService.getDocumentById(documentId)).rejects.toThrow(
+        'Document not found'
+      );
     });
   });
 

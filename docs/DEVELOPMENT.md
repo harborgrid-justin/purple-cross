@@ -52,12 +52,14 @@ purple-cross/
 ### Option 1: Using Docker (Recommended)
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/harborgrid-justin/purple-cross.git
    cd purple-cross
    ```
 
 2. **Start all services**
+
    ```bash
    docker-compose up
    ```
@@ -69,6 +71,7 @@ purple-cross/
    - Frontend dev server on port 5173
 
 3. **Run database migrations**
+
    ```bash
    docker-compose exec backend npx prisma migrate dev
    ```
@@ -83,27 +86,32 @@ purple-cross/
 #### Backend Setup
 
 1. **Navigate to backend directory**
+
    ```bash
    cd backend
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Configure environment**
+
    ```bash
    cp .env.example .env
    # Edit .env with your database credentials
    ```
 
 4. **Run database migrations**
+
    ```bash
    npx prisma migrate dev
    ```
 
 5. **Generate Prisma Client**
+
    ```bash
    npx prisma generate
    ```
@@ -116,16 +124,19 @@ purple-cross/
 #### Frontend Setup
 
 1. **Navigate to frontend directory**
+
    ```bash
    cd frontend
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Configure environment**
+
    ```bash
    cp .env.example .env
    # Edit .env if needed
@@ -324,7 +335,7 @@ function MyComponent() {
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
-  
+
   return <div>{/* Render data */}</div>;
 }
 ```

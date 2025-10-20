@@ -6,21 +6,23 @@ This guide will get Purple Cross running on your machine in **5 minutes or less*
 
 ## 📋 Quick Reference
 
-| What | Where |
-|------|-------|
-| **Quick Start** | [QUICK_START.md](./QUICK_START.md) - 5-minute guide |
-| **Complete Setup** | [docs/SETUP.md](./docs/SETUP.md) - Detailed instructions |
-| **Development** | [docs/DEVELOPMENT.md](./docs/DEVELOPMENT.md) - Dev workflow |
+| What                | Where                                                            |
+| ------------------- | ---------------------------------------------------------------- |
+| **Quick Start**     | [QUICK_START.md](./QUICK_START.md) - 5-minute guide              |
+| **Complete Setup**  | [docs/SETUP.md](./docs/SETUP.md) - Detailed instructions         |
+| **Development**     | [docs/DEVELOPMENT.md](./docs/DEVELOPMENT.md) - Dev workflow      |
 | **Troubleshooting** | [docs/SETUP.md#troubleshooting](./docs/SETUP.md#troubleshooting) |
 
 ## ⚡ Super Quick Start
 
 ### Prerequisites
+
 - Node.js 18+
 - Docker Desktop
 - Git
 
 ### Installation
+
 ```bash
 git clone https://github.com/harborgrid-justin/purple-cross.git
 cd purple-cross
@@ -51,12 +53,12 @@ The automated setup script:
 
 ## 🐳 What's Running After Setup?
 
-| Service | Port | URL |
-|---------|------|-----|
-| Frontend (React + Vite) | 5173 | http://localhost:5173 |
+| Service                         | Port | URL                   |
+| ------------------------------- | ---- | --------------------- |
+| Frontend (React + Vite)         | 5173 | http://localhost:5173 |
 | Backend API (Node.js + Express) | 3000 | http://localhost:3000 |
-| PostgreSQL Database | 5432 | localhost:5432 |
-| Redis Cache | 6379 | localhost:6379 |
+| PostgreSQL Database             | 5432 | localhost:5432        |
+| Redis Cache                     | 6379 | localhost:6379        |
 
 ### Access Points
 
@@ -68,6 +70,7 @@ The automated setup script:
 ## 🔧 Alternative Installation Methods
 
 ### Method 1: Using Make
+
 ```bash
 git clone https://github.com/harborgrid-justin/purple-cross.git
 cd purple-cross
@@ -75,6 +78,7 @@ make setup
 ```
 
 ### Method 2: Direct Script
+
 ```bash
 git clone https://github.com/harborgrid-justin/purple-cross.git
 cd purple-cross
@@ -82,67 +86,83 @@ bash scripts/setup.sh
 ```
 
 ### Method 3: Manual Setup
+
 For complete manual setup instructions, see [docs/SETUP.md](./docs/SETUP.md#method-1-manual-docker-setup)
 
 ### Method 4: Local Development (No Docker)
+
 For local development without Docker, see [docs/SETUP.md](./docs/SETUP.md#method-2-local-development-without-docker)
 
 ## ✅ Verify Installation
 
 ### 1. Check Containers
+
 ```bash
 docker ps
 ```
+
 Should show 4 running containers:
+
 - purple-cross-postgres
 - purple-cross-redis
 - purple-cross-backend
 - purple-cross-frontend
 
 ### 2. Check Backend
+
 ```bash
 curl http://localhost:3000/health
 ```
+
 Should return JSON with status information
 
 ### 3. Check Frontend
+
 Open http://localhost:5173 in your browser
 
 ### 4. Check Database
+
 ```bash
 npm run prisma:studio
 ```
+
 Opens Prisma Studio at http://localhost:5555
 
 ## 🛠️ Post-Installation
 
 ### View All Available Commands
+
 ```bash
 make help
 ```
 
 ### Start Development
+
 ```bash
 npm run dev
 ```
 
 ### Run Tests
+
 ```bash
 npm test
 ```
 
 ### View Logs
+
 ```bash
 docker compose logs -f         # All services
 docker compose logs -f backend # Backend only
 ```
 
 ### Stop Services
+
 ```bash
 docker compose down
 ```
 
 ### Restart Services
+
 ```bash
 docker compose restart
 ```
@@ -154,6 +174,7 @@ docker compose restart
 **Symptoms:** Error message about port 3000, 5173, or 5432 already in use
 
 **Solution:**
+
 ```bash
 docker compose down
 npx kill-port 3000 5173 5432
@@ -165,6 +186,7 @@ npm run setup
 **Symptoms:** "Cannot connect to Docker daemon"
 
 **Solution:**
+
 1. Start Docker Desktop
 2. Wait for it to fully start (green icon)
 3. Run `npm run setup` again
@@ -174,6 +196,7 @@ npm run setup
 **Symptoms:** Setup fails during database migration step
 
 **Solution:**
+
 ```bash
 docker compose restart postgres
 # Wait 10 seconds
@@ -185,6 +208,7 @@ npm run setup
 **Symptoms:** npm install errors
 
 **Solution:**
+
 ```bash
 docker compose down -v
 rm -rf node_modules backend/node_modules frontend/node_modules
@@ -192,6 +216,7 @@ npm run setup
 ```
 
 ### More Issues?
+
 See the complete [Troubleshooting Guide](./docs/SETUP.md#troubleshooting) with 10+ solutions
 
 ## 📚 Additional Documentation
@@ -216,11 +241,13 @@ See the complete [Troubleshooting Guide](./docs/SETUP.md#troubleshooting) with 1
 ## 🧹 Clean Up / Uninstall
 
 ### Stop Services (Keep Data)
+
 ```bash
 docker compose down
 ```
 
 ### Remove Everything (Including Data)
+
 ```bash
 docker compose down -v
 rm -rf node_modules backend/node_modules frontend/node_modules
@@ -240,6 +267,7 @@ rm -rf backend/dist frontend/dist
 ## 🌟 Summary
 
 Purple Cross provides a **fully automated, one-command setup** that:
+
 - ✅ Works on Windows, Mac, and Linux
 - ✅ Supports Docker Compose V1 and V2
 - ✅ Handles all dependencies automatically

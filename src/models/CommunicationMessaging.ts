@@ -28,7 +28,13 @@ export interface PortalAccess {
 }
 
 export interface PortalFeature {
-  feature: 'medical_records' | 'appointments' | 'billing' | 'prescriptions' | 'documents' | 'messaging';
+  feature:
+    | 'medical_records'
+    | 'appointments'
+    | 'billing'
+    | 'prescriptions'
+    | 'documents'
+    | 'messaging';
   enabled: boolean;
   permissions: string[];
 }

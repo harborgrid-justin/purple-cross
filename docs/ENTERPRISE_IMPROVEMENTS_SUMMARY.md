@@ -5,6 +5,7 @@ This document provides a high-level overview of the enterprise capabilities adde
 ## Executive Summary
 
 Purple Cross has been enhanced with production-grade enterprise capabilities covering:
+
 - **Observability**: Correlation IDs, structured logging, metrics collection
 - **Resilience**: Circuit breakers, retry logic, timeouts
 - **Security**: Input sanitization, injection detection, rate limiting
@@ -19,11 +20,13 @@ All improvements are **backward compatible** - existing code continues to work w
 ### 1. Request Tracking & Observability
 
 **Correlation IDs** - Every request gets a unique identifier
+
 - Automatically added to all requests
 - Included in all logs and error responses
 - Enables distributed tracing across services
 
 **Structured Logging** - Enhanced Winston logger
+
 - JSON format for machine parsing
 - Correlation IDs in all log entries
 - Environment and version metadata
@@ -31,6 +34,7 @@ All improvements are **backward compatible** - existing code continues to work w
 - Separate exception and rejection logs
 
 **Metrics Collection** - Real-time monitoring
+
 - Request count, latency, status codes
 - Memory and CPU usage
 - Endpoint: `GET /metrics`
@@ -39,31 +43,35 @@ All improvements are **backward compatible** - existing code continues to work w
 
 Four health check endpoints for different purposes:
 
-| Endpoint | Purpose | Checks |
-|----------|---------|--------|
-| `/health` | Basic uptime | Server running |
-| `/health/live` | Kubernetes liveness | Application responsive |
-| `/health/ready` | Kubernetes readiness | Database connected |
-| `/health/detailed` | Debugging | Full system metrics |
+| Endpoint           | Purpose              | Checks                 |
+| ------------------ | -------------------- | ---------------------- |
+| `/health`          | Basic uptime         | Server running         |
+| `/health/live`     | Kubernetes liveness  | Application responsive |
+| `/health/ready`    | Kubernetes readiness | Database connected     |
+| `/health/detailed` | Debugging            | Full system metrics    |
 
 ### 3. Resilience Patterns
 
 **Circuit Breaker** - Prevent cascading failures
+
 ```typescript
 const breaker = createCircuitBreaker('external-api');
 await breaker.execute(() => externalApi.call());
 ```
+
 - 3 states: CLOSED, OPEN, HALF_OPEN
 - Configurable thresholds and timeouts
 - Automatic recovery attempts
 
 **Retry Logic** - Handle transient failures
+
 ```typescript
 await retry(() => apiCall(), {
   maxAttempts: 3,
   initialDelay: 1000,
 });
 ```
+
 - Exponential backoff
 - Jitter support
 - Retryable error filtering
@@ -71,21 +79,25 @@ await retry(() => apiCall(), {
 ### 4. Security Enhancements
 
 **Input Sanitization** - XSS prevention
+
 - HTML entity escaping
 - Null byte removal
 - Applied to body, query, params
 
 **Injection Detection** - SQL/NoSQL protection
+
 - Pattern matching for SQL injection
 - MongoDB injection detection
 - `containsSQLInjection()` and `containsNoSQLInjection()` utilities
 
 **Rate Limiting** - Abuse prevention
+
 - General API: 100 requests / 15 minutes
 - Auth endpoints: 5 requests / 15 minutes
 - Per-IP tracking
 
 **Enhanced Error Handling** - Structured errors
+
 - Standard error codes (BAD_REQUEST, UNAUTHORIZED, etc.)
 - Correlation IDs in all errors
 - No sensitive data leakage
@@ -94,11 +106,13 @@ await retry(() => apiCall(), {
 ### 5. Request Management
 
 **Timeouts** - Prevent hung requests
+
 - Default: 30 seconds
 - Configurable per route
 - Automatic cleanup
 
 **Middleware Order** - Optimized for security and performance
+
 1. Correlation ID tracking
 2. Metrics collection
 3. Timeout management
@@ -156,6 +170,7 @@ README.md                          (ENHANCED) - Enterprise section
 ## Quick Start Examples
 
 ### Using Correlation IDs in Logs
+
 ```typescript
 logger.info({
   message: 'Processing request',
@@ -165,6 +180,7 @@ logger.info({
 ```
 
 ### Circuit Breaker for External API
+
 ```typescript
 import { createCircuitBreaker } from './utils/circuitBreaker';
 
@@ -178,6 +194,7 @@ await apiBreaker.execute(() => paymentGateway.charge(amount));
 ```
 
 ### Retry for Database Operations
+
 ```typescript
 import { retry } from './utils/retry';
 
@@ -189,6 +206,7 @@ await retry(() => database.query(sql), {
 ```
 
 ### Custom Error with Code
+
 ```typescript
 import { AppError } from './middleware/errorHandler';
 
@@ -212,6 +230,7 @@ LOG_FILE_PATH=./logs
 ```
 
 ### Timeouts
+
 ```typescript
 // Default: 30 seconds
 app.use(timeoutMiddleware(30000));
@@ -225,6 +244,7 @@ app.use('/api/v1/reports', timeoutMiddleware(120000)); // 2 minutes
 ## Monitoring & Operations
 
 ### Kubernetes Deployment
+
 ```yaml
 livenessProbe:
   httpGet:
@@ -242,6 +262,7 @@ readinessProbe:
 ```
 
 ### Metrics Collection
+
 ```bash
 # Get current metrics
 curl http://localhost:3000/metrics
@@ -251,6 +272,7 @@ curl http://localhost:3000/health/ready
 ```
 
 ### Circuit Breaker Monitoring
+
 ```typescript
 import { externalApiBreaker } from './services/external';
 
@@ -274,12 +296,14 @@ externalApiBreaker.reset();
 ## Testing
 
 ### Run Unit Tests
+
 ```bash
 cd backend
 npm test tests/unit/utils/
 ```
 
 ### Test Health Endpoints
+
 ```bash
 # Basic health
 curl http://localhost:3000/health
@@ -295,6 +319,7 @@ curl http://localhost:3000/metrics
 ```
 
 ### Test Rate Limiting
+
 ```bash
 # Send multiple requests quickly
 for i in {1..10}; do curl http://localhost:3000/api/v1/patients; done
@@ -305,6 +330,7 @@ for i in {1..10}; do curl http://localhost:3000/api/v1/patients; done
 ## Benefits
 
 ### For Developers
+
 - ✅ Built-in observability with correlation IDs
 - ✅ Resilience patterns ready to use
 - ✅ Comprehensive documentation and examples
@@ -312,6 +338,7 @@ for i in {1..10}; do curl http://localhost:3000/api/v1/patients; done
 - ✅ Easy debugging with structured logs
 
 ### For Operations
+
 - ✅ Kubernetes-ready health checks
 - ✅ Real-time metrics collection
 - ✅ Circuit breaker prevents cascading failures
@@ -319,6 +346,7 @@ for i in {1..10}; do curl http://localhost:3000/api/v1/patients; done
 - ✅ Comprehensive logging for troubleshooting
 
 ### For Business
+
 - ✅ Production-grade reliability
 - ✅ Security-first approach
 - ✅ Industry best practices (Google SRE)
@@ -352,14 +380,18 @@ for i in {1..10}; do curl http://localhost:3000/api/v1/patients; done
 ## Migration Path
 
 ### Phase 1: Immediate (No Changes Needed) ✅
+
 All middleware is active automatically:
+
 - Correlation IDs on all requests
 - Rate limiting active
 - Health checks available
 - Metrics being collected
 
 ### Phase 2: Enhance Logging (Recommended)
+
 Update your logs to include correlation IDs:
+
 ```typescript
 // Before
 logger.error('Database error', { error });
@@ -373,7 +405,9 @@ logger.error({
 ```
 
 ### Phase 3: Add Error Codes (Recommended)
+
 Use custom error codes for better tracking:
+
 ```typescript
 // Before
 throw new AppError('Not found', 404);
@@ -383,12 +417,12 @@ throw new AppError('Not found', 404, 'RESOURCE_NOT_FOUND');
 ```
 
 ### Phase 4: Add Resilience (Optional)
+
 Wrap external calls with circuit breakers and retry:
+
 ```typescript
 const breaker = createCircuitBreaker('external-api');
-await breaker.execute(() => 
-  retry(() => externalApi.call(), { maxAttempts: 3 })
-);
+await breaker.execute(() => retry(() => externalApi.call(), { maxAttempts: 3 }));
 ```
 
 ---
@@ -396,17 +430,20 @@ await breaker.execute(() =>
 ## Support & Resources
 
 ### Documentation
+
 - [ENTERPRISE_CAPABILITIES.md](./ENTERPRISE_CAPABILITIES.md) - Main guide
 - [backend/examples/README.md](./backend/examples/README.md) - Examples guide
 - [TESTING.md](./TESTING.md) - Testing guide
 
 ### Code References
+
 - Circuit breaker: `backend/src/utils/circuitBreaker.ts`
 - Retry logic: `backend/src/utils/retry.ts`
 - Health checks: `backend/src/routes/health.routes.ts`
 - Metrics: `backend/src/middleware/metrics.ts`
 
 ### External Resources
+
 - [Google SRE Book](https://sre.google/sre-book/)
 - [Circuit Breaker Pattern](https://martinfowler.com/bliki/CircuitBreaker.html)
 - [Exponential Backoff](https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/)

@@ -7,6 +7,7 @@ This document explains the changes in the new project structure and how to migra
 The project has been reorganized from a flat structure to a proper monorepo with separate backend and frontend directories following Google engineering best practices.
 
 ### Old Structure
+
 ```
 purple-cross/
 ├── src/
@@ -18,6 +19,7 @@ purple-cross/
 ```
 
 ### New Structure
+
 ```
 purple-cross/
 ├── backend/              # Complete backend API
@@ -37,6 +39,7 @@ purple-cross/
 ### 1. TypeScript Models → Prisma Schema
 
 **Old:** TypeScript interfaces in `src/models/`
+
 ```typescript
 // src/models/PatientManagement.ts
 export interface Patient {
@@ -47,6 +50,7 @@ export interface Patient {
 ```
 
 **New:** Prisma schema in `backend/prisma/schema.prisma`
+
 ```prisma
 model Patient {
   id        String   @id @default(uuid())
@@ -54,7 +58,7 @@ model Patient {
   species   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
+
   @@map("patients")
 }
 ```
@@ -64,11 +68,13 @@ The TypeScript models are still available in `src/models/` for reference, but th
 ### 2. Frontend Structure
 
 **Old:** Legacy components (removed)
+
 - Basic React components in `src/frontend/` (deprecated and removed)
 - No proper routing
 - Direct file compilation with TSC
 
 **New:** Complete app in `frontend/`
+
 - Vite build tool for fast development
 - React Router for navigation
 - Custom hooks for data fetching
@@ -80,6 +86,7 @@ The TypeScript models are still available in `src/models/` for reference, but th
 **Old:** No backend implementation, only type definitions
 
 **New:** Complete Express.js API in `backend/`
+
 - RESTful endpoints
 - Authentication & authorization
 - Request validation
@@ -90,6 +97,7 @@ The TypeScript models are still available in `src/models/` for reference, but th
 ### 4. Development Workflow
 
 **Old:**
+
 ```bash
 npm install
 npm run build
@@ -97,6 +105,7 @@ npm run build:frontend
 ```
 
 **New:**
+
 ```bash
 # Using Docker (recommended)
 docker-compose up
@@ -111,6 +120,7 @@ cd frontend && npm install && npm run dev
 ### For Developers
 
 1. **Install dependencies**
+
    ```bash
    npm install
    cd backend && npm install
@@ -118,6 +128,7 @@ cd frontend && npm install && npm run dev
    ```
 
 2. **Set up environment**
+
    ```bash
    cd backend
    cp .env.example .env
@@ -125,12 +136,14 @@ cd frontend && npm install && npm run dev
    ```
 
 3. **Run database migrations**
+
    ```bash
    cd backend
    npx prisma migrate dev
    ```
 
 4. **Start development servers**
+
    ```bash
    # Terminal 1: Backend
    cd backend && npm run dev
@@ -162,9 +175,9 @@ import { usePatients } from '@/hooks/usePatients';
 
 function PatientList() {
   const { data, isLoading } = usePatients();
-  
+
   if (isLoading) return <div>Loading...</div>;
-  
+
   return (
     <div>
       {data?.data.map(patient => (
@@ -180,11 +193,13 @@ function PatientList() {
 ### 1. Import Paths
 
 **Old:**
+
 ```typescript
 import { Patient } from '../src/models/PatientManagement';
 ```
 
 **New:**
+
 ```typescript
 // Backend
 import { Patient } from '@prisma/client';
@@ -198,6 +213,7 @@ import { Patient } from '@/types';
 **Old:** Direct TypeScript types (no database)
 
 **New:** Prisma Client
+
 ```typescript
 import { prisma } from './config/database';
 
@@ -207,12 +223,14 @@ const patients = await prisma.patient.findMany();
 ### 3. Build Process
 
 **Old:**
+
 ```bash
 npm run build        # TSC compilation
 npm run build:frontend
 ```
 
 **New:**
+
 ```bash
 cd backend && npm run build    # Backend build
 cd frontend && npm run build   # Frontend build

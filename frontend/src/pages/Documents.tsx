@@ -93,38 +93,38 @@ const DocumentsList = () => {
         </div>
       ) : (
         <table className="data-table" role="table" aria-label="Documents list">
-        <thead>
-          <tr>
-            <th scope="col">Document Name</th>
-            <th scope="col">Type</th>
-            <th scope="col">Patient</th>
-            <th scope="col">Date</th>
-            <th scope="col">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredDocuments.map((doc) => (
-            <tr key={doc.id}>
-              <th scope="row">{doc.name}</th>
-              <td>{doc.type}</td>
-              <td>{doc.patient ? doc.patient.name : 'N/A'}</td>
-              <td>
-                <time dateTime={doc.createdAt}>
-                  {new Date(doc.createdAt).toLocaleDateString()}
-                </time>
-              </td>
-              <td>
-                <button className="btn-action" aria-label={`View ${doc.name}`}>
-                  View
-                </button>
-                <button className="btn-action" aria-label={`Download ${doc.name}`}>
-                  Download
-                </button>
-              </td>
+          <thead>
+            <tr>
+              <th scope="col">Document Name</th>
+              <th scope="col">Type</th>
+              <th scope="col">Patient</th>
+              <th scope="col">Date</th>
+              <th scope="col">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filteredDocuments.map((doc) => (
+              <tr key={doc.id}>
+                <th scope="row">{doc.name}</th>
+                <td>{doc.type}</td>
+                <td>{doc.patient ? doc.patient.name : 'N/A'}</td>
+                <td>
+                  <time dateTime={doc.createdAt}>
+                    {new Date(doc.createdAt).toLocaleDateString()}
+                  </time>
+                </td>
+                <td>
+                  <button className="btn-action" aria-label={`View ${doc.name}`}>
+                    View
+                  </button>
+                  <button className="btn-action" aria-label={`Download ${doc.name}`}>
+                    Download
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   );

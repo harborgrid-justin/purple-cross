@@ -4,7 +4,7 @@
     "module": "commonjs",
     "lib": ["ES2022"],
     "outDir": "./dist",
-    
+
     /* Strict Type-Checking Options - Requirement 1 */
     "strict": true,
     "noImplicitAny": true,
@@ -14,7 +14,7 @@
     "strictPropertyInitialization": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
-    
+
     /* Additional Type Checks */
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -23,14 +23,14 @@
     "noUncheckedIndexedAccess": false, // Disabled for Express params/query - use validation middleware instead
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": false,
-    
+
     /* Module Resolution Options */
     "moduleResolution": "node",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true,
-    
+
     /* Path Aliases - Requirement 19 */
     "baseUrl": ".",
     "paths": {
@@ -44,13 +44,13 @@
       "@/utils/*": ["./src/utils/*"],
       "@/types/*": ["./src/types/*"]
     },
-    
+
     /* Emit Options */
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
     "skipLibCheck": true,
-    
+
     /* Experimental Options */
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true

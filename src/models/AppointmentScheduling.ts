@@ -11,7 +11,14 @@ export interface Appointment {
   startTime: Date;
   endTime: Date;
   duration: number;
-  status: 'scheduled' | 'confirmed' | 'checked_in' | 'in_progress' | 'completed' | 'cancelled' | 'no_show';
+  status:
+    | 'scheduled'
+    | 'confirmed'
+    | 'checked_in'
+    | 'in_progress'
+    | 'completed'
+    | 'cancelled'
+    | 'no_show';
   veterinarianId: string;
   roomId?: string;
   notes?: string;

@@ -6,14 +6,14 @@ describe('Medical Records - Lab Results', () => {
   });
 
   it.skip('should display lab results section', () => {
-    // Skipped: Advanced medical records feature not yet fully implemented 
+    // Skipped: Advanced medical records feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.lab-results-tab').click();
     cy.get('.lab-results-list').should('be.visible');
   });
 
   it.skip('should show pending lab tests', () => {
-    // Skipped: Advanced medical records feature not yet fully implemented 
+    // Skipped: Advanced medical records feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.lab-results-tab').click();
     cy.get('.pending-tests').should('be.visible');
@@ -21,7 +21,7 @@ describe('Medical Records - Lab Results', () => {
   });
 
   it.skip('should display completed lab results with values', () => {
-    // Skipped: Advanced medical records feature not yet fully implemented 
+    // Skipped: Advanced medical records feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.lab-results-tab').click();
     cy.get('.completed-results').should('be.visible');
@@ -35,7 +35,7 @@ describe('Medical Records - Lab Results', () => {
   });
 
   it.skip('should highlight abnormal lab values', () => {
-    // Skipped: Advanced medical records feature not yet fully implemented 
+    // Skipped: Advanced medical records feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.lab-results-tab').click();
     cy.get('.lab-result-item.abnormal').should('have.class', 'alert-warning');
@@ -43,7 +43,7 @@ describe('Medical Records - Lab Results', () => {
   });
 
   it.skip('should show reference ranges for lab tests', () => {
-    // Skipped: Advanced medical records feature not yet fully implemented 
+    // Skipped: Advanced medical records feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.lab-results-tab').click();
     cy.get('.lab-result-item')
@@ -55,7 +55,7 @@ describe('Medical Records - Lab Results', () => {
   });
 
   it.skip('should allow ordering new lab tests', () => {
-    // Skipped: Advanced medical records feature not yet fully implemented 
+    // Skipped: Advanced medical records feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.lab-results-tab').click();
     cy.get('.btn-order-lab-test').click();
@@ -66,7 +66,7 @@ describe('Medical Records - Lab Results', () => {
   });
 
   it.skip('should display graphical trends for repeated tests', () => {
-    // Skipped: Advanced medical records feature not yet fully implemented 
+    // Skipped: Advanced medical records feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.lab-results-tab').click();
     cy.get('.trends-view-toggle').click();
@@ -74,7 +74,7 @@ describe('Medical Records - Lab Results', () => {
   });
 
   it.skip('should allow downloading lab reports', () => {
-    // Skipped: Advanced medical records feature not yet fully implemented 
+    // Skipped: Advanced medical records feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.lab-results-tab').click();
     cy.get('.lab-result-item').first().find('.btn-download-report').should('be.visible');

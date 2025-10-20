@@ -112,7 +112,12 @@ export interface NotificationRequirement {
 
 export interface License {
   id: string;
-  type: 'veterinary_license' | 'dea_registration' | 'state_permit' | 'business_license' | 'controlled_substance';
+  type:
+    | 'veterinary_license'
+    | 'dea_registration'
+    | 'state_permit'
+    | 'business_license'
+    | 'controlled_substance';
   licenseNumber: string;
   issuedTo: string;
   issuedBy: string;
@@ -198,7 +203,13 @@ export interface LegalHold {
 
 export interface IncidentReport {
   id: string;
-  incidentType: 'adverse_event' | 'medication_error' | 'data_breach' | 'safety_incident' | 'compliance_violation' | 'other';
+  incidentType:
+    | 'adverse_event'
+    | 'medication_error'
+    | 'data_breach'
+    | 'safety_incident'
+    | 'compliance_violation'
+    | 'other';
   severity: 'low' | 'medium' | 'high' | 'critical';
   description: string;
   dateOccurred: Date;

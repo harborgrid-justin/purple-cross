@@ -97,34 +97,42 @@ const StaffList = () => {
         </div>
       ) : (
         <table className="data-table" role="table" aria-label="Staff list">
-        <thead>
-          <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Role</th>
-            <th scope="col">Department</th>
-            <th scope="col">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredStaff.map((member) => (
-            <tr key={member.id}>
-              <th scope="row">{member.firstName} {member.lastName}</th>
-              <td>{member.email}</td>
-              <td>{member.role || 'N/A'}</td>
-              <td>{member.department || 'N/A'}</td>
-              <td>
-                <button className="btn-action" aria-label={`View profile for ${member.firstName} ${member.lastName}`}>
-                  View
-                </button>
-                <button className="btn-action" aria-label={`Edit information for ${member.firstName} ${member.lastName}`}>
-                  Edit
-                </button>
-              </td>
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">Role</th>
+              <th scope="col">Department</th>
+              <th scope="col">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filteredStaff.map((member) => (
+              <tr key={member.id}>
+                <th scope="row">
+                  {member.firstName} {member.lastName}
+                </th>
+                <td>{member.email}</td>
+                <td>{member.role || 'N/A'}</td>
+                <td>{member.department || 'N/A'}</td>
+                <td>
+                  <button
+                    className="btn-action"
+                    aria-label={`View profile for ${member.firstName} ${member.lastName}`}
+                  >
+                    View
+                  </button>
+                  <button
+                    className="btn-action"
+                    aria-label={`Edit information for ${member.firstName} ${member.lastName}`}
+                  >
+                    Edit
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   );

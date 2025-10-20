@@ -6,10 +6,10 @@
     "template": {
       "title": "Surgical Consent Form",
       "sections": [
-        {"type": "text", "label": "Patient Name", "required": true},
-        {"type": "text", "label": "Procedure", "required": true},
-        {"type": "date", "label": "Date", "required": true},
-        {"type": "signature", "label": "Owner Signature", "required": true}
+        { "type": "text", "label": "Patient Name", "required": true },
+        { "type": "text", "label": "Procedure", "required": true },
+        { "type": "date", "label": "Date", "required": true },
+        { "type": "signature", "label": "Owner Signature", "required": true }
       ]
     },
     "fields": {
@@ -29,10 +29,10 @@
     "template": {
       "title": "Treatment Plan",
       "sections": [
-        {"type": "text", "label": "Patient Name", "required": true},
-        {"type": "textarea", "label": "Diagnosis", "required": true},
-        {"type": "textarea", "label": "Treatment Plan", "required": true},
-        {"type": "date", "label": "Start Date", "required": true}
+        { "type": "text", "label": "Patient Name", "required": true },
+        { "type": "textarea", "label": "Diagnosis", "required": true },
+        { "type": "textarea", "label": "Treatment Plan", "required": true },
+        { "type": "date", "label": "Start Date", "required": true }
       ]
     },
     "fields": {
@@ -52,10 +52,10 @@
     "template": {
       "title": "Discharge Instructions",
       "sections": [
-        {"type": "text", "label": "Patient Name", "required": true},
-        {"type": "textarea", "label": "Care Instructions", "required": true},
-        {"type": "textarea", "label": "Medications", "required": false},
-        {"type": "date", "label": "Follow-up Date", "required": false}
+        { "type": "text", "label": "Patient Name", "required": true },
+        { "type": "textarea", "label": "Care Instructions", "required": true },
+        { "type": "textarea", "label": "Medications", "required": false },
+        { "type": "date", "label": "Follow-up Date", "required": false }
       ]
     },
     "fields": {
@@ -75,9 +75,9 @@
     "template": {
       "title": "Client Communication",
       "sections": [
-        {"type": "text", "label": "Client Name", "required": true},
-        {"type": "text", "label": "Subject", "required": true},
-        {"type": "textarea", "label": "Message", "required": true}
+        { "type": "text", "label": "Client Name", "required": true },
+        { "type": "text", "label": "Subject", "required": true },
+        { "type": "textarea", "label": "Message", "required": true }
       ]
     },
     "fields": {

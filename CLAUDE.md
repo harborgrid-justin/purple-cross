@@ -17,6 +17,7 @@ Purple Cross is an enterprise-grade veterinary practice management platform buil
 ### Backend Architecture (backend/src/)
 
 **Layered Architecture:**
+
 - **routes/** - Express route definitions for all 15+ modules
 - **controllers/** - Request/response handling, delegates to services
 - **services/** - Business logic layer
@@ -25,6 +26,7 @@ Purple Cross is an enterprise-grade veterinary practice management platform buil
 - **utils/** - Circuit breaker and retry logic for resilience
 
 **Key Patterns:**
+
 - All requests flow through correlation ID middleware (backend/src/middleware/correlation-id.ts) - correlation IDs are tracked throughout request lifecycle for distributed tracing
 - Circuit breakers (backend/src/utils/circuit-breaker.ts) prevent cascading failures
 - Joi validation middleware (backend/src/middleware/validation.ts) with `validate()`, `validateQuery()`, and `validateParams()` helpers
@@ -34,6 +36,7 @@ Purple Cross is an enterprise-grade veterinary practice management platform buil
 ### Frontend Architecture (frontend/src/)
 
 **Structure:**
+
 - **pages/** - Route components organized by feature (appointments/, billing/, clients/, etc.)
 - **components/** - Reusable UI components
 - **services/** - API client layer
@@ -41,6 +44,7 @@ Purple Cross is an enterprise-grade veterinary practice management platform buil
 - **types/** - TypeScript type definitions
 
 **State Management:**
+
 - TanStack Query (React Query) for server state
 - Zustand for client state (if needed)
 - React Router 6 for routing
@@ -48,6 +52,7 @@ Purple Cross is an enterprise-grade veterinary practice management platform buil
 ### Database (backend/prisma/)
 
 Prisma ORM with PostgreSQL:
+
 - **schema.prisma** - Complete database schema with 15+ models (Patient, Client, Appointment, MedicalRecord, Prescription, Invoice, LabTest, Staff, etc.)
 - Relationships managed via Prisma relations
 - Migrations in prisma/migrations/
@@ -55,12 +60,14 @@ Prisma ORM with PostgreSQL:
 ## Common Development Commands
 
 ### Setup & Installation
+
 ```bash
 npm run setup              # Automated setup (runs bash script)
 npm run install:all        # Install all dependencies (root + backend + frontend)
 ```
 
 ### Development
+
 ```bash
 npm run dev                # Run both backend and frontend concurrently
 npm run dev:backend        # Backend only (nodemon with ts-node)
@@ -73,6 +80,7 @@ cd frontend && npm run dev # Frontend dev server on port 5173
 ### Testing
 
 **Backend:**
+
 ```bash
 cd backend
 npm test                   # Run all tests with coverage (Jest + ts-jest)
@@ -81,6 +89,7 @@ npm run test:e2e          # End-to-end tests (jest.e2e.config.js)
 ```
 
 **Frontend:**
+
 ```bash
 cd frontend
 npm test                   # Run tests (Vitest)
@@ -88,11 +97,13 @@ npm run test:coverage      # With coverage report
 ```
 
 **All tests:**
+
 ```bash
 npm test                   # Run backend and frontend tests from root
 ```
 
 ### Code Quality
+
 ```bash
 npm run lint               # Lint backend + frontend (ESLint)
 npm run lint:fix           # Auto-fix linting issues
@@ -104,6 +115,7 @@ npm run typecheck:frontend # Frontend only
 ```
 
 ### Database (Prisma)
+
 ```bash
 cd backend
 npm run prisma:studio      # Open Prisma Studio GUI
@@ -113,6 +125,7 @@ npm run prisma:seed        # Seed database with test data
 ```
 
 Or from root:
+
 ```bash
 npm run prisma:studio
 npm run prisma:migrate
@@ -121,6 +134,7 @@ npm run prisma:seed
 ```
 
 ### Build & Production
+
 ```bash
 npm run build              # Build both backend and frontend
 npm run build:backend      # Backend only (tsc)
@@ -130,6 +144,7 @@ cd backend && npm start    # Run built backend (node dist/index.js)
 ```
 
 ### Docker
+
 ```bash
 npm run docker:up          # Start all services (PostgreSQL, Redis, backend, frontend)
 npm run docker:down        # Stop all services
@@ -143,6 +158,7 @@ npm run docker:build       # Rebuild containers
 **Critical:** This project maintains 100% TypeScript compliance with strict mode enabled. See `docs/TYPESCRIPT_GUIDELINES.md` for complete guidelines.
 
 **Key Rules:**
+
 - **Zero `any` types** - Always use explicit types or proper generics
 - **Explicit function signatures** - All parameters and return types must be typed
 - **Null safety** - Use optional chaining (`?.`) and nullish coalescing (`??`)
@@ -150,6 +166,7 @@ npm run docker:build       # Rebuild containers
 - ESLint enforces these rules with `@typescript-eslint/no-explicit-any: error`
 
 **When adding new code:**
+
 1. Define interfaces/types first
 2. Use strict typing throughout
 3. Run `npm run typecheck` before committing
@@ -160,17 +177,20 @@ npm run docker:build       # Rebuild containers
 ### Backend Testing
 
 **Location:** `backend/tests/`
+
 - `unit/` - Unit tests for services, utils, middleware
 - `integration/` - Integration tests with database
 - `e2e/` - End-to-end API tests
 
 **Setup:**
+
 - Jest with ts-jest preset
 - `tests/setup.ts` - Global test setup
 - `tests/utils/testHelpers.ts` - Shared test utilities
 - Coverage threshold: 70% (branches, functions, lines, statements)
 
 **Running individual tests:**
+
 ```bash
 cd backend
 npm test -- patient.service.test.ts           # Single test file
@@ -180,6 +200,7 @@ npm test -- --testPathPattern=validation      # Pattern matching
 ### Frontend Testing
 
 **Setup:**
+
 - Vitest for testing
 - Tests in `frontend/src/__tests__/`
 - Component tests use React Testing Library patterns
@@ -187,18 +208,21 @@ npm test -- --testPathPattern=validation      # Pattern matching
 ## Enterprise Features
 
 ### Observability
+
 - **Correlation IDs:** Every request gets a unique ID (X-Correlation-ID header) for distributed tracing
 - **Structured Logging:** Winston logger with JSON output, includes correlation IDs
 - **Health Endpoints:** `/health`, `/health/live`, `/health/ready`, `/health/detailed`
 - **Metrics:** `/metrics` endpoint for monitoring
 
 ### Resilience
+
 - **Circuit Breakers:** Prevent cascading failures (backend/src/utils/circuit-breaker.ts)
 - **Retry Logic:** Exponential backoff with jitter (backend/src/utils/retry.ts)
 - **Timeouts:** 30-second request timeout middleware
 - **Rate Limiting:** Per-IP throttling (backend/src/middleware/rate-limiter.ts)
 
 ### Security
+
 - **Input Sanitization:** XSS and injection prevention (backend/src/middleware/sanitization.ts)
 - **Helmet.js:** Security headers
 - **CORS:** Configured via CORS_ORIGIN env var
@@ -207,7 +231,9 @@ npm test -- --testPathPattern=validation      # Pattern matching
 ## Environment Configuration
 
 ### Backend (.env)
+
 Copy `backend/.env.example` and configure:
+
 - `DATABASE_URL` - PostgreSQL connection string
 - `REDIS_URL` - Redis connection
 - `JWT_SECRET` - Change in production!
@@ -215,6 +241,7 @@ Copy `backend/.env.example` and configure:
 - Email/SMS provider credentials (SendGrid, Twilio)
 
 ### Frontend (.env)
+
 Copy `frontend/.env.example` for frontend-specific config.
 
 ## Common Workflows
@@ -250,6 +277,7 @@ Copy `frontend/.env.example` for frontend-specific config.
 The application has 15+ enterprise modules, each following the same pattern:
 
 **Core Modules:**
+
 - Patient Management (patients)
 - Client Management (clients)
 - Appointments (appointments)
@@ -264,6 +292,7 @@ The application has 15+ enterprise modules, each following the same pattern:
 - Analytics (analytics)
 
 **Extended Modules:**
+
 - Breed Information, Patient Relationships, Patient Reminders
 - Client Portal, Loyalty Programs, Feedback
 - Waitlist, Time Blocks, Estimates
@@ -272,6 +301,7 @@ The application has 15+ enterprise modules, each following the same pattern:
 - Policies, Report Templates, Document Templates
 
 Each module has:
+
 - Route file (routes/[module].routes.ts)
 - Controller (controllers/[module].controller.ts)
 - Service (services/[module].service.ts)
@@ -280,6 +310,7 @@ Each module has:
 ## Production Deployment
 
 The application is Docker-ready:
+
 - `docker-compose.yml` orchestrates PostgreSQL, Redis, backend, and frontend
 - Backend runs on port 3000
 - Frontend runs on port 5173 (dev) or served via Nginx (production)
@@ -287,6 +318,7 @@ The application is Docker-ready:
 - Redis runs on port 6379
 
 For production deployment, ensure:
+
 - Environment variables are properly set
 - `NODE_ENV=production`
 - Database migrations are applied (`prisma:migrate:deploy`)
@@ -297,10 +329,12 @@ For production deployment, ensure:
 **All hardcoded values, URLs, and static elements are centralized:**
 
 ### Backend Constants
+
 - **Location**: `backend/src/constants/index.ts` (430+ lines, 200+ constants)
 - **Import**: `import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION, SORT_ORDER, FIELDS } from '../constants';`
 
 **Categories**:
+
 - HTTP Status Codes (`HTTP_STATUS.OK`, `HTTP_STATUS.NOT_FOUND`, etc.)
 - Error Messages (`ERROR_MESSAGES.NOT_FOUND('Entity')`, `ERROR_MESSAGES.ALREADY_EXISTS('Entity')`)
 - Pagination (`PAGINATION.DEFAULT_PAGE`, `PAGINATION.DEFAULT_LIMIT`)
@@ -312,6 +346,7 @@ For production deployment, ensure:
 - Time Constants (`TIME.DEFAULT_REQUEST_TIMEOUT`, `TIME.AUTH_RATE_LIMIT_WINDOW`)
 
 **Usage Examples**:
+
 ```typescript
 // Services
 if (!patient) {
@@ -330,10 +365,12 @@ res.status(HTTP_STATUS.NO_CONTENT).send();
 ```
 
 ### Frontend Constants
+
 - **Location**: `frontend/src/constants/index.ts` (660+ lines, 150+ constants)
 - **Import**: `import { API_CONFIG, API_ENDPOINTS, ROUTES, STORAGE_KEYS, HTTP_STATUS } from '../constants';`
 
 **Categories**:
+
 - API Configuration (`API_CONFIG.BASE_URL`, `API_CONFIG.TIMEOUT`)
 - API Endpoints (`API_ENDPOINTS.PATIENTS`, `API_ENDPOINTS.PATIENT_BY_ID(id)`)
 - Routes (`ROUTES.LOGIN`, `ROUTES.DASHBOARD`, `ROUTES.PATIENTS`)
@@ -342,6 +379,7 @@ res.status(HTTP_STATUS.NO_CONTENT).send();
 - All HTTP Status Codes and Entity Statuses (same as backend)
 
 **Usage Examples**:
+
 ```typescript
 // API Client
 this.client = axios.create({
@@ -350,33 +388,35 @@ this.client = axios.create({
 });
 
 // Endpoints
-this.get(API_ENDPOINTS.PATIENTS, params)
-this.get(API_ENDPOINTS.PATIENT_BY_ID(id))
+this.get(API_ENDPOINTS.PATIENTS, params);
+this.get(API_ENDPOINTS.PATIENT_BY_ID(id));
 
 // Storage
-localStorage.getItem(STORAGE_KEYS.TOKEN)
+localStorage.getItem(STORAGE_KEYS.TOKEN);
 
 // Navigation
-window.location.href = ROUTES.LOGIN
+window.location.href = ROUTES.LOGIN;
 ```
 
 ### Helper Utilities
+
 **Location**: `backend/src/utils/refactor-helper.ts`
 
 ```typescript
 // ServiceHelper
-ServiceHelper.notFound('Patient');                    // Throws 404
-ServiceHelper.alreadyExists('Client');                // Throws 400
-ServiceHelper.getPagination(options);                 // Returns defaults
+ServiceHelper.notFound('Patient'); // Throws 404
+ServiceHelper.alreadyExists('Client'); // Throws 400
+ServiceHelper.getPagination(options); // Returns defaults
 ServiceHelper.buildPaginationResponse(page, limit, total, data);
 
 // ControllerHelper
-ControllerHelper.success(res, data);                  // 200 response
-ControllerHelper.created(res, data);                  // 201 response
-ControllerHelper.noContent(res);                      // 204 response
+ControllerHelper.success(res, data); // 200 response
+ControllerHelper.created(res, data); // 201 response
+ControllerHelper.noContent(res); // 204 response
 ```
 
 ### Documentation
+
 - **README_CONSTANTS.md** - Quick start guide
 - **CONSTANTS_QUICK_REFERENCE.md** - Quick lookup and patterns
 - **docs/CONSTANTS.md** - Complete reference

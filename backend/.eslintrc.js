@@ -38,27 +38,30 @@ module.exports = {
     '@typescript-eslint/no-unsafe-member-access': 'warn',
     '@typescript-eslint/no-unsafe-return': 'warn',
     '@typescript-eslint/no-unsafe-argument': 'warn',
-    
+
     // Strictness - Requirement 1
     '@typescript-eslint/strict-boolean-expressions': 'off', // Can be too strict for Express
     '@typescript-eslint/no-floating-promises': 'error',
-    '@typescript-eslint/no-misused-promises': ['error', {
-      checksVoidReturn: {
-        arguments: false, // Allow async functions in Express route handlers
-        attributes: false,
+    '@typescript-eslint/no-misused-promises': [
+      'error',
+      {
+        checksVoidReturn: {
+          arguments: false, // Allow async functions in Express route handlers
+          attributes: false,
+        },
       },
-    }],
+    ],
     '@typescript-eslint/await-thenable': 'error',
     '@typescript-eslint/no-unnecessary-type-assertion': 'error',
     '@typescript-eslint/unbound-method': 'off', // Disabled for Express controller methods
     '@typescript-eslint/require-await': 'warn', // Allow async without await for consistency
-    
+
     // Code Quality - Requirements 6, 12
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     '@typescript-eslint/prefer-readonly': 'warn',
     'prefer-const': 'error',
     '@typescript-eslint/no-non-null-assertion': 'warn',
-    
+
     // Naming Conventions - Requirement 6
     '@typescript-eslint/naming-convention': [
       'warn',
@@ -84,7 +87,7 @@ module.exports = {
         format: ['UPPER_CASE', 'camelCase'],
       },
     ],
-    
+
     // General
     '@typescript-eslint/interface-name-prefix': 'off',
     'prettier/prettier': 'error',

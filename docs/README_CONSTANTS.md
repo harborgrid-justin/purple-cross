@@ -9,12 +9,12 @@ All constants, variables, URLs, and static elements are now centralized in:
 
 ## 📚 Documentation
 
-| Document | Purpose |
-|----------|---------|
-| [CONSTANTS_QUICK_REFERENCE.md](./CONSTANTS_QUICK_REFERENCE.md) | **START HERE** - Quick lookup and common patterns |
-| [docs/CONSTANTS.md](./docs/CONSTANTS.md) | Complete reference with examples |
-| [FULL_CONSTANTS_MIGRATION_GUIDE.md](./FULL_CONSTANTS_MIGRATION_GUIDE.md) | Step-by-step migration guide |
-| [COMPLETE_CENTRALIZATION_SUMMARY.md](./COMPLETE_CENTRALIZATION_SUMMARY.md) | Full implementation summary |
+| Document                                                                   | Purpose                                           |
+| -------------------------------------------------------------------------- | ------------------------------------------------- |
+| [CONSTANTS_QUICK_REFERENCE.md](./CONSTANTS_QUICK_REFERENCE.md)             | **START HERE** - Quick lookup and common patterns |
+| [docs/CONSTANTS.md](./docs/CONSTANTS.md)                                   | Complete reference with examples                  |
+| [FULL_CONSTANTS_MIGRATION_GUIDE.md](./FULL_CONSTANTS_MIGRATION_GUIDE.md)   | Step-by-step migration guide                      |
+| [COMPLETE_CENTRALIZATION_SUMMARY.md](./COMPLETE_CENTRALIZATION_SUMMARY.md) | Full implementation summary                       |
 
 ## 🚀 Usage
 
@@ -116,6 +116,7 @@ class ApiClient {
 ## 📋 Remaining Work
 
 ### High Priority (Core Services)
+
 - [ ] medical-record.service.ts
 - [ ] prescription.service.ts
 - [ ] inventory.service.ts
@@ -125,10 +126,12 @@ class ApiClient {
 - [ ] communication.service.ts
 
 ### Medium Priority (Extended Services)
+
 - [ ] 20+ additional service files
 - [ ] 30 controller files
 
 ### Low Priority
+
 - [ ] Frontend components scan
 - [ ] Additional UI constants
 - [ ] Validation constants
@@ -136,12 +139,15 @@ class ApiClient {
 ## 🛠️ Migration Tools
 
 ### Option 1: Manual (Recommended for learning)
+
 Follow [FULL_CONSTANTS_MIGRATION_GUIDE.md](./FULL_CONSTANTS_MIGRATION_GUIDE.md)
 
 ### Option 2: VS Code Find & Replace
+
 Use patterns from [CONSTANTS_QUICK_REFERENCE.md](./CONSTANTS_QUICK_REFERENCE.md)
 
 ### Option 3: Automated Scripts
+
 ```bash
 # Node.js script (requires glob)
 npm install -g glob
@@ -158,44 +164,44 @@ chmod +x scripts/bulk-refactor-services.sh
 
 ```typescript
 // HTTP Status
-HTTP_STATUS.OK                    // 200
-HTTP_STATUS.CREATED               // 201
-HTTP_STATUS.NOT_FOUND             // 404
-HTTP_STATUS.BAD_REQUEST           // 400
+HTTP_STATUS.OK; // 200
+HTTP_STATUS.CREATED; // 201
+HTTP_STATUS.NOT_FOUND; // 404
+HTTP_STATUS.BAD_REQUEST; // 400
 
 // Errors
-ERROR_MESSAGES.NOT_FOUND('Entity')
-ERROR_MESSAGES.ALREADY_EXISTS('Entity')
+ERROR_MESSAGES.NOT_FOUND('Entity');
+ERROR_MESSAGES.ALREADY_EXISTS('Entity');
 
 // Pagination
-PAGINATION.DEFAULT_PAGE           // 1
-PAGINATION.DEFAULT_LIMIT          // 20
+PAGINATION.DEFAULT_PAGE; // 1
+PAGINATION.DEFAULT_LIMIT; // 20
 
 // Sort & Query
-SORT_ORDER.DESC                   // 'desc'
-SORT_ORDER.ASC                    // 'asc'
-QUERY_MODE.INSENSITIVE           // 'insensitive'
+SORT_ORDER.DESC; // 'desc'
+SORT_ORDER.ASC; // 'asc'
+QUERY_MODE.INSENSITIVE; // 'insensitive'
 
 // Fields
-FIELDS.CREATED_AT                 // 'createdAt'
-FIELDS.START_TIME                 // 'startTime'
-FIELDS.NAME                       // 'name'
+FIELDS.CREATED_AT; // 'createdAt'
+FIELDS.START_TIME; // 'startTime'
+FIELDS.NAME; // 'name'
 
 // Status
-STATUS.ACTIVE                     // 'active'
-STATUS.PENDING                    // 'pending'
-STATUS.CANCELLED                  // 'cancelled'
+STATUS.ACTIVE; // 'active'
+STATUS.PENDING; // 'pending'
+STATUS.CANCELLED; // 'cancelled'
 ```
 
 ### Common Replacements
 
-| Before | After |
-|--------|-------|
-| `404` | `HTTP_STATUS.NOT_FOUND` |
-| `'Patient not found'` | `ERROR_MESSAGES.NOT_FOUND('Patient')` |
-| `page = 1, limit = 20` | `page = PAGINATION.DEFAULT_PAGE, limit = PAGINATION.DEFAULT_LIMIT` |
-| `mode: 'insensitive'` | `mode: QUERY_MODE.INSENSITIVE` |
-| `orderBy: { createdAt: 'desc' }` | `orderBy: { [FIELDS.CREATED_AT]: SORT_ORDER.DESC }` |
+| Before                           | After                                                              |
+| -------------------------------- | ------------------------------------------------------------------ |
+| `404`                            | `HTTP_STATUS.NOT_FOUND`                                            |
+| `'Patient not found'`            | `ERROR_MESSAGES.NOT_FOUND('Patient')`                              |
+| `page = 1, limit = 20`           | `page = PAGINATION.DEFAULT_PAGE, limit = PAGINATION.DEFAULT_LIMIT` |
+| `mode: 'insensitive'`            | `mode: QUERY_MODE.INSENSITIVE`                                     |
+| `orderBy: { createdAt: 'desc' }` | `orderBy: { [FIELDS.CREATED_AT]: SORT_ORDER.DESC }`                |
 
 ## 📊 Statistics
 

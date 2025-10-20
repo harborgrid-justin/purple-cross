@@ -160,7 +160,7 @@ App.tsx
 ### Color Palette
 
 | Purpose      | Color Code | Example Use                    |
-|--------------|------------|--------------------------------|
+| ------------ | ---------- | ------------------------------ |
 | Primary      | #6b46c1    | Headers, buttons, active links |
 | Secondary    | #2d3748    | Sidebar background             |
 | Success      | #48bb78    | Active status badges           |
@@ -234,6 +234,7 @@ App.tsx
 ### Module-Specific Features
 
 Each of the 15 modules includes:
+
 - **Module Header** with title and primary action
 - **Tab Navigation** for sub-features
 - **Content Area** with tables or info cards
@@ -247,17 +248,20 @@ Each of the 15 modules includes:
 ### Available Actions (Examples)
 
 **Dashboard:**
+
 - View real-time statistics
 - Check recent activity
 - Quick access to common tasks
 
 **Patient Management:**
+
 - Add new patient
 - Search and filter patients
 - View/edit patient records
 - Navigate to patient sub-features
 
 **Billing:**
+
 - Create invoices
 - Process payments
 - View payment history
@@ -348,4 +352,4 @@ The Purple Cross frontend provides:
 
 **Purple Cross** - 100% Complete Frontend Implementation
 
-*Last Updated: 2024*
+_Last Updated: 2024_

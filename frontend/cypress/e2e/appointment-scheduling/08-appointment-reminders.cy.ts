@@ -7,14 +7,22 @@ describe('Appointment Reminders', () => {
 
   it.skip('should display reminder settings for appointments', () => {
     // Skipped: Reminder feature UI not yet implemented
-    cy.get('.data-table tbody tr', { timeout: 10000 }).first().find('.btn-action').contains('View').click();
+    cy.get('.data-table tbody tr', { timeout: 10000 })
+      .first()
+      .find('.btn-action')
+      .contains('View')
+      .click();
     cy.get('.reminders-tab').click();
     cy.get('.reminder-settings').should('be.visible');
   });
 
   it.skip('should allow enabling email reminders', () => {
     // Skipped: Reminder feature requires full implementation and API integration
-    cy.get('.data-table tbody tr', { timeout: 10000 }).first().find('.btn-action').contains('View').click();
+    cy.get('.data-table tbody tr', { timeout: 10000 })
+      .first()
+      .find('.btn-action')
+      .contains('View')
+      .click();
     cy.get('.reminders-tab').click();
     cy.get('#email-reminder').check();
     cy.get('.btn-save-settings').click();
@@ -23,7 +31,11 @@ describe('Appointment Reminders', () => {
 
   it.skip('should allow enabling SMS reminders', () => {
     // Skipped: Reminder feature requires full implementation and API integration
-    cy.get('.data-table tbody tr', { timeout: 10000 }).first().find('.btn-action').contains('View').click();
+    cy.get('.data-table tbody tr', { timeout: 10000 })
+      .first()
+      .find('.btn-action')
+      .contains('View')
+      .click();
     cy.get('.reminders-tab').click();
     cy.get('#sms-reminder').check();
     cy.get('.btn-save-settings').click();
@@ -32,7 +44,11 @@ describe('Appointment Reminders', () => {
 
   it.skip('should show reminder schedule options', () => {
     // Skipped: Reminder feature UI not yet implemented
-    cy.get('.data-table tbody tr', { timeout: 10000 }).first().find('.btn-action').contains('View').click();
+    cy.get('.data-table tbody tr', { timeout: 10000 })
+      .first()
+      .find('.btn-action')
+      .contains('View')
+      .click();
     cy.get('.reminders-tab').click();
     cy.get('#reminder-timing').should('be.visible');
     cy.get('#reminder-timing option').should('have.length.at.least', 4);
@@ -40,7 +56,11 @@ describe('Appointment Reminders', () => {
 
   it.skip('should display sent reminders history', () => {
     // Skipped: Reminder feature UI not yet implemented
-    cy.get('.data-table tbody tr', { timeout: 10000 }).first().find('.btn-action').contains('View').click();
+    cy.get('.data-table tbody tr', { timeout: 10000 })
+      .first()
+      .find('.btn-action')
+      .contains('View')
+      .click();
     cy.get('.reminders-tab').click();
     cy.get('.sent-reminders').should('be.visible');
     cy.get('.reminder-item').should('have.length.at.least', 1);
@@ -48,7 +68,11 @@ describe('Appointment Reminders', () => {
 
   it.skip('should show reminder delivery status', () => {
     // Skipped: Reminder feature UI not yet implemented
-    cy.get('.data-table tbody tr', { timeout: 10000 }).first().find('.btn-action').contains('View').click();
+    cy.get('.data-table tbody tr', { timeout: 10000 })
+      .first()
+      .find('.btn-action')
+      .contains('View')
+      .click();
     cy.get('.reminders-tab').click();
     cy.get('.reminder-item')
       .first()
@@ -59,7 +83,11 @@ describe('Appointment Reminders', () => {
 
   it.skip('should allow sending manual reminder', () => {
     // Skipped: Reminder feature requires full implementation and API integration
-    cy.get('.data-table tbody tr', { timeout: 10000 }).first().find('.btn-action').contains('View').click();
+    cy.get('.data-table tbody tr', { timeout: 10000 })
+      .first()
+      .find('.btn-action')
+      .contains('View')
+      .click();
     cy.get('.reminders-tab').click();
     cy.get('.btn-send-reminder').click();
     cy.get('.confirm-dialog').should('be.visible');
@@ -76,7 +104,11 @@ describe('Appointment Reminders', () => {
 
   it.skip('should allow customizing reminder message', () => {
     // Skipped: Reminder feature requires full implementation and API integration
-    cy.get('.data-table tbody tr', { timeout: 10000 }).first().find('.btn-action').contains('View').click();
+    cy.get('.data-table tbody tr', { timeout: 10000 })
+      .first()
+      .find('.btn-action')
+      .contains('View')
+      .click();
     cy.get('.reminders-tab').click();
     cy.get('.btn-customize-message').click();
     cy.get('#reminder-message').should('be.visible');
@@ -87,7 +119,11 @@ describe('Appointment Reminders', () => {
 
   it.skip('should show reminder preferences from client profile', () => {
     // Skipped: Reminder feature UI not yet implemented
-    cy.get('.data-table tbody tr', { timeout: 10000 }).first().find('.btn-action').contains('View').click();
+    cy.get('.data-table tbody tr', { timeout: 10000 })
+      .first()
+      .find('.btn-action')
+      .contains('View')
+      .click();
     cy.get('.reminders-tab').click();
     cy.get('.client-preferences').should('be.visible');
   });

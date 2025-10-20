@@ -4,9 +4,9 @@ const path = require('path');
 const servicesDir = path.join(__dirname, '..', 'backend', 'src', 'services');
 
 // Get all service files
-const files = fs.readdirSync(servicesDir).filter(file => file.endsWith('.service.ts'));
+const files = fs.readdirSync(servicesDir).filter((file) => file.endsWith('.service.ts'));
 
-files.forEach(file => {
+files.forEach((file) => {
   const filePath = path.join(servicesDir, file);
   let content = fs.readFileSync(filePath, 'utf8');
   let modified = false;

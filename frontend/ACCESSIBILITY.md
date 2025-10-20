@@ -7,11 +7,13 @@ Purple Cross frontend has been enhanced with comprehensive accessibility (WCAG 2
 ## Accessibility Features (WCAG 2.1 Level AA)
 
 ### Semantic HTML
+
 - Proper use of semantic elements: `<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<time>`
 - Heading hierarchy maintained (h1 → h2 → h3)
 - Lists use proper `<ul>`, `<ol>`, and `<li>` elements
 
 ### ARIA Labels and Roles
+
 - **Skip Links**: "Skip to main content" link for keyboard users
 - **Landmark Roles**: `banner`, `navigation`, `main`, `search`, `status`
 - **ARIA Labels**: All interactive elements have descriptive labels
@@ -20,18 +22,21 @@ Purple Cross frontend has been enhanced with comprehensive accessibility (WCAG 2
 - **ARIA Current**: Current page indication in navigation
 
 ### Keyboard Navigation
+
 - All interactive elements accessible via keyboard
 - Visible focus indicators with `focus-visible` pseudo-class
 - Tab order follows logical flow
 - Skip links enable quick navigation to main content
 
 ### Focus Management
+
 - Custom focus styles with 2px outlines
 - Focus visible only when navigating via keyboard
 - No focus styles on mouse click (uses :focus-visible)
 - High contrast focus indicators
 
 ### Screen Reader Support
+
 - Descriptive text for all icons (decorative icons marked with `aria-hidden="true"`)
 - Form labels properly associated with inputs
 - Button purposes clearly communicated
@@ -39,6 +44,7 @@ Purple Cross frontend has been enhanced with comprehensive accessibility (WCAG 2
 - Time elements use semantic `<time>` with datetime attributes
 
 ### Color Contrast
+
 - Primary text: #1f2937 (meets WCAG AA for body text)
 - Secondary text: #6b7280 (meets WCAG AA for large text)
 - Links: Sufficient contrast ratios
@@ -46,11 +52,13 @@ Purple Cross frontend has been enhanced with comprehensive accessibility (WCAG 2
 - High contrast mode support via `prefers-contrast` media query
 
 ### Touch Targets
+
 - Minimum size: 44x44px for primary buttons (WCAG 2.5.5)
 - Adequate spacing between interactive elements
 - Touch-friendly controls on mobile devices
 
 ### Motion & Animation
+
 - Respects `prefers-reduced-motion` preference
 - Animations disabled for users who prefer reduced motion
 - Transitions limited to essential feedback
@@ -58,6 +66,7 @@ Purple Cross frontend has been enhanced with comprehensive accessibility (WCAG 2
 ## Responsive Design
 
 ### Breakpoints
+
 ```css
 /* Desktop: > 1024px (default) */
 /* Tablet: ≤ 1024px */
@@ -66,6 +75,7 @@ Purple Cross frontend has been enhanced with comprehensive accessibility (WCAG 2
 ```
 
 ### Mobile Optimizations
+
 - Collapsible sidebar with overlay
 - Stacked layouts for narrow screens
 - Horizontal scrolling tables
@@ -74,11 +84,13 @@ Purple Cross frontend has been enhanced with comprehensive accessibility (WCAG 2
 - Touch-friendly button sizes (min 44px)
 
 ### Tablet Optimizations
+
 - Narrower sidebar (200px)
 - Two-column layouts where appropriate
 - Adjusted grid layouts
 
 ### Desktop Features
+
 - Full sidebar (240px)
 - Multi-column layouts
 - Larger typography
@@ -87,6 +99,7 @@ Purple Cross frontend has been enhanced with comprehensive accessibility (WCAG 2
 ## Performance Optimizations
 
 ### Code Splitting
+
 - Lazy loading with `React.lazy()`
 - Route-based code splitting
 - Separate chunks per page:
@@ -97,16 +110,19 @@ Purple Cross frontend has been enhanced with comprehensive accessibility (WCAG 2
   - NotFound.js (460B)
 
 ### Bundle Size
+
 - Main bundle: 192KB (63KB gzipped)
 - API client: 39KB (15KB gzipped)
 - Total CSS: 11KB (3KB gzipped)
 
 ### Loading States
+
 - Suspense boundaries for async components
 - Loading spinner with accessibility attributes
 - Proper loading state announcements for screen readers
 
 ### Build Optimizations
+
 - TypeScript compilation for type safety
 - Vite for fast builds and HMR
 - CSS code splitting
@@ -114,11 +130,13 @@ Purple Cross frontend has been enhanced with comprehensive accessibility (WCAG 2
 - Asset compression (gzip)
 
 ### Browser Caching
+
 - Cache-Control headers (configured via server)
 - Long-term caching for static assets
 - Content-based hashing in filenames
 
 ### Image Optimization
+
 - SVG for icons (scalable and small)
 - Emoji for decorative icons (no image requests)
 - Optimized image formats recommended
@@ -126,6 +144,7 @@ Purple Cross frontend has been enhanced with comprehensive accessibility (WCAG 2
 ## Testing Recommendations
 
 ### Manual Testing
+
 1. **Keyboard Navigation**
    - Tab through all interactive elements
    - Test skip links
@@ -146,6 +165,7 @@ Purple Cross frontend has been enhanced with comprehensive accessibility (WCAG 2
    - Test with different contrast settings
 
 ### Automated Testing
+
 - Lighthouse accessibility audit
 - axe-core automated testing
 - WAVE browser extension
@@ -162,6 +182,7 @@ Purple Cross frontend has been enhanced with comprehensive accessibility (WCAG 2
 ## Future Enhancements
 
 ### Potential Improvements
+
 1. **Internationalization (i18n)**
    - Multi-language support
    - RTL layout support

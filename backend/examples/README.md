@@ -12,6 +12,7 @@ This directory contains example code demonstrating how to use the enterprise cap
 These examples are for reference and education. To use them in your code:
 
 1. Import the utilities:
+
 ```typescript
 import { createCircuitBreaker } from '../src/utils/circuitBreaker';
 import { retry, retryWithJitter } from '../src/utils/retry';
@@ -43,14 +44,11 @@ const result = await breaker.execute(async () => {
 ```typescript
 import { retry } from './utils/retry';
 
-const result = await retry(
-  async () => await apiCall(),
-  {
-    maxAttempts: 3,
-    initialDelay: 1000,
-    name: 'api-call',
-  }
-);
+const result = await retry(async () => await apiCall(), {
+  maxAttempts: 3,
+  initialDelay: 1000,
+  name: 'api-call',
+});
 ```
 
 ## Best Practices
@@ -70,6 +68,7 @@ const result = await retry(
 ## Support
 
 For questions about these examples or the enterprise capabilities:
+
 1. Refer to the main [ENTERPRISE_CAPABILITIES.md](../../ENTERPRISE_CAPABILITIES.md) documentation
 2. Check the inline comments in the example files
 3. Review the source code in `src/utils/`

@@ -6,21 +6,21 @@ describe('Medical Records - Prescriptions Integration', () => {
   });
 
   it.skip('should display prescriptions section in medical record', () => {
-    // Skipped: Advanced medical records feature not yet fully implemented 
+    // Skipped: Advanced medical records feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.prescriptions-tab').click();
     cy.get('.prescriptions-list').should('be.visible');
   });
 
   it.skip('should show active prescriptions', () => {
-    // Skipped: Advanced medical records feature not yet fully implemented 
+    // Skipped: Advanced medical records feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.prescriptions-tab').click();
     cy.get('.prescription-item.active').should('have.length.at.least', 1);
   });
 
   it.skip('should allow adding new prescription from medical record', () => {
-    // Skipped: Advanced medical records feature not yet fully implemented 
+    // Skipped: Advanced medical records feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.prescriptions-tab').click();
     cy.get('.btn-add-prescription').click();
@@ -33,7 +33,7 @@ describe('Medical Records - Prescriptions Integration', () => {
   });
 
   it.skip('should display prescription history', () => {
-    // Skipped: Advanced medical records feature not yet fully implemented 
+    // Skipped: Advanced medical records feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.prescriptions-tab').click();
     cy.get('.prescription-history').should('be.visible');
@@ -41,7 +41,7 @@ describe('Medical Records - Prescriptions Integration', () => {
   });
 
   it.skip('should show prescription refill requests', () => {
-    // Skipped: Advanced medical records feature not yet fully implemented 
+    // Skipped: Advanced medical records feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.prescriptions-tab').click();
     cy.get('.prescription-item')
@@ -52,7 +52,7 @@ describe('Medical Records - Prescriptions Integration', () => {
   });
 
   it.skip('should alert for drug interactions', () => {
-    // Skipped: Advanced medical records feature not yet fully implemented 
+    // Skipped: Advanced medical records feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.prescriptions-tab').click();
     cy.get('.drug-interaction-alert').should('be.visible');
@@ -60,7 +60,7 @@ describe('Medical Records - Prescriptions Integration', () => {
   });
 
   it.skip('should display dosage instructions clearly', () => {
-    // Skipped: Advanced medical records feature not yet fully implemented 
+    // Skipped: Advanced medical records feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.prescriptions-tab').click();
     cy.get('.prescription-item')
@@ -71,7 +71,7 @@ describe('Medical Records - Prescriptions Integration', () => {
   });
 
   it.skip('should track prescription compliance', () => {
-    // Skipped: Advanced medical records feature not yet fully implemented 
+    // Skipped: Advanced medical records feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.prescriptions-tab').click();
     cy.get('.prescription-item')

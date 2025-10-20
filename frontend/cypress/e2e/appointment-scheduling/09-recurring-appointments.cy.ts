@@ -85,7 +85,11 @@ describe('Appointment Recurring Scheduling', () => {
 
   it.skip('should allow editing single occurrence', () => {
     // Skipped: Recurring appointment edit feature not yet implemented
-    cy.get('.data-table tbody tr', { timeout: 10000 }).first().find('.btn-action').contains('View').click();
+    cy.get('.data-table tbody tr', { timeout: 10000 })
+      .first()
+      .find('.btn-action')
+      .contains('View')
+      .click();
     cy.get('.btn-edit').click();
     cy.get('.edit-options').should('be.visible');
     cy.get('#edit-this-occurrence').check();
@@ -95,7 +99,11 @@ describe('Appointment Recurring Scheduling', () => {
 
   it.skip('should allow editing all occurrences', () => {
     // Skipped: Recurring appointment edit feature not yet implemented
-    cy.get('.data-table tbody tr', { timeout: 10000 }).first().find('.btn-action').contains('View').click();
+    cy.get('.data-table tbody tr', { timeout: 10000 })
+      .first()
+      .find('.btn-action')
+      .contains('View')
+      .click();
     cy.get('.btn-edit').click();
     cy.get('#edit-all-occurrences').check();
     cy.get('button[type="submit"]').click();
@@ -104,7 +112,11 @@ describe('Appointment Recurring Scheduling', () => {
 
   it.skip('should allow cancelling recurring series', () => {
     // Skipped: Recurring appointment cancel feature not yet implemented
-    cy.get('.data-table tbody tr', { timeout: 10000 }).first().find('.btn-action').contains('View').click();
+    cy.get('.data-table tbody tr', { timeout: 10000 })
+      .first()
+      .find('.btn-action')
+      .contains('View')
+      .click();
     cy.get('.btn-cancel-series').click();
     cy.get('.confirm-dialog').should('be.visible');
     cy.get('.confirm-dialog').should('contain', 'Cancel entire series');

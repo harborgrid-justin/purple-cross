@@ -16,10 +16,7 @@
     "**/dist": true,
     "**/coverage": true
   },
-  "eslint.workingDirectories": [
-    "./backend",
-    "./frontend"
-  ],
+  "eslint.workingDirectories": ["./backend", "./frontend"],
   "files.associations": {
     "*.css": "css"
   },

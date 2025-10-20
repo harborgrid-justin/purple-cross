@@ -12,7 +12,13 @@ export interface Employee {
   lastName: string;
   email: string;
   phoneNumber: string;
-  role: 'veterinarian' | 'veterinary_technician' | 'receptionist' | 'manager' | 'assistant' | 'administrator';
+  role:
+    | 'veterinarian'
+    | 'veterinary_technician'
+    | 'receptionist'
+    | 'manager'
+    | 'assistant'
+    | 'administrator';
   department: string;
   hireDate: Date;
   status: 'active' | 'on_leave' | 'suspended' | 'terminated';
@@ -24,7 +30,12 @@ export interface Employee {
 
 export interface Credential {
   id: string;
-  type: 'veterinary_license' | 'dea_registration' | 'certification' | 'continuing_education' | 'other';
+  type:
+    | 'veterinary_license'
+    | 'dea_registration'
+    | 'certification'
+    | 'continuing_education'
+    | 'other';
   name: string;
   number?: string;
   issuingOrganization: string;

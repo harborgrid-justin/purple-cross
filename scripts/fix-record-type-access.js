@@ -10,10 +10,10 @@ const filesToFix = [
   'insurance-claim.service.ts',
   'patient-reminder.service.ts',
   'refund.service.ts',
-  'time-block.service.ts'
+  'time-block.service.ts',
 ];
 
-filesToFix.forEach(file => {
+filesToFix.forEach((file) => {
   const filePath = path.join(servicesDir, file);
   if (!fs.existsSync(filePath)) {
     console.log(`⚠ Skipped ${file} (not found)`);
@@ -59,10 +59,7 @@ filesToFix.forEach(file => {
     /const { page = (filters\.page)/g,
     `const { page = ((filters as any).page`
   );
-  content = content.replace(
-    /limit = (filters\.limit)/g,
-    `limit = ((filters as any).limit`
-  );
+  content = content.replace(/limit = (filters\.limit)/g, `limit = ((filters as any).limit`);
 
   fs.writeFileSync(filePath, content, 'utf8');
   console.log(`✓ Fixed ${file}`);

@@ -13,14 +13,24 @@ async function main() {
 
   // Read fixture files
   const fixturesPath = path.join(__dirname, '../../../frontend/cypress/fixtures');
-  
+
   const clientsData = JSON.parse(fs.readFileSync(path.join(fixturesPath, 'clients.json'), 'utf-8'));
-  const patientsData = JSON.parse(fs.readFileSync(path.join(fixturesPath, 'patients.json'), 'utf-8'));
+  const patientsData = JSON.parse(
+    fs.readFileSync(path.join(fixturesPath, 'patients.json'), 'utf-8')
+  );
   const staffData = JSON.parse(fs.readFileSync(path.join(fixturesPath, 'staff.json'), 'utf-8'));
-  const appointmentsData = JSON.parse(fs.readFileSync(path.join(fixturesPath, 'appointments.json'), 'utf-8'));
-  const medicalRecordsData = JSON.parse(fs.readFileSync(path.join(fixturesPath, 'medical-records.json'), 'utf-8'));
-  const documentsData = JSON.parse(fs.readFileSync(path.join(fixturesPath, 'documents.json'), 'utf-8'));
-  const documentTemplatesData = JSON.parse(fs.readFileSync(path.join(fixturesPath, 'document-templates.json'), 'utf-8'));
+  const appointmentsData = JSON.parse(
+    fs.readFileSync(path.join(fixturesPath, 'appointments.json'), 'utf-8')
+  );
+  const medicalRecordsData = JSON.parse(
+    fs.readFileSync(path.join(fixturesPath, 'medical-records.json'), 'utf-8')
+  );
+  const documentsData = JSON.parse(
+    fs.readFileSync(path.join(fixturesPath, 'documents.json'), 'utf-8')
+  );
+  const documentTemplatesData = JSON.parse(
+    fs.readFileSync(path.join(fixturesPath, 'document-templates.json'), 'utf-8')
+  );
 
   // Clear existing data
   console.log('🗑️  Clearing existing data...');

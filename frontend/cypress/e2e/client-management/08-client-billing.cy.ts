@@ -9,18 +9,18 @@ describe('Client Billing & Invoicing', () => {
   });
 
   it.skip('should display client billing page', () => {
-    // Skipped: Advanced billing feature not yet fully implemented 
+    // Skipped: Advanced billing feature not yet fully implemented
     cy.get('.page-header h1').should('contain', 'Client Billing');
     cy.get('.billing-section').should('be.visible');
   });
 
   it.skip('should display invoice history', () => {
-    // Skipped: Advanced billing feature not yet fully implemented 
+    // Skipped: Advanced billing feature not yet fully implemented
     cy.get('.invoice-item').should('have.length', 2);
   });
 
   it.skip('should display invoice details', () => {
-    // Skipped: Advanced billing feature not yet fully implemented 
+    // Skipped: Advanced billing feature not yet fully implemented
     cy.visit(`/clients/client-001/billing`);
     cy.get('.invoice-item').first().click();
     cy.get('.invoice-details-modal').should('be.visible');
@@ -29,13 +29,13 @@ describe('Client Billing & Invoicing', () => {
   });
 
   it.skip('should display outstanding balance', () => {
-    // Skipped: Advanced billing feature not yet fully implemented 
+    // Skipped: Advanced billing feature not yet fully implemented
     cy.get('.outstanding-balance').should('be.visible');
     cy.get('.outstanding-balance').should('contain', '500.00');
   });
 
   it.skip('should filter invoices by status', () => {
-    // Skipped: Advanced billing feature not yet fully implemented 
+    // Skipped: Advanced billing feature not yet fully implemented
     cy.get('#invoice-status-filter').select('paid');
     cy.get('.invoice-item').each(($item) => {
       cy.wrap($item).find('.status-badge').should('contain', 'paid');
@@ -43,7 +43,7 @@ describe('Client Billing & Invoicing', () => {
   });
 
   it.skip('should allow recording a payment', () => {
-    // Skipped: Advanced billing feature not yet fully implemented 
+    // Skipped: Advanced billing feature not yet fully implemented
     cy.visit(`/clients/client-001/billing`);
     cy.get('.btn-record-payment').first().click();
     cy.get('.payment-modal').should('be.visible');
@@ -56,20 +56,20 @@ describe('Client Billing & Invoicing', () => {
   });
 
   it.skip('should display payment history', () => {
-    // Skipped: Advanced billing feature not yet fully implemented 
+    // Skipped: Advanced billing feature not yet fully implemented
     cy.get('.payment-history-section').should('be.visible');
     cy.get('.payment-item').should('have.length', 2);
   });
 
   it.skip('should generate and download invoice PDF', () => {
-    // Skipped: Advanced billing feature not yet fully implemented 
+    // Skipped: Advanced billing feature not yet fully implemented
     cy.visit(`/clients/client-001/billing`);
 
     cy.get('.btn-download-invoice').first().click();
   });
 
   it.skip('should display billing statements', () => {
-    // Skipped: Advanced billing feature not yet fully implemented 
+    // Skipped: Advanced billing feature not yet fully implemented
     cy.get('.btn-view-statements').click();
     cy.get('.statements-section').should('be.visible');
 
@@ -77,7 +77,7 @@ describe('Client Billing & Invoicing', () => {
   });
 
   it.skip('should send invoice via email', () => {
-    // Skipped: Advanced billing feature not yet fully implemented 
+    // Skipped: Advanced billing feature not yet fully implemented
     cy.visit(`/clients/client-001/billing`);
 
     cy.get('.btn-email-invoice').first().click();
@@ -85,14 +85,14 @@ describe('Client Billing & Invoicing', () => {
   });
 
   it.skip('should display payment plans', () => {
-    // Skipped: Advanced billing feature not yet fully implemented 
+    // Skipped: Advanced billing feature not yet fully implemented
     cy.get('.payment-plans-section').should('be.visible');
 
     cy.get('.payment-plan-item').should('have.length', 1);
   });
 
   it.skip('should allow setting up a payment plan', () => {
-    // Skipped: Advanced billing feature not yet fully implemented 
+    // Skipped: Advanced billing feature not yet fully implemented
     cy.get('.btn-setup-payment-plan').click();
     cy.get('.payment-plan-modal').should('be.visible');
 

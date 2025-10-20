@@ -9,6 +9,7 @@ This document describes the Cypress end-to-end tests created for the Purple Cros
 ## Test Coverage
 
 ### Total Tests: 72
+
 - **Passing: 66 (91.7%)**
 - **Failing: 6 (8.3%)** - All failures are in data mocking tests that require precise timing with API intercepts
 
@@ -107,6 +108,7 @@ This document describes the Cypress end-to-end tests created for the Purple Cros
 ## Running the Tests
 
 ### Prerequisites
+
 - Frontend development server must be running
 - Node.js and npm installed
 - Cypress installed (automatically installed via npm install)
@@ -136,6 +138,7 @@ npx cypress run --spec "cypress/e2e/patient-management/02-patient-registration.c
 ## Test Infrastructure
 
 ### Configuration
+
 - **File:** `frontend/cypress.config.ts`
 - **Base URL:** http://localhost:5173 (Vite dev server)
 - **Viewport:** 1280x720
@@ -143,11 +146,14 @@ npx cypress run --spec "cypress/e2e/patient-management/02-patient-registration.c
 - **Screenshots:** On failure only
 
 ### Fixtures
+
 - `cypress/fixtures/patients.json` - Sample patient data
 - `cypress/fixtures/clients.json` - Sample client (owner) data
 
 ### Custom Commands
+
 Located in `cypress/support/commands.ts`:
+
 - `cy.visitPatients()` - Navigate to patients page
 - `cy.visitPatientsPage(subpage)` - Navigate to patient subpage
 - `cy.searchPatients(searchTerm)` - Search for patients
@@ -157,6 +163,7 @@ Located in `cypress/support/commands.ts`:
 - `cy.waitForPatients()` - Wait for patient API calls
 
 ### Support Files
+
 - `cypress/support/e2e.ts` - Global test configuration and hooks
 - `cypress/support/commands.ts` - Custom Cypress commands
 - `cypress/tsconfig.json` - TypeScript configuration for Cypress
@@ -164,7 +171,9 @@ Located in `cypress/support/commands.ts`:
 ## Known Issues
 
 ### Mocked Data Tests (6 failures)
+
 Six tests in `01-patient-list.cy.ts` that depend on mocked API data are currently failing due to timing issues with Cypress intercept setup. These tests are:
+
 1. should display patient list table with correct headers
 2. should display patient data in the table
 3. should display action buttons for each patient
@@ -177,6 +186,7 @@ Six tests in `01-patient-list.cy.ts` that depend on mocked API data are currentl
 **Root Cause:** Race condition between Cypress intercept setup (which happens inside a `.then()` callback) and page visit. The intercept may not be ready when the API call is made.
 
 **Potential Solutions:**
+
 1. Use a real backend API for testing instead of mocks
 2. Implement a test database with seed data
 3. Refactor to use Cypress component testing instead of E2E for these specific tests

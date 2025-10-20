@@ -1,6 +1,6 @@
 /**
  * Purple Cross - Enterprise Veterinary Practice Management Platform
- * 
+ *
  * A comprehensive, enterprise-grade platform for veterinary practices
  * featuring 15 primary modules with 120 sub-features.
  */
@@ -77,8 +77,8 @@ export const PLATFORM_INFO = {
     'Document Management',
     'Compliance & Regulatory Management',
     'Integration & API Management',
-    'Mobile & Remote Access'
-  ]
+    'Mobile & Remote Access',
+  ],
 };
 
 /**

@@ -221,7 +221,12 @@ export interface CreditMemo {
 }
 
 export interface BillingFinancialReport {
-  reportType: 'daily_summary' | 'revenue_analysis' | 'aging_report' | 'payment_methods' | 'profitability';
+  reportType:
+    | 'daily_summary'
+    | 'revenue_analysis'
+    | 'aging_report'
+    | 'payment_methods'
+    | 'profitability';
   periodStart: Date;
   periodEnd: Date;
   data: Record<string, any>;

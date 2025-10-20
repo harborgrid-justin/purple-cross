@@ -54,7 +54,15 @@ export interface DocumentTemplate {
   id: string;
   name: string;
   description?: string;
-  category: 'letter' | 'form' | 'consent' | 'prescription' | 'invoice' | 'certificate' | 'report' | 'other';
+  category:
+    | 'letter'
+    | 'form'
+    | 'consent'
+    | 'prescription'
+    | 'invoice'
+    | 'certificate'
+    | 'report'
+    | 'other';
   templateContent: string;
   variables: TemplateVariable[];
   format: 'docx' | 'pdf' | 'html';
@@ -164,7 +172,14 @@ export interface DocumentSearch {
 }
 
 export interface SearchFilter {
-  field: 'category' | 'tags' | 'createdBy' | 'createdDate' | 'fileType' | 'accessLevel' | 'relatedTo';
+  field:
+    | 'category'
+    | 'tags'
+    | 'createdBy'
+    | 'createdDate'
+    | 'fileType'
+    | 'accessLevel'
+    | 'relatedTo';
   operator: 'equals' | 'contains' | 'between' | 'in';
   value: any;
 }

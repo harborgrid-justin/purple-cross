@@ -5,6 +5,7 @@ Thank you for considering contributing to Purple Cross! This document outlines t
 ## Code of Conduct
 
 We expect all contributors to:
+
 - Be respectful and inclusive
 - Welcome newcomers and help them get started
 - Focus on what is best for the community
@@ -15,11 +16,13 @@ We expect all contributors to:
 ### Reporting Bugs
 
 Before creating a bug report, please:
+
 1. Check if the issue has already been reported
 2. Ensure you're using the latest version
 3. Check the documentation to confirm it's actually a bug
 
 When creating a bug report, include:
+
 - Clear, descriptive title
 - Steps to reproduce the issue
 - Expected behavior
@@ -30,6 +33,7 @@ When creating a bug report, include:
 ### Suggesting Enhancements
 
 Enhancement suggestions are tracked as GitHub issues. When creating an enhancement suggestion:
+
 - Use a clear, descriptive title
 - Provide detailed description of the proposed feature
 - Explain why this enhancement would be useful
@@ -62,6 +66,7 @@ Before contributing, you'll need to set up your development environment:
 2. **Development Workflow**: See [Development Guide](./DEVELOPMENT.md) for detailed development instructions
 
 Quick start:
+
 ```bash
 git clone https://github.com/harborgrid-justin/purple-cross.git
 cd purple-cross
@@ -75,6 +80,7 @@ npm run setup
 Purple Cross follows enterprise-grade TypeScript standards. Please refer to our comprehensive [TypeScript Guidelines](./TYPESCRIPT_GUIDELINES.md) for detailed best practices.
 
 **Key Requirements:**
+
 - Use TypeScript strict mode (enforced in tsconfig.json)
 - Avoid `any` types - use proper typing
 - Provide explicit type annotations for function parameters and return types
@@ -191,6 +197,7 @@ footer
 ```
 
 Types:
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation changes
@@ -200,6 +207,7 @@ Types:
 - `chore`: Maintenance tasks
 
 Examples:
+
 ```
 feat(patients): add patient search functionality
 
@@ -232,10 +240,10 @@ describe('PatientService', () => {
     it('should create a patient with valid data', async () => {
       // Arrange
       const patientData = { name: 'Max', species: 'Dog', ownerId: '123' };
-      
+
       // Act
       const result = await patientService.createPatient(patientData);
-      
+
       // Assert
       expect(result).toBeDefined();
       expect(result.name).toBe('Max');
@@ -244,10 +252,9 @@ describe('PatientService', () => {
     it('should throw error when owner does not exist', async () => {
       // Arrange
       const patientData = { name: 'Max', species: 'Dog', ownerId: 'invalid' };
-      
+
       // Act & Assert
-      await expect(patientService.createPatient(patientData))
-        .rejects.toThrow('Owner not found');
+      await expect(patientService.createPatient(patientData)).rejects.toThrow('Owner not found');
     });
   });
 });
@@ -261,14 +268,14 @@ describe('PatientService', () => {
 - Add inline comments for complex logic
 - Update CHANGELOG.md for significant changes
 
-```typescript
+````typescript
 /**
  * Creates a new patient record
- * 
+ *
  * @param data - Patient creation data
  * @returns Created patient with assigned ID
  * @throws {AppError} When owner is not found
- * 
+ *
  * @example
  * ```typescript
  * const patient = await createPatient({
@@ -281,7 +288,7 @@ describe('PatientService', () => {
 async createPatient(data: CreatePatientDto): Promise<Patient> {
   // Implementation
 }
-```
+````
 
 ## Review Process
 
