@@ -4,8 +4,7 @@ describe('Appointment Details View', () => {
   // Using first appointment from seeded data
   const appointmentId = 'appt-001';
 
-  beforeEach(() => {
-  });
+  beforeEach(() => {});
 
   it('should display the appointment details page title', () => {
     cy.visit(`/appointments/${appointmentId}`);

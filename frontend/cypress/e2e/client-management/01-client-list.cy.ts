@@ -27,29 +27,32 @@ describe('Client List View', () => {
   it('should display client data in the table', () => {
     cy.visitClients();
     cy.get('.data-table tbody tr', { timeout: 10000 }).should('have.length', 6);
-    cy.get('.data-table tbody tr').first().within(() => {
-      cy.get('th').should('contain', 'John Smith');
-      cy.get('td').eq(0).should('contain', 'john.smith@email.com');
-      cy.get('td').eq(1).should('contain', '555-0101');
-      cy.get('td').eq(2).should('contain', 'Springfield');
-    });
+    cy.get('.data-table tbody tr')
+      .first()
+      .within(() => {
+        cy.get('th').should('contain', 'John Smith');
+        cy.get('td').eq(0).should('contain', 'john.smith@email.com');
+        cy.get('td').eq(1).should('contain', '555-0101');
+        cy.get('td').eq(2).should('contain', 'Springfield');
+      });
   });
 
   it('should display action buttons for each client', () => {
     cy.visitClients();
-    cy.get('.data-table tbody tr', { timeout: 10000 }).first().within(() => {
-      cy.get('.btn-action').should('have.length', 2);
-      cy.get('.btn-action').eq(0).should('contain', 'View');
-      cy.get('.btn-action').eq(1).should('contain', 'Edit');
-    });
+    cy.get('.data-table tbody tr', { timeout: 10000 })
+      .first()
+      .within(() => {
+        cy.get('.btn-action').should('have.length', 2);
+        cy.get('.btn-action').eq(0).should('contain', 'View');
+        cy.get('.btn-action').eq(1).should('contain', 'Edit');
+      });
   });
 
   it('should display search input field', () => {
     cy.visitClients();
-    
+
     cy.get('#client-search').should('be.visible');
-    cy.get('#client-search').should('have.attr', 'placeholder')
-      .and('include', 'Search clients');
+    cy.get('#client-search').should('have.attr', 'placeholder').and('include', 'Search clients');
   });
 
   it('should filter clients when searching', () => {
@@ -89,10 +92,12 @@ describe('Client List View', () => {
 
   it('should display client status badges', () => {
     cy.visitClients();
-    cy.get('.data-table tbody tr', { timeout: 10000 }).first().within(() => {
-      cy.get('.badge').should('be.visible');
-      cy.get('.badge').should('contain', 'active');
-    });
+    cy.get('.data-table tbody tr', { timeout: 10000 })
+      .first()
+      .within(() => {
+        cy.get('.badge').should('be.visible');
+        cy.get('.badge').should('contain', 'active');
+      });
   });
 
   it.skip('should handle API errors gracefully', () => {

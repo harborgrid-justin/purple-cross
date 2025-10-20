@@ -1,11 +1,8 @@
 /// <reference types="cypress" />
 
 describe('Patient Search & Filtering', () => {
-  let patients: unknown[];
-
   beforeEach(() => {
     cy.fixture('patients').then((data) => {
-      patients = data;
       cy.mockPatients(data);
     });
   });
@@ -18,8 +15,7 @@ describe('Patient Search & Filtering', () => {
   it('should display search input field', () => {
     cy.visitPatientsPage('search');
     cy.get('input[type="search"]').should('be.visible');
-    cy.get('input[type="search"]').should('have.attr', 'placeholder')
-      .and('include', 'Search');
+    cy.get('input[type="search"]').should('have.attr', 'placeholder').and('include', 'Search');
   });
 
   it('should display "Advanced Filters" button', () => {
@@ -61,14 +57,14 @@ describe('Patient Search & Filtering', () => {
     cy.visitPatients();
     cy.contains('.sub-nav-link', 'Search & Filtering').click();
     cy.url().should('include', '/patients/search');
-    
+
     cy.contains('.sub-nav-link', 'All Patients').click();
     cy.url().should('eq', Cypress.config().baseUrl + '/patients');
   });
 
   it('should display comprehensive search features', () => {
     cy.visitPatientsPage('search');
-    
+
     const searchFeatures = [
       'Name & microchip search',
       'Species & breed filters',
@@ -77,10 +73,10 @@ describe('Patient Search & Filtering', () => {
       'Medical condition filters',
       'Vaccination status',
       'Last visit date range',
-      'Active/inactive status'
+      'Active/inactive status',
     ];
-    
-    searchFeatures.forEach(feature => {
+
+    searchFeatures.forEach((feature) => {
       cy.contains(feature).should('be.visible');
     });
   });

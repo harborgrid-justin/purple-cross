@@ -65,7 +65,7 @@ describe('Diagnostic Results Tracking', () => {
 
   it('should display comprehensive diagnostics features', () => {
     cy.visitMedicalRecordsPage('diagnostics');
-    
+
     const expectedFeatures = [
       'Blood work',
       'Urinalysis',
@@ -78,10 +78,10 @@ describe('Diagnostic Results Tracking', () => {
       'Result summaries',
       'PDF reports',
       'Shareable reports',
-      'Historical trends'
+      'Historical trends',
     ];
-    
-    expectedFeatures.forEach(feature => {
+
+    expectedFeatures.forEach((feature) => {
       cy.contains(feature).should('be.visible');
     });
   });

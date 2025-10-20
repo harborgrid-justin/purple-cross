@@ -58,14 +58,9 @@ describe('Role-Based Access Control', () => {
 
   it('should display all role types', () => {
     cy.visitStaffPage('access-control');
-    
-    const expectedRoles = [
-      'Veterinarian',
-      'Technician',
-      'Receptionist',
-      'Administrator'
-    ];
-    
+
+    const expectedRoles = ['Veterinarian', 'Technician', 'Receptionist', 'Administrator'];
+
     expectedRoles.forEach((role) => {
       cy.contains(role).should('be.visible');
     });
@@ -73,14 +68,9 @@ describe('Role-Based Access Control', () => {
 
   it('should display all permission types', () => {
     cy.visitStaffPage('access-control');
-    
-    const expectedPermissions = [
-      'View rights',
-      'Edit rights',
-      'Delete rights',
-      'Module access'
-    ];
-    
+
+    const expectedPermissions = ['View rights', 'Edit rights', 'Delete rights', 'Module access'];
+
     expectedPermissions.forEach((permission) => {
       cy.contains(permission).should('be.visible');
     });

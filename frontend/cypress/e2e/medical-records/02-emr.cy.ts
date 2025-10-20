@@ -65,7 +65,7 @@ describe('Electronic Medical Records (EMR)', () => {
 
   it('should display comprehensive EMR features', () => {
     cy.visitMedicalRecordsPage('emr');
-    
+
     const expectedFeatures = [
       'Digital records',
       'Quick access',
@@ -78,10 +78,10 @@ describe('Electronic Medical Records (EMR)', () => {
       'Lab results',
       'Imaging',
       'Prescriptions',
-      'Invoices'
+      'Invoices',
     ];
-    
-    expectedFeatures.forEach(feature => {
+
+    expectedFeatures.forEach((feature) => {
       cy.contains(feature).should('be.visible');
     });
   });

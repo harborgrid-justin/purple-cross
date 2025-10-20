@@ -65,7 +65,7 @@ describe('Appointment Creation', () => {
   it('should have proper form validation for required fields', () => {
     cy.visitAppointmentsPage('create');
     cy.get('button[type="submit"]').click();
-    
+
     cy.get('#patient-select').should('have.attr', 'required');
     cy.get('#client-select').should('have.attr', 'required');
     cy.get('#veterinarian-select').should('have.attr', 'required');
@@ -74,7 +74,7 @@ describe('Appointment Creation', () => {
 
   it('should have accessible form labels and inputs', () => {
     cy.visitAppointmentsPage('create');
-    
+
     cy.get('#patient-select').should('have.attr', 'aria-label');
     cy.get('#client-select').should('have.attr', 'aria-label');
     cy.get('#veterinarian-select').should('have.attr', 'aria-label');

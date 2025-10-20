@@ -62,7 +62,7 @@ describe('Patient Registration & Profiles', () => {
 
   it('should display comprehensive patient profile features', () => {
     cy.visitPatientsPage('registration');
-    
+
     // Verify all key features are documented
     const expectedFeatures = [
       'Name, species, breed',
@@ -76,10 +76,10 @@ describe('Patient Registration & Profiles', () => {
       'Allergies & sensitivities',
       'Current medications',
       'Vaccination status',
-      'Medical alerts'
+      'Medical alerts',
     ];
-    
-    expectedFeatures.forEach(feature => {
+
+    expectedFeatures.forEach((feature) => {
       cy.contains(feature).should('be.visible');
     });
   });

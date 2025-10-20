@@ -4,6 +4,7 @@
 // Custom commands for patient management testing
 // ***********************************************
 
+/* eslint-disable @typescript-eslint/no-namespace */
 declare global {
   namespace Cypress {
     interface Chainable {

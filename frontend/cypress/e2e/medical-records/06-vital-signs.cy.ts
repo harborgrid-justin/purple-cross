@@ -65,7 +65,7 @@ describe('Vital Signs Recording', () => {
 
   it('should display comprehensive vital signs features', () => {
     cy.visitMedicalRecordsPage('vital-signs');
-    
+
     const expectedFeatures = [
       'Temperature',
       'Heart rate',
@@ -78,10 +78,10 @@ describe('Vital Signs Recording', () => {
       'Real-time alerts',
       'Abnormal values',
       'Baseline comparisons',
-      'Critical values'
+      'Critical values',
     ];
-    
-    expectedFeatures.forEach(feature => {
+
+    expectedFeatures.forEach((feature) => {
       cy.contains(feature).should('be.visible');
     });
   });

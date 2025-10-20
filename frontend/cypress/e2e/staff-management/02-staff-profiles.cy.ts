@@ -53,7 +53,7 @@ describe('Employee Profiles', () => {
 
   it('should display comprehensive employee profile features', () => {
     cy.visitStaffPage('profiles');
-    
+
     const expectedFeatures = [
       'Personal information',
       'Contact details',
@@ -66,9 +66,9 @@ describe('Employee Profiles', () => {
       'Certifications',
       'Specialties',
       'Languages',
-      'Training records'
+      'Training records',
     ];
-    
+
     expectedFeatures.forEach((feature) => {
       cy.contains(feature).should('be.visible');
     });

@@ -65,7 +65,7 @@ describe('Audit Trail & Compliance', () => {
 
   it('should display comprehensive audit trail features', () => {
     cy.visitMedicalRecordsPage('audit');
-    
+
     const expectedFeatures = [
       'All changes',
       'User actions',
@@ -78,10 +78,10 @@ describe('Audit Trail & Compliance', () => {
       'Audit reports',
       'Compliance reports',
       'Security reports',
-      'Access reports'
+      'Access reports',
     ];
-    
-    expectedFeatures.forEach(feature => {
+
+    expectedFeatures.forEach((feature) => {
       cy.contains(feature).should('be.visible');
     });
   });

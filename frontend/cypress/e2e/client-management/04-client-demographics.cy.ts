@@ -32,10 +32,10 @@ describe('Client Demographics Management', () => {
     cy.get('.btn-edit-contact').click();
     cy.get('#edit-email').should('be.visible');
     cy.get('#edit-phone').should('be.visible');
-    
+
     cy.get('#edit-email').clear().type('newemail@example.com');
     cy.get('.btn-save-contact').click();
-    
+
     cy.get('.success-message', { timeout: 10000 }).should('be.visible');
   });
 
@@ -45,10 +45,10 @@ describe('Client Demographics Management', () => {
     cy.get('#edit-city').should('be.visible');
     cy.get('#edit-state').should('be.visible');
     cy.get('#edit-zipCode').should('be.visible');
-    
+
     cy.get('#edit-address').clear().type('456 New St');
     cy.get('.btn-save-address').click();
-    
+
     cy.get('.success-message', { timeout: 10000 }).should('be.visible');
   });
 });

@@ -65,7 +65,7 @@ describe('Treatment History', () => {
 
   it('should display comprehensive treatment history features', () => {
     cy.visitMedicalRecordsPage('treatment-history');
-    
+
     const expectedFeatures = [
       'All treatments',
       'Chronological view',
@@ -78,10 +78,10 @@ describe('Treatment History', () => {
       'Treatment effectiveness',
       'Recurring issues',
       'Treatment plans',
-      'Follow-up needs'
+      'Follow-up needs',
     ];
-    
-    expectedFeatures.forEach(feature => {
+
+    expectedFeatures.forEach((feature) => {
       cy.contains(feature).should('be.visible');
     });
   });

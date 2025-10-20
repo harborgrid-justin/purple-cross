@@ -58,14 +58,14 @@ describe('Shift Scheduling', () => {
 
   it('should display all scheduling features', () => {
     cy.visitStaffPage('scheduling');
-    
+
     const expectedFeatures = [
       'Shift creation',
       'Shift templates',
       'Recurring shifts',
-      'Shift swaps'
+      'Shift swaps',
     ];
-    
+
     expectedFeatures.forEach((feature) => {
       cy.contains(feature).should('be.visible');
     });
@@ -73,14 +73,14 @@ describe('Shift Scheduling', () => {
 
   it('should display all coverage features', () => {
     cy.visitStaffPage('scheduling');
-    
+
     const expectedFeatures = [
       'Availability',
       'Time-off requests',
       'Coverage gaps',
-      'On-call schedules'
+      'On-call schedules',
     ];
-    
+
     expectedFeatures.forEach((feature) => {
       cy.contains(feature).should('be.visible');
     });

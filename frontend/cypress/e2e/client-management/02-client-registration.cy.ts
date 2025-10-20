@@ -23,7 +23,7 @@ describe('Client Registration', () => {
 
   it('should validate required fields', () => {
     cy.get('.btn-submit').click();
-    
+
     cy.get('#firstName').should('have.class', 'is-invalid');
     cy.get('#lastName').should('have.class', 'is-invalid');
     cy.get('#email').should('have.class', 'is-invalid');
@@ -33,7 +33,7 @@ describe('Client Registration', () => {
   it('should validate email format', () => {
     cy.get('#email').type('invalid-email');
     cy.get('#email').blur();
-    
+
     cy.get('#email').should('have.class', 'is-invalid');
     cy.get('.validation-error').should('contain', 'valid email');
   });
@@ -41,13 +41,12 @@ describe('Client Registration', () => {
   it('should validate phone number format', () => {
     cy.get('#phone').type('123');
     cy.get('#phone').blur();
-    
+
     cy.get('#phone').should('have.class', 'is-invalid');
     cy.get('.validation-error').should('contain', 'phone');
   });
 
   it('should successfully register a new client with valid data', () => {
-
     cy.get('#firstName').type('Jane');
     cy.get('#lastName').type('Doe');
     cy.get('#email').type('jane.doe@email.com');
@@ -64,7 +63,6 @@ describe('Client Registration', () => {
   });
 
   it('should display error message on registration failure', () => {
-
     cy.get('#firstName').type('Jane');
     cy.get('#lastName').type('Doe');
     cy.get('#email').type('existing@email.com');
@@ -84,9 +82,9 @@ describe('Client Registration', () => {
     cy.get('#firstName').type('Jane');
     cy.get('#lastName').type('Doe');
     cy.get('#email').type('jane.doe@email.com');
-    
+
     cy.get('.btn-reset').click();
-    
+
     cy.get('#firstName').should('have.value', '');
     cy.get('#lastName').should('have.value', '');
     cy.get('#email').should('have.value', '');
@@ -106,13 +104,12 @@ describe('Client Registration', () => {
   it('should validate zipCode format', () => {
     cy.get('#zipCode').type('abc');
     cy.get('#zipCode').blur();
-    
+
     cy.get('#zipCode').should('have.class', 'is-invalid');
     cy.get('.validation-error').should('be.visible');
   });
 
   it('should allow registration with minimal required fields only', () => {
-
     cy.get('#firstName').type('John');
     cy.get('#lastName').type('Minimal');
     cy.get('#email').type('john.minimal@email.com');
@@ -125,7 +122,7 @@ describe('Client Registration', () => {
   it('should validate name fields are not empty', () => {
     cy.get('#firstName').type('   ');
     cy.get('#firstName').blur();
-    
+
     cy.get('#firstName').should('have.class', 'is-invalid');
     cy.get('.validation-error').should('be.visible');
   });
@@ -144,7 +141,7 @@ describe('Client Registration', () => {
     cy.get('#firstName').type('John');
     cy.get('#lastName').type('Doe');
     cy.get('.btn-submit').click();
-    
+
     cy.get('#firstName').should('have.value', 'John');
     cy.get('#lastName').should('have.value', 'Doe');
   });

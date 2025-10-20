@@ -14,18 +14,15 @@ describe('Client Appointment History', () => {
   });
 
   it('should display appointment history', () => {
-
     cy.get('.appointment-item').should('have.length', 2);
   });
 
   it('should display upcoming appointments', () => {
-
     cy.get('#appointment-filter').select('upcoming');
     cy.get('.appointment-item').should('have.length.at.least', 1);
   });
 
   it('should display past appointments', () => {
-
     cy.get('#appointment-filter').select('past');
     cy.get('.appointment-item').should('have.length.at.least', 1);
   });
@@ -39,7 +36,6 @@ describe('Client Appointment History', () => {
   });
 
   it('should display appointment statistics', () => {
-
     cy.get('.appointment-statistics').should('be.visible');
     cy.get('.total-appointments').should('contain', '25');
   });
@@ -52,13 +48,12 @@ describe('Client Appointment History', () => {
 
   it('should allow updating scheduling preferences', () => {
     cy.get('.btn-edit-preferences').click();
-    
 
     cy.get('#preferred-day').select('Monday');
     cy.get('#preferred-time').select('Morning');
     cy.get('#reminder-preference').check();
     cy.get('.btn-save-preferences').click();
-    
+
     cy.get('.success-message', { timeout: 10000 }).should('contain', 'Preferences updated');
   });
 });

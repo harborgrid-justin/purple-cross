@@ -68,7 +68,7 @@ describe('Client Search Functionality', () => {
     cy.get('.btn-advanced-search').click();
     cy.get('#filterByStatus').select('active');
     cy.get('.btn-apply-filters').click();
-    
+
     cy.get('.data-table tbody tr', { timeout: 10000 }).each(($row) => {
       cy.wrap($row).find('.badge').should('contain', 'active');
     });
