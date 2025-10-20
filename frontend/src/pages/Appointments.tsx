@@ -40,6 +40,8 @@ interface Appointment {
 
 const AppointmentsList = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [filteredAppointments, setFilteredAppointments] = useState<Appointment[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -50,9 +52,11 @@ const AppointmentsList = () => {
           limit: 50,
         })) as { status: string; data: Appointment[] };
         setAppointments(response.data);
+        setFilteredAppointments(response.data);
       } catch (err) {
         console.error('Error fetching appointments:', err);
         setAppointments([]);
+        setFilteredAppointments([]);
       } finally {
         setLoading(false);
       }
@@ -61,13 +65,48 @@ const AppointmentsList = () => {
     fetchAppointments();
   }, []);
 
+  useEffect(() => {
+    if (!searchTerm) {
+      setFilteredAppointments(appointments);
+      return;
+    }
+
+    const filtered = appointments.filter((appointment) => {
+      const searchLower = searchTerm.toLowerCase();
+      return (
+        appointment.patient.name.toLowerCase().includes(searchLower) ||
+        appointment.client.firstName.toLowerCase().includes(searchLower) ||
+        appointment.client.lastName.toLowerCase().includes(searchLower) ||
+        appointment.appointmentType.toLowerCase().includes(searchLower) ||
+        appointment.status.toLowerCase().includes(searchLower)
+      );
+    });
+    setFilteredAppointments(filtered);
+  }, [searchTerm, appointments]);
+
   return (
     <div className="table-container">
+      <div className="search-container" style={{ marginBottom: '1rem' }}>
+        <input
+          type="text"
+          id="appointment-search"
+          placeholder="Search appointments by patient, client, type, or status..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{
+            width: '100%',
+            padding: '0.5rem',
+            fontSize: '1rem',
+            border: '1px solid #ddd',
+            borderRadius: '4px',
+          }}
+        />
+      </div>
       {loading ? (
         <div role="status" aria-live="polite">
           <p>Loading appointments...</p>
         </div>
-      ) : appointments.length === 0 ? (
+      ) : filteredAppointments.length === 0 ? (
         <div role="status" aria-live="polite">
           <p>No appointments found. Schedule a new appointment to get started.</p>
         </div>
@@ -85,7 +124,7 @@ const AppointmentsList = () => {
             </tr>
           </thead>
           <tbody>
-            {appointments.map((appointment) => (
+            {filteredAppointments.map((appointment) => (
               <tr key={appointment.id}>
                 <th scope="row">
                   <time dateTime={appointment.startTime}>

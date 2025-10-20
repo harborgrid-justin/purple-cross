@@ -1,5 +1,6 @@
-import { useState, Suspense, lazy } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
 import { Link, Routes, Route, useLocation } from 'react-router-dom';
+import api from '../services/api';
 import '../styles/Page.css';
 
 // Lazy load subfeature pages
@@ -12,42 +13,105 @@ const SearchRetrieval = lazy(() => import('./documents/SearchRetrieval'));
 const AccessControl = lazy(() => import('./documents/AccessControl'));
 const Analytics = lazy(() => import('./documents/Analytics'));
 
+interface Document {
+  id: string;
+  name: string;
+  type: string;
+  createdAt: string;
+  patient?: { id: string; name: string };
+}
+
 const DocumentsList = () => {
-  const [documents] = useState([
-    { id: '1', name: 'Consent Form - Max', type: 'Form', date: '2024-01-15', status: 'Signed' },
-    {
-      id: '2',
-      name: 'Treatment Plan - Luna',
-      type: 'Report',
-      date: '2024-01-14',
-      status: 'Pending',
-    },
-  ]);
+  const [documents, setDocuments] = useState<Document[]>([]);
+  const [filteredDocuments, setFilteredDocuments] = useState<Document[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      try {
+        setLoading(true);
+        const response = (await api.documents.getAll({
+          limit: 50,
+        })) as { status: string; data: Document[] };
+        setDocuments(response.data);
+        setFilteredDocuments(response.data);
+      } catch (err) {
+        console.error('Error fetching documents:', err);
+        setDocuments([]);
+        setFilteredDocuments([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDocuments();
+  }, []);
+
+  useEffect(() => {
+    if (!searchTerm) {
+      setFilteredDocuments(documents);
+      return;
+    }
+
+    const filtered = documents.filter((doc) => {
+      const searchLower = searchTerm.toLowerCase();
+      return (
+        doc.name.toLowerCase().includes(searchLower) ||
+        doc.type.toLowerCase().includes(searchLower) ||
+        (doc.patient && doc.patient.name.toLowerCase().includes(searchLower))
+      );
+    });
+    setFilteredDocuments(filtered);
+  }, [searchTerm, documents]);
 
   return (
     <div className="table-container">
-      <table className="data-table" role="table" aria-label="Documents list">
+      <div className="search-container" style={{ marginBottom: '1rem' }}>
+        <input
+          type="text"
+          id="document-search"
+          placeholder="Search documents by name, type, or patient..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{
+            width: '100%',
+            padding: '0.5rem',
+            fontSize: '1rem',
+            border: '1px solid #ddd',
+            borderRadius: '4px',
+          }}
+        />
+      </div>
+      {loading ? (
+        <div role="status" aria-live="polite">
+          <p>Loading documents...</p>
+        </div>
+      ) : filteredDocuments.length === 0 ? (
+        <div role="status" aria-live="polite">
+          <p>No documents found.</p>
+        </div>
+      ) : (
+        <table className="data-table" role="table" aria-label="Documents list">
         <thead>
           <tr>
             <th scope="col">Document Name</th>
             <th scope="col">Type</th>
+            <th scope="col">Patient</th>
             <th scope="col">Date</th>
-            <th scope="col">Status</th>
             <th scope="col">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {documents.map((doc) => (
+          {filteredDocuments.map((doc) => (
             <tr key={doc.id}>
               <th scope="row">{doc.name}</th>
               <td>{doc.type}</td>
-              <td>{doc.date}</td>
+              <td>{doc.patient ? doc.patient.name : 'N/A'}</td>
               <td>
-                <span
-                  className={`status-badge status-${doc.status === 'Signed' ? 'confirmed' : 'pending'}`}
-                >
-                  {doc.status}
-                </span>
+                <time dateTime={doc.createdAt}>
+                  {new Date(doc.createdAt).toLocaleDateString()}
+                </time>
               </td>
               <td>
                 <button className="btn-action" aria-label={`View ${doc.name}`}>
@@ -61,6 +125,7 @@ const DocumentsList = () => {
           ))}
         </tbody>
       </table>
+      )}
     </div>
   );
 };
