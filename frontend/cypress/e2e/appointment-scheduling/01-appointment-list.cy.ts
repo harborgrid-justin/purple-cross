@@ -16,13 +16,14 @@ describe('Appointment List View', () => {
     cy.visitAppointments();
 
     cy.get('.data-table', { timeout: 10000 }).should('be.visible');
-    cy.get('.data-table thead th').should('have.length', 6);
+    cy.get('.data-table thead th').should('have.length', 7);
     cy.get('.data-table thead th').eq(0).should('contain', 'Date & Time');
     cy.get('.data-table thead th').eq(1).should('contain', 'Patient');
-    cy.get('.data-table thead th').eq(2).should('contain', 'Owner');
+    cy.get('.data-table thead th').eq(2).should('contain', 'Client');
     cy.get('.data-table thead th').eq(3).should('contain', 'Type');
-    cy.get('.data-table thead th').eq(4).should('contain', 'Status');
-    cy.get('.data-table thead th').eq(5).should('contain', 'Actions');
+    cy.get('.data-table thead th').eq(4).should('contain', 'Veterinarian');
+    cy.get('.data-table thead th').eq(5).should('contain', 'Status');
+    cy.get('.data-table thead th').eq(6).should('contain', 'Actions');
   });
 
   it('should display appointment data in the table', () => {
@@ -85,8 +86,8 @@ describe('Appointment List View', () => {
   it('should navigate to appointment subpages via navigation', () => {
     cy.visitAppointments();
 
-    cy.get('.sub-nav-link').should('have.length.at.least', 6);
-    cy.contains('.sub-nav-link', 'All Appointments').should('have.class', 'active');
+    cy.get('.sub-nav-link').should('have.length', 9);
+    cy.contains('.sub-nav-link', 'Calendar').should('have.class', 'active');
   });
 
   it('should display proper ARIA labels for accessibility', () => {
