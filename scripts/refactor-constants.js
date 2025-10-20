@@ -23,11 +23,20 @@ const replacements = [
   { pattern: /\bres\.status\(403\)/g, replacement: 'res.status(HTTP_STATUS.FORBIDDEN)' },
   { pattern: /\bres\.status\(404\)/g, replacement: 'res.status(HTTP_STATUS.NOT_FOUND)' },
   { pattern: /\bres\.status\(409\)/g, replacement: 'res.status(HTTP_STATUS.CONFLICT)' },
-  { pattern: /\bres\.status\(500\)/g, replacement: 'res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR)' },
+  {
+    pattern: /\bres\.status\(500\)/g,
+    replacement: 'res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR)',
+  },
 
   // AppError with status codes
-  { pattern: /AppError\(['"](.*?) not found['"], 404\)/g, replacement: "AppError(ERROR_MESSAGES.NOT_FOUND('$1'), HTTP_STATUS.NOT_FOUND)" },
-  { pattern: /AppError\(['"](.*?) already exists['"], 400\)/g, replacement: "AppError(ERROR_MESSAGES.ALREADY_EXISTS('$1'), HTTP_STATUS.BAD_REQUEST)" },
+  {
+    pattern: /AppError\(['"](.*?) not found['"], 404\)/g,
+    replacement: "AppError(ERROR_MESSAGES.NOT_FOUND('$1'), HTTP_STATUS.NOT_FOUND)",
+  },
+  {
+    pattern: /AppError\(['"](.*?) already exists['"], 400\)/g,
+    replacement: "AppError(ERROR_MESSAGES.ALREADY_EXISTS('$1'), HTTP_STATUS.BAD_REQUEST)",
+  },
 
   // Pagination defaults
   { pattern: /\bpage\s*=\s*1\b/g, replacement: 'page = PAGINATION.DEFAULT_PAGE' },
@@ -37,24 +46,40 @@ const replacements = [
   { pattern: /mode:\s*['"]insensitive['"]/g, replacement: 'mode: QUERY_MODE.INSENSITIVE' },
 
   // Sort orders
-  { pattern: /orderBy:\s*\{\s*createdAt:\s*['"]desc['"]\s*\}/g, replacement: 'orderBy: { [FIELDS.CREATED_AT]: SORT_ORDER.DESC }' },
-  { pattern: /orderBy:\s*\{\s*visitDate:\s*['"]desc['"]\s*\}/g, replacement: 'orderBy: { [FIELDS.VISIT_DATE]: SORT_ORDER.DESC }' },
-  { pattern: /orderBy:\s*\{\s*startTime:\s*['"]desc['"]\s*\}/g, replacement: 'orderBy: { [FIELDS.START_TIME]: SORT_ORDER.DESC }' },
-  { pattern: /orderBy:\s*\{\s*name:\s*['"]asc['"]\s*\}/g, replacement: 'orderBy: { name: SORT_ORDER.ASC }' },
+  {
+    pattern: /orderBy:\s*\{\s*createdAt:\s*['"]desc['"]\s*\}/g,
+    replacement: 'orderBy: { [FIELDS.CREATED_AT]: SORT_ORDER.DESC }',
+  },
+  {
+    pattern: /orderBy:\s*\{\s*visitDate:\s*['"]desc['"]\s*\}/g,
+    replacement: 'orderBy: { [FIELDS.VISIT_DATE]: SORT_ORDER.DESC }',
+  },
+  {
+    pattern: /orderBy:\s*\{\s*startTime:\s*['"]desc['"]\s*\}/g,
+    replacement: 'orderBy: { [FIELDS.START_TIME]: SORT_ORDER.DESC }',
+  },
+  {
+    pattern: /orderBy:\s*\{\s*name:\s*['"]asc['"]\s*\}/g,
+    replacement: 'orderBy: { name: SORT_ORDER.ASC }',
+  },
 
   // Take limits
   { pattern: /\btake:\s*10\b/g, replacement: 'take: QUERY_LIMITS.RECENT_ITEMS' },
   { pattern: /\btake:\s*5\b/g, replacement: 'take: QUERY_LIMITS.APPOINTMENTS' },
 
   // Status checks
-  { pattern: /status:\s*\{\s*not:\s*['"]cancelled['"]\s*\}/g, replacement: 'status: { not: STATUS.CANCELLED }' },
+  {
+    pattern: /status:\s*\{\s*not:\s*['"]cancelled['"]\s*\}/g,
+    replacement: 'status: { not: STATUS.CANCELLED }',
+  },
   { pattern: /status:\s*['"]active['"]/g, replacement: 'status: STATUS.ACTIVE' },
   { pattern: /status:\s*['"]pending['"]/g, replacement: 'status: STATUS.PENDING' },
 ];
 
 // Import statement to add if not present
 const requiredImports = {
-  services: "import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION, QUERY_MODE, SORT_ORDER, FIELDS, QUERY_LIMITS, STATUS } from '../constants';",
+  services:
+    "import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION, QUERY_MODE, SORT_ORDER, FIELDS, QUERY_LIMITS, STATUS } from '../constants';",
   controllers: "import { HTTP_STATUS } from '../constants';",
 };
 
@@ -63,7 +88,8 @@ function refactorFile(filePath, fileType) {
   let modified = false;
 
   // Check if constants are already imported
-  const hasConstantsImport = content.includes("from '../constants'") || content.includes('from "../constants"');
+  const hasConstantsImport =
+    content.includes("from '../constants'") || content.includes('from "../constants"');
 
   // Apply replacements
   replacements.forEach(({ pattern, replacement }) => {
@@ -111,7 +137,7 @@ let modifiedFiles = 0;
 
 // Refactor services
 console.log('Refactoring services...');
-glob.sync('backend/src/services/**/*.service.ts').forEach(file => {
+glob.sync('backend/src/services/**/*.service.ts').forEach((file) => {
   totalFiles++;
   if (refactorFile(file, 'services')) {
     modifiedFiles++;
@@ -120,7 +146,7 @@ glob.sync('backend/src/services/**/*.service.ts').forEach(file => {
 
 // Refactor controllers
 console.log('\nRefactoring controllers...');
-glob.sync('backend/src/controllers/**/*.controller.ts').forEach(file => {
+glob.sync('backend/src/controllers/**/*.controller.ts').forEach((file) => {
   totalFiles++;
   if (refactorFile(file, 'controllers')) {
     modifiedFiles++;

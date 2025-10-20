@@ -122,9 +122,7 @@ describe('EquipmentService', () => {
 
   describe('getUpcomingMaintenance', () => {
     it('should retrieve upcoming scheduled maintenance', async () => {
-      const mockItems = [
-        { id: '1', status: 'scheduled', scheduledDate: new Date('2024-12-15') },
-      ];
+      const mockItems = [{ id: '1', status: 'scheduled', scheduledDate: new Date('2024-12-15') }];
 
       (prisma.equipmentMaintenance.findMany as jest.Mock).mockResolvedValue(mockItems);
 

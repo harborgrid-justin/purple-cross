@@ -93,7 +93,11 @@ describe('Client Data Integrity', () => {
   it.skip('should maintain data consistency across client updates', () => {
     // Skipped: Update functionality requires full form submission and API integration
     // Navigate to first client details
-    cy.get('.data-table tbody tr', { timeout: 10000 }).first().find('.btn-action').contains('View').click();
+    cy.get('.data-table tbody tr', { timeout: 10000 })
+      .first()
+      .find('.btn-action')
+      .contains('View')
+      .click();
 
     // Store original client data
     cy.get('.client-email').invoke('text').as('originalEmail');

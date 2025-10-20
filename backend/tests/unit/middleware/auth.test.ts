@@ -42,11 +42,7 @@ describe('Auth Middleware', () => {
 
       (jwt.verify as jest.Mock).mockReturnValue(mockDecoded);
 
-      authenticate(
-        mockRequest as AuthRequest,
-        mockResponse as Response,
-        nextFunction
-      );
+      authenticate(mockRequest as AuthRequest, mockResponse as Response, nextFunction);
 
       expect(jwt.verify).toHaveBeenCalledWith('valid-token', 'test-secret');
       expect(mockRequest.user).toEqual(mockDecoded);
@@ -57,11 +53,7 @@ describe('Auth Middleware', () => {
       mockRequest.headers = {};
 
       try {
-        authenticate(
-          mockRequest as AuthRequest,
-          mockResponse as Response,
-          nextFunction
-        );
+        authenticate(mockRequest as AuthRequest, mockResponse as Response, nextFunction);
         fail('Should have thrown an error');
       } catch (error) {
         expect(error).toBeInstanceOf(AppError);
@@ -77,11 +69,7 @@ describe('Auth Middleware', () => {
       };
 
       try {
-        authenticate(
-          mockRequest as AuthRequest,
-          mockResponse as Response,
-          nextFunction
-        );
+        authenticate(mockRequest as AuthRequest, mockResponse as Response, nextFunction);
         fail('Should have thrown an error');
       } catch (error) {
         expect(error).toBeInstanceOf(AppError);
@@ -101,11 +89,7 @@ describe('Auth Middleware', () => {
       });
 
       try {
-        authenticate(
-          mockRequest as AuthRequest,
-          mockResponse as Response,
-          nextFunction
-        );
+        authenticate(mockRequest as AuthRequest, mockResponse as Response, nextFunction);
         fail('Should have thrown an error');
       } catch (error) {
         expect(error).toBeInstanceOf(AppError);
@@ -123,11 +107,7 @@ describe('Auth Middleware', () => {
       });
 
       try {
-        authenticate(
-          mockRequest as AuthRequest,
-          mockResponse as Response,
-          nextFunction
-        );
+        authenticate(mockRequest as AuthRequest, mockResponse as Response, nextFunction);
         fail('Should have thrown an error');
       } catch (error) {
         expect(error).toBeInstanceOf(AppError);
@@ -146,11 +126,7 @@ describe('Auth Middleware', () => {
 
       const authorizeMiddleware = authorize('admin', 'superadmin');
 
-      authorizeMiddleware(
-        mockRequest as AuthRequest,
-        mockResponse as Response,
-        nextFunction
-      );
+      authorizeMiddleware(mockRequest as AuthRequest, mockResponse as Response, nextFunction);
 
       expect(nextFunction).toHaveBeenCalled();
     });
@@ -161,11 +137,7 @@ describe('Auth Middleware', () => {
       const authorizeMiddleware = authorize('admin');
 
       try {
-        authorizeMiddleware(
-          mockRequest as AuthRequest,
-          mockResponse as Response,
-          nextFunction
-        );
+        authorizeMiddleware(mockRequest as AuthRequest, mockResponse as Response, nextFunction);
         fail('Should have thrown an error');
       } catch (error) {
         expect(error).toBeInstanceOf(AppError);
@@ -185,11 +157,7 @@ describe('Auth Middleware', () => {
       const authorizeMiddleware = authorize('admin');
 
       try {
-        authorizeMiddleware(
-          mockRequest as AuthRequest,
-          mockResponse as Response,
-          nextFunction
-        );
+        authorizeMiddleware(mockRequest as AuthRequest, mockResponse as Response, nextFunction);
         fail('Should have thrown an error');
       } catch (error) {
         expect(error).toBeInstanceOf(AppError);
@@ -208,11 +176,7 @@ describe('Auth Middleware', () => {
 
       const authorizeMiddleware = authorize('admin', 'veterinarian', 'nurse');
 
-      authorizeMiddleware(
-        mockRequest as AuthRequest,
-        mockResponse as Response,
-        nextFunction
-      );
+      authorizeMiddleware(mockRequest as AuthRequest, mockResponse as Response, nextFunction);
 
       expect(nextFunction).toHaveBeenCalled();
     });

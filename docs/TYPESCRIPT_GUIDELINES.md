@@ -39,6 +39,7 @@ All TypeScript projects must have strict mode enabled in `tsconfig.json`:
 The `any` type should be avoided except in rare, well-documented cases.
 
 ❌ **Bad:**
+
 ```typescript
 function processData(data: any) {
   return data.value;
@@ -46,6 +47,7 @@ function processData(data: any) {
 ```
 
 ✅ **Good:**
+
 ```typescript
 interface DataType {
   value: string;
@@ -58,6 +60,7 @@ function processData(data: DataType): string {
 ```
 
 **Exception Cases** (must be documented):
+
 - Working with truly dynamic JSON from external APIs
 - Migrating legacy JavaScript code incrementally
 - Third-party libraries without type definitions
@@ -67,6 +70,7 @@ function processData(data: DataType): string {
 Always provide explicit type annotations for function parameters and return types.
 
 ❌ **Bad:**
+
 ```typescript
 function calculateTotal(items) {
   return items.reduce((sum, item) => sum + item.price, 0);
@@ -74,6 +78,7 @@ function calculateTotal(items) {
 ```
 
 ✅ **Good:**
+
 ```typescript
 interface Item {
   price: number;
@@ -90,6 +95,7 @@ function calculateTotal(items: Item[]): number {
 Prefer union types and type guards over type assertions.
 
 ❌ **Bad:**
+
 ```typescript
 function getUser(id: string) {
   const user = fetchUser(id);
@@ -98,6 +104,7 @@ function getUser(id: string) {
 ```
 
 ✅ **Good:**
+
 ```typescript
 function getUser(id: string): User | null {
   const user = fetchUser(id);
@@ -105,12 +112,7 @@ function getUser(id: string): User | null {
 }
 
 function isUser(obj: unknown): obj is User {
-  return (
-    typeof obj === 'object' &&
-    obj !== null &&
-    'id' in obj &&
-    'email' in obj
-  );
+  return typeof obj === 'object' && obj !== null && 'id' in obj && 'email' in obj;
 }
 ```
 
@@ -119,17 +121,15 @@ function isUser(obj: unknown): obj is User {
 Every object shape should have an interface or type definition.
 
 ❌ **Bad:**
+
 ```typescript
-function createAppointment(data: {
-  patientId: string;
-  date: Date;
-  type: string;
-}) {
+function createAppointment(data: { patientId: string; date: Date; type: string }) {
   // ...
 }
 ```
 
 ✅ **Good:**
+
 ```typescript
 interface AppointmentData {
   patientId: string;
@@ -151,6 +151,7 @@ function createAppointment(data: AppointmentData): Promise<Appointment> {
 Follow consistent naming conventions throughout the codebase:
 
 - **Interfaces/Types/Classes**: PascalCase
+
   ```typescript
   interface PatientRecord {}
   type AppointmentStatus = 'scheduled' | 'completed';
@@ -158,6 +159,7 @@ Follow consistent naming conventions throughout the codebase:
   ```
 
 - **Variables/Functions**: camelCase
+
   ```typescript
   const patientName = 'Max';
   function calculateDosage(weight: number): number {}
@@ -174,6 +176,7 @@ Follow consistent naming conventions throughout the codebase:
 Only export what needs to be public; keep internal implementation details private.
 
 ❌ **Bad:**
+
 ```typescript
 // Everything exported
 export function helperFunction() {}
@@ -182,6 +185,7 @@ export function publicApi() {}
 ```
 
 ✅ **Good:**
+
 ```typescript
 // Internal helpers
 function helperFunction() {}
@@ -226,11 +230,13 @@ import { PatientService, AppointmentService } from '@/services';
 Use optional chaining (`?.`) and nullish coalescing (`??`) operators.
 
 ❌ **Bad:**
+
 ```typescript
 const ownerName = patient && patient.owner && patient.owner.name;
 ```
 
 ✅ **Good:**
+
 ```typescript
 const ownerName = patient?.owner?.name ?? 'Unknown';
 ```
@@ -240,6 +246,7 @@ const ownerName = patient?.owner?.name ?? 'Unknown';
 Use discriminated unions for mutually exclusive states.
 
 ✅ **Good:**
+
 ```typescript
 type ApiResponse<T> =
   | { status: 'success'; data: T }
@@ -266,13 +273,15 @@ function handleResponse<T>(response: ApiResponse<T>): void {
 Use non-null assertion operator (`!`) only when you have absolute certainty, and document why.
 
 ❌ **Bad:**
+
 ```typescript
-const patient = patients.find(p => p.id === id)!;
+const patient = patients.find((p) => p.id === id)!;
 ```
 
 ✅ **Good:**
+
 ```typescript
-const patient = patients.find(p => p.id === id);
+const patient = patients.find((p) => p.id === id);
 if (!patient) {
   throw new AppError('Patient not found', 404);
 }
@@ -286,6 +295,7 @@ if (!patient) {
 Use readonly properties and const assertions for immutability.
 
 ✅ **Good:**
+
 ```typescript
 interface Config {
   readonly apiUrl: string;
@@ -293,7 +303,7 @@ interface Config {
 }
 
 const APPOINTMENT_TYPES = ['checkup', 'surgery', 'emergency'] as const;
-type AppointmentType = typeof APPOINTMENT_TYPES[number];
+type AppointmentType = (typeof APPOINTMENT_TYPES)[number];
 ```
 
 ### 14. String Literal Unions Over Enums
@@ -301,14 +311,16 @@ type AppointmentType = typeof APPOINTMENT_TYPES[number];
 Prefer string literal unions for better type narrowing.
 
 ❌ **Acceptable but less flexible:**
+
 ```typescript
 enum Status {
   Active = 'ACTIVE',
-  Inactive = 'INACTIVE'
+  Inactive = 'INACTIVE',
 }
 ```
 
 ✅ **Better:**
+
 ```typescript
 type Status = 'active' | 'inactive';
 
@@ -318,7 +330,7 @@ const STATUS = {
   INACTIVE: 'inactive',
 } as const;
 
-type Status = typeof STATUS[keyof typeof STATUS];
+type Status = (typeof STATUS)[keyof typeof STATUS];
 ```
 
 ### 15. Generic Types
@@ -326,6 +338,7 @@ type Status = typeof STATUS[keyof typeof STATUS];
 Implement generic types for reusable, type-safe utilities.
 
 ✅ **Good:**
+
 ```typescript
 interface ApiResponse<T> {
   data: T;
@@ -347,6 +360,7 @@ const patients = await fetchData<Patient[]>('/api/patients');
 Use utility types to transform existing types.
 
 ✅ **Good:**
+
 ```typescript
 interface Patient {
   id: string;
@@ -372,30 +386,27 @@ type ReadonlyPatient = Readonly<Patient>;
 Add JSDoc comments for public APIs, complex types, and non-obvious business logic.
 
 ✅ **Good:**
-```typescript
+
+````typescript
 /**
  * Calculates the appropriate medication dosage for a patient based on weight and species.
- * 
+ *
  * @param weight - Patient weight in kilograms
  * @param species - Animal species (affects dosage calculation)
  * @param medication - Medication identifier
  * @returns Recommended dosage in milligrams
  * @throws {AppError} When medication is not approved for the species
- * 
+ *
  * @example
  * ```typescript
  * const dosage = calculateDosage(5.2, 'cat', 'AMOX-500');
  * // Returns: 52 (mg)
  * ```
  */
-export function calculateDosage(
-  weight: number,
-  species: Species,
-  medication: string
-): number {
+export function calculateDosage(weight: number, species: Species, medication: string): number {
   // Implementation
 }
-```
+````
 
 ### 18. Keep TypeScript Up to Date
 
@@ -425,6 +436,7 @@ Configure path aliases in `tsconfig.json` for cleaner imports.
 ```
 
 Usage:
+
 ```typescript
 // Instead of: import { PatientService } from '../../../../services/patient.service';
 import { PatientService } from '@/services/patient.service';
@@ -435,6 +447,7 @@ import { PatientService } from '@/services/patient.service';
 Set up ESLint with TypeScript plugins and enforce consistent code style.
 
 **`.eslintrc.js`:**
+
 ```javascript
 module.exports = {
   parser: '@typescript-eslint/parser',
@@ -488,5 +501,5 @@ These guidelines are enforced through:
 
 ---
 
-*Last Updated: October 2024*
-*Version: 1.0.0*
+_Last Updated: October 2024_
+_Version: 1.0.0_

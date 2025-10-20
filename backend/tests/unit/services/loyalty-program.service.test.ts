@@ -169,9 +169,9 @@ describe('LoyaltyProgramService', () => {
 
       (prisma.loyaltyProgram.findUnique as jest.Mock).mockResolvedValue(mockProgram);
 
-      await expect(
-        loyaltyProgramService.redeemPoints('client-1', 100, 'Discount')
-      ).rejects.toThrow('Insufficient points');
+      await expect(loyaltyProgramService.redeemPoints('client-1', 100, 'Discount')).rejects.toThrow(
+        'Insufficient points'
+      );
     });
   });
 });

@@ -6,14 +6,14 @@ describe('Patient Insurance Management', () => {
   });
 
   it.skip('should display insurance information for patient', () => {
-    // Skipped: Advanced patient management feature not yet fully implemented 
+    // Skipped: Advanced patient management feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.insurance-tab').click();
     cy.get('.insurance-info').should('be.visible');
   });
 
   it.skip('should show active insurance policies', () => {
-    // Skipped: Advanced patient management feature not yet fully implemented 
+    // Skipped: Advanced patient management feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.insurance-tab').click();
     cy.get('.active-policies').should('be.visible');
@@ -21,7 +21,7 @@ describe('Patient Insurance Management', () => {
   });
 
   it.skip('should display insurance provider details', () => {
-    // Skipped: Advanced patient management feature not yet fully implemented 
+    // Skipped: Advanced patient management feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.insurance-tab').click();
     cy.get('.policy-item')
@@ -34,7 +34,7 @@ describe('Patient Insurance Management', () => {
   });
 
   it.skip('should allow adding new insurance policy', () => {
-    // Skipped: Advanced patient management feature not yet fully implemented 
+    // Skipped: Advanced patient management feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.insurance-tab').click();
     cy.get('.btn-add-policy').click();
@@ -47,7 +47,7 @@ describe('Patient Insurance Management', () => {
   });
 
   it.skip('should show coverage limits and deductibles', () => {
-    // Skipped: Advanced patient management feature not yet fully implemented 
+    // Skipped: Advanced patient management feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.insurance-tab').click();
     cy.get('.policy-item')
@@ -59,7 +59,7 @@ describe('Patient Insurance Management', () => {
   });
 
   it.skip('should display coverage verification status', () => {
-    // Skipped: Advanced patient management feature not yet fully implemented 
+    // Skipped: Advanced patient management feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.insurance-tab').click();
     cy.get('.verification-status').should('be.visible');
@@ -67,7 +67,7 @@ describe('Patient Insurance Management', () => {
   });
 
   it.skip('should allow verifying insurance coverage', () => {
-    // Skipped: Advanced patient management feature not yet fully implemented 
+    // Skipped: Advanced patient management feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.insurance-tab').click();
     cy.get('.policy-item').first().find('.btn-verify').click();
@@ -77,7 +77,7 @@ describe('Patient Insurance Management', () => {
   });
 
   it.skip('should show insurance claim history', () => {
-    // Skipped: Advanced patient management feature not yet fully implemented 
+    // Skipped: Advanced patient management feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.insurance-tab').click();
     cy.get('.claims-history-tab').click();
@@ -85,7 +85,7 @@ describe('Patient Insurance Management', () => {
   });
 
   it.skip('should display policy expiration warnings', () => {
-    // Skipped: Advanced patient management feature not yet fully implemented 
+    // Skipped: Advanced patient management feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.insurance-tab').click();
     cy.get('.policy-expiring-soon').should('exist');
@@ -93,7 +93,7 @@ describe('Patient Insurance Management', () => {
   });
 
   it.skip('should allow uploading insurance documents', () => {
-    // Skipped: Advanced patient management feature not yet fully implemented 
+    // Skipped: Advanced patient management feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.insurance-tab').click();
     cy.get('.policy-item').first().find('.btn-upload-docs').click();

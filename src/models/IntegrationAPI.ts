@@ -160,7 +160,13 @@ export interface HL7Message {
 
 export interface FHIRResource {
   id: string;
-  resourceType: 'Patient' | 'Practitioner' | 'Observation' | 'MedicationRequest' | 'Appointment' | 'DiagnosticReport';
+  resourceType:
+    | 'Patient'
+    | 'Practitioner'
+    | 'Observation'
+    | 'MedicationRequest'
+    | 'Appointment'
+    | 'DiagnosticReport';
   version: string;
   data: Record<string, any>;
   lastUpdated: Date;

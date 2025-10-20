@@ -6,7 +6,7 @@ describe('Appointment Conflicts and Validation', () => {
   });
 
   it.skip('should detect double-booking conflicts', () => {
-    // Skipped: Conflict detection feature not yet implemented 
+    // Skipped: Conflict detection feature not yet implemented
     cy.visitAppointmentsPage('create');
     cy.get('#patient-select').select('Buddy');
     cy.get('#veterinarian-select').select('Dr. Emily Smith');
@@ -18,7 +18,7 @@ describe('Appointment Conflicts and Validation', () => {
   });
 
   it.skip('should warn about overlapping appointments', () => {
-    // Skipped: Conflict detection feature not yet implemented 
+    // Skipped: Conflict detection feature not yet implemented
     cy.visitAppointmentsPage('create');
     cy.get('#veterinarian-select').select('Dr. Emily Smith');
     cy.get('#start-time').type('2024-01-20T09:15');
@@ -26,7 +26,7 @@ describe('Appointment Conflicts and Validation', () => {
   });
 
   it.skip('should validate appointment duration', () => {
-    // Skipped: Conflict detection feature not yet implemented 
+    // Skipped: Conflict detection feature not yet implemented
     cy.visitAppointmentsPage('create');
     cy.get('#start-time').type('2024-01-20T09:00');
     cy.get('#end-time').type('2024-01-20T08:45'); // End before start
@@ -35,7 +35,7 @@ describe('Appointment Conflicts and Validation', () => {
   });
 
   it.skip('should enforce minimum appointment duration', () => {
-    // Skipped: Conflict detection feature not yet implemented 
+    // Skipped: Conflict detection feature not yet implemented
     cy.visitAppointmentsPage('create');
     cy.get('#start-time').type('2024-01-20T09:00');
     cy.get('#end-time').type('2024-01-20T09:05'); // Only 5 minutes
@@ -43,21 +43,21 @@ describe('Appointment Conflicts and Validation', () => {
   });
 
   it.skip('should validate business hours', () => {
-    // Skipped: Conflict detection feature not yet implemented 
+    // Skipped: Conflict detection feature not yet implemented
     cy.visitAppointmentsPage('create');
     cy.get('#start-time').type('2024-01-20T22:00'); // After hours
     cy.get('.validation-warning').should('contain', 'outside business hours');
   });
 
   it.skip('should prevent scheduling on holidays', () => {
-    // Skipped: Conflict detection feature not yet implemented 
+    // Skipped: Conflict detection feature not yet implemented
     cy.visitAppointmentsPage('create');
     cy.get('#start-time').type('2024-12-25T09:00'); // Christmas
     cy.get('.validation-error').should('contain', 'holiday');
   });
 
   it.skip('should check veterinarian availability', () => {
-    // Skipped: Conflict detection feature not yet implemented 
+    // Skipped: Conflict detection feature not yet implemented
     cy.visitAppointmentsPage('create');
     cy.get('#veterinarian-select').select('Dr. Emily Smith');
     cy.get('#start-time').type('2024-01-20T09:00');
@@ -65,7 +65,7 @@ describe('Appointment Conflicts and Validation', () => {
   });
 
   it.skip('should show available alternative time slots', () => {
-    // Skipped: Conflict detection feature not yet implemented 
+    // Skipped: Conflict detection feature not yet implemented
     cy.visitAppointmentsPage('create');
     cy.get('#start-time').type('2024-01-20T09:00');
     cy.get('.conflict-warning').should('be.visible');
@@ -75,7 +75,7 @@ describe('Appointment Conflicts and Validation', () => {
   });
 
   it.skip('should validate patient has no concurrent appointments', () => {
-    // Skipped: Conflict detection feature not yet implemented 
+    // Skipped: Conflict detection feature not yet implemented
     cy.visitAppointmentsPage('create');
     cy.get('#patient-select').select('Max');
     cy.get('#start-time').type('2024-01-20T10:00');
@@ -83,7 +83,7 @@ describe('Appointment Conflicts and Validation', () => {
   });
 
   it.skip('should allow overriding conflicts with confirmation', () => {
-    // Skipped: Conflict detection feature not yet implemented 
+    // Skipped: Conflict detection feature not yet implemented
     cy.visitAppointmentsPage('create');
     cy.get('#patient-select').select('Buddy');
     cy.get('#start-time').type('2024-01-20T09:00');

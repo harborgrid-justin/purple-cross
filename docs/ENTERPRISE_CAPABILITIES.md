@@ -19,12 +19,14 @@ This document describes the production-grade enterprise capabilities implemented
 Every request is assigned a unique correlation ID for distributed tracing.
 
 **Features:**
+
 - Accepts existing correlation IDs from `X-Correlation-ID` or `X-Request-ID` headers
 - Generates UUID v4 if no ID is provided
 - Returns correlation ID in response headers
 - Includes correlation ID in all logs and error responses
 
 **Usage:**
+
 ```typescript
 // Middleware automatically adds req.correlationId to every request
 app.use(correlationIdMiddleware);
@@ -34,6 +36,7 @@ console.log(req.correlationId); // e.g., "550e8400-e29b-41d4-a716-446655440000"
 ```
 
 **Example Request:**
+
 ```bash
 curl -H "X-Correlation-ID: my-custom-id" http://localhost:3000/api/v1/patients
 # Response includes: X-Correlation-ID: my-custom-id
@@ -44,6 +47,7 @@ curl -H "X-Correlation-ID: my-custom-id" http://localhost:3000/api/v1/patients
 Real-time application metrics for monitoring and observability.
 
 **Metrics Tracked:**
+
 - Total requests
 - Requests by HTTP method
 - Requests by status code
@@ -54,9 +58,11 @@ Real-time application metrics for monitoring and observability.
 - CPU usage
 
 **Endpoints:**
+
 - `GET /metrics` - Returns JSON metrics
 
 **Example Response:**
+
 ```json
 {
   "timestamp": "2024-01-15T10:30:00.000Z",
@@ -95,6 +101,7 @@ Real-time application metrics for monitoring and observability.
 Enhanced Winston logging with correlation IDs and structured data.
 
 **Features:**
+
 - JSON structured logs
 - Correlation ID in all log entries
 - Log rotation (10MB max, 5 files)
@@ -102,12 +109,14 @@ Enhanced Winston logging with correlation IDs and structured data.
 - Environment and version metadata
 
 **Log Files:**
+
 - `logs/combined.log` - All logs
 - `logs/error.log` - Error level and above
 - `logs/exceptions.log` - Unhandled exceptions
 - `logs/rejections.log` - Unhandled promise rejections
 
 **Example Log Entry:**
+
 ```json
 {
   "level": "info",
@@ -133,12 +142,15 @@ Kubernetes-ready health check endpoints for orchestration and monitoring.
 ### Endpoints
 
 #### Basic Health Check
+
 ```bash
 GET /health
 ```
+
 Returns simple uptime status.
 
 **Response:**
+
 ```json
 {
   "status": "ok",
@@ -148,12 +160,15 @@ Returns simple uptime status.
 ```
 
 #### Liveness Probe
+
 ```bash
 GET /health/live
 ```
+
 Indicates if the application is running (used by Kubernetes liveness probe).
 
 **Response:**
+
 ```json
 {
   "status": "ok",
@@ -162,15 +177,19 @@ Indicates if the application is running (used by Kubernetes liveness probe).
 ```
 
 #### Readiness Probe
+
 ```bash
 GET /health/ready
 ```
+
 Indicates if the application is ready to serve traffic (checks dependencies).
 
 **Checks:**
+
 - Database connectivity
 
 **Success Response (200):**
+
 ```json
 {
   "status": "ready",
@@ -182,6 +201,7 @@ Indicates if the application is ready to serve traffic (checks dependencies).
 ```
 
 **Failure Response (503):**
+
 ```json
 {
   "status": "not_ready",
@@ -194,12 +214,15 @@ Indicates if the application is ready to serve traffic (checks dependencies).
 ```
 
 #### Detailed Health Check
+
 ```bash
 GET /health/detailed
 ```
+
 Returns comprehensive system information.
 
 **Response:**
+
 ```json
 {
   "status": "ok",
@@ -237,20 +260,20 @@ spec:
   template:
     spec:
       containers:
-      - name: api
-        image: purple-cross:latest
-        livenessProbe:
-          httpGet:
-            path: /health/live
-            port: 3000
-          initialDelaySeconds: 15
-          periodSeconds: 20
-        readinessProbe:
-          httpGet:
-            path: /health/ready
-            port: 3000
-          initialDelaySeconds: 5
-          periodSeconds: 10
+        - name: api
+          image: purple-cross:latest
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
 ```
 
 ---
@@ -262,20 +285,22 @@ spec:
 Prevents cascading failures when external services are down.
 
 **Features:**
+
 - Three states: CLOSED, OPEN, HALF_OPEN
 - Configurable failure threshold
 - Automatic recovery attempts
 - Detailed logging and statistics
 
 **Usage:**
+
 ```typescript
 import { createCircuitBreaker } from '@/utils/circuitBreaker';
 
 // Create a circuit breaker for an external service
 const externalApiBreaker = createCircuitBreaker('external-api', {
-  failureThreshold: 5,      // Open after 5 failures
-  successThreshold: 2,      // Close after 2 successes in HALF_OPEN
-  timeout: 60000,           // Try to close after 60 seconds
+  failureThreshold: 5, // Open after 5 failures
+  successThreshold: 2, // Close after 2 successes in HALF_OPEN
+  timeout: 60000, // Try to close after 60 seconds
 });
 
 // Use the circuit breaker
@@ -305,41 +330,37 @@ console.log(stats);
 Handles transient failures with intelligent retry logic.
 
 **Features:**
+
 - Exponential backoff with configurable multiplier
 - Maximum delay cap
 - Retryable error filtering
 - Optional jitter to prevent thundering herd
 
 **Usage:**
+
 ```typescript
 import { retry, retryWithJitter } from '@/utils/retry';
 
 // Basic retry
 try {
-  const result = await retry(
-    async () => await fetch('https://api.example.com/data'),
-    {
-      maxAttempts: 3,
-      initialDelay: 1000,      // 1 second
-      maxDelay: 10000,         // 10 seconds max
-      backoffMultiplier: 2,    // Double delay each time
-      name: 'external-api-call',
-    }
-  );
+  const result = await retry(async () => await fetch('https://api.example.com/data'), {
+    maxAttempts: 3,
+    initialDelay: 1000, // 1 second
+    maxDelay: 10000, // 10 seconds max
+    backoffMultiplier: 2, // Double delay each time
+    name: 'external-api-call',
+  });
 } catch (error) {
   console.error('All retry attempts failed:', error);
 }
 
 // Retry with jitter (recommended for distributed systems)
-const result = await retryWithJitter(
-  async () => await databaseQuery(),
-  {
-    maxAttempts: 5,
-    initialDelay: 500,
-    maxDelay: 5000,
-    name: 'database-query',
-  }
-);
+const result = await retryWithJitter(async () => await databaseQuery(), {
+  maxAttempts: 5,
+  initialDelay: 500,
+  maxDelay: 5000,
+  name: 'database-query',
+});
 ```
 
 ### Request Timeout
@@ -347,6 +368,7 @@ const result = await retryWithJitter(
 Prevents hung requests from consuming resources.
 
 **Configuration:**
+
 ```typescript
 // Default timeout: 30 seconds
 app.use(timeoutMiddleware(30000));
@@ -356,6 +378,7 @@ app.use('/api/v1/long-running', timeoutMiddleware(120000)); // 2 minutes
 ```
 
 **Timeout Response:**
+
 ```json
 {
   "status": "error",
@@ -374,6 +397,7 @@ app.use('/api/v1/long-running', timeoutMiddleware(120000)); // 2 minutes
 Protects against abuse and DDoS attacks.
 
 **Configuration:**
+
 ```typescript
 // General API rate limit (from env vars)
 RATE_LIMIT_WINDOW_MS=900000    # 15 minutes
@@ -384,12 +408,14 @@ RATE_LIMIT_MAX_REQUESTS=100    # 100 requests per window
 ```
 
 **Features:**
+
 - Per-IP rate limiting
 - Standard rate limit headers
 - Separate stricter limits for authentication endpoints
 - Graceful error responses
 
 **Rate Limit Headers:**
+
 ```
 RateLimit-Limit: 100
 RateLimit-Remaining: 95
@@ -397,6 +423,7 @@ RateLimit-Reset: 1610723400
 ```
 
 **Rate Limit Response (429):**
+
 ```json
 {
   "status": "error",
@@ -410,6 +437,7 @@ RateLimit-Reset: 1610723400
 Multi-layer protection against injection attacks.
 
 **Features:**
+
 - HTML entity escaping (XSS prevention)
 - Null byte removal
 - SQL injection pattern detection
@@ -417,6 +445,7 @@ Multi-layer protection against injection attacks.
 - Applied to body, query params, and route params
 
 **Usage:**
+
 ```typescript
 // Automatically applied to all requests
 app.use(sanitizationMiddleware);
@@ -430,6 +459,7 @@ if (containsSQLInjection(userInput)) {
 ```
 
 **Protected Patterns:**
+
 - SQL: `SELECT`, `INSERT`, `UPDATE`, `DELETE`, `DROP`, `--`, `/*`, etc.
 - NoSQL: `$where`, `$ne`, `$gt`, `$lt`, `$regex`, etc.
 
@@ -438,12 +468,14 @@ if (containsSQLInjection(userInput)) {
 Structured error responses with security in mind.
 
 **Features:**
+
 - Error codes for easy tracking
 - Correlation IDs for tracing
 - Stack traces only in development
 - No sensitive data leakage
 
 **Error Response Format:**
+
 ```json
 {
   "status": "error",
@@ -456,6 +488,7 @@ Structured error responses with security in mind.
 ```
 
 **Using AppError:**
+
 ```typescript
 import { AppError } from '@/middleware/errorHandler';
 
@@ -468,6 +501,7 @@ throw new AppError('Invalid request', 400);
 ```
 
 **Standard Error Codes:**
+
 - `BAD_REQUEST` (400)
 - `UNAUTHORIZED` (401)
 - `FORBIDDEN` (403)
@@ -522,21 +556,21 @@ ENABLE_API_DOCS=false
 The middleware is applied in a specific order for optimal security and performance:
 
 ```typescript
-app.use(correlationIdMiddleware);    // 1. Track request
-app.use(metricsMiddleware);          // 2. Collect metrics
-app.use(timeoutMiddleware);          // 3. Set timeout
-app.use(helmet());                   // 4. Security headers
-app.use(cors());                     // 5. CORS
-app.use(express.json());             // 6. Parse body
-app.use(sanitizationMiddleware);     // 7. Sanitize input
-app.use(compression());              // 8. Compress response
-app.use(morgan());                   // 9. HTTP logging
-app.use('/health', healthRoutes);    // 10. Health checks (before rate limit)
-app.use('/metrics', metricsRoutes);  // 11. Metrics (before rate limit)
-app.use(apiRateLimiter);             // 12. Rate limiting
-app.use('/api/v1', routes);          // 13. Application routes
-app.use(notFoundHandler);            // 14. 404 handler
-app.use(errorHandler);               // 15. Error handler
+app.use(correlationIdMiddleware); // 1. Track request
+app.use(metricsMiddleware); // 2. Collect metrics
+app.use(timeoutMiddleware); // 3. Set timeout
+app.use(helmet()); // 4. Security headers
+app.use(cors()); // 5. CORS
+app.use(express.json()); // 6. Parse body
+app.use(sanitizationMiddleware); // 7. Sanitize input
+app.use(compression()); // 8. Compress response
+app.use(morgan()); // 9. HTTP logging
+app.use('/health', healthRoutes); // 10. Health checks (before rate limit)
+app.use('/metrics', metricsRoutes); // 11. Metrics (before rate limit)
+app.use(apiRateLimiter); // 12. Rate limiting
+app.use('/api/v1', routes); // 13. Application routes
+app.use(notFoundHandler); // 14. 404 handler
+app.use(errorHandler); // 15. Error handler
 ```
 
 ---
@@ -546,6 +580,7 @@ app.use(errorHandler);               // 15. Error handler
 ### For Developers
 
 1. **Always use correlation IDs in logs:**
+
    ```typescript
    logger.info({
      message: 'Processing request',
@@ -555,12 +590,14 @@ app.use(errorHandler);               // 15. Error handler
    ```
 
 2. **Use circuit breakers for external services:**
+
    ```typescript
    const breaker = createCircuitBreaker('payment-gateway');
    await breaker.execute(() => paymentGateway.charge(amount));
    ```
 
 3. **Add retry logic for transient failures:**
+
    ```typescript
    await retry(() => database.query(sql), {
      maxAttempts: 3,
@@ -633,19 +670,21 @@ app.use(errorHandler);               // 15. Error handler
 ### Updating Existing Code
 
 1. **Update error throwing:**
+
    ```typescript
    // Before
    throw new AppError('Not found', 404);
-   
+
    // After
    throw new AppError('Not found', 404, 'RESOURCE_NOT_FOUND');
    ```
 
 2. **Add correlation IDs to logs:**
+
    ```typescript
    // Before
    logger.error('Database error', { error });
-   
+
    // After
    logger.error({
      message: 'Database error',
@@ -655,10 +694,11 @@ app.use(errorHandler);               // 15. Error handler
    ```
 
 3. **Wrap external calls with circuit breakers:**
+
    ```typescript
    // Before
    const data = await externalAPI.getData();
-   
+
    // After
    const breaker = createCircuitBreaker('external-api');
    const data = await breaker.execute(() => externalAPI.getData());

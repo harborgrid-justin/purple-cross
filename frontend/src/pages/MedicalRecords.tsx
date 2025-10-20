@@ -94,38 +94,46 @@ const MedicalRecordsList = () => {
         </div>
       ) : (
         <table className="data-table" role="table" aria-label="Medical records list">
-        <thead>
-          <tr>
-            <th scope="col">Date</th>
-            <th scope="col">Patient</th>
-            <th scope="col">Chief Complaint</th>
-            <th scope="col">Veterinarian</th>
-            <th scope="col">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredRecords.map((record) => (
-            <tr key={record.id}>
-              <td>
-                <time dateTime={record.visitDate}>
-                  {new Date(record.visitDate).toLocaleDateString()}
-                </time>
-              </td>
-              <th scope="row">{record.patient.name}</th>
-              <td>{record.chiefComplaint}</td>
-              <td>Dr. {record.veterinarian.firstName} {record.veterinarian.lastName}</td>
-              <td>
-                <button className="btn-action" aria-label={`View record for ${record.patient.name}`}>
-                  View
-                </button>
-                <button className="btn-action" aria-label={`Edit record for ${record.patient.name}`}>
-                  Edit
-                </button>
-              </td>
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Patient</th>
+              <th scope="col">Chief Complaint</th>
+              <th scope="col">Veterinarian</th>
+              <th scope="col">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filteredRecords.map((record) => (
+              <tr key={record.id}>
+                <td>
+                  <time dateTime={record.visitDate}>
+                    {new Date(record.visitDate).toLocaleDateString()}
+                  </time>
+                </td>
+                <th scope="row">{record.patient.name}</th>
+                <td>{record.chiefComplaint}</td>
+                <td>
+                  Dr. {record.veterinarian.firstName} {record.veterinarian.lastName}
+                </td>
+                <td>
+                  <button
+                    className="btn-action"
+                    aria-label={`View record for ${record.patient.name}`}
+                  >
+                    View
+                  </button>
+                  <button
+                    className="btn-action"
+                    aria-label={`Edit record for ${record.patient.name}`}
+                  >
+                    Edit
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   );

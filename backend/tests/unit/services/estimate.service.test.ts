@@ -59,7 +59,9 @@ describe('EstimateService', () => {
       };
 
       // Mock the generate number method
-      jest.spyOn(estimateService as any, 'generateEstimateNumber').mockResolvedValue('EST-2024-001');
+      jest
+        .spyOn(estimateService as any, 'generateEstimateNumber')
+        .mockResolvedValue('EST-2024-001');
       mockPrisma.estimate.create.mockResolvedValue(expectedResult);
 
       const result = await estimateService.createEstimate(estimateData);

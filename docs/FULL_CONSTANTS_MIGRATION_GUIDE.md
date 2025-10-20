@@ -7,11 +7,13 @@ This guide provides a systematic approach to centralize ALL constants, variables
 ## Phase 1: Already Completed ✓
 
 ### Files Created
+
 - `backend/src/constants/index.ts` - Backend constants
 - `frontend/src/constants/index.ts` - Frontend constants
 - `backend/src/utils/refactor-helper.ts` - Helper utilities for using constants
 
 ### Files Refactored
+
 - `backend/src/config/env.ts`
 - `backend/src/middleware/rate-limiter.ts`
 - `backend/src/middleware/timeout.ts`
@@ -26,6 +28,7 @@ This guide provides a systematic approach to centralize ALL constants, variables
 ### Backend Services (23 files remaining)
 
 **Pattern to Follow:**
+
 ```typescript
 // OLD
 import { prisma } from '../config/database';
@@ -68,6 +71,7 @@ async getAll(options: { page?: number; limit?: number }) {
 ```
 
 **Files to Refactor:**
+
 1. ✓ `services/patient.service.ts` - DONE
 2. ✓ `services/appointment.service.ts` - DONE
 3. ✓ `services/client.service.ts` - DONE
@@ -102,6 +106,7 @@ async getAll(options: { page?: number; limit?: number }) {
 ### Backend Controllers (30 files)
 
 **Pattern to Follow:**
+
 ```typescript
 // OLD
 import { Request, Response } from 'express';
@@ -142,6 +147,7 @@ async delete(req: Request, res: Response) {
 ```
 
 **OR use the helper:**
+
 ```typescript
 import { Request, Response } from 'express';
 import { ControllerHelper } from '../utils/refactor-helper';
@@ -163,6 +169,7 @@ async delete(req: Request, res: Response) {
 ```
 
 **Files to Refactor:**
+
 1. `controllers/patient.controller.ts`
 2. `controllers/client.controller.ts`
 3. `controllers/appointment.controller.ts`
@@ -271,11 +278,22 @@ async delete(req: Request, res: Response) {
 After replacing, add this import at the top of each file:
 
 **For Services:**
+
 ```typescript
-import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION, QUERY_MODE, SORT_ORDER, FIELDS, QUERY_LIMITS, STATUS } from '../constants';
+import {
+  HTTP_STATUS,
+  ERROR_MESSAGES,
+  PAGINATION,
+  QUERY_MODE,
+  SORT_ORDER,
+  FIELDS,
+  QUERY_LIMITS,
+  STATUS,
+} from '../constants';
 ```
 
 **For Controllers:**
+
 ```typescript
 import { HTTP_STATUS } from '../constants';
 ```
@@ -324,17 +342,20 @@ This will automatically refactor common patterns across all services and control
 After refactoring each file or batch:
 
 1. **Type Check:**
+
    ```bash
    cd backend
    npm run typecheck
    ```
 
 2. **Lint:**
+
    ```bash
    npm run lint
    ```
 
 3. **Run Tests:**
+
    ```bash
    npm test
    ```
@@ -422,6 +443,7 @@ export const VALIDATION = {
 ## Progress Tracking
 
 ### Backend Services
+
 - [x] patient.service.ts
 - [x] appointment.service.ts
 - [x] client.service.ts
@@ -454,9 +476,11 @@ export const VALIDATION = {
 - [ ] document-template.service.ts
 
 ### Backend Controllers
+
 - [ ] All 30 controller files (see list above)
 
 ### Frontend
+
 - [x] services/api.ts
 - [ ] All components (scan needed)
 - [ ] All pages (scan needed)
@@ -484,6 +508,7 @@ export const VALIDATION = {
 ---
 
 **Note**: This is a comprehensive migration. Consider doing it in batches:
+
 - Batch 1: Core services (patient, client, appointment, medical-record, invoice)
 - Batch 2: Extended services
 - Batch 3: All controllers

@@ -21,9 +21,11 @@ Duration:       23 seconds
 ## Test Files and Coverage
 
 ### 1. Document List View (`01-document-list.cy.ts`)
+
 **15 tests** - All passing ✓
 
 Tests cover:
+
 - Page title and structure
 - Upload Document button visibility and accessibility
 - Table headers and data display
@@ -35,9 +37,11 @@ Tests cover:
 - Table structure integrity
 
 ### 2. Document Storage (`02-document-storage.cy.ts`)
+
 **12 tests** - All passing ✓
 
 Tests cover:
+
 - Storage page title and layout
 - Three information cards (Storage, Organization, Security)
 - Storage features: unlimited storage, cloud backup, version control, automatic sync
@@ -47,9 +51,11 @@ Tests cover:
 - Semantic HTML structure
 
 ### 3. Document Templates (`03-document-templates.cy.ts`)
+
 **12 tests** - All passing ✓
 
 Tests cover:
+
 - Templates page title and layout
 - Three information cards (Templates, Customization, Usage)
 - Template types: consent forms, treatment plans, discharge instructions, client letters
@@ -58,9 +64,11 @@ Tests cover:
 - Responsive design and semantic structure
 
 ### 4. E-Signature (`04-e-signature.cy.ts`)
+
 **12 tests** - All passing ✓
 
 Tests cover:
+
 - E-signature page title and layout
 - Three information cards (Signing, Compliance, Management)
 - Signing methods: in-person, remote, bulk, sequential signing
@@ -69,9 +77,11 @@ Tests cover:
 - Responsive layout and proper structure
 
 ### 5. Document Scanning (`05-document-scanning.cy.ts`)
+
 **10 tests** - All passing ✓
 
 Tests cover:
+
 - Scanning page title and layout
 - Three information cards (Scanning, OCR, Processing)
 - Scanning methods: flatbed, sheet-fed, mobile, batch scanning
@@ -80,9 +90,11 @@ Tests cover:
 - Responsive design
 
 ### 6. Document Workflow (`06-document-workflow.cy.ts`)
+
 **12 tests** - All passing ✓
 
 Tests cover:
+
 - Workflow page title and layout
 - Three information cards (Workflows, Automation, Tracking)
 - Workflow types: approval routing, multi-step approvals, parallel approvals, conditional routing
@@ -91,9 +103,11 @@ Tests cover:
 - Proper page structure and styling
 
 ### 7. Search & Retrieval (`07-search-retrieval.cy.ts`)
+
 **12 tests** - All passing ✓
 
 Tests cover:
+
 - Search page title and layout
 - Three information cards (Search, Features, Results)
 - Search capabilities: full-text search, metadata search, advanced filters, Boolean operators
@@ -102,9 +116,11 @@ Tests cover:
 - Responsive layout validation
 
 ### 8. Access Control (`08-access-control.cy.ts`)
+
 **10 tests** - All passing ✓
 
 Tests cover:
+
 - Access control page title and layout
 - Three information cards (Permissions, Sharing, Monitoring)
 - Permission levels: user permissions, role-based access, document-level security, field-level security
@@ -113,9 +129,11 @@ Tests cover:
 - Proper semantic structure
 
 ### 9. Document Analytics (`09-analytics.cy.ts`)
+
 **9 tests** - All passing ✓
 
 Tests cover:
+
 - Analytics page title and layout
 - Three information cards (Metrics, Reports, Insights)
 - Metrics tracking: storage usage, document counts, user activity, access patterns
@@ -146,70 +164,78 @@ Tests cover:
 Added to `cypress/support/commands.ts`:
 
 ```typescript
-cy.visitDocuments()                      // Navigate to documents page
-cy.visitDocumentsPage(subpage)          // Navigate to specific subpage
-cy.mockDocuments(documents)              // Mock documents API
-cy.mockDocument(document)                // Mock single document API
-cy.mockDocumentTemplates(templates)     // Mock templates API
-cy.waitForDocuments()                    // Wait for API calls
+cy.visitDocuments(); // Navigate to documents page
+cy.visitDocumentsPage(subpage); // Navigate to specific subpage
+cy.mockDocuments(documents); // Mock documents API
+cy.mockDocument(document); // Mock single document API
+cy.mockDocumentTemplates(templates); // Mock templates API
+cy.waitForDocuments(); // Wait for API calls
 ```
 
 ## Test Categories
 
 ### Functional Testing (60 tests)
+
 - Page navigation and routing
 - Data display and rendering
 - API mocking and response handling
 - User interactions
 
 ### Accessibility Testing (24 tests)
+
 - ARIA labels and roles
 - Semantic HTML structure
 - Keyboard navigation support
 - Screen reader compatibility
 
 ### Responsive Design Testing (12 tests)
+
 - Viewport size variations (1280x720, 768x1024)
 - Layout adaptability
 - Mobile-friendly design
 
 ### Visual/UI Testing (8 tests)
+
 - Card layouts and styling
 - Information hierarchy
 - CSS properties validation
 
 ## Coverage Metrics
 
-| Category | Coverage |
-|----------|----------|
-| Document Management Pages | 9/9 (100%) |
-| Core Features | All tested |
-| Navigation | All routes tested |
-| Accessibility | WCAG compliant |
-| Responsive Design | Multiple viewports |
-| API Integration | All endpoints mocked |
+| Category                  | Coverage             |
+| ------------------------- | -------------------- |
+| Document Management Pages | 9/9 (100%)           |
+| Core Features             | All tested           |
+| Navigation                | All routes tested    |
+| Accessibility             | WCAG compliant       |
+| Responsive Design         | Multiple viewports   |
+| API Integration           | All endpoints mocked |
 
 ## Running the Tests
 
 ### Prerequisites
+
 ```bash
 cd /home/runner/work/purple-cross/purple-cross
 npm run install:all
 ```
 
 ### Run All Document Management Tests
+
 ```bash
 cd frontend
 npm run test:e2e -- --spec "cypress/e2e/document-management/*.cy.ts"
 ```
 
 ### Run Specific Test File
+
 ```bash
 cd frontend
 npm run test:e2e -- --spec "cypress/e2e/document-management/01-document-list.cy.ts"
 ```
 
 ### Run in Interactive Mode
+
 ```bash
 cd frontend
 npm run test:e2e:open
@@ -219,7 +245,9 @@ npm run test:e2e:open
 ## Test Patterns and Best Practices
 
 ### Consistent Structure
+
 All tests follow the pattern used in patient-management and medical-records modules:
+
 - Clear test descriptions
 - Proper setup and teardown
 - Fixture-based data mocking
@@ -227,12 +255,14 @@ All tests follow the pattern used in patient-management and medical-records modu
 - Accessibility validation
 
 ### Reliability Features
+
 - Explicit waits with `{ timeout: 10000 }`
 - `.scrollIntoView()` for visibility issues
 - Proper selector specificity
 - API mocking to avoid external dependencies
 
 ### Maintainability
+
 - DRY principle with custom commands
 - Centralized fixture data
 - Descriptive test names
@@ -241,6 +271,7 @@ All tests follow the pattern used in patient-management and medical-records modu
 ## Integration with CI/CD
 
 The test suite is ready for CI/CD integration:
+
 - Headless execution supported
 - Screenshot capture on failure
 - JSON report generation
@@ -249,6 +280,7 @@ The test suite is ready for CI/CD integration:
 ## Future Enhancements
 
 Potential areas for expansion:
+
 1. Add tests for document upload functionality
 2. Test document download flows
 3. Add workflow state transition tests

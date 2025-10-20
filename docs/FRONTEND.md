@@ -9,6 +9,7 @@ The Purple Cross frontend is a complete React-based web application built with T
 ## Technology Stack
 
 ### Core Technologies
+
 - **React 18.2** - Modern React with hooks and functional components
 - **TypeScript 5.x** - Full type safety throughout the application
 - **React Router 6.x** - Client-side routing and navigation
@@ -16,6 +17,7 @@ The Purple Cross frontend is a complete React-based web application built with T
 - **CSS3** - Custom styling with modular CSS files
 
 ### Build Tools
+
 - **Vite** - Modern build tool with fast HMR (Hot Module Replacement)
 - **TypeScript** - Type checking and compilation
 - **npm** - Package management and build scripts
@@ -82,18 +84,21 @@ frontend/
 ### Core Components
 
 #### 1. Layout Component
+
 - Responsive header with app branding
 - Collapsible sidebar navigation
 - User information display
 - Flexible content area
 
 #### 2. Navigation Component
+
 - 15 module navigation links with icons
 - Active route highlighting
 - Collapsible sidebar support
 - Smooth transitions
 
 #### 3. Dashboard Component
+
 - Real-time statistics cards
 - Recent activity feed
 - Quick action buttons
@@ -102,6 +107,7 @@ frontend/
 ### Module Pages
 
 All 15 enterprise modules have dedicated pages with:
+
 - Module-specific header and actions
 - Tab-based sub-navigation
 - Data tables or information cards
@@ -139,6 +145,7 @@ All 15 enterprise modules have dedicated pages with:
 ### Design System
 
 **Color Palette:**
+
 - Primary: `#6b46c1` (Purple)
 - Secondary: `#2d3748` (Dark Gray)
 - Success: `#48bb78` (Green)
@@ -147,11 +154,13 @@ All 15 enterprise modules have dedicated pages with:
 - Danger: `#fed7d7` (Red)
 
 **Typography:**
+
 - Font Family: System fonts (-apple-system, BlinkMacSystemFont, etc.)
 - Base Size: 14px
 - Headings: 18px - 28px
 
 **Spacing:**
+
 - Base unit: 4px
 - Common spacing: 8px, 12px, 16px, 20px, 24px
 
@@ -167,20 +176,25 @@ All 15 enterprise modules have dedicated pages with:
 ## Building the Frontend
 
 ### Development Server
+
 ```bash
 cd frontend
 npm run dev
 ```
+
 This starts the Vite development server with Hot Module Replacement (HMR) at `http://localhost:5173`
 
 ### Production Build
+
 ```bash
 cd frontend
 npm run build
 ```
+
 This creates an optimized production build in `frontend/dist/`
 
 ### Build Output
+
 ```
 frontend/dist/
 ├── index.html               # Optimized HTML
@@ -192,10 +206,12 @@ frontend/dist/
 ```
 
 ### Preview Production Build
+
 ```bash
 cd frontend
 npm run preview
 ```
+
 This serves the production build locally for testing before deployment.
 
 ---
@@ -233,90 +249,105 @@ The frontend uses `frontend/tsconfig.json` for TypeScript configuration:
 ## Module Details
 
 ### 1. Patient Management
+
 - Patient registration and profiles
 - Search and filtering capabilities
 - Demographics and health status
 - Patient reminders and alerts
 
 ### 2. Client Management
+
 - Client registration and profiles
 - Account management
 - Multi-pet household support
 - Loyalty programs
 
 ### 3. Appointment Scheduling
+
 - Calendar view with appointments
 - Booking and management
 - Waitlist functionality
 - Appointment analytics
 
 ### 4. Medical Records
+
 - Electronic medical records (EMR)
 - Clinical note templates
 - Diagnostic results tracking
 - Vital signs recording
 
 ### 5. Prescription Management
+
 - E-prescribing interface
 - Drug database access
 - Dosage calculators
 - Drug interaction alerts
 
 ### 6. Inventory Management
+
 - Stock level monitoring
 - Automatic reordering
 - Vendor management
 - Asset tracking
 
 ### 7. Billing & Payment
+
 - Invoice generation
 - Payment processing
 - Insurance claims
 - Payment plans
 
 ### 8. Laboratory Management
+
 - Lab test ordering
 - In-house and external labs
 - Sample tracking
 - Quality assurance
 
 ### 9. Staff Management
+
 - Employee profiles
 - Role-based access control
 - Shift scheduling
 - Performance tracking
 
 ### 10. Reporting & Analytics
+
 - Financial reports
 - Operational metrics
 - Clinical analytics
 - Custom report builder
 
 ### 11. Communication & Messaging
+
 - Client portal
 - SMS and email
 - Telemedicine
 - Marketing automation
 
 ### 12. Document Management
+
 - Document storage
 - Templates
 - E-signature integration
 - Workflow automation
 
 ### 13. Compliance & Regulatory
+
 - HIPAA compliance
 - License tracking
 - Incident reporting
 - Audit preparation
 
 ### 14. Integration & API
+
 - Third-party integrations
 - RESTful API management
 - Webhooks
 - SSO configuration
 
 ### 15. Mobile & Remote Access
+
 - Mobile app configuration
 - Tablet interface
 - Field service management
@@ -327,6 +358,7 @@ The frontend uses `frontend/tsconfig.json` for TypeScript configuration:
 ## Development Guidelines
 
 ### Component Structure
+
 ```tsx
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
@@ -336,15 +368,18 @@ const ModuleName: React.FC = () => {
   return (
     <div className="page-container">
       <Routes>
-        <Route index element={
-          <>
-            <div className="page-header">
-              <h1 className="page-title">Module Title</h1>
-              <button className="btn-primary">Action</button>
-            </div>
-            {/* Module content */}
-          </>
-        } />
+        <Route
+          index
+          element={
+            <>
+              <div className="page-header">
+                <h1 className="page-title">Module Title</h1>
+                <button className="btn-primary">Action</button>
+              </div>
+              {/* Module content */}
+            </>
+          }
+        />
       </Routes>
     </div>
   );
@@ -354,6 +389,7 @@ export default ModuleName;
 ```
 
 ### Data Fetching with Custom Hooks
+
 ```tsx
 import { usePatients } from '../hooks/usePatients';
 
@@ -365,7 +401,7 @@ const PatientList: React.FC = () => {
 
   return (
     <div>
-      {data?.data.map(patient => (
+      {data?.data.map((patient) => (
         <div key={patient.id}>{patient.name}</div>
       ))}
     </div>
@@ -374,12 +410,14 @@ const PatientList: React.FC = () => {
 ```
 
 ### Type Safety
+
 - All components use TypeScript with proper typing
 - Props interfaces defined for all reusable components
 - React.FC type for functional components
 - Strict TypeScript compiler options enabled
 
 ### Styling Conventions
+
 - CSS classes use kebab-case naming
 - Modular CSS files per component/feature
 - No inline styles for maintainability
@@ -390,6 +428,7 @@ const PatientList: React.FC = () => {
 ## Next Steps
 
 ### Immediate Enhancements
+
 1. Add state management (Redux/MobX/Context API)
 2. Implement API integration with backend services
 3. Add form validation and error handling
@@ -397,6 +436,7 @@ const PatientList: React.FC = () => {
 5. Add authentication and authorization
 
 ### UI/UX Improvements
+
 1. Add animations and transitions
 2. Implement dark mode support
 3. Enhance mobile responsiveness
@@ -404,6 +444,7 @@ const PatientList: React.FC = () => {
 5. Implement toast notifications
 
 ### Data Integration
+
 1. Connect to backend API endpoints
 2. Implement data fetching hooks
 3. Add caching and optimistic updates
@@ -411,6 +452,7 @@ const PatientList: React.FC = () => {
 5. Implement real-time updates (WebSockets)
 
 ### Testing
+
 1. Unit tests with Jest and React Testing Library
 2. Integration tests for user flows
 3. E2E tests with Cypress/Playwright
@@ -422,6 +464,7 @@ const PatientList: React.FC = () => {
 ## Deployment
 
 ### Production Build Process
+
 1. Run `npm run build` in frontend directory
 2. Vite automatically optimizes and minifies assets
 3. Output is generated in `frontend/dist/`
@@ -429,6 +472,7 @@ const PatientList: React.FC = () => {
 5. Configure environment variables via `.env` files
 
 ### Hosting Options
+
 - **Static Hosting**: Netlify, Vercel, GitHub Pages
 - **Cloud Platforms**: AWS S3 + CloudFront, Azure Static Web Apps
 - **Container**: Docker + Kubernetes
@@ -466,5 +510,5 @@ For questions or contributions, please refer to the main [README.md](./README.md
 
 **Purple Cross** - Empowering veterinary professionals with enterprise-grade technology.
 
-*Frontend Implementation Date: 2024*
-*Version: 1.0.0*
+_Frontend Implementation Date: 2024_
+_Version: 1.0.0_

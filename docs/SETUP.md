@@ -37,7 +37,6 @@ Before you begin, ensure you have the following installed on your system:
 
 - **PostgreSQL 14+**
   - Download from [postgresql.org](https://www.postgresql.org/download/)
-  
 - **Redis 6+**
   - Download from [redis.io](https://redis.io/download)
 
@@ -79,6 +78,7 @@ bash scripts/setup.sh
 ### 3. Wait for Setup to Complete
 
 The setup script will:
+
 - ✅ Verify Docker and Docker Compose are installed
 - ✅ Create environment files (.env) for backend and frontend
 - ✅ Start Docker containers (PostgreSQL, Redis, Backend, Frontend)

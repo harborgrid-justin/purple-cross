@@ -25,11 +25,7 @@ describe('Sanitization Middleware', () => {
         description: 'Normal text',
       };
 
-      sanitizationMiddleware(
-        mockRequest as Request,
-        mockResponse as Response,
-        nextFunction
-      );
+      sanitizationMiddleware(mockRequest as Request, mockResponse as Response, nextFunction);
 
       expect(mockRequest.body.name).not.toContain('<script>');
       expect(mockRequest.body.description).toBe('Normal text');
@@ -42,11 +38,7 @@ describe('Sanitization Middleware', () => {
         filter: 'normal',
       };
 
-      sanitizationMiddleware(
-        mockRequest as Request,
-        mockResponse as Response,
-        nextFunction
-      );
+      sanitizationMiddleware(mockRequest as Request, mockResponse as Response, nextFunction);
 
       expect(mockRequest.query.search).not.toContain('<img');
       expect(mockRequest.query.filter).toBe('normal');
@@ -63,11 +55,7 @@ describe('Sanitization Middleware', () => {
         },
       };
 
-      sanitizationMiddleware(
-        mockRequest as Request,
-        mockResponse as Response,
-        nextFunction
-      );
+      sanitizationMiddleware(mockRequest as Request, mockResponse as Response, nextFunction);
 
       expect(mockRequest.body.user.name).not.toContain('<script>');
       expect(mockRequest.body.user.profile.bio).not.toContain('<img');
@@ -79,11 +67,7 @@ describe('Sanitization Middleware', () => {
         items: ['<script>alert(1)</script>', 'normal', '<img src=x>'],
       };
 
-      sanitizationMiddleware(
-        mockRequest as Request,
-        mockResponse as Response,
-        nextFunction
-      );
+      sanitizationMiddleware(mockRequest as Request, mockResponse as Response, nextFunction);
 
       expect(mockRequest.body.items[0]).not.toContain('<script>');
       expect(mockRequest.body.items[1]).toBe('normal');
@@ -99,11 +83,7 @@ describe('Sanitization Middleware', () => {
         query: 'SELECT * FROM users',
       };
 
-      sanitizationMiddleware(
-        mockRequest as Request,
-        mockResponse as Response,
-        nextFunction
-      );
+      sanitizationMiddleware(mockRequest as Request, mockResponse as Response, nextFunction);
 
       // Should escape or remove SQL injection patterns
       expect(mockRequest.body.username).toBeDefined();
@@ -115,11 +95,7 @@ describe('Sanitization Middleware', () => {
     it('should handle empty body', () => {
       mockRequest.body = {};
 
-      sanitizationMiddleware(
-        mockRequest as Request,
-        mockResponse as Response,
-        nextFunction
-      );
+      sanitizationMiddleware(mockRequest as Request, mockResponse as Response, nextFunction);
 
       expect(mockRequest.body).toEqual({});
       expect(nextFunction).toHaveBeenCalled();
@@ -130,11 +106,7 @@ describe('Sanitization Middleware', () => {
         field: null,
       };
 
-      sanitizationMiddleware(
-        mockRequest as Request,
-        mockResponse as Response,
-        nextFunction
-      );
+      sanitizationMiddleware(mockRequest as Request, mockResponse as Response, nextFunction);
 
       expect(mockRequest.body.field).toBeNull();
       expect(nextFunction).toHaveBeenCalled();
@@ -145,11 +117,7 @@ describe('Sanitization Middleware', () => {
         field: undefined,
       };
 
-      sanitizationMiddleware(
-        mockRequest as Request,
-        mockResponse as Response,
-        nextFunction
-      );
+      sanitizationMiddleware(mockRequest as Request, mockResponse as Response, nextFunction);
 
       expect(mockRequest.body.field).toBeUndefined();
       expect(nextFunction).toHaveBeenCalled();
@@ -162,11 +130,7 @@ describe('Sanitization Middleware', () => {
         price: 99.99,
       };
 
-      sanitizationMiddleware(
-        mockRequest as Request,
-        mockResponse as Response,
-        nextFunction
-      );
+      sanitizationMiddleware(mockRequest as Request, mockResponse as Response, nextFunction);
 
       expect(mockRequest.body.age).toBe(25);
       expect(mockRequest.body.active).toBe(true);

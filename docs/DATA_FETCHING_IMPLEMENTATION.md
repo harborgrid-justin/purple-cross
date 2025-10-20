@@ -71,7 +71,7 @@ export const useResource = (id: string) => {
 // Create mutation
 export const useCreateResource = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (data: unknown) => api.resources.create(data),
     onSuccess: () => {
@@ -83,10 +83,9 @@ export const useCreateResource = () => {
 // Update mutation
 export const useUpdateResource = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: unknown }) => 
-      api.resources.update(id, data),
+    mutationFn: ({ id, data }: { id: string; data: unknown }) => api.resources.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['resources'] });
     },
@@ -96,7 +95,7 @@ export const useUpdateResource = () => {
 // Delete mutation
 export const useDeleteResource = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (id: string) => api.resources.delete(id),
     onSuccess: () => {
@@ -118,14 +117,14 @@ const ModuleName: React.FC = () => {
     <div className="module-container">
       {/* Loading State */}
       {isLoading && <div className="loading">Loading...</div>}
-      
+
       {/* Error State */}
       {error && (
         <div className="error">
           Error: {error instanceof Error ? error.message : 'Unknown error'}
         </div>
       )}
-      
+
       {/* Data Display */}
       {data && data.data && data.data.length > 0 ? (
         <DataTable data={data.data} />
@@ -212,29 +211,34 @@ These modules maintain informational content as they don't require data fetching
 ## Benefits
 
 ### 1. Consistent Data Management
+
 - Unified approach across all modules
 - Predictable data flow and state updates
 - Standardized error handling
 
 ### 2. Performance Optimization
+
 - Automatic request caching
 - Background refetching
 - Request deduplication
 - Stale-while-revalidate pattern
 
 ### 3. Developer Experience
+
 - Type-safe hooks with TypeScript
 - Reusable custom hooks
 - Minimal boilerplate code
 - Easy to test and maintain
 
 ### 4. User Experience
+
 - Loading indicators for better feedback
 - Graceful error handling
 - Optimistic updates capability
 - Automatic background refetching
 
 ### 5. Maintainability
+
 - Centralized API client configuration
 - Single source of truth for data fetching logic
 - Easy to extend with new endpoints
@@ -246,15 +250,13 @@ Query keys are structured hierarchically for optimal cache management:
 
 ```typescript
 // List queries
-['patients']              // All patients
-['patients', { page: 1 }] // Patients page 1
-['patients', { search: 'Max' }] // Filtered patients
-
-// Detail queries
-['patient', '123']        // Single patient by ID
-
-// Nested queries
-['appointments', { date: '2024-01-15' }] // Date-filtered appointments
+['patients'][('patients', { page: 1 })][('patients', { search: 'Max' })][ // All patients // Patients page 1 // Filtered patients
+  // Detail queries
+  ('patient', '123')
+][ // Single patient by ID
+  // Nested queries
+  ('appointments', { date: '2024-01-15' })
+]; // Date-filtered appointments
 ```
 
 ## Cache Invalidation
@@ -265,10 +267,10 @@ Mutations automatically invalidate related queries:
 onSuccess: () => {
   // Invalidate all patient queries
   queryClient.invalidateQueries({ queryKey: ['patients'] });
-  
+
   // Optionally invalidate specific queries
   queryClient.invalidateQueries({ queryKey: ['patient', id] });
-}
+};
 ```
 
 ## Error Handling

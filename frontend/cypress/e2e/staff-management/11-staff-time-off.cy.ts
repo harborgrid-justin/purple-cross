@@ -6,21 +6,21 @@ describe('Staff Time Off Management', () => {
   });
 
   it.skip('should display time off requests section', () => {
-    // Skipped: Advanced staff management feature not yet fully implemented 
+    // Skipped: Advanced staff management feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.time-off-tab').click();
     cy.get('.time-off-section').should('be.visible');
   });
 
   it.skip('should show upcoming time off', () => {
-    // Skipped: Advanced staff management feature not yet fully implemented 
+    // Skipped: Advanced staff management feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.time-off-tab').click();
     cy.get('.upcoming-time-off').should('be.visible');
   });
 
   it.skip('should display time off balance', () => {
-    // Skipped: Advanced staff management feature not yet fully implemented 
+    // Skipped: Advanced staff management feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.time-off-tab').click();
     cy.get('.pto-balance').should('be.visible');
@@ -28,7 +28,7 @@ describe('Staff Time Off Management', () => {
   });
 
   it.skip('should allow requesting time off', () => {
-    // Skipped: Advanced staff management feature not yet fully implemented 
+    // Skipped: Advanced staff management feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.time-off-tab').click();
     cy.get('.btn-request-time-off').click();
@@ -41,7 +41,7 @@ describe('Staff Time Off Management', () => {
   });
 
   it.skip('should show pending time off requests', () => {
-    // Skipped: Advanced staff management feature not yet fully implemented 
+    // Skipped: Advanced staff management feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.time-off-tab').click();
     cy.get('.pending-requests').should('be.visible');
@@ -49,7 +49,7 @@ describe('Staff Time Off Management', () => {
   });
 
   it.skip('should display time off history', () => {
-    // Skipped: Advanced staff management feature not yet fully implemented 
+    // Skipped: Advanced staff management feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.time-off-tab').click();
     cy.get('.time-off-history').should('be.visible');
@@ -57,7 +57,7 @@ describe('Staff Time Off Management', () => {
   });
 
   it.skip('should show different types of leave', () => {
-    // Skipped: Advanced staff management feature not yet fully implemented 
+    // Skipped: Advanced staff management feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.time-off-tab').click();
     cy.get('.leave-types').should('be.visible');
@@ -66,7 +66,7 @@ describe('Staff Time Off Management', () => {
   });
 
   it.skip('should allow approving time off requests as manager', () => {
-    // Skipped: Advanced staff management feature not yet fully implemented 
+    // Skipped: Advanced staff management feature not yet fully implemented
     cy.visitStaffPage('time-off-approvals');
     cy.get('.pending-approval').first().find('.btn-approve').click();
     cy.get('.confirm-dialog').should('be.visible');
@@ -75,14 +75,14 @@ describe('Staff Time Off Management', () => {
   });
 
   it.skip('should show time off calendar view', () => {
-    // Skipped: Advanced staff management feature not yet fully implemented 
+    // Skipped: Advanced staff management feature not yet fully implemented
     cy.visitStaffPage('time-off-calendar');
     cy.get('.time-off-calendar').should('be.visible');
     cy.get('.calendar-event').should('have.length.at.least', 1);
   });
 
   it.skip('should warn about overlapping time off requests', () => {
-    // Skipped: Advanced staff management feature not yet fully implemented 
+    // Skipped: Advanced staff management feature not yet fully implemented
     cy.get('.data-table tbody tr').first().find('.btn-action').contains('View').click();
     cy.get('.time-off-tab').click();
     cy.get('.btn-request-time-off').click();

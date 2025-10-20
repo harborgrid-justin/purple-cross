@@ -63,10 +63,10 @@ describe('PatientService', () => {
     it('should create a patient with valid data', async () => {
       // Arrange
       const patientData = { name: 'Max', species: 'Dog', ownerId: '123' };
-      
+
       // Act
       const result = await patientService.createPatient(patientData);
-      
+
       // Assert
       expect(result).toBeDefined();
       expect(result.name).toBe('Max');
@@ -78,6 +78,7 @@ describe('PatientService', () => {
 ### Test Coverage
 
 Current test files:
+
 - ✅ Patient Service Tests
 - ✅ Client Service Tests
 - ✅ Appointment Service Tests
@@ -175,9 +176,8 @@ const mockPatient = TestDataGenerator.mockPatient({
 ```typescript
 it('should handle error cases', async () => {
   (prisma.patient.findUnique as jest.Mock).mockResolvedValue(null);
-  
-  await expect(patientService.getPatientById('invalid'))
-    .rejects.toThrow('Patient not found');
+
+  await expect(patientService.getPatientById('invalid')).rejects.toThrow('Patient not found');
 });
 ```
 
@@ -186,7 +186,7 @@ it('should handle error cases', async () => {
 ```typescript
 it('should return paginated results', async () => {
   const result = await service.getAll({ page: 1, limit: 20 });
-  
+
   expect(result.pagination).toEqual({
     page: 1,
     limit: 20,
@@ -201,15 +201,15 @@ it('should return paginated results', async () => {
 ```typescript
 it('should validate required fields', async () => {
   const invalidData = {};
-  
-  await expect(service.create(invalidData))
-    .rejects.toThrow('Validation error');
+
+  await expect(service.create(invalidData)).rejects.toThrow('Validation error');
 });
 ```
 
 ## Continuous Integration
 
 Tests run automatically on:
+
 - Every pull request
 - Every commit to main branch
 - Scheduled nightly builds
@@ -278,6 +278,7 @@ npm test -- --verbose
 ## Coverage Reports
 
 Coverage reports are generated in:
+
 - `backend/coverage/` - Backend test coverage
 - `frontend/coverage/` - Frontend test coverage
 
@@ -298,6 +299,7 @@ open frontend/coverage/index.html
 Configuration: `backend/jest.config.js`
 
 Key settings:
+
 - Coverage threshold: 70%
 - Test timeout: 10000ms
 - Test environment: node
@@ -307,6 +309,7 @@ Key settings:
 Configuration: `frontend/vite.config.ts`
 
 Key settings:
+
 - Test environment: jsdom
 - Coverage provider: v8
 - Global test APIs enabled
@@ -331,6 +334,7 @@ When adding new tests:
 ## Support
 
 For testing questions or issues:
+
 - Open an issue on GitHub
 - Contact the development team
 - Refer to `docs/CONTRIBUTING.md`

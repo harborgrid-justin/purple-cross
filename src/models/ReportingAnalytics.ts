@@ -43,7 +43,12 @@ export interface BudgetComparison {
 
 export interface OperationalReport {
   id: string;
-  reportType: 'patient_visits' | 'appointment_utilization' | 'staff_productivity' | 'service_mix' | 'capacity';
+  reportType:
+    | 'patient_visits'
+    | 'appointment_utilization'
+    | 'staff_productivity'
+    | 'service_mix'
+    | 'capacity';
   periodStart: Date;
   periodEnd: Date;
   data: OperationalData;
@@ -73,7 +78,12 @@ export interface StaffProductivityData {
 
 export interface ClinicalReport {
   id: string;
-  reportType: 'disease_prevalence' | 'treatment_outcomes' | 'procedure_success' | 'diagnostic_accuracy' | 'protocol_compliance';
+  reportType:
+    | 'disease_prevalence'
+    | 'treatment_outcomes'
+    | 'procedure_success'
+    | 'diagnostic_accuracy'
+    | 'protocol_compliance';
   periodStart: Date;
   periodEnd: Date;
   data: ClinicalData;

@@ -25,11 +25,7 @@ describe('Timeout Middleware', () => {
   it('should setup timeout handler', () => {
     const middleware = timeoutMiddleware(5000);
 
-    middleware(
-      mockRequest as Request,
-      mockResponse as Response,
-      nextFunction
-    );
+    middleware(mockRequest as Request, mockResponse as Response, nextFunction);
 
     expect(mockResponse.on).toHaveBeenCalledWith('finish', expect.any(Function));
     expect(mockResponse.on).toHaveBeenCalledWith('close', expect.any(Function));
@@ -39,11 +35,7 @@ describe('Timeout Middleware', () => {
   it('should use default timeout when not specified', () => {
     const middleware = timeoutMiddleware();
 
-    middleware(
-      mockRequest as Request,
-      mockResponse as Response,
-      nextFunction
-    );
+    middleware(mockRequest as Request, mockResponse as Response, nextFunction);
 
     expect(nextFunction).toHaveBeenCalled();
     expect(mockResponse.on).toHaveBeenCalled();

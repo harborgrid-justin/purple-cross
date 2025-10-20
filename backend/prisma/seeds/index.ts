@@ -94,8 +94,8 @@ async function main() {
       quantityOnHand: 100,
       minimumQuantity: 20,
       reorderPoint: 30,
-      unitCost: 0.50,
-      sellingPrice: 2.00,
+      unitCost: 0.5,
+      sellingPrice: 2.0,
       status: 'active',
     },
   });

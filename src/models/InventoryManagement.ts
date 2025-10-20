@@ -89,7 +89,14 @@ export interface PurchaseOrder {
   vendorId: string;
   orderDate: Date;
   expectedDeliveryDate: Date;
-  status: 'draft' | 'submitted' | 'approved' | 'ordered' | 'partially_received' | 'received' | 'cancelled';
+  status:
+    | 'draft'
+    | 'submitted'
+    | 'approved'
+    | 'ordered'
+    | 'partially_received'
+    | 'received'
+    | 'cancelled';
   items: PurchaseOrderItem[];
   subtotal: number;
   tax: number;

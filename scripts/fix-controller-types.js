@@ -4,9 +4,9 @@ const path = require('path');
 const controllersDir = path.join(__dirname, '..', 'backend', 'src', 'controllers');
 
 // Get all controller files
-const files = fs.readdirSync(controllersDir).filter(file => file.endsWith('.controller.ts'));
+const files = fs.readdirSync(controllersDir).filter((file) => file.endsWith('.controller.ts'));
 
-files.forEach(file => {
+files.forEach((file) => {
   const filePath = path.join(controllersDir, file);
   let content = fs.readFileSync(filePath, 'utf8');
 

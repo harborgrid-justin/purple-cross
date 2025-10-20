@@ -2,33 +2,33 @@
 
 describe('Treatment History', () => {
   it.skip('should display the treatment history page title', () => {
-    // Skipped: Advanced medical records feature not yet fully implemented 
+    // Skipped: Advanced medical records feature not yet fully implemented
     cy.visitMedicalRecordsPage('treatment-history');
     cy.get('.page-header h1').should('contain', 'Treatment History');
   });
 
   it.skip('should display treatment history content section', () => {
-    // Skipped: Advanced medical records feature not yet fully implemented 
+    // Skipped: Advanced medical records feature not yet fully implemented
     cy.visitMedicalRecordsPage('treatment-history');
     cy.get('.content-section').should('exist');
     cy.get('.content-section').should('be.visible');
   });
 
   it.skip('should navigate to treatment history from main medical records page', () => {
-    // Skipped: Advanced medical records feature not yet fully implemented 
+    // Skipped: Advanced medical records feature not yet fully implemented
     cy.visitMedicalRecords();
     cy.contains('.sub-nav-link', 'Treatment History').click();
     cy.url().should('include', '/medical-records/treatment-history');
   });
 
   it.skip('should highlight treatment history in navigation when active', () => {
-    // Skipped: Advanced medical records feature not yet fully implemented 
+    // Skipped: Advanced medical records feature not yet fully implemented
     cy.visitMedicalRecordsPage('treatment-history');
     cy.contains('.sub-nav-link', 'Treatment History').should('have.class', 'active');
   });
 
   it.skip('should have proper page structure', () => {
-    // Skipped: Advanced medical records feature not yet fully implemented 
+    // Skipped: Advanced medical records feature not yet fully implemented
     cy.visitMedicalRecordsPage('treatment-history');
     cy.get('.page').should('exist');
     cy.get('.page-header').should('exist');
@@ -36,7 +36,7 @@ describe('Treatment History', () => {
   });
 
   it.skip('should display History Tracking card', () => {
-    // Skipped: Advanced medical records feature not yet fully implemented 
+    // Skipped: Advanced medical records feature not yet fully implemented
     cy.visitMedicalRecordsPage('treatment-history');
     cy.contains('h3', 'History Tracking').should('be.visible');
     cy.contains('All treatments').should('be.visible');
@@ -46,7 +46,7 @@ describe('Treatment History', () => {
   });
 
   it.skip('should display Search card', () => {
-    // Skipped: Advanced medical records feature not yet fully implemented 
+    // Skipped: Advanced medical records feature not yet fully implemented
     cy.visitMedicalRecordsPage('treatment-history');
     cy.contains('h3', 'Search').should('be.visible');
     cy.contains('By date range').should('be.visible');
@@ -56,7 +56,7 @@ describe('Treatment History', () => {
   });
 
   it.skip('should display Analysis card', () => {
-    // Skipped: Advanced medical records feature not yet fully implemented 
+    // Skipped: Advanced medical records feature not yet fully implemented
     cy.visitMedicalRecordsPage('treatment-history');
     cy.contains('h3', 'Analysis').should('be.visible');
     cy.contains('Treatment effectiveness').should('be.visible');
@@ -66,14 +66,14 @@ describe('Treatment History', () => {
   });
 
   it.skip('should have proper grid layout for info cards', () => {
-    // Skipped: Advanced medical records feature not yet fully implemented 
+    // Skipped: Advanced medical records feature not yet fully implemented
     cy.visitMedicalRecordsPage('treatment-history');
     cy.get('.info-cards').should('be.visible');
     cy.get('.info-cards').should('have.css', 'display', 'grid');
   });
 
   it.skip('should display comprehensive treatment history features', () => {
-    // Skipped: Advanced medical records feature not yet fully implemented 
+    // Skipped: Advanced medical records feature not yet fully implemented
     cy.visitMedicalRecordsPage('treatment-history');
 
     const expectedFeatures = [
@@ -97,7 +97,7 @@ describe('Treatment History', () => {
   });
 
   it.skip('should allow navigation to other medical record sections', () => {
-    // Skipped: Advanced medical records feature not yet fully implemented 
+    // Skipped: Advanced medical records feature not yet fully implemented
     cy.visitMedicalRecordsPage('treatment-history');
     cy.get('.sub-nav').should('exist');
     cy.contains('.sub-nav-link', 'Vital Signs').click();
@@ -105,7 +105,7 @@ describe('Treatment History', () => {
   });
 
   it.skip('should navigate back to all records from treatment history page', () => {
-    // Skipped: Advanced medical records feature not yet fully implemented 
+    // Skipped: Advanced medical records feature not yet fully implemented
     cy.visitMedicalRecordsPage('treatment-history');
     cy.contains('.sub-nav-link', 'All Records').click();
     cy.url().should('eq', Cypress.config().baseUrl + '/medical-records');

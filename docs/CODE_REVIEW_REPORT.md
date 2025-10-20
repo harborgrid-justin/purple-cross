@@ -1,6 +1,7 @@
 # Code Review Report - Misaligned Codes, File Names, and Folders
 
 ## Date: January 2025
+
 ## Status: ✅ COMPLETED
 
 ## Summary
@@ -16,6 +17,7 @@ This report documents the complete code review conducted to identify and fix mis
 **Issue:** 46 backend files used camelCase naming instead of kebab-case as required by CONTRIBUTING.md guidelines.
 
 **Standard (from CONTRIBUTING.md):**
+
 - Backend files should use kebab-case: `patient-service.ts`
 - Component files use PascalCase: `PatientList.tsx`
 - Utility files use camelCase for variables but kebab-case for file names
@@ -23,6 +25,7 @@ This report documents the complete code review conducted to identify and fix mis
 **Files Renamed:**
 
 #### Controllers (14 files)
+
 - `breedInfo.controller.ts` → `breed-info.controller.ts`
 - `clientPortal.controller.ts` → `client-portal.controller.ts`
 - `documentTemplate.controller.ts` → `document-template.controller.ts`
@@ -39,6 +42,7 @@ This report documents the complete code review conducted to identify and fix mis
 - `timeBlock.controller.ts` → `time-block.controller.ts`
 
 #### Services (13 files)
+
 - `breedInfo.service.ts` → `breed-info.service.ts`
 - `clientPortal.service.ts` → `client-portal.service.ts`
 - `documentTemplate.service.ts` → `document-template.service.ts`
@@ -55,6 +59,7 @@ This report documents the complete code review conducted to identify and fix mis
 - `timeBlock.service.ts` → `time-block.service.ts`
 
 #### Routes (14 files)
+
 - `breedInfo.routes.ts` → `breed-info.routes.ts`
 - `clientPortal.routes.ts` → `client-portal.routes.ts`
 - `documentTemplate.routes.ts` → `document-template.routes.ts`
@@ -71,19 +76,23 @@ This report documents the complete code review conducted to identify and fix mis
 - `timeBlock.routes.ts` → `time-block.routes.ts`
 
 #### Middleware (3 files)
+
 - `correlationId.ts` → `correlation-id.ts`
 - `errorHandler.ts` → `error-handler.ts`
 - `rateLimiter.ts` → `rate-limiter.ts`
 
 #### Utils (1 file)
+
 - `circuitBreaker.ts` → `circuit-breaker.ts`
 
 #### Test Files (3 files)
+
 - `circuitBreaker.test.ts` → `circuit-breaker.test.ts`
 - `labTest.service.test.ts` → `lab-test.service.test.ts`
 - `medicalRecord.service.test.ts` → `medical-record.service.test.ts`
 
 **Impact:**
+
 - All imports updated automatically across 45+ files
 - Tests continue to pass
 - No breaking changes to functionality
@@ -95,10 +104,12 @@ This report documents the complete code review conducted to identify and fix mis
 **Issue:** The repository contains a `/src/frontend` folder that appears to be outdated/duplicate code from an earlier implementation.
 
 **Current State:**
+
 - Active frontend code: `/frontend/src/` (uses Vite, React Router v6, modern structure)
 - Outdated frontend code: `/src/frontend/` (old module-based structure)
 
 **Evidence:**
+
 - `/frontend/src` has proper tests, hooks, services, and modern structure
 - `/src/frontend` has old `modules/` folder with legacy components
 - Documentation in `FRONTEND.md` references the old structure
@@ -106,6 +117,7 @@ This report documents the complete code review conducted to identify and fix mis
 - Active frontend uses `/frontend/tsconfig.json`
 
 **Recommendation:**
+
 - The `/src/frontend` folder can be removed in a future cleanup
 - The `/src` folder contains shared type models that ARE being used
 - Only the `/src/frontend` subfolder is outdated
@@ -120,17 +132,20 @@ This report documents the complete code review conducted to identify and fix mis
 **Pre-existing Issues Identified (Not Fixed - Out of Scope):**
 
 #### TypeScript Type Safety Issues
+
 - Multiple controllers missing explicit return types
 - Unsafe `any` type usage in service methods
 - Missing null/undefined checks for query parameters
 - Over 50 TypeScript strict mode violations
 
 #### Linting Issues
+
 - Prettier formatting inconsistencies
 - Missing explicit function return types
 - Definition for rule '@typescript-eslint/prefer-const' not found (ESLint config issue)
 
 #### Coverage Issues
+
 - Test coverage below 70% threshold (currently ~9%)
 - Many service methods lack unit tests
 
@@ -141,16 +156,19 @@ This report documents the complete code review conducted to identify and fix mis
 ## Verification
 
 ### Tests Run
+
 ✅ All renamed files compile successfully
 ✅ Unit tests for circuit-breaker pass (9/9 tests)
 ✅ No new test failures introduced
 ⚠️ Pre-existing test failures unrelated to renaming
 
 ### Build Status
+
 ✅ TypeScript compilation succeeds for renamed files
 ⚠️ Pre-existing type errors in other files (undefined handling)
 
 ### Import Verification
+
 ✅ All 45+ files with imports updated successfully
 ✅ No broken import paths
 ✅ Example files updated to reference new names
@@ -162,6 +180,7 @@ This report documents the complete code review conducted to identify and fix mis
 **Total Files Modified:** 63 files
 
 ### Breakdown:
+
 - 46 files renamed (controllers, services, routes, middleware, utils, tests)
 - 45+ files with updated imports
 - 2 example files updated
@@ -172,12 +191,14 @@ This report documents the complete code review conducted to identify and fix mis
 ## Compliance Status
 
 ### ✅ Compliant with CONTRIBUTING.md Standards:
+
 - [x] Backend files use kebab-case naming
 - [x] Component files use PascalCase naming (already compliant)
 - [x] Utility files follow proper naming conventions
 - [x] Test files follow same naming as source files
 
 ### 📋 Documented for Future Action:
+
 - [x] Remove `/src/frontend` outdated folder structure
 - [x] Update `FRONTEND.md` to reflect current architecture
 - [x] Remove or update `tsconfig.frontend.json`
@@ -190,11 +211,13 @@ This report documents the complete code review conducted to identify and fix mis
 ## Recommendations
 
 ### Immediate Actions (Completed)
+
 1. ✅ Rename all camelCase backend files to kebab-case
 2. ✅ Update all imports to reference renamed files
 3. ✅ Verify tests still pass
 
 ### Future Actions (Recommended)
+
 1. ✅ Clean up `/src/frontend` outdated folder structure (COMPLETED)
 2. ✅ Update documentation to reflect current architecture (COMPLETED)
 3. ✅ Remove `tsconfig.frontend.json` (COMPLETED)
