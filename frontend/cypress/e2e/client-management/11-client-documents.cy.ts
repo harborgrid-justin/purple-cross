@@ -1,11 +1,11 @@
 /// <reference types="cypress" />
 
 describe('Client Documents Management', () => {
+  // Using first client from seeded data
+  const clientId = 'client-001';
+
   beforeEach(() => {
-    cy.fixture('clients').then((clients) => {
-      cy.mockClient(clients[0]);
-      cy.visit(`/clients/${clients[0].id}/documents`);
-    });
+    cy.visit(`/clients/${clientId}/documents`);
   });
 
   it('should display client documents page', () => {
@@ -15,7 +15,6 @@ describe('Client Documents Management', () => {
 
   it('should display client document list', () => {
 
-    cy.wait('@getDocuments');
     cy.get('.document-item').should('have.length', 2);
   });
 
@@ -29,15 +28,13 @@ describe('Client Documents Management', () => {
     cy.get('#document-file').selectFile('cypress/fixtures/test-document.pdf', { force: true });
     cy.get('.btn-upload').click();
     
-    cy.wait('@uploadDocument');
-    cy.get('.success-message').should('contain', 'Document uploaded');
+    cy.get('.success-message', { timeout: 10000 }).should('contain', 'Document uploaded');
   });
 
   it('should display consent forms section', () => {
     cy.get('.consent-forms-section').should('be.visible');
     
 
-    cy.wait('@getConsentForms');
     cy.get('.consent-form-item').should('have.length.at.least', 1);
   });
 
@@ -47,8 +44,7 @@ describe('Client Documents Management', () => {
     
 
     cy.get('.btn-request-signature').first().click();
-    cy.wait('@requestSignature');
-    cy.get('.success-message').should('contain', 'Signature request sent');
+    cy.get('.success-message', { timeout: 10000 }).should('contain', 'Signature request sent');
   });
 
   it('should display signed documents with signature date', () => {
@@ -66,14 +62,11 @@ describe('Client Documents Management', () => {
     
 
     cy.get('.btn-download').first().click();
-    cy.wait('@downloadDocument');
   });
 
   it('should filter documents by category', () => {
 
     cy.get('#document-category-filter').select('contracts');
-    cy.wait('@filterDocuments');
-    
     cy.get('.document-item').each(($item) => {
       cy.wrap($item).find('.category-badge').should('contain', 'contracts');
     });

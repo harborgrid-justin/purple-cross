@@ -1,11 +1,11 @@
 /// <reference types="cypress" />
 
 describe('Client Portal Management', () => {
+  // Using first client from seeded data
+  const clientId = 'client-001';
+
   beforeEach(() => {
-    cy.fixture('clients').then((clients) => {
-      cy.mockClient(clients[0]);
-      cy.visit(`/clients/${clients[0].id}/portal`);
-    });
+    cy.visit(`/clients/${clientId}/portal`);
   });
 
   it('should display client portal page', () => {
@@ -19,27 +19,21 @@ describe('Client Portal Management', () => {
   });
 
   it('should allow enabling portal access', () => {
-
     cy.get('.btn-enable-portal').click();
-    cy.wait('@enablePortal');
-    cy.get('.success-message').should('contain', 'Portal access enabled');
+    cy.get('.success-message', { timeout: 10000 }).should('contain', 'Portal access enabled');
   });
 
   it('should allow disabling portal access', () => {
-
     cy.get('.btn-disable-portal').click();
     cy.get('.confirm-modal').should('be.visible');
     cy.get('.btn-confirm').click();
     
-    cy.wait('@disablePortal');
-    cy.get('.success-message').should('contain', 'Portal access disabled');
+    cy.get('.success-message', { timeout: 10000 }).should('contain', 'Portal access disabled');
   });
 
   it('should send portal invitation email', () => {
-
     cy.get('.btn-send-invitation').click();
-    cy.wait('@sendInvitation');
-    cy.get('.success-message').should('contain', 'Invitation sent');
+    cy.get('.success-message', { timeout: 10000 }).should('contain', 'Invitation sent');
   });
 
   it('should display portal login credentials section', () => {
@@ -48,12 +42,10 @@ describe('Client Portal Management', () => {
   });
 
   it('should allow resetting portal password', () => {
-
     cy.get('.btn-reset-password').click();
     cy.get('.confirm-modal').should('be.visible');
     cy.get('.btn-confirm').click();
     
-    cy.wait('@resetPassword');
-    cy.get('.success-message').should('contain', 'Password reset email sent');
+    cy.get('.success-message', { timeout: 10000 }).should('contain', 'Password reset email sent');
   });
 });

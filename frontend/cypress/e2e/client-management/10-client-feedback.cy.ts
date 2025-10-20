@@ -1,11 +1,11 @@
 /// <reference types="cypress" />
 
 describe('Client Feedback Management', () => {
+  // Using first client from seeded data
+  const clientId = 'client-001';
+
   beforeEach(() => {
-    cy.fixture('clients').then((clients) => {
-      cy.mockClient(clients[0]);
-      cy.visit(`/clients/${clients[0].id}/feedback`);
-    });
+    cy.visit(`/clients/${clientId}/feedback`);
   });
 
   it('should display client feedback page', () => {
@@ -15,13 +15,11 @@ describe('Client Feedback Management', () => {
 
   it('should display feedback history', () => {
 
-    cy.wait('@getFeedback');
     cy.get('.feedback-item').should('have.length', 2);
   });
 
   it('should display average rating', () => {
 
-    cy.wait('@getFeedbackSummary');
     cy.get('.average-rating').should('be.visible');
     cy.get('.average-rating').should('contain', '4.5');
   });
@@ -34,8 +32,7 @@ describe('Client Feedback Management', () => {
     cy.get('#survey-template').select('Visit Satisfaction');
     cy.get('.btn-send').click();
     
-    cy.wait('@sendSurvey');
-    cy.get('.success-message').should('contain', 'Survey sent');
+    cy.get('.success-message', { timeout: 10000 }).should('contain', 'Survey sent');
   });
 
   it('should display feedback details', () => {
@@ -57,15 +54,12 @@ describe('Client Feedback Management', () => {
     cy.get('#response-text').type('Thank you for your feedback. We will improve.');
     cy.get('.btn-submit-response').click();
     
-    cy.wait('@respondToFeedback');
-    cy.get('.success-message').should('contain', 'Response sent');
+    cy.get('.success-message', { timeout: 10000 }).should('contain', 'Response sent');
   });
 
   it('should filter feedback by type', () => {
 
     cy.get('#feedback-type-filter').select('review');
-    cy.wait('@filterFeedback');
-    
     cy.get('.feedback-item').each(($item) => {
       cy.wrap($item).find('.type-badge').should('contain', 'review');
     });

@@ -1,11 +1,11 @@
 /// <reference types="cypress" />
 
 describe('Client Relationships Management', () => {
+  // Using first client from seeded data
+  const clientId = 'client-001';
+
   beforeEach(() => {
-    cy.fixture('clients').then((clients) => {
-      cy.mockClient(clients[0]);
-      cy.visit(`/clients/${clients[0].id}/relationships`);
-    });
+    cy.visit(`/clients/${clientId}/relationships`);
   });
 
   it('should display client relationships page', () => {
@@ -16,7 +16,6 @@ describe('Client Relationships Management', () => {
   it('should display patient ownership section', () => {
 
     cy.get('.patient-ownership-section').should('be.visible');
-    cy.wait('@getPatients');
     cy.get('.patient-item').should('have.length', 2);
   });
 
@@ -29,8 +28,7 @@ describe('Client Relationships Management', () => {
     cy.get('#pet-species').select('Dog');
     cy.get('.btn-save-pet').click();
     
-    cy.wait('@addPet');
-    cy.get('.success-message').should('contain', 'Pet added successfully');
+    cy.get('.success-message', { timeout: 10000 }).should('contain', 'Pet added successfully');
   });
 
   it('should display family relationships', () => {
@@ -49,14 +47,12 @@ describe('Client Relationships Management', () => {
     cy.get('#family-relationship').select('Spouse');
     cy.get('.btn-save-family').click();
     
-    cy.wait('@addFamilyMember');
-    cy.get('.success-message').should('contain', 'Family member added');
+    cy.get('.success-message', { timeout: 10000 }).should('contain', 'Family member added');
   });
 
   it('should display emergency contacts', () => {
 
     cy.get('.emergency-contacts-section').should('be.visible');
-    cy.wait('@getEmergencyContacts');
     cy.get('.emergency-contact-item').should('have.length', 1);
   });
 

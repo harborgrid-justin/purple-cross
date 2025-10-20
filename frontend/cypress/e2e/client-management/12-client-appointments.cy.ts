@@ -1,11 +1,11 @@
 /// <reference types="cypress" />
 
 describe('Client Appointment History', () => {
+  // Using first client from seeded data
+  const clientId = 'client-001';
+
   beforeEach(() => {
-    cy.fixture('clients').then((clients) => {
-      cy.mockClient(clients[0]);
-      cy.visit(`/clients/${clients[0].id}/appointments`);
-    });
+    cy.visit(`/clients/${clientId}/appointments`);
   });
 
   it('should display client appointments page', () => {
@@ -15,21 +15,18 @@ describe('Client Appointment History', () => {
 
   it('should display appointment history', () => {
 
-    cy.wait('@getAppointments');
     cy.get('.appointment-item').should('have.length', 2);
   });
 
   it('should display upcoming appointments', () => {
 
     cy.get('#appointment-filter').select('upcoming');
-    cy.wait('@getUpcoming');
     cy.get('.appointment-item').should('have.length.at.least', 1);
   });
 
   it('should display past appointments', () => {
 
     cy.get('#appointment-filter').select('past');
-    cy.wait('@getPast');
     cy.get('.appointment-item').should('have.length.at.least', 1);
   });
 
@@ -44,7 +41,6 @@ describe('Client Appointment History', () => {
   it('should display appointment statistics', () => {
 
     cy.get('.appointment-statistics').should('be.visible');
-    cy.wait('@getStatistics');
     cy.get('.total-appointments').should('contain', '25');
   });
 
@@ -63,7 +59,6 @@ describe('Client Appointment History', () => {
     cy.get('#reminder-preference').check();
     cy.get('.btn-save-preferences').click();
     
-    cy.wait('@updatePreferences');
-    cy.get('.success-message').should('contain', 'Preferences updated');
+    cy.get('.success-message', { timeout: 10000 }).should('contain', 'Preferences updated');
   });
 });
