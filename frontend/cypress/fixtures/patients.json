@@ -1,0 +1,128 @@
+[
+  {
+    "id": "patient-001",
+    "name": "Buddy",
+    "species": "Dog",
+    "breed": "Golden Retriever",
+    "dateOfBirth": "2020-03-15T00:00:00.000Z",
+    "gender": "Male",
+    "color": "Golden",
+    "weight": 32.5,
+    "microchipId": "123456789012345",
+    "insuranceProvider": "PetSure",
+    "insurancePolicy": "POL-123456",
+    "status": "active",
+    "owner": {
+      "id": "client-001",
+      "firstName": "John",
+      "lastName": "Smith"
+    },
+    "createdAt": "2023-01-15T10:00:00.000Z",
+    "updatedAt": "2023-12-15T14:30:00.000Z"
+  },
+  {
+    "id": "patient-002",
+    "name": "Whiskers",
+    "species": "Cat",
+    "breed": "Siamese",
+    "dateOfBirth": "2019-07-22T00:00:00.000Z",
+    "gender": "Female",
+    "color": "Cream",
+    "weight": 4.2,
+    "microchipId": "987654321098765",
+    "insuranceProvider": null,
+    "insurancePolicy": null,
+    "status": "active",
+    "owner": {
+      "id": "client-002",
+      "firstName": "Sarah",
+      "lastName": "Johnson"
+    },
+    "createdAt": "2023-02-20T09:00:00.000Z",
+    "updatedAt": "2023-12-10T11:20:00.000Z"
+  },
+  {
+    "id": "patient-003",
+    "name": "Max",
+    "species": "Dog",
+    "breed": "Labrador Retriever",
+    "dateOfBirth": "2021-11-10T00:00:00.000Z",
+    "gender": "Male",
+    "color": "Black",
+    "weight": 28.0,
+    "microchipId": "456789012345678",
+    "insuranceProvider": "VetCare",
+    "insurancePolicy": "POL-789012",
+    "status": "active",
+    "owner": {
+      "id": "client-003",
+      "firstName": "Michael",
+      "lastName": "Brown"
+    },
+    "createdAt": "2023-03-10T13:00:00.000Z",
+    "updatedAt": "2023-12-12T16:45:00.000Z"
+  },
+  {
+    "id": "patient-004",
+    "name": "Luna",
+    "species": "Cat",
+    "breed": "Persian",
+    "dateOfBirth": "2022-01-05T00:00:00.000Z",
+    "gender": "Female",
+    "color": "White",
+    "weight": 3.8,
+    "microchipId": null,
+    "insuranceProvider": null,
+    "insurancePolicy": null,
+    "status": "active",
+    "owner": {
+      "id": "client-004",
+      "firstName": "Emily",
+      "lastName": "Davis"
+    },
+    "createdAt": "2023-04-05T10:30:00.000Z",
+    "updatedAt": "2023-12-08T09:15:00.000Z"
+  },
+  {
+    "id": "patient-005",
+    "name": "Charlie",
+    "species": "Dog",
+    "breed": "Beagle",
+    "dateOfBirth": "2018-09-30T00:00:00.000Z",
+    "gender": "Male",
+    "color": "Tri-color",
+    "weight": 12.3,
+    "microchipId": "234567890123456",
+    "insuranceProvider": "PetSure",
+    "insurancePolicy": "POL-234567",
+    "status": "active",
+    "owner": {
+      "id": "client-005",
+      "firstName": "David",
+      "lastName": "Wilson"
+    },
+    "createdAt": "2023-05-12T11:00:00.000Z",
+    "updatedAt": "2023-12-14T15:00:00.000Z"
+  },
+  {
+    "id": "patient-006",
+    "name": "Bella",
+    "species": "Dog",
+    "breed": "French Bulldog",
+    "dateOfBirth": "2020-06-18T00:00:00.000Z",
+    "gender": "Female",
+    "color": "Fawn",
+    "weight": 11.5,
+    "microchipId": "345678901234567",
+    "insuranceProvider": null,
+    "insurancePolicy": null,
+    "status": "active",
+    "owner": {
+      "id": "client-006",
+      "firstName": "Jennifer",
+      "lastName": "Martinez"
+    },
+    "createdAt": "2023-06-20T14:00:00.000Z",
+    "updatedAt": "2023-12-13T12:30:00.000Z"
+  }
+]
