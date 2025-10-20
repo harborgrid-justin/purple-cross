@@ -34,9 +34,9 @@ describe('Document Storage', () => {
     cy.visitDocumentsPage('storage');
     cy.contains('h3', 'Security').should('be.visible');
     cy.contains('Encryption').should('be.visible');
-    cy.contains('Access controls').should('be.visible');
-    cy.contains('Audit trails').should('be.visible');
-    cy.contains('Compliance').should('be.visible');
+    cy.contains('Access controls').scrollIntoView().should('be.visible');
+    cy.contains('Audit trails').scrollIntoView().should('be.visible');
+    cy.contains('Compliance').scrollIntoView().should('be.visible');
   });
 
   it('should have proper page structure', () => {
