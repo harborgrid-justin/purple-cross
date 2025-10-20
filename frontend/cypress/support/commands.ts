@@ -49,6 +49,39 @@ declare global {
       mockClients(clients: unknown[]): Chainable<void>;
 
       /**
+       * Custom command to navigate to clients page
+       * @example cy.visitClients()
+       */
+      visitClients(): Chainable<void>;
+
+      /**
+       * Custom command to navigate to a specific client subpage
+       * @param subpage - The client subpage to navigate to
+       * @example cy.visitClientsPage('registration')
+       */
+      visitClientsPage(subpage: string): Chainable<void>;
+
+      /**
+       * Custom command to search for clients
+       * @param searchTerm - The search term to use
+       * @example cy.searchClients('John')
+       */
+      searchClients(searchTerm: string): Chainable<void>;
+
+      /**
+       * Custom command to mock a single client
+       * @param client - Client object
+       * @example cy.mockClient({ id: '1', firstName: 'John', lastName: 'Doe' })
+       */
+      mockClient(client: unknown): Chainable<void>;
+
+      /**
+       * Custom command to wait for client API calls
+       * @example cy.waitForClients()
+       */
+      waitForClients(): Chainable<void>;
+
+      /**
        * Custom command to wait for patient API calls
        * @example cy.waitForPatients()
        */
@@ -257,6 +290,38 @@ Cypress.Commands.add('mockClients', (clients: unknown[]) => {
       data: clients,
     },
   }).as('getClientsData');
+});
+
+// Navigate to clients page
+Cypress.Commands.add('visitClients', () => {
+  cy.visit('/clients');
+});
+
+// Navigate to a specific client subpage
+Cypress.Commands.add('visitClientsPage', (subpage: string) => {
+  cy.visit(`/clients/${subpage}`);
+});
+
+// Search for clients
+Cypress.Commands.add('searchClients', (searchTerm: string) => {
+  cy.get('input[id="client-search"]').clear().type(searchTerm);
+});
+
+// Mock a single client
+Cypress.Commands.add('mockClient', (client: unknown) => {
+  const clientId = (client as { id: string }).id;
+  cy.intercept('GET', `/api/clients/${clientId}`, {
+    statusCode: 200,
+    body: {
+      status: 'success',
+      data: client,
+    },
+  }).as('getClientData');
+});
+
+// Wait for client API calls
+Cypress.Commands.add('waitForClients', () => {
+  cy.wait('@getClientsData');
 });
 
 // Wait for patient API calls
