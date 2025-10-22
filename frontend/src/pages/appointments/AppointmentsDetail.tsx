@@ -14,9 +14,11 @@ import '../../styles/Page.css';
 const AppointmentsDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
-  const { selectedAppointment: appointment, loading, error } = useAppSelector(
-    (state) => state.appointments
-  );
+  const {
+    selectedAppointment: appointment,
+    loading,
+    error,
+  } = useAppSelector((state) => state.appointments);
 
   useEffect(() => {
     if (id) {

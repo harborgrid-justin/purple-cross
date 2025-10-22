@@ -1,57 +1,57 @@
 /**
- * WF-COMP-031 | routes.tsx - Appointments page routes
- * Purpose: Appointments route configuration with role-based protection
- * Related: ProtectedRoute, appointments components
+ * WF-COMP-MEDICALRECORDS-002 | routes.tsx - MedicalRecords page routes
+ * Purpose: MedicalRecords route configuration with role-based protection
+ * Related: ProtectedRoute, medical-records components
  * Last Updated: 2025-10-22 | File Type: .tsx
  */
 
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ProtectedRoute } from '../../routes';
-import AppointmentsMain from './AppointmentsMain';
-import AppointmentsDetail from './AppointmentsDetail';
-import AppointmentsCreate from './AppointmentsCreate';
-import AppointmentsEdit from './AppointmentsEdit';
+import MedicalRecordsMain from './MedicalRecordsMain';
+import MedicalRecordsDetail from './MedicalRecordsDetail';
+import MedicalRecordsCreate from './MedicalRecordsCreate';
+import MedicalRecordsEdit from './MedicalRecordsEdit';
 
-export const AppointmentsRoutes: React.FC = () => {
+export const MedicalRecordsRoutes: React.FC = () => {
   return (
     <Routes>
-      {/* Main Appointments List/Dashboard */}
+      {/* Main MedicalRecords List/Dashboard */}
       <Route
         path="/"
         element={
           <ProtectedRoute allowedRoles={['admin', 'veterinarian', 'staff']}>
-            <AppointmentsMain />
+            <MedicalRecordsMain />
           </ProtectedRoute>
         }
       />
 
-      {/* Create New Appointment */}
+      {/* Create New MedicalRecords */}
       <Route
         path="/create"
         element={
           <ProtectedRoute allowedRoles={['admin', 'veterinarian', 'staff']}>
-            <AppointmentsCreate />
+            <MedicalRecordsCreate />
           </ProtectedRoute>
         }
       />
 
-      {/* View Appointment Details */}
+      {/* View MedicalRecords Details */}
       <Route
         path="/:id"
         element={
           <ProtectedRoute allowedRoles={['admin', 'veterinarian', 'staff']}>
-            <AppointmentsDetail />
+            <MedicalRecordsDetail />
           </ProtectedRoute>
         }
       />
 
-      {/* Edit Appointment */}
+      {/* Edit MedicalRecords */}
       <Route
         path="/:id/edit"
         element={
           <ProtectedRoute allowedRoles={['admin', 'veterinarian', 'staff']}>
-            <AppointmentsEdit />
+            <MedicalRecordsEdit />
           </ProtectedRoute>
         }
       />
@@ -59,4 +59,4 @@ export const AppointmentsRoutes: React.FC = () => {
   );
 };
 
-export default AppointmentsRoutes;
+export default MedicalRecordsRoutes;

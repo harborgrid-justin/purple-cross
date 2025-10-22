@@ -1,57 +1,57 @@
 /**
- * WF-COMP-031 | routes.tsx - Appointments page routes
- * Purpose: Appointments route configuration with role-based protection
- * Related: ProtectedRoute, appointments components
+ * WF-COMP-STAFF-002 | routes.tsx - Staff page routes
+ * Purpose: Staff route configuration with role-based protection
+ * Related: ProtectedRoute, staff components
  * Last Updated: 2025-10-22 | File Type: .tsx
  */
 
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ProtectedRoute } from '../../routes';
-import AppointmentsMain from './AppointmentsMain';
-import AppointmentsDetail from './AppointmentsDetail';
-import AppointmentsCreate from './AppointmentsCreate';
-import AppointmentsEdit from './AppointmentsEdit';
+import StaffMain from './StaffMain';
+import StaffDetail from './StaffDetail';
+import StaffCreate from './StaffCreate';
+import StaffEdit from './StaffEdit';
 
-export const AppointmentsRoutes: React.FC = () => {
+export const StaffRoutes: React.FC = () => {
   return (
     <Routes>
-      {/* Main Appointments List/Dashboard */}
+      {/* Main Staff List/Dashboard */}
       <Route
         path="/"
         element={
           <ProtectedRoute allowedRoles={['admin', 'veterinarian', 'staff']}>
-            <AppointmentsMain />
+            <StaffMain />
           </ProtectedRoute>
         }
       />
 
-      {/* Create New Appointment */}
+      {/* Create New Staff */}
       <Route
         path="/create"
         element={
           <ProtectedRoute allowedRoles={['admin', 'veterinarian', 'staff']}>
-            <AppointmentsCreate />
+            <StaffCreate />
           </ProtectedRoute>
         }
       />
 
-      {/* View Appointment Details */}
+      {/* View Staff Details */}
       <Route
         path="/:id"
         element={
           <ProtectedRoute allowedRoles={['admin', 'veterinarian', 'staff']}>
-            <AppointmentsDetail />
+            <StaffDetail />
           </ProtectedRoute>
         }
       />
 
-      {/* Edit Appointment */}
+      {/* Edit Staff */}
       <Route
         path="/:id/edit"
         element={
           <ProtectedRoute allowedRoles={['admin', 'veterinarian', 'staff']}>
-            <AppointmentsEdit />
+            <StaffEdit />
           </ProtectedRoute>
         }
       />
@@ -59,4 +59,4 @@ export const AppointmentsRoutes: React.FC = () => {
   );
 };
 
-export default AppointmentsRoutes;
+export default StaffRoutes;

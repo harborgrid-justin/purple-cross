@@ -14,31 +14,28 @@ interface ProtectedRouteProps {
 
 /**
  * ProtectedRoute component for role-based access control
- * 
+ *
  * For now, this is a placeholder that allows all access.
  * In production, this should check authentication and user roles.
  */
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
-  children, 
-  allowedRoles = [] 
-}) => {
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles = [] }) => {
   // TODO: Implement actual authentication check
   // const { user, isAuthenticated } = useAuth();
-  
+
   // Placeholder: Allow all access for now
   const isAuthenticated = true;
   const hasRequiredRole = true; // In production: check user.role against allowedRoles
-  
+
   if (!isAuthenticated) {
     // Redirect to login if not authenticated
     return <Navigate to="/login" replace />;
   }
-  
+
   if (allowedRoles.length > 0 && !hasRequiredRole) {
     // Redirect to unauthorized page if user doesn't have required role
     return <Navigate to="/unauthorized" replace />;
   }
-  
+
   return <>{children}</>;
 };
 

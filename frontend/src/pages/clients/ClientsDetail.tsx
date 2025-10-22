@@ -80,7 +80,9 @@ const ClientsDetail: React.FC = () => {
             <h2>Basic Information</h2>
             <dl>
               <dt>Name:</dt>
-              <dd>{client.firstName} {client.lastName}</dd>
+              <dd>
+                {client.firstName} {client.lastName}
+              </dd>
               {client.email && (
                 <>
                   <dt>Email:</dt>

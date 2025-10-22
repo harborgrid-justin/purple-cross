@@ -17,43 +17,43 @@ export const ClientsRoutes: React.FC = () => {
   return (
     <Routes>
       {/* Main Clients List/Dashboard */}
-      <Route 
-        path="/" 
+      <Route
+        path="/"
         element={
           <ProtectedRoute allowedRoles={['admin', 'veterinarian', 'staff']}>
             <ClientsMain />
           </ProtectedRoute>
-        } 
+        }
       />
 
       {/* Create New Clients */}
-      <Route 
-        path="/create" 
+      <Route
+        path="/create"
         element={
           <ProtectedRoute allowedRoles={['admin', 'veterinarian', 'staff']}>
             <ClientsCreate />
           </ProtectedRoute>
-        } 
+        }
       />
 
       {/* View Clients Details */}
-      <Route 
-        path="/:id" 
+      <Route
+        path="/:id"
         element={
           <ProtectedRoute allowedRoles={['admin', 'veterinarian', 'staff']}>
             <ClientsDetail />
           </ProtectedRoute>
-        } 
+        }
       />
 
       {/* Edit Clients */}
-      <Route 
-        path="/:id/edit" 
+      <Route
+        path="/:id/edit"
         element={
           <ProtectedRoute allowedRoles={['admin', 'veterinarian', 'staff']}>
             <ClientsEdit />
           </ProtectedRoute>
-        } 
+        }
       />
     </Routes>
   );
