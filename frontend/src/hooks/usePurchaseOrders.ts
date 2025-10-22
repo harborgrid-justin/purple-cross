@@ -1,0 +1,86 @@
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { api } from '@/services/api';
+
+export const usePurchaseOrders = (params?: { page?: number; limit?: number }) => {
+  return useQuery({
+    queryKey: ['purchaseOrders', params],
+    queryFn: () => api.purchaseOrders.getAll(params),
+  });
+};
+
+export const usePurchaseOrder = (id: string) => {
+  return useQuery({
+    queryKey: ['purchaseOrder', id],
+    queryFn: () => api.purchaseOrders.getById(id),
+    enabled: !!id,
+  });
+};
+
+export const useCreatePurchaseOrder = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: unknown) => api.purchaseOrders.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['purchaseOrders'] });
+    },
+  });
+};
+
+export const useUpdatePurchaseOrder = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: unknown }) =>
+      api.purchaseOrders.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['purchaseOrders'] });
+    },
+  });
+};
+
+export const useApprovePurchaseOrder = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => api.purchaseOrders.approve(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['purchaseOrders'] });
+    },
+  });
+};
+
+export const useReceivePurchaseOrderItems = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, itemsData }: { id: string; itemsData: unknown }) =>
+      api.purchaseOrders.receiveItems(id, itemsData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['purchaseOrders'] });
+      queryClient.invalidateQueries({ queryKey: ['inventory'] });
+    },
+  });
+};
+
+export const useCancelPurchaseOrder = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => api.purchaseOrders.cancel(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['purchaseOrders'] });
+    },
+  });
+};
+
+export const useDeletePurchaseOrder = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => api.purchaseOrders.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['purchaseOrders'] });
+    },
+  });
+};
