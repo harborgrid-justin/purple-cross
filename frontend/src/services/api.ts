@@ -100,6 +100,7 @@ class ApiClient {
     getById: (id: string) => this.get(API_ENDPOINTS.APPOINTMENT_BY_ID(id)),
     create: (data: unknown) => this.post(API_ENDPOINTS.APPOINTMENTS, data),
     update: (id: string, data: unknown) => this.put(API_ENDPOINTS.APPOINTMENT_BY_ID(id), data),
+    complete: (id: string) => this.patch(`/appointments/${id}/complete`),
     delete: (id: string) => this.delete(API_ENDPOINTS.APPOINTMENT_BY_ID(id)),
   };
 
