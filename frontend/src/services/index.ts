@@ -200,6 +200,66 @@ export type {
   PatientStatistics,
 } from './modules/patientsApi';
 
+// Clients API
+export { clientsApi } from './modules/clientsApi';
+export type {
+  ClientsApi,
+  Client,
+  CreateClientData,
+  UpdateClientData,
+  ClientFilters,
+  PaginatedClientResponse,
+  ClientStatistics,
+} from './modules/clientsApi';
+
+// Appointments API
+export { appointmentsApi } from './modules/appointmentsApi';
+export type {
+  AppointmentsApi,
+  Appointment,
+  CreateAppointmentData,
+  UpdateAppointmentData,
+  AppointmentFilters,
+  PaginatedAppointmentResponse,
+  AppointmentStatistics,
+} from './modules/appointmentsApi';
+
+// Medical Records API
+export { medicalRecordsApi } from './modules/medicalRecordsApi';
+export type {
+  MedicalRecordsApi,
+  MedicalRecord,
+  CreateMedicalRecordData,
+  UpdateMedicalRecordData,
+  MedicalRecordFilters,
+  PaginatedMedicalRecordResponse,
+} from './modules/medicalRecordsApi';
+
+// Invoices API
+export { invoicesApi } from './modules/invoicesApi';
+export type {
+  InvoicesApi,
+  Invoice,
+  InvoiceItem,
+  CreateInvoiceData,
+  UpdateInvoiceData,
+  InvoiceFilters,
+  PaginatedInvoiceResponse,
+  InvoiceStatistics,
+} from './modules/invoicesApi';
+
+// Staff API
+export { staffApi } from './modules/staffApi';
+export type {
+  StaffApi,
+  Staff,
+  CreateStaffData,
+  UpdateStaffData,
+  StaffFilters,
+  PaginatedStaffResponse,
+  StaffStatistics,
+} from './modules/staffApi';
+
 // ==========================================
 // LEGACY COMPATIBILITY
 // ==========================================
