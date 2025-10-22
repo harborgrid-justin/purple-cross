@@ -53,3 +53,43 @@ export const useDeleteMedicalRecord = () => {
     },
   });
 };
+
+// Composite hooks
+export const useMedicalRecordWithPatient = (id: string) => {
+  const recordQuery = useMedicalRecord(id);
+  const patientId = (recordQuery.data as { data?: { patientId?: string } })?.data?.patientId;
+  const patientQuery = useQuery({
+    queryKey: ['patient', patientId],
+    queryFn: () => api.patients.getById(patientId as string),
+    enabled: !!patientId,
+  });
+
+  return {
+    record: recordQuery,
+    patient: patientQuery,
+    isLoading: recordQuery.isLoading || patientQuery.isLoading,
+    isError: recordQuery.isError || patientQuery.isError,
+  };
+};
+
+export const usePatientMedicalHistory = (patientId: string) => {
+  const recordsQuery = useMedicalRecords({ patientId });
+  const prescriptionsQuery = useQuery({
+    queryKey: ['prescriptions', { patientId }],
+    queryFn: () => api.prescriptions.getAll({ patientId }),
+    enabled: !!patientId,
+  });
+  const labTestsQuery = useQuery({
+    queryKey: ['labTests', { patientId }],
+    queryFn: () => api.labTests.getAll({ patientId }),
+    enabled: !!patientId,
+  });
+
+  return {
+    records: recordsQuery,
+    prescriptions: prescriptionsQuery,
+    labTests: labTestsQuery,
+    isLoading: recordsQuery.isLoading || prescriptionsQuery.isLoading || labTestsQuery.isLoading,
+    isError: recordsQuery.isError || prescriptionsQuery.isError || labTestsQuery.isError,
+  };
+};

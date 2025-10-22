@@ -52,3 +52,21 @@ export const useDeletePrescription = () => {
     },
   });
 };
+
+// Composite hooks
+export const usePrescriptionWithPatient = (id: string) => {
+  const prescriptionQuery = usePrescription(id);
+  const patientId = (prescriptionQuery.data as { data?: { patientId?: string } })?.data?.patientId;
+  const patientQuery = useQuery({
+    queryKey: ['patient', patientId],
+    queryFn: () => api.patients.getById(patientId as string),
+    enabled: !!patientId,
+  });
+
+  return {
+    prescription: prescriptionQuery,
+    patient: patientQuery,
+    isLoading: prescriptionQuery.isLoading || patientQuery.isLoading,
+    isError: prescriptionQuery.isError || patientQuery.isError,
+  };
+};

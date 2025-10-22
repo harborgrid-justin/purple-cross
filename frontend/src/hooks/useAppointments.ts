@@ -48,3 +48,38 @@ export const useDeleteAppointment = () => {
     },
   });
 };
+
+// Composite hooks
+export const useAppointmentWithPatient = (id: string) => {
+  const appointmentQuery = useAppointment(id);
+  const patientId = (appointmentQuery.data as { data?: { patientId?: string } })?.data?.patientId;
+  const patientQuery = useQuery({
+    queryKey: ['patient', patientId],
+    queryFn: () => api.patients.getById(patientId as string),
+    enabled: !!patientId,
+  });
+
+  return {
+    appointment: appointmentQuery,
+    patient: patientQuery,
+    isLoading: appointmentQuery.isLoading || patientQuery.isLoading,
+    isError: appointmentQuery.isError || patientQuery.isError,
+  };
+};
+
+export const useAppointmentWithClient = (id: string) => {
+  const appointmentQuery = useAppointment(id);
+  const clientId = (appointmentQuery.data as { data?: { clientId?: string } })?.data?.clientId;
+  const clientQuery = useQuery({
+    queryKey: ['client', clientId],
+    queryFn: () => api.clients.getById(clientId as string),
+    enabled: !!clientId,
+  });
+
+  return {
+    appointment: appointmentQuery,
+    client: clientQuery,
+    isLoading: appointmentQuery.isLoading || clientQuery.isLoading,
+    isError: appointmentQuery.isError || clientQuery.isError,
+  };
+};

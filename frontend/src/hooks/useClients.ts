@@ -48,3 +48,52 @@ export const useDeleteClient = () => {
     },
   });
 };
+
+// Composite hooks
+export const useClientWithPatients = (id: string) => {
+  const clientQuery = useClient(id);
+  const patientsQuery = useQuery({
+    queryKey: ['patients', { ownerId: id }],
+    queryFn: () => api.patients.getAll({ ownerId: id }),
+    enabled: !!id,
+  });
+
+  return {
+    client: clientQuery,
+    patients: patientsQuery,
+    isLoading: clientQuery.isLoading || patientsQuery.isLoading,
+    isError: clientQuery.isError || patientsQuery.isError,
+  };
+};
+
+export const useClientWithAppointments = (id: string) => {
+  const clientQuery = useClient(id);
+  const patientsQuery = useQuery({
+    queryKey: ['patients', { ownerId: id }],
+    queryFn: () => api.patients.getAll({ ownerId: id }),
+    enabled: !!id,
+  });
+
+  return {
+    client: clientQuery,
+    patients: patientsQuery,
+    isLoading: clientQuery.isLoading || patientsQuery.isLoading,
+    isError: clientQuery.isError || patientsQuery.isError,
+  };
+};
+
+export const useClientWithInvoices = (id: string) => {
+  const clientQuery = useClient(id);
+  const invoicesQuery = useQuery({
+    queryKey: ['invoices', { clientId: id }],
+    queryFn: () => api.invoices.getAll({ clientId: id }),
+    enabled: !!id,
+  });
+
+  return {
+    client: clientQuery,
+    invoices: invoicesQuery,
+    isLoading: clientQuery.isLoading || invoicesQuery.isLoading,
+    isError: clientQuery.isError || invoicesQuery.isError,
+  };
+};

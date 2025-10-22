@@ -53,3 +53,27 @@ export const useDeleteInventoryItem = () => {
     },
   });
 };
+
+// Composite hooks
+export const useLowStockInventory = () => {
+  return useInventory({ lowStock: true });
+};
+
+export const useInventoryByCategory = (category: string) => {
+  return useInventory({ category });
+};
+
+export const useInventoryWithOrders = () => {
+  const inventoryQuery = useInventory();
+  const purchaseOrdersQuery = useQuery({
+    queryKey: ['purchaseOrders', 'pending'],
+    queryFn: () => api.purchaseOrders.getAll(),
+  });
+
+  return {
+    inventory: inventoryQuery,
+    pendingOrders: purchaseOrdersQuery,
+    isLoading: inventoryQuery.isLoading || purchaseOrdersQuery.isLoading,
+    isError: inventoryQuery.isError || purchaseOrdersQuery.isError,
+  };
+};

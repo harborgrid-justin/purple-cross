@@ -53,3 +53,25 @@ export const useDeleteLabTest = () => {
     },
   });
 };
+
+// Composite hooks
+export const useLabTestWithPatient = (id: string) => {
+  const labTestQuery = useLabTest(id);
+  const patientId = (labTestQuery.data as { data?: { patientId?: string } })?.data?.patientId;
+  const patientQuery = useQuery({
+    queryKey: ['patient', patientId],
+    queryFn: () => api.patients.getById(patientId as string),
+    enabled: !!patientId,
+  });
+
+  return {
+    labTest: labTestQuery,
+    patient: patientQuery,
+    isLoading: labTestQuery.isLoading || patientQuery.isLoading,
+    isError: labTestQuery.isError || patientQuery.isError,
+  };
+};
+
+export const usePendingLabTests = () => {
+  return useLabTests({ status: 'pending' });
+};
