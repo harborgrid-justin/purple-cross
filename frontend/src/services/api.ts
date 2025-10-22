@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | api.ts - Legacy API client (preserved for backward compatibility)
+ * Purpose: Maintains backward compatibility with existing code
+ * Note: New code should use the services/modules APIs instead
+ * Last Updated: 2025-10-22 | File Type: .ts
+ */
+
 import axios, { AxiosInstance, AxiosError } from 'axios';
 import {
   API_CONFIG,
