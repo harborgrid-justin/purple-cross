@@ -7,13 +7,12 @@
  */
 
 import { AxiosInstance } from 'axios';
-import { z, ZodSchema } from 'zod';
-import { 
-  ApiResponse, 
+import { ZodSchema } from 'zod';
+import {
   PaginatedResponse,
   handleApiError,
   extractApiData,
-  buildUrlParams
+  buildUrlParams,
 } from '../utils/apiUtils';
 
 // ==========================================
@@ -52,8 +51,9 @@ export interface CrudOperations<T extends BaseEntity, TCreate, TUpdate = Partial
 export abstract class BaseApiService<
   TEntity extends BaseEntity,
   TCreateDto = Partial<TEntity>,
-  TUpdateDto = Partial<TCreateDto>
-> implements CrudOperations<TEntity, TCreateDto, TUpdateDto> {
+  TUpdateDto = Partial<TCreateDto>,
+> implements CrudOperations<TEntity, TCreateDto, TUpdateDto>
+{
   protected client: AxiosInstance;
   protected baseEndpoint: string;
   protected createSchema?: ZodSchema<TCreateDto>;
@@ -84,7 +84,7 @@ export abstract class BaseApiService<
     try {
       const params = buildUrlParams(filters);
       const url = `${this.baseEndpoint}${params.toString() ? `?${params.toString()}` : ''}`;
-      
+
       const response = await this.client.get(url);
       return extractApiData<PaginatedResponse<TEntity>>(response);
     } catch (error) {
@@ -111,7 +111,7 @@ export abstract class BaseApiService<
     try {
       // Validate input if schema provided
       const validatedData = this.createSchema ? this.createSchema.parse(data) : data;
-      
+
       const response = await this.client.post(this.baseEndpoint, validatedData);
       return extractApiData<TEntity>(response);
     } catch (error) {
@@ -126,7 +126,7 @@ export abstract class BaseApiService<
     try {
       // Validate input if schema provided
       const validatedData = this.updateSchema ? this.updateSchema.parse(data) : data;
-      
+
       const response = await this.client.put(`${this.baseEndpoint}/${id}`, validatedData);
       return extractApiData<TEntity>(response);
     } catch (error) {
@@ -164,7 +164,7 @@ export abstract class BaseApiService<
       const url = this.buildUrl(path);
       const queryParams = buildUrlParams(params);
       const fullUrl = queryParams.toString() ? `${url}?${queryParams.toString()}` : url;
-      
+
       const response = await this.client.get(fullUrl);
       return extractApiData<T>(response);
     } catch (error) {

@@ -38,7 +38,10 @@ export function formatDate(date: Date | string | null | undefined, format = 'MM/
 /**
  * Format datetime for display
  */
-export function formatDateTime(date: Date | string | null | undefined, format = 'MM/DD/YYYY hh:mm A'): string {
+export function formatDateTime(
+  date: Date | string | null | undefined,
+  format = 'MM/DD/YYYY hh:mm A'
+): string {
   if (!date) return '';
   return moment(date).format(format);
 }
@@ -60,7 +63,7 @@ export function getRelativeTime(date: Date | string | null | undefined): string 
  */
 export function formatCurrency(amount: number | null | undefined, currency = 'USD'): string {
   if (amount === null || amount === undefined) return '';
-  
+
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency,
@@ -84,17 +87,17 @@ export function parseCurrency(currencyString: string): number {
  */
 export function formatPhoneNumber(phone: string | null | undefined): string {
   if (!phone) return '';
-  
+
   const cleaned = phone.replace(/\D/g, '');
-  
+
   if (cleaned.length === 10) {
     return `(${cleaned.substring(0, 3)}) ${cleaned.substring(3, 6)}-${cleaned.substring(6)}`;
   }
-  
+
   if (cleaned.length === 11 && cleaned.startsWith('1')) {
     return `+1 (${cleaned.substring(1, 4)}) ${cleaned.substring(4, 7)}-${cleaned.substring(7)}`;
   }
-  
+
   return phone;
 }
 
@@ -127,10 +130,10 @@ export function formatFullName(
  */
 export function getInitials(name: string | null | undefined): string {
   if (!name) return '';
-  
+
   return name
     .split(' ')
-    .map(part => part.charAt(0).toUpperCase())
+    .map((part) => part.charAt(0).toUpperCase())
     .join('')
     .substring(0, 2);
 }
@@ -140,11 +143,11 @@ export function getInitials(name: string | null | undefined): string {
  */
 export function titleCase(text: string | null | undefined): string {
   if (!text) return '';
-  
+
   return text
     .toLowerCase()
     .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
 }
 
@@ -165,10 +168,12 @@ export function formatAddress(address: {
   const parts = [
     address.street,
     address.city,
-    address.state && address.zipCode ? `${address.state} ${address.zipCode}` : address.state || address.zipCode,
+    address.state && address.zipCode
+      ? `${address.state} ${address.zipCode}`
+      : address.state || address.zipCode,
     address.country && address.country !== 'US' ? address.country : null,
   ].filter(Boolean);
-  
+
   return parts.join(', ');
 }
 
@@ -189,7 +194,10 @@ export function arrayToString<T>(arr: T[] | null | undefined, separator = ', '):
  */
 export function stringToArray(str: string | null | undefined, separator = ','): string[] {
   if (!str) return [];
-  return str.split(separator).map(s => s.trim()).filter(Boolean);
+  return str
+    .split(separator)
+    .map((s) => s.trim())
+    .filter(Boolean);
 }
 
 // ==========================================
@@ -202,7 +210,7 @@ export function stringToArray(str: string | null | undefined, separator = ','): 
 export function removeEmpty<T extends Record<string, unknown>>(obj: T): Partial<T> {
   return Object.entries(obj).reduce((acc, [key, value]) => {
     if (value !== null && value !== undefined) {
-      acc[key as keyof T] = value;
+      (acc as Record<string, unknown>)[key] = value;
     }
     return acc;
   }, {} as Partial<T>);
@@ -223,14 +231,14 @@ export function deepMerge<T extends Record<string, unknown>>(
   ...sources: Partial<T>[]
 ): T {
   if (!sources.length) return target;
-  
+
   const source = sources.shift();
-  
+
   if (source) {
-    Object.keys(source).forEach(key => {
+    Object.keys(source).forEach((key) => {
       const sourceValue = source[key as keyof T];
       const targetValue = target[key as keyof T];
-      
+
       if (
         sourceValue &&
         typeof sourceValue === 'object' &&
@@ -242,13 +250,13 @@ export function deepMerge<T extends Record<string, unknown>>(
         target[key as keyof T] = deepMerge(
           targetValue as Record<string, unknown>,
           sourceValue as Record<string, unknown>
-        ) as T[keyof T];
-      } else {
+        ) as unknown as T[keyof T];
+      } else if (sourceValue !== undefined) {
         target[key as keyof T] = sourceValue as T[keyof T];
       }
     });
   }
-  
+
   return deepMerge(target, ...sources);
 }
 
@@ -259,7 +267,11 @@ export function deepMerge<T extends Record<string, unknown>>(
 /**
  * Format boolean for display
  */
-export function formatBoolean(value: boolean | null | undefined, trueLabel = 'Yes', falseLabel = 'No'): string {
+export function formatBoolean(
+  value: boolean | null | undefined,
+  trueLabel = 'Yes',
+  falseLabel = 'No'
+): string {
   if (value === null || value === undefined) return '';
   return value ? trueLabel : falseLabel;
 }
@@ -273,7 +285,7 @@ export function formatBoolean(value: boolean | null | undefined, trueLabel = 'Ye
  */
 export function formatNumber(value: number | null | undefined, decimals = 0): string {
   if (value === null || value === undefined) return '';
-  
+
   return new Intl.NumberFormat('en-US', {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
@@ -285,7 +297,7 @@ export function formatNumber(value: number | null | undefined, decimals = 0): st
  */
 export function formatPercentage(value: number | null | undefined, decimals = 1): string {
   if (value === null || value === undefined) return '';
-  
+
   return new Intl.NumberFormat('en-US', {
     style: 'percent',
     minimumFractionDigits: decimals,
@@ -302,10 +314,10 @@ export function formatPercentage(value: number | null | undefined, decimals = 1)
  */
 export function formatStatus(status: string | null | undefined): string {
   if (!status) return '';
-  
+
   return status
     .split('_')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(' ');
 }
 
@@ -314,20 +326,20 @@ export function formatStatus(status: string | null | undefined): string {
  */
 export function getStatusColor(status: string | null | undefined): string {
   if (!status) return 'gray';
-  
+
   const statusLower = status.toLowerCase();
-  
+
   if (['active', 'completed', 'paid', 'approved', 'success'].includes(statusLower)) {
     return 'green';
   }
-  
+
   if (['pending', 'scheduled', 'partial'].includes(statusLower)) {
     return 'yellow';
   }
-  
+
   if (['inactive', 'cancelled', 'failed', 'rejected', 'overdue'].includes(statusLower)) {
     return 'red';
   }
-  
+
   return 'gray';
 }

@@ -8,11 +8,7 @@
 // CORE INFRASTRUCTURE EXPORTS
 // ==========================================
 
-export {
-  apiInstance,
-  tokenUtils,
-  API_CONFIG
-} from './config/apiConfig';
+export { apiInstance, tokenUtils, API_CONFIG } from './config/apiConfig';
 
 // ==========================================
 // UTILITY EXPORTS
@@ -32,14 +28,14 @@ export {
   isPaginatedResponse,
   apiCache as utilsApiCache,
   withCache,
-  debounce
+  debounce,
 } from './utils/apiUtils';
 
-export type { 
+export type {
   ApiError as UtilsApiError,
   ApiResponse as UtilsApiResponse,
   PaginatedResponse as UtilsPaginatedResponse,
-  RetryOptions
+  RetryOptions,
 } from './utils/apiUtils';
 
 export {
@@ -49,13 +45,10 @@ export {
   logError,
   isRecoverableError,
   requiresAuthentication,
-  isValidationError
+  isValidationError,
 } from './utils/errorHandlers';
 
-export type {
-  AppError,
-  ErrorType
-} from './utils/errorHandlers';
+export type { AppError, ErrorType } from './utils/errorHandlers';
 
 export {
   ID_REGEX,
@@ -86,7 +79,7 @@ export {
   pdfFileSchema,
   requiredString,
   optionalString,
-  enumSchema
+  enumSchema,
 } from './utils/validators';
 
 export {
@@ -112,7 +105,7 @@ export {
   formatNumber,
   formatPercentage,
   formatStatus,
-  getStatusColor
+  getStatusColor,
 } from './utils/transformers';
 
 // ==========================================
@@ -131,13 +124,9 @@ export {
   generateCsrfToken,
   initializeCsrfToken,
   clearCsrfToken,
-  getCsrfToken
+  getCsrfToken,
 } from './security/CsrfProtection';
-export {
-  permissionChecker,
-  Permission,
-  ROLE_PERMISSIONS
-} from './security/PermissionChecker';
+export { permissionChecker, Permission, ROLE_PERMISSIONS } from './security/PermissionChecker';
 export type { User } from './security/PermissionChecker';
 
 // ==========================================
@@ -151,11 +140,7 @@ export { errorReporting } from './monitoring/ErrorReporting';
 // RESILIENCE EXPORTS
 // ==========================================
 
-export {
-  CircuitBreaker,
-  CircuitState,
-  circuitBreakerRegistry
-} from './resilience/CircuitBreaker';
+export { CircuitBreaker, CircuitState, circuitBreakerRegistry } from './resilience/CircuitBreaker';
 
 export {
   RetryStrategy,
@@ -166,13 +151,10 @@ export {
   createRetryFunction,
   quickRetry,
   standardRetry,
-  aggressiveRetry
+  aggressiveRetry,
 } from './resilience/RetryStrategies';
 
-export type {
-  RetryConfig,
-  RetryStats
-} from './resilience/RetryStrategies';
+export type { RetryConfig, RetryStats } from './resilience/RetryStrategies';
 
 // ==========================================
 // CACHE EXPORTS
@@ -191,23 +173,16 @@ export {
   invalidateRelated,
   buildListCacheKey,
   buildDetailCacheKey,
-  buildCustomCacheKey
+  buildCustomCacheKey,
 } from './cache/CacheStrategies';
 
 // ==========================================
 // AUDIT EXPORTS
 // ==========================================
 
-export {
-  auditService,
-  AuditAction,
-  AuditResourceType,
-  AuditStatus
-} from './audit';
+export { auditService, AuditAction, AuditResourceType, AuditStatus } from './audit';
 
-export type {
-  AuditEntry
-} from './audit';
+export type { AuditEntry } from './audit';
 
 // ==========================================
 // DOMAIN API EXPORTS
@@ -222,7 +197,7 @@ export type {
   UpdatePatientData,
   PatientFilters,
   PaginatedPatientResponse,
-  PatientStatistics
+  PatientStatistics,
 } from './modules/patientsApi';
 
 // ==========================================
@@ -231,4 +206,4 @@ export type {
 
 // Export legacy API client for backward compatibility
 export { api } from './api';
-export default { api: () => import('./api').then(m => m.api) };
+export default { api: () => import('./api').then((m) => m.api) };

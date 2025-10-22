@@ -46,29 +46,29 @@ export function classifyError(error: AxiosError): ErrorType {
     }
     return ErrorType.NETWORK;
   }
-  
+
   const status = error.response.status;
-  
+
   if (status === HTTP_STATUS.UNAUTHORIZED) {
     return ErrorType.AUTHENTICATION;
   }
-  
+
   if (status === HTTP_STATUS.FORBIDDEN) {
     return ErrorType.AUTHORIZATION;
   }
-  
+
   if (status === HTTP_STATUS.NOT_FOUND) {
     return ErrorType.NOT_FOUND;
   }
-  
+
   if (status === HTTP_STATUS.BAD_REQUEST) {
     return ErrorType.VALIDATION;
   }
-  
+
   if (status >= 500) {
     return ErrorType.SERVER;
   }
-  
+
   return ErrorType.UNKNOWN;
 }
 
@@ -78,30 +78,31 @@ export function classifyError(error: AxiosError): ErrorType {
 export function transformError(error: unknown): AppError {
   if (error instanceof Error) {
     const axiosError = error as AxiosError<{ message?: string; error?: string }>;
-    
+
     if (axiosError.isAxiosError) {
       const errorType = classifyError(axiosError);
-      
+
       return {
         type: errorType,
-        message: axiosError.response?.data?.message || 
-                 axiosError.response?.data?.error || 
-                 axiosError.message || 
-                 'An error occurred',
+        message:
+          axiosError.response?.data?.message ||
+          axiosError.response?.data?.error ||
+          axiosError.message ||
+          'An error occurred',
         code: axiosError.code,
         status: axiosError.response?.status,
         details: axiosError.response?.data,
         timestamp: Date.now(),
       };
     }
-    
+
     return {
       type: ErrorType.UNKNOWN,
       message: error.message,
       timestamp: Date.now(),
     };
   }
-  
+
   return {
     type: ErrorType.UNKNOWN,
     message: 'An unknown error occurred',
@@ -120,25 +121,25 @@ export function getUserFriendlyMessage(error: AppError): string {
   switch (error.type) {
     case ErrorType.NETWORK:
       return 'Unable to connect to the server. Please check your internet connection.';
-      
+
     case ErrorType.TIMEOUT:
       return 'Request timed out. Please try again.';
-      
+
     case ErrorType.AUTHENTICATION:
       return 'You need to log in to access this resource.';
-      
+
     case ErrorType.AUTHORIZATION:
       return 'You do not have permission to perform this action.';
-      
+
     case ErrorType.NOT_FOUND:
       return 'The requested resource was not found.';
-      
+
     case ErrorType.VALIDATION:
       return error.message || 'Please check your input and try again.';
-      
+
     case ErrorType.SERVER:
       return 'A server error occurred. Please try again later.';
-      
+
     default:
       return error.message || 'An unexpected error occurred.';
   }
@@ -172,11 +173,7 @@ export function logError(error: AppError, context?: string): void {
  * Determine if error is recoverable
  */
 export function isRecoverableError(error: AppError): boolean {
-  return [
-    ErrorType.NETWORK,
-    ErrorType.TIMEOUT,
-    ErrorType.SERVER,
-  ].includes(error.type);
+  return [ErrorType.NETWORK, ErrorType.TIMEOUT, ErrorType.SERVER].includes(error.type);
 }
 
 /**

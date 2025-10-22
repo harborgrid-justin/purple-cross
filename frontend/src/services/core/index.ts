@@ -6,9 +6,4 @@
 
 export * from './BaseApiService';
 export { BaseApiService } from './BaseApiService';
-export type {
-  BaseEntity,
-  PaginationParams,
-  FilterParams,
-  CrudOperations
-} from './BaseApiService';
+export type { BaseEntity, PaginationParams, FilterParams, CrudOperations } from './BaseApiService';

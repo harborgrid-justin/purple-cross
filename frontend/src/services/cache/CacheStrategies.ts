@@ -39,14 +39,14 @@ export async function cacheFirst<T>(
   options: CacheOptions = {}
 ): Promise<T> {
   const cached = cache.get<T>(key);
-  
+
   if (cached !== null) {
     return cached;
   }
-  
+
   const data = await fetcher();
   cache.set(key, data, options.ttl, options.tags);
-  
+
   return data;
 }
 
@@ -65,12 +65,12 @@ export async function networkFirst<T>(
     return data;
   } catch (error) {
     const cached = cache.get<T>(key);
-    
+
     if (cached !== null) {
       console.warn('[CacheStrategies] Network request failed, using cached data');
       return cached;
     }
-    
+
     throw error;
   }
 }
@@ -78,10 +78,7 @@ export async function networkFirst<T>(
 /**
  * Cache-only strategy: Only return cached data, never fetch
  */
-export async function cacheOnly<T>(
-  cache: ApiCache,
-  key: string
-): Promise<T | null> {
+export async function cacheOnly<T>(cache: ApiCache, key: string): Promise<T | null> {
   return cache.get<T>(key);
 }
 
@@ -109,21 +106,21 @@ export async function staleWhileRevalidate<T>(
   options: CacheOptions = {}
 ): Promise<T> {
   const cached = cache.get<T>(key);
-  
+
   // Start background update
   fetcher()
-    .then(data => {
+    .then((data) => {
       cache.set(key, data, options.ttl, options.tags);
     })
-    .catch(error => {
+    .catch((error) => {
       console.error('[CacheStrategies] Background update failed:', error);
     });
-  
+
   // Return cached data immediately if available
   if (cached !== null) {
     return cached;
   }
-  
+
   // If no cached data, wait for fetch
   return fetcher();
 }
@@ -135,10 +132,7 @@ export async function staleWhileRevalidate<T>(
 /**
  * Create a cache function with specific strategy
  */
-export function createCacheStrategy(
-  cache: ApiCache,
-  strategy: CacheStrategy
-) {
+export function createCacheStrategy(cache: ApiCache, strategy: CacheStrategy) {
   return async <T>(
     key: string,
     fetcher: () => Promise<T>,
@@ -147,19 +141,19 @@ export function createCacheStrategy(
     switch (strategy) {
       case CacheStrategy.CACHE_FIRST:
         return cacheFirst(cache, key, fetcher, options);
-        
+
       case CacheStrategy.NETWORK_FIRST:
         return networkFirst(cache, key, fetcher, options);
-        
+
       case CacheStrategy.CACHE_ONLY:
         return cacheOnly(cache, key);
-        
+
       case CacheStrategy.NETWORK_ONLY:
         return networkOnly(cache, key, fetcher, options);
-        
+
       case CacheStrategy.STALE_WHILE_REVALIDATE:
         return staleWhileRevalidate(cache, key, fetcher, options);
-        
+
       default:
         return cacheFirst(cache, key, fetcher, options);
     }
@@ -173,11 +167,8 @@ export function createCacheStrategy(
 /**
  * Invalidate cache on mutation
  */
-export function invalidateOnMutation(
-  cache: ApiCache,
-  tags: string[]
-): void {
-  tags.forEach(tag => cache.clearByTag(tag));
+export function invalidateOnMutation(cache: ApiCache, tags: string[]): void {
+  tags.forEach((tag) => cache.clearByTag(tag));
 }
 
 /**
@@ -190,12 +181,12 @@ export function invalidateRelated(
 ): void {
   // Invalidate list caches
   cache.clearByTag(`${resource}-list`);
-  
+
   // Invalidate detail caches on delete
   if (action === 'delete') {
     cache.clearByTag(`${resource}-detail`);
   }
-  
+
   // Invalidate related resources
   // Example: updating a patient should invalidate appointments
   const relatedResources: Record<string, string[]> = {
@@ -203,9 +194,9 @@ export function invalidateRelated(
     client: ['appointment', 'invoice', 'patient'],
     appointment: ['patient', 'client', 'staff'],
   };
-  
+
   const related = relatedResources[resource] || [];
-  related.forEach(relatedResource => {
+  related.forEach((relatedResource) => {
     cache.clearByTag(`${relatedResource}-list`);
   });
 }
@@ -217,31 +208,25 @@ export function invalidateRelated(
 /**
  * Build cache key for list endpoint
  */
-export function buildListCacheKey(
-  resource: string,
-  filters?: Record<string, unknown>
-): string {
+export function buildListCacheKey(resource: string, filters?: Record<string, unknown>): string {
   const baseKey = `${resource}-list`;
-  
+
   if (!filters || Object.keys(filters).length === 0) {
     return baseKey;
   }
-  
+
   const sortedFilters = Object.keys(filters)
     .sort()
-    .map(key => `${key}=${JSON.stringify(filters[key])}`)
+    .map((key) => `${key}=${JSON.stringify(filters[key])}`)
     .join('&');
-  
+
   return `${baseKey}?${sortedFilters}`;
 }
 
 /**
  * Build cache key for detail endpoint
  */
-export function buildDetailCacheKey(
-  resource: string,
-  id: string
-): string {
+export function buildDetailCacheKey(resource: string, id: string): string {
   return `${resource}-detail-${id}`;
 }
 
@@ -254,15 +239,15 @@ export function buildCustomCacheKey(
   params?: Record<string, unknown>
 ): string {
   const baseKey = `${resource}-${endpoint}`;
-  
+
   if (!params || Object.keys(params).length === 0) {
     return baseKey;
   }
-  
+
   const sortedParams = Object.keys(params)
     .sort()
-    .map(key => `${key}=${JSON.stringify(params[key])}`)
+    .map((key) => `${key}=${JSON.stringify(params[key])}`)
     .join('&');
-  
+
   return `${baseKey}?${sortedParams}`;
 }

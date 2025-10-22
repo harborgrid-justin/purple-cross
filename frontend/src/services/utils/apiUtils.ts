@@ -52,17 +52,20 @@ export interface RetryOptions {
 export function handleApiError(error: unknown): ApiError {
   if (error instanceof Error) {
     const axiosError = error as AxiosError<{ message?: string; error?: string }>;
-    
+
     if (axiosError.response) {
       // Server responded with error
       return {
-        message: axiosError.response.data?.message || axiosError.response.data?.error || 'An error occurred',
+        message:
+          axiosError.response.data?.message ||
+          axiosError.response.data?.error ||
+          'An error occurred',
         code: axiosError.code,
         status: axiosError.response.status,
         details: axiosError.response.data,
       };
     }
-    
+
     if (axiosError.request) {
       // Request made but no response
       return {
@@ -70,13 +73,13 @@ export function handleApiError(error: unknown): ApiError {
         code: axiosError.code,
       };
     }
-    
+
     // Error setting up request
     return {
       message: error.message || 'An unexpected error occurred',
     };
   }
-  
+
   return {
     message: 'An unknown error occurred',
   };
@@ -94,7 +97,7 @@ export function extractApiData<T>(response: AxiosResponse): T {
   if (response.data?.data !== undefined) {
     return response.data.data as T;
   }
-  
+
   return response.data as T;
 }
 
@@ -118,19 +121,19 @@ export function extractApiDataOptional<T>(response: AxiosResponse): T | null {
  */
 export function buildUrlParams(params?: Record<string, unknown>): URLSearchParams {
   const searchParams = new URLSearchParams();
-  
+
   if (!params) return searchParams;
-  
+
   Object.entries(params).forEach(([key, value]) => {
     if (value !== undefined && value !== null) {
       if (Array.isArray(value)) {
-        value.forEach(v => searchParams.append(key, String(v)));
+        value.forEach((v) => searchParams.append(key, String(v)));
       } else {
         searchParams.append(key, String(value));
       }
     }
   });
-  
+
   return searchParams;
 }
 
@@ -176,37 +179,36 @@ export function parseDateFromApi(dateString: string): Date {
 /**
  * Retry a promise-returning function with exponential backoff
  */
-export async function withRetry<T>(
-  fn: () => Promise<T>,
-  options?: RetryOptions
-): Promise<T> {
+export async function withRetry<T>(fn: () => Promise<T>, options?: RetryOptions): Promise<T> {
   const maxRetries = options?.maxRetries || 3;
   const backoffMs = options?.backoffMs || 1000;
-  const shouldRetry = options?.shouldRetry || ((error: AxiosError) => {
-    // Retry on network errors or 5xx server errors
-    return !error.response || (error.response.status >= 500 && error.response.status < 600);
-  });
-  
-  let lastError: Error;
-  
+  const shouldRetry =
+    options?.shouldRetry ||
+    ((error: AxiosError) => {
+      // Retry on network errors or 5xx server errors
+      return !error.response || (error.response.status >= 500 && error.response.status < 600);
+    });
+
+  let lastError: Error | undefined;
+
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
       return await fn();
     } catch (error) {
       lastError = error as Error;
-      
+
       const isAxiosError = (error as AxiosError).isAxiosError;
       if (!isAxiosError || !shouldRetry(error as AxiosError) || attempt === maxRetries) {
         throw error;
       }
-      
+
       // Wait before retrying (exponential backoff with jitter)
       const delay = backoffMs * Math.pow(2, attempt) + Math.random() * 100;
-      await new Promise(resolve => setTimeout(resolve, delay));
+      await new Promise((resolve) => setTimeout(resolve, delay));
     }
   }
-  
-  throw lastError!;
+
+  throw lastError || new Error('Retry failed with unknown error');
 }
 
 // ==========================================
@@ -218,7 +220,7 @@ export async function withRetry<T>(
  */
 export function createFormData(data: Record<string, unknown>): FormData {
   const formData = new FormData();
-  
+
   Object.entries(data).forEach(([key, value]) => {
     if (value !== undefined && value !== null) {
       if (value instanceof File || value instanceof Blob) {
@@ -234,7 +236,7 @@ export function createFormData(data: Record<string, unknown>): FormData {
       }
     }
   });
-  
+
   return formData;
 }
 
@@ -246,12 +248,7 @@ export function createFormData(data: Record<string, unknown>): FormData {
  * Check if response is an API response
  */
 export function isApiResponse<T>(data: unknown): data is ApiResponse<T> {
-  return (
-    typeof data === 'object' &&
-    data !== null &&
-    'success' in data &&
-    'data' in data
-  );
+  return typeof data === 'object' && data !== null && 'success' in data && 'data' in data;
 }
 
 /**
@@ -279,7 +276,7 @@ interface CacheEntry<T> {
 
 class SimpleCache {
   private cache: Map<string, CacheEntry<unknown>> = new Map();
-  
+
   set<T>(key: string, data: T, ttl: number = 300000): void {
     this.cache.set(key, {
       data,
@@ -287,20 +284,20 @@ class SimpleCache {
       ttl,
     });
   }
-  
+
   get<T>(key: string): T | null {
     const entry = this.cache.get(key) as CacheEntry<T> | undefined;
-    
+
     if (!entry) return null;
-    
+
     if (Date.now() - entry.timestamp > entry.ttl) {
       this.cache.delete(key);
       return null;
     }
-    
+
     return entry.data;
   }
-  
+
   clear(key?: string): void {
     if (key) {
       this.cache.delete(key);
@@ -308,16 +305,16 @@ class SimpleCache {
       this.cache.clear();
     }
   }
-  
+
   has(key: string): boolean {
     const entry = this.cache.get(key);
     if (!entry) return false;
-    
+
     if (Date.now() - entry.timestamp > entry.ttl) {
       this.cache.delete(key);
       return false;
     }
-    
+
     return true;
   }
 }
@@ -327,17 +324,13 @@ export const apiCache = new SimpleCache();
 /**
  * Wrap a function with caching
  */
-export function withCache<T>(
-  key: string,
-  fn: () => Promise<T>,
-  ttl?: number
-): Promise<T> {
+export function withCache<T>(key: string, fn: () => Promise<T>, ttl?: number): Promise<T> {
   const cached = apiCache.get<T>(key);
   if (cached) {
     return Promise.resolve(cached);
   }
-  
-  return fn().then(data => {
+
+  return fn().then((data) => {
     apiCache.set(key, data, ttl);
     return data;
   });
@@ -355,7 +348,7 @@ export function debounce<T extends (...args: unknown[]) => unknown>(
   delay: number
 ): (...args: Parameters<T>) => void {
   let timeoutId: ReturnType<typeof setTimeout>;
-  
+
   return function (this: unknown, ...args: Parameters<T>) {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => fn.apply(this, args), delay);

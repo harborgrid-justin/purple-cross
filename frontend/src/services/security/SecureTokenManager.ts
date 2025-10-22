@@ -28,7 +28,7 @@ class SecureTokenManager {
   private readonly TOKEN_EXPIRY_KEY = 'token_expiry';
   private readonly REFRESH_EXPIRY_KEY = 'refresh_token_expiry';
   private readonly CSRF_TOKEN_KEY = 'csrf_token';
-  
+
   /**
    * Set authentication tokens
    */
@@ -36,7 +36,7 @@ class SecureTokenManager {
     const now = Date.now();
     const expiresAt = now + expiresIn * 1000;
     const refreshExpiresAt = now + 30 * 24 * 60 * 60 * 1000; // 30 days
-    
+
     try {
       localStorage.setItem(this.TOKEN_KEY, token);
       localStorage.setItem(this.REFRESH_TOKEN_KEY, refreshToken);
@@ -55,7 +55,7 @@ class SecureTokenManager {
       }
     }
   }
-  
+
   /**
    * Get authentication token
    */
@@ -67,30 +67,35 @@ class SecureTokenManager {
       return null;
     }
   }
-  
+
   /**
    * Get refresh token
    */
   getRefreshToken(): string | null {
     try {
-      return localStorage.getItem(this.REFRESH_TOKEN_KEY) || sessionStorage.getItem(this.REFRESH_TOKEN_KEY);
+      return (
+        localStorage.getItem(this.REFRESH_TOKEN_KEY) ||
+        sessionStorage.getItem(this.REFRESH_TOKEN_KEY)
+      );
     } catch (error) {
       console.error('[SecureTokenManager] Error getting refresh token:', error);
       return null;
     }
   }
-  
+
   /**
    * Check if token is valid (not expired)
    */
   isTokenValid(): boolean {
     try {
-      const expiryStr = localStorage.getItem(this.TOKEN_EXPIRY_KEY) || sessionStorage.getItem(this.TOKEN_EXPIRY_KEY);
+      const expiryStr =
+        localStorage.getItem(this.TOKEN_EXPIRY_KEY) ||
+        sessionStorage.getItem(this.TOKEN_EXPIRY_KEY);
       if (!expiryStr) return false;
-      
+
       const expiry = parseInt(expiryStr, 10);
       const now = Date.now();
-      
+
       // Add 60 second buffer
       return expiry > now + 60000;
     } catch (error) {
@@ -98,25 +103,27 @@ class SecureTokenManager {
       return false;
     }
   }
-  
+
   /**
    * Check if refresh token is valid (not expired)
    */
   isRefreshTokenValid(): boolean {
     try {
-      const expiryStr = localStorage.getItem(this.REFRESH_EXPIRY_KEY) || sessionStorage.getItem(this.REFRESH_EXPIRY_KEY);
+      const expiryStr =
+        localStorage.getItem(this.REFRESH_EXPIRY_KEY) ||
+        sessionStorage.getItem(this.REFRESH_EXPIRY_KEY);
       if (!expiryStr) return false;
-      
+
       const expiry = parseInt(expiryStr, 10);
       const now = Date.now();
-      
+
       return expiry > now;
     } catch (error) {
       console.error('[SecureTokenManager] Error checking refresh token validity:', error);
       return false;
     }
   }
-  
+
   /**
    * Check if user has valid token
    */
@@ -124,7 +131,7 @@ class SecureTokenManager {
     const token = this.getToken();
     return !!token && this.isTokenValid();
   }
-  
+
   /**
    * Clear all tokens
    */
@@ -135,7 +142,7 @@ class SecureTokenManager {
       localStorage.removeItem(this.TOKEN_EXPIRY_KEY);
       localStorage.removeItem(this.REFRESH_EXPIRY_KEY);
       localStorage.removeItem(this.CSRF_TOKEN_KEY);
-      
+
       sessionStorage.removeItem(this.TOKEN_KEY);
       sessionStorage.removeItem(this.REFRESH_TOKEN_KEY);
       sessionStorage.removeItem(this.TOKEN_EXPIRY_KEY);
@@ -145,25 +152,27 @@ class SecureTokenManager {
       console.error('[SecureTokenManager] Error clearing tokens:', error);
     }
   }
-  
+
   /**
    * Get time until token expiry in milliseconds
    */
   getTimeUntilExpiry(): number {
     try {
-      const expiryStr = localStorage.getItem(this.TOKEN_EXPIRY_KEY) || sessionStorage.getItem(this.TOKEN_EXPIRY_KEY);
+      const expiryStr =
+        localStorage.getItem(this.TOKEN_EXPIRY_KEY) ||
+        sessionStorage.getItem(this.TOKEN_EXPIRY_KEY);
       if (!expiryStr) return 0;
-      
+
       const expiry = parseInt(expiryStr, 10);
       const now = Date.now();
-      
+
       return Math.max(0, expiry - now);
     } catch (error) {
       console.error('[SecureTokenManager] Error getting time until expiry:', error);
       return 0;
     }
   }
-  
+
   /**
    * Set CSRF token
    */
@@ -174,7 +183,7 @@ class SecureTokenManager {
       console.error('[SecureTokenManager] Error setting CSRF token:', error);
     }
   }
-  
+
   /**
    * Get CSRF token
    */
@@ -186,7 +195,7 @@ class SecureTokenManager {
       return null;
     }
   }
-  
+
   /**
    * Clear CSRF token
    */
@@ -197,7 +206,7 @@ class SecureTokenManager {
       console.error('[SecureTokenManager] Error clearing CSRF token:', error);
     }
   }
-  
+
   /**
    * Get all token data
    */
@@ -205,13 +214,17 @@ class SecureTokenManager {
     try {
       const token = this.getToken();
       const refreshToken = this.getRefreshToken();
-      const expiryStr = localStorage.getItem(this.TOKEN_EXPIRY_KEY) || sessionStorage.getItem(this.TOKEN_EXPIRY_KEY);
-      const refreshExpiryStr = localStorage.getItem(this.REFRESH_EXPIRY_KEY) || sessionStorage.getItem(this.REFRESH_EXPIRY_KEY);
-      
+      const expiryStr =
+        localStorage.getItem(this.TOKEN_EXPIRY_KEY) ||
+        sessionStorage.getItem(this.TOKEN_EXPIRY_KEY);
+      const refreshExpiryStr =
+        localStorage.getItem(this.REFRESH_EXPIRY_KEY) ||
+        sessionStorage.getItem(this.REFRESH_EXPIRY_KEY);
+
       if (!token || !refreshToken || !expiryStr || !refreshExpiryStr) {
         return null;
       }
-      
+
       return {
         token,
         refreshToken,

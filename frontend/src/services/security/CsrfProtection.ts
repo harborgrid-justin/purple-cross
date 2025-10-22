@@ -22,19 +22,19 @@ export function setupCsrfProtection(axiosInstance: AxiosInstance): void {
       // Only add CSRF token for state-changing methods
       const methodsRequiringCsrf = ['post', 'put', 'patch', 'delete'];
       const method = config.method?.toLowerCase();
-      
+
       if (method && methodsRequiringCsrf.includes(method)) {
         const csrfToken = secureTokenManager.getCsrfToken();
         if (csrfToken) {
           config.headers['X-CSRF-Token'] = csrfToken;
         }
       }
-      
+
       return config;
     },
     (error) => Promise.reject(error)
   );
-  
+
   // Store CSRF token from response headers
   axiosInstance.interceptors.response.use(
     (response) => {
@@ -54,7 +54,7 @@ export function setupCsrfProtection(axiosInstance: AxiosInstance): void {
 export function generateCsrfToken(): string {
   const array = new Uint8Array(32);
   crypto.getRandomValues(array);
-  return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+  return Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join('');
 }
 
 /**

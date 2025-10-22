@@ -60,14 +60,14 @@ class AuditService {
   private entries: AuditEntry[] = [];
   private readonly maxEntries = 1000;
   private userId: string | null = null;
-  
+
   /**
    * Set current user ID
    */
   setUserId(userId: string | null): void {
     this.userId = userId;
   }
-  
+
   /**
    * Log an audit action
    */
@@ -77,25 +77,25 @@ class AuditService {
       timestamp: Date.now(),
       userId: this.userId || undefined,
     };
-    
+
     this.entries.push(auditEntry);
-    
+
     // Keep only recent entries
     if (this.entries.length > this.maxEntries) {
       this.entries.shift();
     }
-    
+
     // Log in development
     if (import.meta.env.DEV) {
       console.log('[AuditService] Action logged:', auditEntry);
     }
-    
+
     // In production, send to backend audit service
     if (import.meta.env.PROD) {
       this.sendToBackend(auditEntry);
     }
   }
-  
+
   /**
    * Get audit entries
    */
@@ -106,41 +106,39 @@ class AuditService {
     userId?: string;
   }): AuditEntry[] {
     let entries = [...this.entries];
-    
+
     if (filters) {
       if (filters.action) {
-        entries = entries.filter(e => e.action === filters.action);
+        entries = entries.filter((e) => e.action === filters.action);
       }
       if (filters.resourceType) {
-        entries = entries.filter(e => e.resourceType === filters.resourceType);
+        entries = entries.filter((e) => e.resourceType === filters.resourceType);
       }
       if (filters.status) {
-        entries = entries.filter(e => e.status === filters.status);
+        entries = entries.filter((e) => e.status === filters.status);
       }
       if (filters.userId) {
-        entries = entries.filter(e => e.userId === filters.userId);
+        entries = entries.filter((e) => e.userId === filters.userId);
       }
     }
-    
+
     return entries;
   }
-  
+
   /**
    * Get recent entries
    */
   getRecentEntries(count = 10): AuditEntry[] {
-    return [...this.entries]
-      .sort((a, b) => b.timestamp - a.timestamp)
-      .slice(0, count);
+    return [...this.entries].sort((a, b) => b.timestamp - a.timestamp).slice(0, count);
   }
-  
+
   /**
    * Clear all entries
    */
   clear(): void {
     this.entries = [];
   }
-  
+
   /**
    * Send audit entry to backend (placeholder)
    */
@@ -152,10 +150,10 @@ class AuditService {
     //   headers: { 'Content-Type': 'application/json' },
     //   body: JSON.stringify(entry)
     // }).catch(err => console.error('Failed to send audit entry:', err));
-    
+
     console.log('[AuditService] Would send to backend:', entry);
   }
-  
+
   /**
    * Export entries as JSON
    */

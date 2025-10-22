@@ -68,11 +68,9 @@ function defaultShouldRetry(error: AxiosError): boolean {
       return false;
     }
   }
-  
+
   // Retry on network errors, timeouts, and 5xx errors
-  return !error.response || 
-         error.code === 'ECONNABORTED' || 
-         error.response.status >= 500;
+  return !error.response || error.code === 'ECONNABORTED' || error.response.status >= 500;
 }
 
 // ==========================================
@@ -91,11 +89,11 @@ export function calculateExponentialBackoff(
 ): number {
   let delay = initialDelay * Math.pow(multiplier, attempt);
   delay = capDelay(delay, maxDelay);
-  
+
   if (jitter) {
     delay = addJitter(delay);
   }
-  
+
   return delay;
 }
 
@@ -110,11 +108,11 @@ export function calculateLinearBackoff(
 ): number {
   let delay = initialDelay * (attempt + 1);
   delay = capDelay(delay, maxDelay);
-  
+
   if (jitter) {
     delay = addJitter(delay);
   }
-  
+
   return delay;
 }
 
@@ -131,14 +129,14 @@ export function calculateFibonacciBackoff(
     if (n <= 1) return 1;
     return fib(n - 1) + fib(n - 2);
   };
-  
+
   let delay = initialDelay * fib(attempt);
   delay = capDelay(delay, maxDelay);
-  
+
   if (jitter) {
     delay = addJitter(delay);
   }
-  
+
   return delay;
 }
 
@@ -149,10 +147,7 @@ export function calculateFibonacciBackoff(
 /**
  * Execute function with retry logic
  */
-export async function withRetry<T>(
-  fn: () => Promise<T>,
-  config: RetryConfig = {}
-): Promise<T> {
+export async function withRetry<T>(fn: () => Promise<T>, config: RetryConfig = {}): Promise<T> {
   const {
     maxRetries = 3,
     initialDelay = 1000,
@@ -162,42 +157,48 @@ export async function withRetry<T>(
     shouldRetry = defaultShouldRetry,
     onRetry,
   } = config;
-  
-  let lastError: Error;
-  let totalDelay = 0;
-  
+
+  let lastError: Error | undefined;
+
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
       return await fn();
     } catch (error) {
       lastError = error as Error;
       const axiosError = error as AxiosError;
-      
+
       // Check if we should retry
       if (attempt < maxRetries && (!axiosError.isAxiosError || shouldRetry(axiosError, attempt))) {
         // Calculate delay
-        const delay = calculateExponentialBackoff(attempt, initialDelay, multiplier, maxDelay, jitter);
-        totalDelay += delay;
-        
+        const delay = calculateExponentialBackoff(
+          attempt,
+          initialDelay,
+          multiplier,
+          maxDelay,
+          jitter
+        );
+
         // Call retry callback
         if (onRetry) {
           onRetry(axiosError, attempt + 1, delay);
         }
-        
+
         // Wait before retrying
-        await new Promise(resolve => setTimeout(resolve, delay));
-        
+        await new Promise((resolve) => setTimeout(resolve, delay));
+
         // Log retry in development
         if (import.meta.env.DEV) {
-          console.warn(`[RetryStrategies] Retrying request (attempt ${attempt + 2}/${maxRetries + 1}) after ${delay}ms`);
+          console.warn(
+            `[RetryStrategies] Retrying request (attempt ${attempt + 2}/${maxRetries + 1}) after ${delay}ms`
+          );
         }
       } else {
         throw error;
       }
     }
   }
-  
-  throw lastError!;
+
+  throw lastError || new Error('Retry failed with unknown error');
 }
 
 /**
@@ -214,19 +215,22 @@ export function createRetryFunction(strategy: RetryStrategy, config: RetryConfig
       shouldRetry = defaultShouldRetry,
       onRetry,
     } = config;
-    
-    let lastError: Error;
-    
+
+    let lastError: Error | undefined;
+
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       try {
         return await fn();
       } catch (error) {
         lastError = error as Error;
         const axiosError = error as AxiosError;
-        
-        if (attempt < maxRetries && (!axiosError.isAxiosError || shouldRetry(axiosError, attempt))) {
+
+        if (
+          attempt < maxRetries &&
+          (!axiosError.isAxiosError || shouldRetry(axiosError, attempt))
+        ) {
           let delay: number;
-          
+
           switch (strategy) {
             case RetryStrategy.LINEAR_BACKOFF:
               delay = calculateLinearBackoff(attempt, initialDelay, maxDelay, jitter);
@@ -239,22 +243,28 @@ export function createRetryFunction(strategy: RetryStrategy, config: RetryConfig
               break;
             case RetryStrategy.EXPONENTIAL_BACKOFF:
             default:
-              delay = calculateExponentialBackoff(attempt, initialDelay, multiplier, maxDelay, jitter);
+              delay = calculateExponentialBackoff(
+                attempt,
+                initialDelay,
+                multiplier,
+                maxDelay,
+                jitter
+              );
               break;
           }
-          
+
           if (onRetry) {
             onRetry(axiosError, attempt + 1, delay);
           }
-          
-          await new Promise(resolve => setTimeout(resolve, delay));
+
+          await new Promise((resolve) => setTimeout(resolve, delay));
         } else {
           throw error;
         }
       }
     }
-    
-    throw lastError!;
+
+    throw lastError || new Error('Retry failed with unknown error');
   };
 }
 

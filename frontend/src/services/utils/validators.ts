@@ -24,27 +24,17 @@ export const ZIP_CODE_REGEX = /^\d{5}(-\d{4})?$/;
 /**
  * ID validation schema
  */
-export const idSchema = z
-  .string()
-  .regex(ID_REGEX, 'Invalid ID format')
-  .min(1, 'ID is required');
+export const idSchema = z.string().regex(ID_REGEX, 'Invalid ID format').min(1, 'ID is required');
 
 /**
  * Email validation schema
  */
-export const emailSchema = z
-  .string()
-  .email('Invalid email address')
-  .toLowerCase()
-  .trim();
+export const emailSchema = z.string().email('Invalid email address').toLowerCase().trim();
 
 /**
  * Phone validation schema
  */
-export const phoneSchema = z
-  .string()
-  .regex(PHONE_REGEX, 'Invalid phone number format')
-  .trim();
+export const phoneSchema = z.string().regex(PHONE_REGEX, 'Invalid phone number format').trim();
 
 /**
  * URL validation schema
@@ -57,9 +47,7 @@ export const urlSchema = z
 /**
  * Date string validation schema
  */
-export const dateStringSchema = z
-  .string()
-  .datetime('Invalid date format');
+export const dateStringSchema = z.string().datetime('Invalid date format');
 
 /**
  * Date validation schema
@@ -69,10 +57,7 @@ export const dateSchema = z.coerce.date();
 /**
  * Positive integer validation schema
  */
-export const positiveIntSchema = z
-  .number()
-  .int('Must be an integer')
-  .positive('Must be positive');
+export const positiveIntSchema = z.number().int('Must be an integer').positive('Must be positive');
 
 /**
  * Non-negative integer validation schema
@@ -89,9 +74,7 @@ export const nonNegativeIntSchema = z
 /**
  * Common status values
  */
-export const statusSchema = z.enum(['active', 'inactive', 'pending'], {
-  errorMap: () => ({ message: 'Status must be active, inactive, or pending' })
-});
+export const statusSchema = z.enum(['active', 'inactive', 'pending']);
 
 /**
  * Appointment status schema
@@ -110,13 +93,7 @@ export const appointmentStatusSchema = z.enum([
 /**
  * Payment status schema
  */
-export const paymentStatusSchema = z.enum([
-  'paid',
-  'unpaid',
-  'partial',
-  'overdue',
-  'refunded',
-]);
+export const paymentStatusSchema = z.enum(['paid', 'unpaid', 'partial', 'overdue', 'refunded']);
 
 // ==========================================
 // PAGINATION SCHEMAS
@@ -179,10 +156,7 @@ export const descriptionSchema = z
 /**
  * Notes validation schema
  */
-export const notesSchema = z
-  .string()
-  .max(2000, 'Notes cannot exceed 2000 characters')
-  .optional();
+export const notesSchema = z.string().max(2000, 'Notes cannot exceed 2000 characters').optional();
 
 /**
  * Currency amount validation schema
@@ -204,18 +178,16 @@ export const fileSchema = z.instanceof(File, { message: 'Invalid file' });
 /**
  * Image file validation schema
  */
-export const imageFileSchema = fileSchema.refine(
-  (file) => file.type.startsWith('image/'),
-  { message: 'File must be an image' }
-);
+export const imageFileSchema = fileSchema.refine((file) => file.type.startsWith('image/'), {
+  message: 'File must be an image',
+});
 
 /**
  * PDF file validation schema
  */
-export const pdfFileSchema = fileSchema.refine(
-  (file) => file.type === 'application/pdf',
-  { message: 'File must be a PDF' }
-);
+export const pdfFileSchema = fileSchema.refine((file) => file.type === 'application/pdf', {
+  message: 'File must be a PDF',
+});
 
 // ==========================================
 // HELPER FUNCTIONS
@@ -231,19 +203,19 @@ export function requiredString(options?: {
   patternMessage?: string;
 }) {
   let schema = z.string().min(1, 'This field is required').trim();
-  
+
   if (options?.minLength) {
     schema = schema.min(options.minLength, `Minimum ${options.minLength} characters required`);
   }
-  
+
   if (options?.maxLength) {
     schema = schema.max(options.maxLength, `Maximum ${options.maxLength} characters allowed`);
   }
-  
+
   if (options?.pattern) {
     schema = schema.regex(options.pattern, options.patternMessage || 'Invalid format');
   }
-  
+
   return schema;
 }
 
@@ -257,41 +229,34 @@ export function optionalString(options?: {
   patternMessage?: string;
 }) {
   let schema = z.string().trim().optional();
-  
-  if (options?.minLength) {
-    schema = schema.refine(
-      (val) => !val || val.length >= options.minLength!,
-      { message: `Minimum ${options.minLength} characters required` }
-    );
+
+  if (options?.minLength !== undefined) {
+    const minLen = options.minLength;
+    schema = schema.refine((val) => !val || val.length >= minLen, {
+      message: `Minimum ${minLen} characters required`,
+    });
   }
-  
-  if (options?.maxLength) {
-    schema = schema.refine(
-      (val) => !val || val.length <= options.maxLength!,
-      { message: `Maximum ${options.maxLength} characters allowed` }
-    );
+
+  if (options?.maxLength !== undefined) {
+    const maxLen = options.maxLength;
+    schema = schema.refine((val) => !val || val.length <= maxLen, {
+      message: `Maximum ${maxLen} characters allowed`,
+    });
   }
-  
-  if (options?.pattern) {
-    schema = schema.refine(
-      (val) => !val || options.pattern!.test(val),
-      { message: options.patternMessage || 'Invalid format' }
-    );
+
+  if (options?.pattern !== undefined) {
+    const pattern = options.pattern;
+    schema = schema.refine((val) => !val || pattern.test(val), {
+      message: options.patternMessage || 'Invalid format',
+    });
   }
-  
+
   return schema;
 }
 
 /**
  * Create an enum schema with custom error message
  */
-export function enumSchema<T extends [string, ...string[]]>(
-  values: T,
-  errorMessage?: string
-) {
-  return z.enum(values, {
-    errorMap: () => ({
-      message: errorMessage || `Value must be one of: ${values.join(', ')}`
-    })
-  });
+export function enumSchema<T extends [string, ...string[]]>(values: T) {
+  return z.enum(values);
 }

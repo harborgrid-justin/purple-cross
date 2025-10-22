@@ -44,7 +44,7 @@ class ApiMetrics {
   private requests: RequestMetric[] = [];
   private errors: ErrorMetric[] = [];
   private readonly maxStoredMetrics = 100;
-  
+
   /**
    * Record a successful request
    */
@@ -56,20 +56,20 @@ class ApiMetrics {
       duration,
       timestamp: Date.now(),
     };
-    
+
     this.requests.push(metric);
-    
+
     // Keep only recent metrics
     if (this.requests.length > this.maxStoredMetrics) {
       this.requests.shift();
     }
-    
+
     // Log slow requests in development
     if (import.meta.env.DEV && duration > 2000) {
       console.warn(`[ApiMetrics] Slow request detected: ${method} ${url} took ${duration}ms`);
     }
   }
-  
+
   /**
    * Record an error
    */
@@ -81,14 +81,14 @@ class ApiMetrics {
       message: error.message,
       timestamp: Date.now(),
     };
-    
+
     this.errors.push(metric);
-    
+
     // Keep only recent errors
     if (this.errors.length > this.maxStoredMetrics) {
       this.errors.shift();
     }
-    
+
     // Log errors in development
     if (import.meta.env.DEV) {
       console.error(`[ApiMetrics] Request error: ${metric.method} ${metric.url}`, {
@@ -97,35 +97,35 @@ class ApiMetrics {
       });
     }
   }
-  
+
   /**
    * Get metrics summary
    */
   getSummary(): MetricsSummary {
     const totalRequests = this.requests.length;
     const totalErrors = this.errors.length;
-    
+
     // Calculate average duration
-    const averageDuration = totalRequests > 0
-      ? this.requests.reduce((sum, req) => sum + req.duration, 0) / totalRequests
-      : 0;
-    
+    const averageDuration =
+      totalRequests > 0
+        ? this.requests.reduce((sum, req) => sum + req.duration, 0) / totalRequests
+        : 0;
+
     // Count requests by status
-    const requestsByStatus = this.requests.reduce((acc, req) => {
-      acc[req.status] = (acc[req.status] || 0) + 1;
-      return acc;
-    }, {} as Record<number, number>);
-    
+    const requestsByStatus = this.requests.reduce(
+      (acc, req) => {
+        acc[req.status] = (acc[req.status] || 0) + 1;
+        return acc;
+      },
+      {} as Record<number, number>
+    );
+
     // Get slowest requests
-    const slowestRequests = [...this.requests]
-      .sort((a, b) => b.duration - a.duration)
-      .slice(0, 10);
-    
+    const slowestRequests = [...this.requests].sort((a, b) => b.duration - a.duration).slice(0, 10);
+
     // Get recent errors
-    const recentErrors = [...this.errors]
-      .sort((a, b) => b.timestamp - a.timestamp)
-      .slice(0, 10);
-    
+    const recentErrors = [...this.errors].sort((a, b) => b.timestamp - a.timestamp).slice(0, 10);
+
     return {
       totalRequests,
       totalErrors,
@@ -135,21 +135,21 @@ class ApiMetrics {
       recentErrors,
     };
   }
-  
+
   /**
    * Get requests by URL pattern
    */
   getRequestsByUrl(urlPattern: string): RequestMetric[] {
-    return this.requests.filter(req => req.url.includes(urlPattern));
+    return this.requests.filter((req) => req.url.includes(urlPattern));
   }
-  
+
   /**
    * Get errors by URL pattern
    */
   getErrorsByUrl(urlPattern: string): ErrorMetric[] {
-    return this.errors.filter(err => err.url.includes(urlPattern));
+    return this.errors.filter((err) => err.url.includes(urlPattern));
   }
-  
+
   /**
    * Get error rate
    */
@@ -157,16 +157,16 @@ class ApiMetrics {
     const total = this.requests.length + this.errors.length;
     return total > 0 ? this.errors.length / total : 0;
   }
-  
+
   /**
    * Get requests per second (last minute)
    */
   getRequestsPerSecond(): number {
     const oneMinuteAgo = Date.now() - 60000;
-    const recentRequests = this.requests.filter(req => req.timestamp > oneMinuteAgo);
+    const recentRequests = this.requests.filter((req) => req.timestamp > oneMinuteAgo);
     return recentRequests.length / 60;
   }
-  
+
   /**
    * Clear all metrics
    */
@@ -174,19 +174,23 @@ class ApiMetrics {
     this.requests = [];
     this.errors = [];
   }
-  
+
   /**
    * Export metrics as JSON
    */
   exportMetrics(): string {
-    return JSON.stringify({
-      summary: this.getSummary(),
-      requests: this.requests,
-      errors: this.errors,
-      timestamp: new Date().toISOString(),
-    }, null, 2);
+    return JSON.stringify(
+      {
+        summary: this.getSummary(),
+        requests: this.requests,
+        errors: this.errors,
+        timestamp: new Date().toISOString(),
+      },
+      null,
+      2
+    );
   }
-  
+
   /**
    * Log metrics summary to console
    */
@@ -200,11 +204,11 @@ class ApiMetrics {
       'Requests/Second': this.getRequestsPerSecond().toFixed(2),
       'Requests by Status': summary.requestsByStatus,
     });
-    
+
     if (summary.slowestRequests.length > 0) {
       console.log('[ApiMetrics] Slowest Requests:', summary.slowestRequests.slice(0, 5));
     }
-    
+
     if (summary.recentErrors.length > 0) {
       console.log('[ApiMetrics] Recent Errors:', summary.recentErrors.slice(0, 5));
     }
