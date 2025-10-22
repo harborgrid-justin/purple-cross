@@ -1,6 +1,6 @@
-import { useState, useEffect, Suspense, lazy } from 'react';
+import { useState, Suspense, lazy } from 'react';
 import { Link, Routes, Route, useLocation } from 'react-router-dom';
-import api from '../services/api';
+import { usePatients } from '../hooks/usePatients';
 import '../styles/Page.css';
 
 // Lazy load subfeature pages
@@ -13,44 +13,12 @@ const BreedInfo = lazy(() => import('./patients/BreedInfo'));
 const Relationships = lazy(() => import('./patients/Relationships'));
 const Reminders = lazy(() => import('./patients/Reminders'));
 
-interface Patient {
-  id: string;
-  name: string;
-  species: string;
-  breed?: string;
-  owner: {
-    id: string;
-    firstName: string;
-    lastName: string;
-  };
-  updatedAt: string;
-}
-
 const PatientsList = () => {
-  const [patients, setPatients] = useState<Patient[]>([]);
-  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-
-  useEffect(() => {
-    const fetchPatients = async () => {
-      try {
-        setLoading(true);
-        const response = (await api.patients.getAll({
-          search: searchTerm || undefined,
-          limit: 50,
-        })) as { status: string; data: Patient[] };
-        setPatients(response.data);
-      } catch (err) {
-        console.error('Error fetching patients:', err);
-        setPatients([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    const timeoutId = setTimeout(fetchPatients, 300); // Debounce search
-    return () => clearTimeout(timeoutId);
-  }, [searchTerm]);
+  const { data: patients, isLoading: loading } = usePatients({
+    search: searchTerm || undefined,
+    limit: 50,
+  });
 
   return (
     <>
