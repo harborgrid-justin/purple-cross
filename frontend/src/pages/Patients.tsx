@@ -15,10 +15,24 @@ const Reminders = lazy(() => import('./patients/Reminders'));
 
 const PatientsList = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const { data: patients, isLoading: loading } = usePatients({
+  const { data, isLoading: loading } = usePatients({
     search: searchTerm || undefined,
     limit: 50,
   });
+
+  const patients =
+    (
+      data as {
+        data?: Array<{
+          id: string;
+          name: string;
+          species: string;
+          breed?: string;
+          owner?: { firstName: string; lastName: string };
+          updatedAt: string;
+        }>;
+      }
+    )?.data || [];
 
   return (
     <>
