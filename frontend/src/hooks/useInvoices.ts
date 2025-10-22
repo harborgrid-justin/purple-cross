@@ -53,3 +53,43 @@ export const useDeleteInvoice = () => {
     },
   });
 };
+
+// Composite hooks
+export const useInvoiceWithClient = (id: string) => {
+  const invoiceQuery = useInvoice(id);
+  const clientId = (invoiceQuery.data as { data?: { clientId?: string } })?.data?.clientId;
+  const clientQuery = useQuery({
+    queryKey: ['client', clientId],
+    queryFn: () => api.clients.getById(clientId as string),
+    enabled: !!clientId,
+  });
+
+  return {
+    invoice: invoiceQuery,
+    client: clientQuery,
+    isLoading: invoiceQuery.isLoading || clientQuery.isLoading,
+    isError: invoiceQuery.isError || clientQuery.isError,
+  };
+};
+
+export const useClientBilling = (clientId: string) => {
+  const invoicesQuery = useInvoices({ clientId });
+  const estimatesQuery = useQuery({
+    queryKey: ['estimates', clientId],
+    queryFn: () => api.estimates.getAll(),
+    enabled: !!clientId,
+  });
+  const paymentPlansQuery = useQuery({
+    queryKey: ['paymentPlans', clientId],
+    queryFn: () => api.paymentPlans.getAll(),
+    enabled: !!clientId,
+  });
+
+  return {
+    invoices: invoicesQuery,
+    estimates: estimatesQuery,
+    paymentPlans: paymentPlansQuery,
+    isLoading: invoicesQuery.isLoading || estimatesQuery.isLoading || paymentPlansQuery.isLoading,
+    isError: invoicesQuery.isError || estimatesQuery.isError || paymentPlansQuery.isError,
+  };
+};

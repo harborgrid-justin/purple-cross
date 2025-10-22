@@ -61,3 +61,22 @@ export const useDeletePatientRelationship = () => {
     },
   });
 };
+
+// Composite hooks
+export const usePatientWithFamily = (patientId: string) => {
+  const patientQuery = useQuery({
+    queryKey: ['patient', patientId],
+    queryFn: () => api.patients.getById(patientId),
+    enabled: !!patientId,
+  });
+  const familyQuery = usePatientFamily(patientId);
+  const relationshipsQuery = usePatientRelationships(patientId);
+
+  return {
+    patient: patientQuery,
+    family: familyQuery,
+    relationships: relationshipsQuery,
+    isLoading: patientQuery.isLoading || familyQuery.isLoading || relationshipsQuery.isLoading,
+    isError: patientQuery.isError || familyQuery.isError || relationshipsQuery.isError,
+  };
+};

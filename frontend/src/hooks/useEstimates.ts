@@ -82,3 +82,21 @@ export const useDeleteEstimate = () => {
     },
   });
 };
+
+// Composite hooks
+export const useEstimateWithClient = (id: string) => {
+  const estimateQuery = useEstimate(id);
+  const clientId = (estimateQuery.data as { data?: { clientId?: string } })?.data?.clientId;
+  const clientQuery = useQuery({
+    queryKey: ['client', clientId],
+    queryFn: () => api.clients.getById(clientId as string),
+    enabled: !!clientId,
+  });
+
+  return {
+    estimate: estimateQuery,
+    client: clientQuery,
+    isLoading: estimateQuery.isLoading || clientQuery.isLoading,
+    isError: estimateQuery.isError || clientQuery.isError,
+  };
+};

@@ -89,3 +89,21 @@ export const useDeleteLoyaltyProgram = () => {
     },
   });
 };
+
+// Composite hooks
+export const useClientLoyaltyDetails = (clientId: string) => {
+  const loyaltyProgramQuery = useLoyaltyProgramByClient(clientId);
+  const programId = (loyaltyProgramQuery.data as { data?: { id?: string } })?.data?.id;
+  const transactionsQuery = useQuery({
+    queryKey: ['loyaltyProgram', programId, 'transactions'],
+    queryFn: () => api.loyaltyPrograms.getTransactions(programId as string),
+    enabled: !!programId,
+  });
+
+  return {
+    loyaltyProgram: loyaltyProgramQuery,
+    transactions: transactionsQuery,
+    isLoading: loyaltyProgramQuery.isLoading || transactionsQuery.isLoading,
+    isError: loyaltyProgramQuery.isError || transactionsQuery.isError,
+  };
+};
