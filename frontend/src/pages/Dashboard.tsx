@@ -1,50 +1,15 @@
-import { useState, useEffect } from 'react';
-import api from '../services/api';
+import { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../store';
+import { fetchDashboardStats } from '../store/slices/analyticsSlice';
 import '../styles/Page.css';
 
-interface DashboardStats {
-  totalPatients: number;
-  totalClients: number;
-  totalAppointments: number;
-  activePatients: number;
-  todayAppointments: number;
-  pendingInvoices: number;
-}
-
 const Dashboard = () => {
-  const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
+  const { dashboardStats: stats, loading, error } = useAppSelector((state) => state.analytics);
 
   useEffect(() => {
-    const fetchDashboardStats = async () => {
-      try {
-        setLoading(true);
-        const response = (await api.analytics.getDashboard()) as {
-          status: string;
-          data: DashboardStats;
-        };
-        setStats(response.data);
-        setError(null);
-      } catch (err) {
-        console.error('Error fetching dashboard stats:', err);
-        setError('Failed to load dashboard data. Using demo data.');
-        // Fallback to demo data
-        setStats({
-          totalPatients: 1234,
-          totalClients: 856,
-          totalAppointments: 3456,
-          activePatients: 1180,
-          todayAppointments: 24,
-          pendingInvoices: 45,
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDashboardStats();
-  }, []);
+    dispatch(fetchDashboardStats());
+  }, [dispatch]);
 
   const recentActivities = [
     { time: '10:30 AM', activity: 'Appointment with Max (Labrador)', type: 'appointment' },
