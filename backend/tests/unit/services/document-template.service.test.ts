@@ -27,16 +27,18 @@ describe('DocumentTemplateService', () => {
     it('should create a document template successfully', async () => {
       const templateData = {
         name: 'Medical Record Template',
-        description: 'Standard medical record format',
         category: 'medical',
-        content: '<html><body>{{patientName}}</body></html>',
-        variables: ['patientName', 'visitDate'],
+        template: {
+          content: '<html><body>{{patientName}}</body></html>',
+          variables: ['patientName', 'visitDate'],
+        },
+        fields: { description: 'Standard medical record format' },
       };
 
       const expectedResult = {
         id: 'template-123',
         ...templateData,
-        isActive: true,
+        status: 'active',
         createdAt: new Date(),
       };
 

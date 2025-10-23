@@ -1,7 +1,5 @@
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../config/database';
 import { PAGINATION } from '../constants';
-
-const prisma = new PrismaClient();
 
 export class DocumentTemplateService {
   async createTemplate(data: { name: string; category: string; template: any; fields?: any }) {

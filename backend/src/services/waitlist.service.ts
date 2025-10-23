@@ -1,7 +1,6 @@
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../config/database';
 import { PAGINATION } from '../constants';
 
-const prisma = new PrismaClient();
 
 export class WaitlistService {
   async addToWaitlist(data: {

@@ -1,24 +1,19 @@
 import { PrismaClient } from '@prisma/client';
 import { logger } from './logger';
 
-// Prisma event types
+// Prisma event types for type-safe event handlers
 interface QueryEvent {
   query: string;
   duration: number;
   timestamp: Date;
 }
 
-interface ErrorEvent {
+interface LogEvent {
   message: string;
   target: string;
 }
 
-interface WarnEvent {
-  message: string;
-  target: string;
-}
-
-const prisma = new PrismaClient({
+const prisma: PrismaClient = new PrismaClient({
   log: [
     { level: 'query', emit: 'event' },
     { level: 'error', emit: 'event' },
@@ -28,17 +23,17 @@ const prisma = new PrismaClient({
 
 // Log queries in development
 if (process.env.NODE_ENV === 'development') {
-  prisma.$on('query', (e: QueryEvent) => {
+  prisma.$on('query', (e: QueryEvent): void => {
     logger.debug('Query: ' + e.query);
     logger.debug('Duration: ' + e.duration + 'ms');
   });
 }
 
-prisma.$on('error', (e: ErrorEvent) => {
+prisma.$on('error', (e: LogEvent): void => {
   logger.error('Database error:', e);
 });
 
-prisma.$on('warn', (e: WarnEvent) => {
+prisma.$on('warn', (e: LogEvent): void => {
   logger.warn('Database warning:', e);
 });
 

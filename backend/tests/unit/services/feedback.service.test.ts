@@ -4,7 +4,7 @@ import { prisma } from '../../../src/config/database';
 // Mock Prisma
 jest.mock('../../../src/config/database', () => ({
   prisma: {
-    feedback: {
+    clientFeedback: {
       create: jest.fn(),
       findUnique: jest.fn(),
       findMany: jest.fn(),
@@ -26,23 +26,23 @@ describe('FeedbackService', () => {
     it('should create feedback successfully', async () => {
       const feedbackData = {
         clientId: 'client-123',
+        feedbackType: 'service-quality',
         rating: 5,
         comment: 'Great service!',
-        category: 'service-quality',
       };
 
       const expectedResult = {
         id: 'feedback-123',
         ...feedbackData,
-        status: 'pending',
+        status: 'new',
         createdAt: new Date(),
       };
 
-      (prisma.feedback.create as jest.Mock).mockResolvedValue(expectedResult);
+      (prisma.clientFeedback.create as jest.Mock).mockResolvedValue(expectedResult);
 
       const result = await feedbackService.createFeedback(feedbackData);
 
-      expect(prisma.feedback.create).toHaveBeenCalled();
+      expect(prisma.clientFeedback.create).toHaveBeenCalled();
       expect(result).toEqual(expectedResult);
     });
   });
@@ -56,7 +56,7 @@ describe('FeedbackService', () => {
         comment: 'Great service!',
       };
 
-      (prisma.feedback.findUnique as jest.Mock).mockResolvedValue(expectedFeedback);
+      (prisma.clientFeedback.findUnique as jest.Mock).mockResolvedValue(expectedFeedback);
 
       const result = await feedbackService.getFeedback(feedbackId);
 
@@ -66,7 +66,7 @@ describe('FeedbackService', () => {
     it('should throw error when feedback not found', async () => {
       const feedbackId = 'non-existent';
 
-      (prisma.feedback.findUnique as jest.Mock).mockResolvedValue(null);
+      (prisma.clientFeedback.findUnique as jest.Mock).mockResolvedValue(null);
 
       await expect(feedbackService.getFeedback(feedbackId)).rejects.toThrow('Feedback not found');
     });
@@ -79,13 +79,13 @@ describe('FeedbackService', () => {
         { id: 'feedback-2', rating: 4 },
       ];
 
-      (prisma.feedback.findMany as jest.Mock).mockResolvedValue(mockFeedback);
-      (prisma.feedback.count as jest.Mock).mockResolvedValue(2);
+      (prisma.clientFeedback.findMany as jest.Mock).mockResolvedValue(mockFeedback);
+      (prisma.clientFeedback.count as jest.Mock).mockResolvedValue(2);
 
       const result = await feedbackService.listFeedback({});
 
-      expect(result.data).toEqual(mockFeedback);
-      expect(result.pagination.total).toBe(2);
+      expect(result.items).toEqual(mockFeedback);
+      expect(result.total).toBe(2);
     });
   });
 
@@ -96,8 +96,8 @@ describe('FeedbackService', () => {
       const existingFeedback = { id: feedbackId, status: 'pending' };
       const updatedFeedback = { ...existingFeedback, ...updateData };
 
-      (prisma.feedback.findUnique as jest.Mock).mockResolvedValue(existingFeedback);
-      (prisma.feedback.update as jest.Mock).mockResolvedValue(updatedFeedback);
+      (prisma.clientFeedback.findUnique as jest.Mock).mockResolvedValue(existingFeedback);
+      (prisma.clientFeedback.update as jest.Mock).mockResolvedValue(updatedFeedback);
 
       const result = await feedbackService.updateFeedback(feedbackId, updateData);
 

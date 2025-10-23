@@ -1,7 +1,5 @@
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../config/database';
 import { PAGINATION, SORT_ORDER, FIELDS } from '../constants';
-
-const prisma = new PrismaClient();
 
 export class PaymentPlanService {
   async createPaymentPlan(data: {
