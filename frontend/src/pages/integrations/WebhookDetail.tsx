@@ -8,11 +8,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { webhooksApi } from '../../services/modules/webhooksApi';
-import type {
-  Webhook,
-  WebhookDelivery,
-  WebhookStats,
-} from '../../services/modules/webhooksApi';
+import type { Webhook, WebhookDelivery, WebhookStats } from '../../services/modules/webhooksApi';
 import '../../styles/Page.css';
 
 const WebhookDetail = () => {
@@ -69,8 +65,7 @@ const WebhookDetail = () => {
   };
 
   const handleRegenerateSecret = async () => {
-    if (!id || !window.confirm('Are you sure you want to regenerate the webhook secret?'))
-      return;
+    if (!id || !window.confirm('Are you sure you want to regenerate the webhook secret?')) return;
     try {
       const updated = await webhooksApi.regenerateSecret(id);
       setWebhook(updated);
@@ -194,9 +189,7 @@ const WebhookDetail = () => {
           </div>
           <div>
             <strong>Created:</strong>
-            <p style={{ margin: '0.25rem 0' }}>
-              {new Date(webhook.createdAt).toLocaleString()}
-            </p>
+            <p style={{ margin: '0.25rem 0' }}>{new Date(webhook.createdAt).toLocaleString()}</p>
           </div>
         </div>
       </div>

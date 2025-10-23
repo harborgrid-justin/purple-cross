@@ -233,7 +233,9 @@ class WebhooksApi {
   /**
    * Get all webhook deliveries (admin view)
    */
-  async getAllDeliveries(filters?: WebhookDeliveryFilters): Promise<PaginatedResponse<WebhookDelivery>> {
+  async getAllDeliveries(
+    filters?: WebhookDeliveryFilters
+  ): Promise<PaginatedResponse<WebhookDelivery>> {
     try {
       const params = filters ? buildUrlParams(filters) : '';
       const response = await apiInstance.get<{

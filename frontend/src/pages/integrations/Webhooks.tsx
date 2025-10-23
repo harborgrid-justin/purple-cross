@@ -210,7 +210,9 @@ const Webhooks = () => {
                 border: '1px solid var(--border-color)',
               }}
             >
-              <h3 style={{ marginTop: 0, marginBottom: '0.5rem', fontSize: '2rem', color: '#10b981' }}>
+              <h3
+                style={{ marginTop: 0, marginBottom: '0.5rem', fontSize: '2rem', color: '#10b981' }}
+              >
                 {stats.success}
               </h3>
               <p style={{ margin: 0, color: 'var(--text-secondary)' }}>Successful</p>
@@ -223,7 +225,9 @@ const Webhooks = () => {
                 border: '1px solid var(--border-color)',
               }}
             >
-              <h3 style={{ marginTop: 0, marginBottom: '0.5rem', fontSize: '2rem', color: '#ef4444' }}>
+              <h3
+                style={{ marginTop: 0, marginBottom: '0.5rem', fontSize: '2rem', color: '#ef4444' }}
+              >
                 {stats.failed}
               </h3>
               <p style={{ margin: 0, color: 'var(--text-secondary)' }}>Failed</p>

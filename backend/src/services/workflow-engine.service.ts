@@ -88,56 +88,70 @@ export class WorkflowEngineService {
       const steps = execution.steps || [];
       const variables = (execution.variables as Record<string, unknown>) || {};
 
-      // Execute each step in sequence
-      for (const step of steps) {
+      // Group steps by parallel execution groups
+      const executionGroups = this.groupStepsByParallelExecution(steps);
+
+      // Execute each group
+      for (const group of executionGroups) {
         try {
-          // Start step
-          await workflowExecutionService.startExecutionStep(executionId, step.actionId);
+          // Execute all steps in the group in parallel
+          const results = await Promise.allSettled(
+            group.map(async (step) => {
+              // Start step
+              await workflowExecutionService.startExecutionStep(executionId, step.actionId);
 
-          // Execute action
-          const actionConfig = step.actionConfig as Record<string, unknown>;
-          const result = await this.executeAction(
-            step.actionType,
-            actionConfig,
-            variables,
-            execution.triggerData as Record<string, unknown>
+              // Execute action
+              const actionConfig = step.actionConfig as Record<string, unknown>;
+              const result = await this.executeAction(
+                step.actionType,
+                actionConfig,
+                variables,
+                execution.triggerData as Record<string, unknown>
+              );
+
+              // Complete step
+              await workflowExecutionService.completeExecutionStep(
+                executionId,
+                step.actionId,
+                result.success ? 'success' : 'failed',
+                result.output,
+                result.error
+              );
+
+              return { step, result };
+            })
           );
 
-          // Update variables with action output
-          if (result.output) {
-            Object.assign(variables, result.output);
-            await workflowExecutionService.updateExecutionVariables(executionId, variables);
+          // Process results and update variables
+          for (const settledResult of results) {
+            if (settledResult.status === 'fulfilled') {
+              const { result } = settledResult.value;
+              
+              if (result.output) {
+                Object.assign(variables, result.output);
+              }
+
+              if (!result.success) {
+                throw new Error(result.error || 'Action execution failed');
+              }
+            } else {
+              // Handle rejected promise
+              const error = settledResult.reason;
+              logger.error('Step execution failed', {
+                executionId,
+                error: error instanceof Error ? error.message : 'Unknown error',
+              });
+              throw error;
+            }
           }
 
-          // Complete step
-          await workflowExecutionService.completeExecutionStep(
-            executionId,
-            step.actionId,
-            result.success ? 'success' : 'failed',
-            result.output,
-            result.error
-          );
-
-          // If action failed and no retry, fail the execution
-          if (!result.success) {
-            throw new Error(result.error || 'Action execution failed');
-          }
+          // Update variables after group execution
+          await workflowExecutionService.updateExecutionVariables(executionId, variables);
         } catch (error) {
-          logger.error('Step execution failed', {
+          logger.error('Group execution failed', {
             executionId,
-            stepId: step.id,
-            actionId: step.actionId,
             error: error instanceof Error ? error.message : 'Unknown error',
           });
-
-          // Mark step as failed
-          await workflowExecutionService.completeExecutionStep(
-            executionId,
-            step.actionId,
-            'failed',
-            undefined,
-            error instanceof Error ? error.message : 'Unknown error'
-          );
 
           // Fail the execution
           throw error;
@@ -163,6 +177,53 @@ export class WorkflowEngineService {
         error instanceof Error ? error.message : 'Unknown error'
       );
     }
+  }
+
+  /**
+   * Group steps by parallel execution
+   * Steps with isParallel=true are grouped together if they have no dependencies
+   */
+  private groupStepsByParallelExecution(steps: any[]): any[][] {
+    const groups: any[][] = [];
+
+    // For simplicity, we'll group consecutive parallel steps together
+    let currentGroup: any[] = [];
+    
+    for (const step of steps) {
+      const config = step.actionConfig as Record<string, unknown>;
+      const isParallel = config.isParallel === true;
+
+      if (isParallel && currentGroup.length > 0) {
+        // Check if the last action in current group is also parallel
+        const lastConfig = currentGroup[currentGroup.length - 1].actionConfig as Record<string, unknown>;
+        if (lastConfig.isParallel === true) {
+          // Add to current parallel group
+          currentGroup.push(step);
+          continue;
+        }
+      }
+
+      // Start new group or add to sequential group
+      if (currentGroup.length > 0) {
+        groups.push(currentGroup);
+        currentGroup = [];
+      }
+      
+      currentGroup.push(step);
+      
+      // If not parallel, immediately close the group
+      if (!isParallel) {
+        groups.push(currentGroup);
+        currentGroup = [];
+      }
+    }
+
+    // Add remaining group
+    if (currentGroup.length > 0) {
+      groups.push(currentGroup);
+    }
+
+    return groups;
   }
 
   /**

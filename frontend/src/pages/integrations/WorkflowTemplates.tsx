@@ -16,7 +16,7 @@ const WorkflowTemplates = () => {
   const [error, setError] = useState<string | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [categories, setCategories] = useState<string[]>([]);
-  
+
   const [formData, setFormData] = useState<{
     name: string;
     description: string;
@@ -279,7 +279,14 @@ const WorkflowTemplates = () => {
               />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '1rem',
+                marginBottom: '1rem',
+              }}
+            >
               <div>
                 <label htmlFor="category" style={{ display: 'block', marginBottom: '0.5rem' }}>
                   Category
@@ -300,7 +307,10 @@ const WorkflowTemplates = () => {
                   id="triggerType"
                   value={formData.triggerType}
                   onChange={(e) =>
-                    setFormData({ ...formData, triggerType: e.target.value as 'manual' | 'event' | 'schedule' })
+                    setFormData({
+                      ...formData,
+                      triggerType: e.target.value as 'manual' | 'event' | 'schedule',
+                    })
                   }
                   style={{ width: '100%', padding: '0.5rem' }}
                 >
@@ -324,7 +334,14 @@ const WorkflowTemplates = () => {
             </div>
 
             <div style={{ marginBottom: '1rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: '0.5rem',
+                }}
+              >
                 <strong>Actions ({formData.actions.length})</strong>
                 <button type="button" className="btn-secondary" onClick={handleAddAction}>
                   + Add Action
@@ -347,7 +364,14 @@ const WorkflowTemplates = () => {
                         border: '1px solid var(--border-color)',
                       }}
                     >
-                      <div style={{ display: 'grid', gridTemplateColumns: '2fr 2fr 1fr auto', gap: '0.5rem', alignItems: 'center' }}>
+                      <div
+                        style={{
+                          display: 'grid',
+                          gridTemplateColumns: '2fr 2fr 1fr auto',
+                          gap: '0.5rem',
+                          alignItems: 'center',
+                        }}
+                      >
                         <input
                           type="text"
                           placeholder="Action name"
@@ -387,7 +411,11 @@ const WorkflowTemplates = () => {
             </div>
 
             <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <button type="submit" className="btn-primary" disabled={formData.actions.length === 0}>
+              <button
+                type="submit"
+                className="btn-primary"
+                disabled={formData.actions.length === 0}
+              >
                 Create Template
               </button>
               <button

@@ -86,6 +86,8 @@ export interface WorkflowAction {
   config: Record<string, unknown>;
   onSuccess?: string; // Next action ID
   onFailure?: string; // Next action ID on failure
+  isParallel?: boolean; // Whether this action can run in parallel with others
+  nextActions?: string[]; // Array of next action IDs for parallel execution
 }
 
 /**
