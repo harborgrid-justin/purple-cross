@@ -16,7 +16,9 @@
     "test:coverage": "vitest --coverage",
     "test:e2e": "cypress run",
     "test:e2e:open": "cypress open",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.9.1",
@@ -52,7 +54,11 @@
     "prettier": "^3.1.1",
     "typescript": "^5.3.3",
     "vite": "^5.0.8",
-    "vitest": "^1.0.4"
+    "vitest": "^1.0.4",
+    "storybook": "^9.1.13",
+    "@storybook/react-vite": "^9.1.13",
+    "@storybook/addon-docs": "^9.1.13",
+    "@storybook/addon-onboarding": "^9.1.13"
   },
   "engines": {
     "node": ">=18.0.0",
