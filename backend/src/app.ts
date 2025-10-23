@@ -47,6 +47,7 @@ import policyRoutes from './routes/policy.routes';
 import reportTemplateRoutes from './routes/report-template.routes';
 import documentTemplateRoutes from './routes/document-template.routes';
 import webhookRoutes from './routes/webhook.routes';
+import workflowRoutes from './routes/workflow.routes';
 import healthRoutes from './routes/health.routes';
 import metricsRoutes from './routes/metrics.routes';
 import { serverAdapter } from './config/bull-board';
@@ -146,6 +147,7 @@ export function createApp(): Application {
   app.use(`${env.apiPrefix}/report-templates`, reportTemplateRoutes);
   app.use(`${env.apiPrefix}/document-templates`, documentTemplateRoutes);
   app.use(`${env.apiPrefix}/webhooks`, webhookRoutes);
+  app.use(`${env.apiPrefix}/workflows`, workflowRoutes);
 
   // 404 handler
   app.use(notFoundHandler);
