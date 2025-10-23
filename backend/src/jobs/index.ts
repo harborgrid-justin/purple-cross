@@ -27,3 +27,12 @@ export {
 
 // Webhook jobs
 export { queueWebhook, processWebhookJob, type WebhookPayload } from './webhook.job';
+
+// Workflow jobs
+export {
+  queueWorkflow,
+  queueScheduledWorkflow,
+  processWorkflowJob,
+  workflowsQueue,
+  type WorkflowJobPayload,
+} from './workflow.job';

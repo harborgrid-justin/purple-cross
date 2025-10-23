@@ -84,8 +84,15 @@ export class WebhookController {
    */
   async testWebhook(req: Request, res: Response): Promise<void> {
     const webhook = await webhookService.getWebhookById(req.params.id);
+    const { queueWebhook } = await import('../jobs');
 
-    // This will be handled by the webhook delivery system
+    // Queue a test webhook
+    await queueWebhook(webhook.id, 'webhook.test', {
+      test: true,
+      timestamp: new Date().toISOString(),
+      message: 'This is a test webhook delivery',
+    });
+
     res.status(HTTP_STATUS.OK).json({
       status: 'success',
       message: 'Test webhook queued for delivery',
@@ -93,6 +100,78 @@ export class WebhookController {
         webhookId: webhook.id,
         url: webhook.url,
       },
+    });
+  }
+
+  /**
+   * Get webhook deliveries
+   */
+  async getWebhookDeliveries(req: Request, res: Response): Promise<void> {
+    const { webhookDeliveryService } = await import('../services/webhook-delivery.service');
+    const { page, limit, status, event } = req.query;
+
+    const result = await webhookDeliveryService.getDeliveries({
+      webhookId: req.params.id,
+      page: page ? parseInt(page as string) : undefined,
+      limit: limit ? parseInt(limit as string) : undefined,
+      status: status as string | undefined,
+      event: event as string | undefined,
+    });
+
+    res.status(HTTP_STATUS.OK).json({
+      status: 'success',
+      data: result.deliveries,
+      pagination: result.pagination,
+    });
+  }
+
+  /**
+   * Get webhook delivery statistics
+   */
+  async getWebhookStats(req: Request, res: Response): Promise<void> {
+    const { webhookDeliveryService } = await import('../services/webhook-delivery.service');
+
+    const stats = await webhookDeliveryService.getDeliveryStats(req.params.id);
+
+    res.status(HTTP_STATUS.OK).json({
+      status: 'success',
+      data: stats,
+    });
+  }
+
+  /**
+   * Get all webhook deliveries (admin view)
+   */
+  async getAllDeliveries(req: Request, res: Response): Promise<void> {
+    const { webhookDeliveryService } = await import('../services/webhook-delivery.service');
+    const { page, limit, status, event, webhookId } = req.query;
+
+    const result = await webhookDeliveryService.getDeliveries({
+      page: page ? parseInt(page as string) : undefined,
+      limit: limit ? parseInt(limit as string) : undefined,
+      status: status as string | undefined,
+      event: event as string | undefined,
+      webhookId: webhookId as string | undefined,
+    });
+
+    res.status(HTTP_STATUS.OK).json({
+      status: 'success',
+      data: result.deliveries,
+      pagination: result.pagination,
+    });
+  }
+
+  /**
+   * Get delivery analytics
+   */
+  async getDeliveryAnalytics(_req: Request, res: Response): Promise<void> {
+    const { webhookDeliveryService } = await import('../services/webhook-delivery.service');
+
+    const overallStats = await webhookDeliveryService.getDeliveryStats();
+
+    res.status(HTTP_STATUS.OK).json({
+      status: 'success',
+      data: overallStats,
     });
   }
 }
