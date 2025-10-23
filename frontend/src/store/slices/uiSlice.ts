@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | uiSlice.ts - ui Slice
+ * Purpose: Redux slice for managing ui state
+ * Dependencies: @reduxjs/toolkit
+ * Last Updated: 2025-10-23 | File Type: .ts
+ */
+
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface Notification {

@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Applications.tsx - Applications
+ * Purpose: React component for Applications functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const Applications = () => {

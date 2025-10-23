@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Clinical.tsx - Clinical
+ * Purpose: React component for Clinical functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const Clinical = () => {

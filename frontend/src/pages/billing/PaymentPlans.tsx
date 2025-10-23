@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | PaymentPlans.tsx - Payment Plans
+ * Purpose: React component for PaymentPlans functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const PaymentPlans = () => {

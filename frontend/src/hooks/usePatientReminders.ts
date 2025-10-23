@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | usePatientReminders.ts - use Patient Reminders
+ * Purpose: React hook for managing PatientReminders data and operations
+ * Dependencies: react, @tanstack/react-query
+ * Last Updated: 2025-10-23 | File Type: .ts
+ */
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/services/api';
 

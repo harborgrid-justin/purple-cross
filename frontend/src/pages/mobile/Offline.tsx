@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Offline.tsx - Offline
+ * Purpose: React component for Offline functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const Offline = () => {

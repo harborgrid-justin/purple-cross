@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | api.test.ts - api.test
+ * Purpose: API service for api.test.ts endpoints and operations
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .ts
+ */
+
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('API Service', () => {

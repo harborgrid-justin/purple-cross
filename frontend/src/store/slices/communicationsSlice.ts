@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | communicationsSlice.ts - communications Slice
+ * Purpose: Redux slice for managing communications state
+ * Dependencies: @reduxjs/toolkit
+ * Last Updated: 2025-10-23 | File Type: .ts
+ */
+
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { api } from '@/services/api';
 

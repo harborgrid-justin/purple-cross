@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | index.ts - index
+ * Purpose: Module exports and re-exports
+ * Dependencies: react, @reduxjs/toolkit
+ * Last Updated: 2025-10-23 | File Type: .ts
+ */
+
 import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import patientsReducer from './slices/patientsSlice';

@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | MedicationReminders.tsx - Medication Reminders
+ * Purpose: React component for MedicationReminders functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const MedicationReminders = () => {

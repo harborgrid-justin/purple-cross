@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | AutoReorder.tsx - Auto Reorder
+ * Purpose: React component for AutoReorder functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const AutoReorder = () => {

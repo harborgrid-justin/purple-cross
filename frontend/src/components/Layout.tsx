@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Layout.tsx - Layout
+ * Purpose: React component for Layout functionality
+ * Dependencies: react
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import '../styles/Layout.css';

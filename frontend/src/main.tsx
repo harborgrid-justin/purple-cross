@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | main.tsx - main
+ * Purpose: React component for main functionality
+ * Dependencies: react, @tanstack/react-query
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';

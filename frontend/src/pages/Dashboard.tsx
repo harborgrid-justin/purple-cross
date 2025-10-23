@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Dashboard.tsx - Dashboard
+ * Purpose: React component for Dashboard functionality
+ * Dependencies: react
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { fetchDashboardStats } from '../store/slices/analyticsSlice';

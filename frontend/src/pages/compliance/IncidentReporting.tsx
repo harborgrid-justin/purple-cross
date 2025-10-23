@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | IncidentReporting.tsx - Incident Reporting
+ * Purpose: React component for IncidentReporting functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const IncidentReporting = () => {

@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Modal.tsx - Modal
+ * Purpose: React component for Modal functionality
+ * Dependencies: react
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import { ReactNode, useEffect } from 'react';
 import clsx from 'clsx';
 

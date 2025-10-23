@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | HealthStatus.tsx - Health Status
+ * Purpose: React component for HealthStatus functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const PatientHealthStatus = () => {

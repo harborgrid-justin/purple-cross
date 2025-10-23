@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | CalendarManagement.tsx - Calendar Management
+ * Purpose: React component for CalendarManagement functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const CalendarManagement = () => {

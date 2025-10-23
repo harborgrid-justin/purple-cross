@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | index.ts - index
+ * Purpose: Module exports and re-exports
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .ts
+ */
+
 export interface Patient {
   id: string;
   name: string;

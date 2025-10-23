@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | AppointmentCalendar.test.tsx - Appointment Calendar.test
+ * Purpose: React component for AppointmentCalendar.test functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import { describe, it, expect } from 'vitest';
 
 describe('AppointmentCalendar Component', () => {

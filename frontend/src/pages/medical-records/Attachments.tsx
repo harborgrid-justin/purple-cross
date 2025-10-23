@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Attachments.tsx - Attachments
+ * Purpose: React component for Attachments functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const Attachments = () => {

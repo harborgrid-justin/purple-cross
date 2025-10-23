@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | RecordRetention.tsx - Record Retention
+ * Purpose: React component for RecordRetention functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const RecordRetention = () => {

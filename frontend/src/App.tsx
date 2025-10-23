@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | App.tsx - App
+ * Purpose: React component for App functionality
+ * Dependencies: react
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';

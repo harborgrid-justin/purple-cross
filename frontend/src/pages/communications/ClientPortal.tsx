@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | ClientPortal.tsx - Client Portal
+ * Purpose: React component for ClientPortal functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const ClientPortal = () => {

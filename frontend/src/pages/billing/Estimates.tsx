@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Estimates.tsx - Estimates
+ * Purpose: React component for Estimates functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const Estimates = () => {

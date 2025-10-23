@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Accounting.tsx - Accounting
+ * Purpose: React component for Accounting functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const Accounting = () => {

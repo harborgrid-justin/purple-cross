@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | ClinicalNotes.tsx - Clinical Notes
+ * Purpose: React component for ClinicalNotes functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const ClinicalNotes = () => {

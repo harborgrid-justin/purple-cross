@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | SSO.tsx - S S O
+ * Purpose: React component for SSO functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const SSO = () => {

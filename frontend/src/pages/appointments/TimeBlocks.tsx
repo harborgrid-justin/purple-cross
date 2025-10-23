@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | TimeBlocks.tsx - Time Blocks
+ * Purpose: React component for TimeBlocks functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const TimeBlocks = () => {

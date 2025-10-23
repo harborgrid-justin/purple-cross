@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Staff.tsx - Staff
+ * Purpose: React component for Staff functionality
+ * Dependencies: react
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import { useState, useEffect, Suspense, lazy } from 'react';
 import { Link, Routes, Route, useLocation } from 'react-router-dom';
 import api from '../services/api';

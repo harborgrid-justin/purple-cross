@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | useMedicalRecords.ts - use Medical Records
+ * Purpose: React hook for managing MedicalRecords data and operations
+ * Dependencies: react, @tanstack/react-query
+ * Last Updated: 2025-10-23 | File Type: .ts
+ */
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/services/api';
 

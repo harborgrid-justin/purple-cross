@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | SocialMedia.tsx - Social Media
+ * Purpose: React component for SocialMedia functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const SocialMedia = () => {

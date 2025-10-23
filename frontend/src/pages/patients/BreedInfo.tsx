@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | BreedInfo.tsx - Breed Info
+ * Purpose: React component for BreedInfo functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const PatientBreedInfo = () => {
