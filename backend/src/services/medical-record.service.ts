@@ -1,16 +1,25 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
-import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION, SORT_ORDER, FIELDS } from '../constants';
+import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION, SORT_ORDER, FIELDS, WORKFLOW_EVENTS } from '../constants';
+import { domainEvents } from './domain-events.service';
 
 export class MedicalRecordService {
   async createMedicalRecord(data: Record<string, unknown>) {
-    return prisma.medicalRecord.create({
+    const medicalRecord = await prisma.medicalRecord.create({
       data,
       include: {
         patient: true,
         veterinarian: true,
       },
     });
+
+    // Emit domain event (triggers both webhooks and workflows)
+    domainEvents.emit(WORKFLOW_EVENTS.MEDICAL_RECORD_CREATED, {
+      medicalRecordId: medicalRecord.id,
+      medicalRecord,
+    });
+
+    return medicalRecord;
   }
 
   async getMedicalRecordById(id: string) {
@@ -84,7 +93,7 @@ export class MedicalRecordService {
       throw new AppError(ERROR_MESSAGES.NOT_FOUND('Medical record'), HTTP_STATUS.NOT_FOUND);
     }
 
-    return prisma.medicalRecord.update({
+    const updatedRecord = await prisma.medicalRecord.update({
       where: { id },
       data,
       include: {
@@ -92,6 +101,15 @@ export class MedicalRecordService {
         veterinarian: true,
       },
     });
+
+    // Emit domain event (triggers both webhooks and workflows)
+    domainEvents.emit(WORKFLOW_EVENTS.MEDICAL_RECORD_UPDATED, {
+      medicalRecordId: updatedRecord.id,
+      medicalRecord: updatedRecord,
+      previousData: record,
+    });
+
+    return updatedRecord;
   }
 
   async deleteMedicalRecord(id: string) {

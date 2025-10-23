@@ -8,16 +8,26 @@ import {
   QUERY_MODE,
   SORT_ORDER,
   FIELDS,
+  WORKFLOW_EVENTS,
 } from '../constants';
+import { domainEvents } from './domain-events.service';
 
 export class PatientService {
   async createPatient(data: Record<string, unknown>) {
-    return prisma.patient.create({
+    const patient = await prisma.patient.create({
       data,
       include: {
         owner: true,
       },
     });
+
+    // Emit domain event (triggers both webhooks and workflows)
+    domainEvents.emit(WORKFLOW_EVENTS.PATIENT_CREATED, {
+      patientId: patient.id,
+      patient,
+    });
+
+    return patient;
   }
 
   async getPatientById(id: string) {
@@ -107,13 +117,22 @@ export class PatientService {
       throw new AppError(ERROR_MESSAGES.NOT_FOUND('Patient'), HTTP_STATUS.NOT_FOUND);
     }
 
-    return prisma.patient.update({
+    const updatedPatient = await prisma.patient.update({
       where: { id },
       data,
       include: {
         owner: true,
       },
     });
+
+    // Emit domain event (triggers both webhooks and workflows)
+    domainEvents.emit(WORKFLOW_EVENTS.PATIENT_UPDATED, {
+      patientId: updatedPatient.id,
+      patient: updatedPatient,
+      previousData: patient,
+    });
+
+    return updatedPatient;
   }
 
   async deletePatient(id: string) {
@@ -124,10 +143,18 @@ export class PatientService {
     }
 
     // Soft delete by updating status
-    return prisma.patient.update({
+    const deletedPatient = await prisma.patient.update({
       where: { id },
       data: { status: 'inactive' },
     });
+
+    // Emit domain event (triggers both webhooks and workflows)
+    domainEvents.emit(WORKFLOW_EVENTS.PATIENT_DELETED, {
+      patientId: deletedPatient.id,
+      patient: deletedPatient,
+    });
+
+    return deletedPatient;
   }
 }
 

@@ -1,10 +1,11 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
-import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION } from '../constants';
+import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION, WORKFLOW_EVENTS } from '../constants';
+import { domainEvents } from './domain-events.service';
 
 export class PrescriptionService {
   async createPrescription(data: Record<string, unknown>) {
-    return prisma.prescription.create({
+    const prescription = await prisma.prescription.create({
       data,
       include: {
         patient: true,
@@ -12,6 +13,14 @@ export class PrescriptionService {
         prescribedBy: true,
       },
     });
+
+    // Emit domain event (triggers both webhooks and workflows)
+    domainEvents.emit(WORKFLOW_EVENTS.PRESCRIPTION_CREATED, {
+      prescriptionId: prescription.id,
+      prescription,
+    });
+
+    return prescription;
   }
 
   async getPrescriptionById(id: string) {
@@ -113,6 +122,34 @@ export class PrescriptionService {
     return prisma.prescription.delete({
       where: { id },
     });
+  }
+
+  async refillPrescription(id: string) {
+    const prescription = await prisma.prescription.findUnique({ where: { id } });
+
+    if (!prescription) {
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Prescription'), HTTP_STATUS.NOT_FOUND);
+    }
+
+    const refilledPrescription = await prisma.prescription.update({
+      where: { id },
+      data: { 
+        refills: (prescription.refills as number) + 1,
+      },
+      include: {
+        patient: true,
+        medication: true,
+        prescribedBy: true,
+      },
+    });
+
+    // Emit domain event (triggers both webhooks and workflows)
+    domainEvents.emit(WORKFLOW_EVENTS.PRESCRIPTION_REFILLED, {
+      prescriptionId: refilledPrescription.id,
+      prescription: refilledPrescription,
+    });
+
+    return refilledPrescription;
   }
 }
 

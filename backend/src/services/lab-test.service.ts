@@ -1,16 +1,25 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
-import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION } from '../constants';
+import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION, WORKFLOW_EVENTS } from '../constants';
+import { domainEvents } from './domain-events.service';
 
 export class LabTestService {
   async createLabTest(data: Record<string, unknown>) {
-    return prisma.labTest.create({
+    const labTest = await prisma.labTest.create({
       data,
       include: {
         patient: true,
         orderedBy: true,
       },
     });
+
+    // Emit domain event (triggers both webhooks and workflows)
+    domainEvents.emit(WORKFLOW_EVENTS.LAB_TEST_ORDERED, {
+      labTestId: labTest.id,
+      labTest,
+    });
+
+    return labTest;
   }
 
   async getLabTestById(id: string) {
@@ -107,6 +116,35 @@ export class LabTestService {
     return prisma.labTest.delete({
       where: { id },
     });
+  }
+
+  async completeLabTest(id: string, results: string) {
+    const labTest = await prisma.labTest.findUnique({ where: { id } });
+
+    if (!labTest) {
+      throw new AppError(ERROR_MESSAGES.NOT_FOUND('Lab test'), HTTP_STATUS.NOT_FOUND);
+    }
+
+    const completedLabTest = await prisma.labTest.update({
+      where: { id },
+      data: { 
+        status: 'completed',
+        results,
+        resultDate: new Date(),
+      },
+      include: {
+        patient: true,
+        orderedBy: true,
+      },
+    });
+
+    // Emit domain event (triggers both webhooks and workflows)
+    domainEvents.emit(WORKFLOW_EVENTS.LAB_TEST_COMPLETED, {
+      labTestId: completedLabTest.id,
+      labTest: completedLabTest,
+    });
+
+    return completedLabTest;
   }
 }
 
