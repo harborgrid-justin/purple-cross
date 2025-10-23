@@ -1,7 +1,6 @@
 import { prisma } from '../config/database';
 import { SORT_ORDER, FIELDS } from '../constants';
 
-
 export class PatientRelationshipService {
   async createRelationship(data: {
     patientId: string;

@@ -28,9 +28,7 @@ export interface NotificationJobData {
 /**
  * Process a notification job from the queue
  */
-export async function processNotificationJob(
-  job: Job<NotificationJobData>
-): Promise<void> {
+export async function processNotificationJob(job: Job<NotificationJobData>): Promise<void> {
   const { type, recipientId, recipientType, channels, title } = job.data;
 
   logger.info('Processing notification job', {

@@ -46,6 +46,7 @@ import marketingCampaignRoutes from './routes/marketing-campaign.routes';
 import policyRoutes from './routes/policy.routes';
 import reportTemplateRoutes from './routes/report-template.routes';
 import documentTemplateRoutes from './routes/document-template.routes';
+import webhookRoutes from './routes/webhook.routes';
 import healthRoutes from './routes/health.routes';
 import metricsRoutes from './routes/metrics.routes';
 import { serverAdapter } from './config/bull-board';
@@ -53,7 +54,7 @@ import { serverAdapter } from './config/bull-board';
 export function createApp(): Application {
   // Initialize Sentry FIRST - before creating app
   initializeSentry();
-  
+
   const app = express();
 
   // Trust proxy - important for rate limiting and getting correct client IP
@@ -144,6 +145,7 @@ export function createApp(): Application {
   app.use(`${env.apiPrefix}/policies`, policyRoutes);
   app.use(`${env.apiPrefix}/report-templates`, reportTemplateRoutes);
   app.use(`${env.apiPrefix}/document-templates`, documentTemplateRoutes);
+  app.use(`${env.apiPrefix}/webhooks`, webhookRoutes);
 
   // 404 handler
   app.use(notFoundHandler);

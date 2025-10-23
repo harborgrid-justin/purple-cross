@@ -1,7 +1,6 @@
 import { prisma } from '../config/database';
 import { PAGINATION, SORT_ORDER, FIELDS } from '../constants';
 
-
 export class MarketingCampaignService {
   async createCampaign(data: {
     name: string;

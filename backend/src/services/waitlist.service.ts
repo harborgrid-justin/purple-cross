@@ -1,7 +1,6 @@
 import { prisma } from '../config/database';
 import { PAGINATION } from '../constants';
 
-
 export class WaitlistService {
   async addToWaitlist(data: {
     patientId: string;

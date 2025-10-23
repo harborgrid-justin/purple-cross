@@ -4,6 +4,7 @@ import { processEmailJob } from './jobs/email.job';
 import { processReportJob } from './jobs/report.job';
 import { processReminderJob } from './jobs/reminder.job';
 import { processNotificationJob } from './jobs/notification.job';
+import { processWebhookJob } from './jobs/webhook.job';
 import { logger } from './config/logger';
 
 const redisConnection = {
@@ -38,6 +39,12 @@ const notificationsWorker = new Worker(QUEUES.NOTIFICATIONS, processNotification
   concurrency: 10, // Notifications are lightweight, higher concurrency
 });
 
+// Webhooks worker
+const webhooksWorker = new Worker(QUEUES.WEBHOOKS, processWebhookJob, {
+  connection: redisConnection,
+  concurrency: 5, // Moderate concurrency for webhooks
+});
+
 // Helper function to set up worker event handlers
 function setupWorkerHandlers(worker: Worker, name: string): void {
   worker.on('completed', (job) => {
@@ -69,6 +76,7 @@ setupWorkerHandlers(emailWorker, 'Email');
 setupWorkerHandlers(reportsWorker, 'Reports');
 setupWorkerHandlers(remindersWorker, 'Reminders');
 setupWorkerHandlers(notificationsWorker, 'Notifications');
+setupWorkerHandlers(webhooksWorker, 'Webhooks');
 
 // Graceful shutdown
 const shutdown = async (): Promise<void> => {
@@ -79,6 +87,7 @@ const shutdown = async (): Promise<void> => {
     reportsWorker.close(),
     remindersWorker.close(),
     notificationsWorker.close(),
+    webhooksWorker.close(),
   ]);
 
   logger.info('Workers shut down successfully');
@@ -89,5 +98,5 @@ process.on('SIGTERM', shutdown);
 process.on('SIGINT', shutdown);
 
 logger.info('Workers started', {
-  queues: [QUEUES.EMAIL, QUEUES.REPORTS, QUEUES.REMINDERS, QUEUES.NOTIFICATIONS],
+  queues: [QUEUES.EMAIL, QUEUES.REPORTS, QUEUES.REMINDERS, QUEUES.NOTIFICATIONS, QUEUES.WEBHOOKS],
 });

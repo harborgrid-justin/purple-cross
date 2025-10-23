@@ -23,11 +23,11 @@ export class FeedbackService {
     const feedback = await prisma.clientFeedback.findUnique({
       where: { id },
     });
-    
+
     if (!feedback) {
       throw new Error('Feedback not found');
     }
-    
+
     return feedback;
   }
 

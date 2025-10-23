@@ -1,7 +1,6 @@
 import { prisma } from '../config/database';
 import { PAGINATION, QUERY_LIMITS } from '../constants';
 
-
 export class PolicyService {
   async createPolicy(data: {
     title: string;
