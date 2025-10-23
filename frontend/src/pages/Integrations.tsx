@@ -16,6 +16,7 @@ const ImportExport = lazy(() => import('./integrations/ImportExport'));
 const HL7FHIR = lazy(() => import('./integrations/HL7FHIR'));
 const Webhooks = lazy(() => import('./integrations/Webhooks'));
 const WebhookDetail = lazy(() => import('./integrations/WebhookDetail'));
+const WorkflowTemplates = lazy(() => import('./integrations/WorkflowTemplates'));
 const SSO = lazy(() => import('./integrations/SSO'));
 const Accounting = lazy(() => import('./integrations/Accounting'));
 const APIAnalytics = lazy(() => import('./integrations/APIAnalytics'));
@@ -121,6 +122,12 @@ const Integrations = () => {
           Webhooks
         </Link>
         <Link
+          to="/integrations/workflows"
+          className={`sub-nav-link ${location.pathname.includes('/workflows') ? 'active' : ''}`}
+        >
+          Workflows
+        </Link>
+        <Link
           to="/integrations/sso"
           className={`sub-nav-link ${location.pathname.includes('/sso') ? 'active' : ''}`}
         >
@@ -155,6 +162,7 @@ const Integrations = () => {
           <Route path="/hl7-fhir" element={<HL7FHIR />} />
           <Route path="/webhooks" element={<Webhooks />} />
           <Route path="/webhooks/:id" element={<WebhookDetail />} />
+          <Route path="/workflows" element={<WorkflowTemplates />} />
           <Route path="/sso" element={<SSO />} />
           <Route path="/accounting" element={<Accounting />} />
           <Route path="/analytics" element={<APIAnalytics />} />
