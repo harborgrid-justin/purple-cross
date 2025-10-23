@@ -1,6 +1,7 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
-import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION, STATUS } from '../constants';
+import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION, STATUS, WORKFLOW_EVENTS } from '../constants';
+import { workflowTriggerService } from './workflow-trigger.service';
 
 export class AppointmentService {
   async createAppointment(data: Record<string, unknown>) {
@@ -29,7 +30,7 @@ export class AppointmentService {
       throw new AppError(ERROR_MESSAGES.TIME_SLOT_BOOKED, HTTP_STATUS.CONFLICT);
     }
 
-    return prisma.appointment.create({
+    const appointment = await prisma.appointment.create({
       data,
       include: {
         patient: true,
@@ -37,6 +38,14 @@ export class AppointmentService {
         veterinarian: true,
       },
     });
+
+    // Trigger workflow event
+    workflowTriggerService.emitWorkflowEvent(WORKFLOW_EVENTS.APPOINTMENT_CREATED, {
+      appointmentId: appointment.id,
+      appointment,
+    });
+
+    return appointment;
   }
 
   async getAppointmentById(id: string) {
@@ -135,7 +144,7 @@ export class AppointmentService {
       throw new AppError(ERROR_MESSAGES.NOT_FOUND('Appointment'), HTTP_STATUS.NOT_FOUND);
     }
 
-    return prisma.appointment.update({
+    const updatedAppointment = await prisma.appointment.update({
       where: { id },
       data,
       include: {
@@ -144,6 +153,15 @@ export class AppointmentService {
         veterinarian: true,
       },
     });
+
+    // Trigger workflow event
+    workflowTriggerService.emitWorkflowEvent(WORKFLOW_EVENTS.APPOINTMENT_UPDATED, {
+      appointmentId: updatedAppointment.id,
+      appointment: updatedAppointment,
+      previousData: appointment,
+    });
+
+    return updatedAppointment;
   }
 
   async deleteAppointment(id: string) {
@@ -154,10 +172,18 @@ export class AppointmentService {
     }
 
     // Soft delete by updating status
-    return prisma.appointment.update({
+    const cancelledAppointment = await prisma.appointment.update({
       where: { id },
       data: { status: 'cancelled' },
     });
+
+    // Trigger workflow event
+    workflowTriggerService.emitWorkflowEvent(WORKFLOW_EVENTS.APPOINTMENT_CANCELLED, {
+      appointmentId: cancelledAppointment.id,
+      appointment: cancelledAppointment,
+    });
+
+    return cancelledAppointment;
   }
 
   async completeAppointment(id: string) {
@@ -167,7 +193,7 @@ export class AppointmentService {
       throw new AppError(ERROR_MESSAGES.NOT_FOUND('Appointment'), HTTP_STATUS.NOT_FOUND);
     }
 
-    return prisma.appointment.update({
+    const completedAppointment = await prisma.appointment.update({
       where: { id },
       data: { status: 'completed' },
       include: {
@@ -176,6 +202,14 @@ export class AppointmentService {
         veterinarian: true,
       },
     });
+
+    // Trigger workflow event
+    workflowTriggerService.emitWorkflowEvent(WORKFLOW_EVENTS.APPOINTMENT_COMPLETED, {
+      appointmentId: completedAppointment.id,
+      appointment: completedAppointment,
+    });
+
+    return completedAppointment;
   }
 }
 

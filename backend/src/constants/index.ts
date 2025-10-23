@@ -370,3 +370,41 @@ export const INTEGRATION_STATUS = {
   ERROR: 'error',
   PENDING: 'pending',
 } as const;
+
+// ============================================================================
+// Workflow Event Types
+// ============================================================================
+export const WORKFLOW_EVENTS = {
+  // Patient events
+  PATIENT_CREATED: 'patient.created',
+  PATIENT_UPDATED: 'patient.updated',
+  PATIENT_DELETED: 'patient.deleted',
+
+  // Client events
+  CLIENT_CREATED: 'client.created',
+  CLIENT_UPDATED: 'client.updated',
+  CLIENT_DELETED: 'client.deleted',
+
+  // Appointment events
+  APPOINTMENT_CREATED: 'appointment.created',
+  APPOINTMENT_UPDATED: 'appointment.updated',
+  APPOINTMENT_CANCELLED: 'appointment.cancelled',
+  APPOINTMENT_COMPLETED: 'appointment.completed',
+
+  // Invoice events
+  INVOICE_CREATED: 'invoice.created',
+  INVOICE_PAID: 'invoice.paid',
+  INVOICE_OVERDUE: 'invoice.overdue',
+
+  // Medical Record events
+  MEDICAL_RECORD_CREATED: 'medical_record.created',
+  MEDICAL_RECORD_UPDATED: 'medical_record.updated',
+
+  // Lab Test events
+  LAB_TEST_ORDERED: 'lab_test.ordered',
+  LAB_TEST_COMPLETED: 'lab_test.completed',
+
+  // Prescription events
+  PRESCRIPTION_CREATED: 'prescription.created',
+  PRESCRIPTION_REFILLED: 'prescription.refilled',
+} as const;
