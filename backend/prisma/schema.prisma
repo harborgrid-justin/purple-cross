@@ -564,10 +564,41 @@ model WebhookSubscription {
   
   active            Boolean  @default(true)
   
+  deliveries        WebhookDelivery[]
+  
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   
   @@map("webhook_subscriptions")
+}
+
+model WebhookDelivery {
+  id                String   @id @default(uuid())
+  webhookId         String
+  webhook           WebhookSubscription @relation(fields: [webhookId], references: [id], onDelete: Cascade)
+  
+  event             String
+  payload           Json
+  
+  status            String   @default("pending") // pending, success, failed
+  statusCode        Int?
+  responseBody      String?
+  errorMessage      String?
+  
+  attempt           Int      @default(1)
+  maxAttempts       Int      @default(3)
+  
+  deliveredAt       DateTime?
+  nextRetryAt       DateTime?
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([webhookId])
+  @@index([status])
+  @@index([event])
+  @@index([createdAt])
+  @@map("webhook_deliveries")
 }
 
 // ============================================================================
@@ -1568,6 +1599,89 @@ model DocumentWorkflow {
   @@index([documentId])
   @@index([status])
   @@map("document_workflows")
+}
+
+model WorkflowTemplate {
+  id                String   @id @default(uuid())
+  name              String
+  description       String?
+  category          String   @default("general")
+  
+  triggerType       String   // event, schedule, manual
+  triggerConfig     Json
+  
+  actions           Json     // Array of workflow actions
+  
+  isPublic          Boolean  @default(false)
+  isActive          Boolean  @default(true)
+  
+  usageCount        Int      @default(0)
+  
+  executions        WorkflowExecution[]
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([category])
+  @@index([triggerType])
+  @@index([isActive])
+  @@map("workflow_templates")
+}
+
+model WorkflowExecution {
+  id                String   @id @default(uuid())
+  templateId        String?
+  template          WorkflowTemplate? @relation(fields: [templateId], references: [id])
+  
+  workflowName      String
+  triggerType       String
+  triggerData       Json
+  
+  status            String   @default("pending") // pending, running, completed, failed, cancelled
+  
+  currentActionId   String?
+  variables         Json     @default("{}")
+  
+  steps             WorkflowExecutionStep[]
+  
+  startedAt         DateTime @default(now())
+  completedAt       DateTime?
+  
+  error             String?
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([templateId])
+  @@index([status])
+  @@index([startedAt])
+  @@map("workflow_executions")
+}
+
+model WorkflowExecutionStep {
+  id                String   @id @default(uuid())
+  executionId       String
+  execution         WorkflowExecution @relation(fields: [executionId], references: [id], onDelete: Cascade)
+  
+  actionId          String
+  actionType        String   // send_email, send_sms, update_record, webhook, wait, condition
+  actionName        String
+  actionConfig      Json
+  
+  status            String   @default("pending") // pending, running, success, failed, skipped
+  
+  output            Json?
+  error             String?
+  
+  startedAt         DateTime?
+  completedAt       DateTime?
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([executionId])
+  @@index([status])
+  @@map("workflow_execution_steps")
 }
 
 // ============================================================================

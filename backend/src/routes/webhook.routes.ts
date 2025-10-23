@@ -83,4 +83,40 @@ router.post('/:id/test', (req, res, next) => {
   webhookController.testWebhook(req, res).catch(next);
 });
 
+/**
+ * @route   GET /api/webhooks/:id/deliveries
+ * @desc    Get webhook deliveries for a specific webhook
+ * @access  Private
+ */
+router.get('/:id/deliveries', (req, res, next) => {
+  webhookController.getWebhookDeliveries(req, res).catch(next);
+});
+
+/**
+ * @route   GET /api/webhooks/:id/stats
+ * @desc    Get webhook delivery statistics
+ * @access  Private
+ */
+router.get('/:id/stats', (req, res, next) => {
+  webhookController.getWebhookStats(req, res).catch(next);
+});
+
+/**
+ * @route   GET /api/webhooks/deliveries/all
+ * @desc    Get all webhook deliveries (admin)
+ * @access  Private
+ */
+router.get('/deliveries/all', (req, res, next) => {
+  webhookController.getAllDeliveries(req, res).catch(next);
+});
+
+/**
+ * @route   GET /api/webhooks/analytics
+ * @desc    Get webhook delivery analytics
+ * @access  Private
+ */
+router.get('/analytics', (req, res, next) => {
+  webhookController.getDeliveryAnalytics(req, res).catch(next);
+});
+
 export default router;
