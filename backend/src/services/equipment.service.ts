@@ -1,7 +1,6 @@
 import { prisma } from '../config/database';
 import { PAGINATION, SORT_ORDER, FIELDS, QUERY_LIMITS } from '../constants';
 
-
 export class EquipmentService {
   async createEquipment(data: {
     name: string;

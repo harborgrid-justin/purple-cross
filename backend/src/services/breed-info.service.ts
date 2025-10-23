@@ -1,7 +1,6 @@
 import { prisma } from '../config/database';
 import { PAGINATION } from '../constants';
 
-
 export class BreedInfoService {
   async createBreedInfo(data: {
     breed: string;

@@ -1,7 +1,6 @@
 import { prisma } from '../config/database';
 import { PAGINATION, QUERY_MODE, SORT_ORDER, FIELDS } from '../constants';
 
-
 export class PurchaseOrderService {
   async createPurchaseOrder(data: {
     vendor: string;

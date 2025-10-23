@@ -109,9 +109,7 @@ export async function processReminderJob(job: Job<ReminderJobData>): Promise<voi
  * Queue a reminder for async delivery
  */
 export async function queueReminder(data: ReminderJobData): Promise<string> {
-  const delay = data.scheduledFor
-    ? Math.max(0, data.scheduledFor.getTime() - Date.now())
-    : 0;
+  const delay = data.scheduledFor ? Math.max(0, data.scheduledFor.getTime() - Date.now()) : 0;
 
   const job = await remindersQueue.add('send-reminder', data, {
     priority: data.priority || 5,
@@ -132,9 +130,7 @@ export async function queueReminder(data: ReminderJobData): Promise<string> {
 /**
  * Schedule multiple reminders at once (bulk operation)
  */
-export async function queueBulkReminders(
-  reminders: ReminderJobData[]
-): Promise<string[]> {
+export async function queueBulkReminders(reminders: ReminderJobData[]): Promise<string[]> {
   const jobs = await Promise.all(reminders.map((data) => queueReminder(data)));
 
   logger.info('Bulk reminders queued', {

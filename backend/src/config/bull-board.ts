@@ -6,6 +6,7 @@ import {
   reportsQueue,
   remindersQueue,
   notificationsQueue,
+  webhooksQueue,
 } from './queue';
 
 // Create the Bull Board UI adapter for Express
@@ -19,6 +20,7 @@ const { addQueue, removeQueue, setQueues, replaceQueues } = createBullBoard({
     new BullMQAdapter(reportsQueue),
     new BullMQAdapter(remindersQueue),
     new BullMQAdapter(notificationsQueue),
+    new BullMQAdapter(webhooksQueue),
   ],
   serverAdapter,
 });

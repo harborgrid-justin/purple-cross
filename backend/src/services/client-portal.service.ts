@@ -1,7 +1,6 @@
 import { prisma } from '../config/database';
 import bcrypt from 'bcrypt';
 
-
 export class ClientPortalService {
   async createPortalAccess(data: { clientId: string; email: string; password: string }) {
     const passwordHash = await bcrypt.hash(data.password, 10);

@@ -1,7 +1,6 @@
 import { prisma } from '../config/database';
 import { PAGINATION } from '../constants';
 
-
 export class PatientReminderService {
   async createReminder(data: {
     patientId: string;

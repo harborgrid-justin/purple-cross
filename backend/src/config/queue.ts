@@ -6,6 +6,7 @@ export const QUEUES = {
   REPORTS: 'reports',
   REMINDERS: 'reminders',
   NOTIFICATIONS: 'notifications',
+  WEBHOOKS: 'webhooks',
 } as const;
 
 // Redis connection configuration for BullMQ
@@ -60,5 +61,18 @@ export const notificationsQueue = new Queue(QUEUES.NOTIFICATIONS, {
   defaultJobOptions: {
     ...defaultJobOptions,
     attempts: 2, // Fewer retries for notifications
+  },
+});
+
+// Webhooks queue - for webhook delivery with retry
+export const webhooksQueue = new Queue(QUEUES.WEBHOOKS, {
+  connection: redisConnection,
+  defaultJobOptions: {
+    ...defaultJobOptions,
+    attempts: 5, // More retries for webhooks
+    backoff: {
+      type: 'exponential',
+      delay: 5000, // Start with 5 second delay
+    },
   },
 });

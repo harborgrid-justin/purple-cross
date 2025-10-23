@@ -100,10 +100,7 @@ export function createEntityCacheKey(prefix: string, id: string, suffix?: string
 /**
  * Create a cache key for list queries
  */
-export function createListCacheKey(
-  prefix: string,
-  filters: Record<string, unknown>
-): string {
+export function createListCacheKey(prefix: string, filters: Record<string, unknown>): string {
   const filterString = Object.keys(filters)
     .sort()
     .map((key) => `${key}=${filters[key]}`)

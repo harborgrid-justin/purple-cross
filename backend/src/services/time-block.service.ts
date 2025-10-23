@@ -1,7 +1,6 @@
 import { prisma } from '../config/database';
 import { PAGINATION } from '../constants';
 
-
 export class TimeBlockService {
   async createTimeBlock(data: {
     staffId: string;

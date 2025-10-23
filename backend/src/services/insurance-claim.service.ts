@@ -1,7 +1,6 @@
 import { prisma } from '../config/database';
 import { PAGINATION, SORT_ORDER, FIELDS } from '../constants';
 
-
 export class InsuranceClaimService {
   async createClaim(data: {
     patientId: string;
