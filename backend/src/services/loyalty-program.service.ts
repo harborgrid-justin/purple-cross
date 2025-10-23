@@ -1,7 +1,6 @@
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../config/database';
 import { PAGINATION, QUERY_LIMITS } from '../constants';
 
-const prisma = new PrismaClient();
 
 export class LoyaltyProgramService {
   async createProgram(clientId: string) {

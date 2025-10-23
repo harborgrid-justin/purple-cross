@@ -1,24 +1,7 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 import { logger } from './logger';
 
-// Prisma event types
-interface QueryEvent {
-  query: string;
-  duration: number;
-  timestamp: Date;
-}
-
-interface ErrorEvent {
-  message: string;
-  target: string;
-}
-
-interface WarnEvent {
-  message: string;
-  target: string;
-}
-
-const prisma = new PrismaClient({
+const prisma: PrismaClient = new PrismaClient({
   log: [
     { level: 'query', emit: 'event' },
     { level: 'error', emit: 'event' },
@@ -28,17 +11,17 @@ const prisma = new PrismaClient({
 
 // Log queries in development
 if (process.env.NODE_ENV === 'development') {
-  prisma.$on('query', (e: QueryEvent) => {
+  prisma.$on('query', (e: Prisma.QueryEvent): void => {
     logger.debug('Query: ' + e.query);
     logger.debug('Duration: ' + e.duration + 'ms');
   });
 }
 
-prisma.$on('error', (e: ErrorEvent) => {
+prisma.$on('error', (e: Prisma.LogEvent): void => {
   logger.error('Database error:', e);
 });
 
-prisma.$on('warn', (e: WarnEvent) => {
+prisma.$on('warn', (e: Prisma.LogEvent): void => {
   logger.warn('Database warning:', e);
 });
 

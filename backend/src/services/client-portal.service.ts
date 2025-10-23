@@ -1,7 +1,6 @@
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../config/database';
 import bcrypt from 'bcrypt';
 
-const prisma = new PrismaClient();
 
 export class ClientPortalService {
   async createPortalAccess(data: { clientId: string; email: string; password: string }) {

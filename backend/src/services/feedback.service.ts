@@ -1,7 +1,5 @@
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../config/database';
 import { PAGINATION, SORT_ORDER, FIELDS } from '../constants';
-
-const prisma = new PrismaClient();
 
 export class FeedbackService {
   async createFeedback(data: {
@@ -22,9 +20,15 @@ export class FeedbackService {
   }
 
   async getFeedback(id: string) {
-    return prisma.clientFeedback.findUnique({
+    const feedback = await prisma.clientFeedback.findUnique({
       where: { id },
     });
+    
+    if (!feedback) {
+      throw new Error('Feedback not found');
+    }
+    
+    return feedback;
   }
 
   async listFeedback(filters?: {

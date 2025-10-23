@@ -29,8 +29,10 @@ describe('PaymentPlanService', () => {
         invoiceId: 'invoice-123',
         totalAmount: 1000,
         downPayment: 200,
-        numberOfPayments: 4,
-        paymentFrequency: 'monthly',
+        installmentAmount: 200,
+        installmentFrequency: 'monthly',
+        numberOfInstallments: 4,
+        startDate: new Date(),
       };
 
       const expectedResult = {
@@ -89,8 +91,8 @@ describe('PaymentPlanService', () => {
 
       const result = await paymentPlanService.listPaymentPlans({});
 
-      expect(result.data).toEqual(mockPlans);
-      expect(result.pagination.total).toBe(2);
+      expect(result.items).toEqual(mockPlans);
+      expect(result.total).toBe(2);
     });
   });
 
