@@ -12,6 +12,8 @@ export { default as IntegrationsMain } from './IntegrationsMain';
 export { default as IntegrationsDetail } from './IntegrationsDetail';
 export { default as IntegrationsCreate } from './IntegrationsCreate';
 export { default as IntegrationsEdit } from './IntegrationsEdit';
+export { default as WorkflowBuilder } from './WorkflowBuilder';
+export { default as WorkflowTemplates } from './WorkflowTemplates';
 
 // Route exports
 export { default as IntegrationsRoutes } from './routes';

@@ -155,7 +155,9 @@ class WorkflowTemplatesApi {
   /**
    * Get all workflow templates
    */
-  async getTemplates(filters?: WorkflowTemplateFilters): Promise<PaginatedResponse<WorkflowTemplate>> {
+  async getTemplates(
+    filters?: WorkflowTemplateFilters
+  ): Promise<PaginatedResponse<WorkflowTemplate>> {
     try {
       const params = filters ? buildUrlParams(filters) : '';
       const response = await apiInstance.get<{
@@ -271,7 +273,10 @@ class WorkflowTemplatesApi {
   /**
    * Execute a workflow template
    */
-  async executeTemplate(id: string, data?: ExecuteTemplateData): Promise<{ message: string; templateId: string }> {
+  async executeTemplate(
+    id: string,
+    data?: ExecuteTemplateData
+  ): Promise<{ message: string; templateId: string }> {
     try {
       const response = await apiInstance.post<{
         status: string;
@@ -298,7 +303,9 @@ class WorkflowExecutionsApi {
   /**
    * Get all workflow executions
    */
-  async getExecutions(filters?: WorkflowExecutionFilters): Promise<PaginatedResponse<WorkflowExecution>> {
+  async getExecutions(
+    filters?: WorkflowExecutionFilters
+  ): Promise<PaginatedResponse<WorkflowExecution>> {
     try {
       const params = filters ? buildUrlParams(filters) : '';
       const response = await apiInstance.get<{
@@ -374,7 +381,9 @@ class WorkflowExecutionsApi {
   /**
    * Execute a custom workflow
    */
-  async executeCustomWorkflow(data: ExecuteCustomWorkflowData): Promise<{ message: string; workflowName: string }> {
+  async executeCustomWorkflow(
+    data: ExecuteCustomWorkflowData
+  ): Promise<{ message: string; workflowName: string }> {
     try {
       const response = await apiInstance.post<{
         status: string;

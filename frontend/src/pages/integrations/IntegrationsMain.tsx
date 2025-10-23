@@ -18,6 +18,8 @@ const Webhooks = lazy(() => import('./Webhooks'));
 const SSO = lazy(() => import('./SSO'));
 const Accounting = lazy(() => import('./Accounting'));
 const APIAnalytics = lazy(() => import('./APIAnalytics'));
+const WorkflowBuilder = lazy(() => import('./WorkflowBuilder'));
+const WorkflowTemplates = lazy(() => import('./WorkflowTemplates'));
 
 const IntegrationsList = () => {
   const [integrations] = useState([
@@ -137,6 +139,18 @@ const IntegrationsMain = () => {
         >
           API Analytics
         </Link>
+        <Link
+          to="/integrations/workflows"
+          className={`sub-nav-link ${location.pathname.includes('/workflows') ? 'active' : ''}`}
+        >
+          Workflow Templates
+        </Link>
+        <Link
+          to="/integrations/workflow-builder"
+          className={`sub-nav-link ${location.pathname.includes('/workflow-builder') ? 'active' : ''}`}
+        >
+          Workflow Builder
+        </Link>
       </nav>
 
       <Suspense
@@ -156,6 +170,8 @@ const IntegrationsMain = () => {
           <Route path="/sso" element={<SSO />} />
           <Route path="/accounting" element={<Accounting />} />
           <Route path="/analytics" element={<APIAnalytics />} />
+          <Route path="/workflows" element={<WorkflowTemplates />} />
+          <Route path="/workflow-builder" element={<WorkflowBuilder />} />
         </Routes>
       </Suspense>
     </div>

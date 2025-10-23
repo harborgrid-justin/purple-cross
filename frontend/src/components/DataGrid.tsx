@@ -145,7 +145,8 @@ export function DataGrid<TData>({
       {enablePagination && !loading && data.length > 0 && (
         <div className="data-grid-pagination">
           <div className="data-grid-pagination-info">
-            Showing {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1} to{' '}
+            Showing{' '}
+            {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1} to{' '}
             {Math.min(
               (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
               table.getFilteredRowModel().rows.length

@@ -64,9 +64,9 @@ export const LongMessage: Story = {
     type: 'warning',
     children: (
       <>
-        <strong>Important Notice:</strong> Your session will expire in 5 minutes. Please save
-        your work to prevent any data loss. If you need more time, you can extend your session
-        by clicking the "Stay Logged In" button in the top navigation bar.
+        <strong>Important Notice:</strong> Your session will expire in 5 minutes. Please save your
+        work to prevent any data loss. If you need more time, you can extend your session by
+        clicking the "Stay Logged In" button in the top navigation bar.
       </>
     ),
   },
@@ -99,8 +99,8 @@ export const SuccessfulAppointment: Story = {
           <strong>Appointment Confirmed!</strong>
         </p>
         <p style={{ margin: 0 }}>
-          Your appointment for Max on Monday, October 23 at 10:00 AM has been scheduled.
-          A confirmation email has been sent to john.smith@example.com.
+          Your appointment for Max on Monday, October 23 at 10:00 AM has been scheduled. A
+          confirmation email has been sent to john.smith@example.com.
         </p>
       </div>
     ),
@@ -117,8 +117,8 @@ export const PaymentWarning: Story = {
           <strong>Outstanding Balance</strong>
         </p>
         <p style={{ margin: 0 }}>
-          You have an outstanding balance of $450.00. Please settle your account to avoid
-          service interruptions.
+          You have an outstanding balance of $450.00. Please settle your account to avoid service
+          interruptions.
         </p>
       </div>
     ),
@@ -134,8 +134,8 @@ export const SystemError: Story = {
           <strong>Connection Error</strong>
         </p>
         <p style={{ margin: 0 }}>
-          Unable to connect to the server. Please check your internet connection and try again.
-          If the problem persists, contact support.
+          Unable to connect to the server. Please check your internet connection and try again. If
+          the problem persists, contact support.
         </p>
       </div>
     ),

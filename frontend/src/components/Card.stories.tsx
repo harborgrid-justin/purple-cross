@@ -39,10 +39,18 @@ export const WithTitle: Story = {
     title: 'Patient Information',
     children: (
       <div>
-        <p><strong>Name:</strong> Max</p>
-        <p><strong>Species:</strong> Dog</p>
-        <p><strong>Breed:</strong> Golden Retriever</p>
-        <p><strong>Age:</strong> 5 years</p>
+        <p>
+          <strong>Name:</strong> Max
+        </p>
+        <p>
+          <strong>Species:</strong> Dog
+        </p>
+        <p>
+          <strong>Breed:</strong> Golden Retriever
+        </p>
+        <p>
+          <strong>Age:</strong> 5 years
+        </p>
       </div>
     ),
   },
@@ -74,15 +82,25 @@ export const WithActions: Story = {
     subtitle: 'View and edit patient information',
     actions: (
       <div style={{ display: 'flex', gap: '8px' }}>
-        <Button size="sm" variant="secondary">Edit</Button>
-        <Button size="sm" variant="danger">Delete</Button>
+        <Button size="sm" variant="secondary">
+          Edit
+        </Button>
+        <Button size="sm" variant="danger">
+          Delete
+        </Button>
       </div>
     ),
     children: (
       <div>
-        <p><strong>Patient ID:</strong> PAT-12345</p>
-        <p><strong>Owner:</strong> John Smith</p>
-        <p><strong>Last Visit:</strong> Oct 15, 2024</p>
+        <p>
+          <strong>Patient ID:</strong> PAT-12345
+        </p>
+        <p>
+          <strong>Owner:</strong> John Smith
+        </p>
+        <p>
+          <strong>Last Visit:</strong> Oct 15, 2024
+        </p>
       </div>
     ),
   },
@@ -128,7 +146,9 @@ export const ComplexCard: Story = {
     title: 'Invoice Summary',
     subtitle: 'Total amount due: $450.00',
     actions: (
-      <Button size="sm" variant="success">Mark as Paid</Button>
+      <Button size="sm" variant="success">
+        Mark as Paid
+      </Button>
     ),
     children: (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -144,13 +164,15 @@ export const ComplexCard: Story = {
           <span>Lab Tests</span>
           <strong>$100.00</strong>
         </div>
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between',
-          paddingTop: '16px',
-          borderTop: '2px solid #333',
-          fontSize: '18px'
-        }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            paddingTop: '16px',
+            borderTop: '2px solid #333',
+            fontSize: '18px',
+          }}
+        >
           <strong>Total</strong>
           <strong>$450.00</strong>
         </div>
