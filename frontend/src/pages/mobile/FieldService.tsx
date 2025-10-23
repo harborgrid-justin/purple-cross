@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | FieldService.tsx - Field Service
+ * Purpose: API service for Fieldx endpoints and operations
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const FieldService = () => {

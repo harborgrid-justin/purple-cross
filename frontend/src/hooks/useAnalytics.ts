@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | useAnalytics.ts - use Analytics
+ * Purpose: React hook for managing Analytics data and operations
+ * Dependencies: react, @tanstack/react-query
+ * Last Updated: 2025-10-23 | File Type: .ts
+ */
+
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/services/api';
 

@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | SampleTracking.tsx - Sample Tracking
+ * Purpose: React component for SampleTracking functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const SampleTracking = () => {

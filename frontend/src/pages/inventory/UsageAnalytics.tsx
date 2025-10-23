@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | UsageAnalytics.tsx - Usage Analytics
+ * Purpose: React component for UsageAnalytics functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const UsageAnalytics = () => {

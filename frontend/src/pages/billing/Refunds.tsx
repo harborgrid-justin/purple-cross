@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Refunds.tsx - Refunds
+ * Purpose: React component for Refunds functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const Refunds = () => {

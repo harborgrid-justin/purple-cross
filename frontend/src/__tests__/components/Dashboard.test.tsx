@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Dashboard.test.tsx - Dashboard.test
+ * Purpose: React component for Dashboard.test functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import { describe, it, expect } from 'vitest';
 
 describe('Dashboard Component', () => {

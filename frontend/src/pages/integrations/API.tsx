@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | API.tsx - A P I
+ * Purpose: API service for API.tsx endpoints and operations
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const API = () => {

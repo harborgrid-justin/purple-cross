@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | APIAnalytics.tsx - A P I Analytics
+ * Purpose: API service for APIAnalytics.tsx endpoints and operations
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const APIAnalytics = () => {

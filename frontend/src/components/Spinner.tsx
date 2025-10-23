@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Spinner.tsx - Spinner
+ * Purpose: React component for Spinner functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import clsx from 'clsx';
 
 interface SpinnerProps {

@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | index.ts - index
+ * Purpose: Module exports and re-exports
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .ts
+ */
+
 export { default as Alert } from './Alert';
 export { default as Button } from './Button';
 export { default as Card } from './Card';

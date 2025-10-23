@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | FinancialReports.tsx - Financial Reports
+ * Purpose: React component for FinancialReports functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const FinancialReports = () => {

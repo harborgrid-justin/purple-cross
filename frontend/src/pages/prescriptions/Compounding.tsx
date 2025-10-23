@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Compounding.tsx - Compounding
+ * Purpose: React component for Compounding functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const Compounding = () => {

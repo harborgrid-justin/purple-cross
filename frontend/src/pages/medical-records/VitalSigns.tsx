@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | VitalSigns.tsx - Vital Signs
+ * Purpose: React component for VitalSigns functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const VitalSigns = () => {

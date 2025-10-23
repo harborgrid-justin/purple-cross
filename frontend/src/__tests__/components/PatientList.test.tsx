@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | PatientList.test.tsx - Patient List.test
+ * Purpose: React component for PatientList.test functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import { describe, it, expect } from 'vitest';
 
 describe('PatientList Component', () => {

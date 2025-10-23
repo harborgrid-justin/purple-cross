@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | helpers.test.ts - helpers.test
+ * Purpose: Test suite for helpers
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .ts
+ */
+
 import { describe, it, expect } from 'vitest';
 
 describe('Helper Functions', () => {

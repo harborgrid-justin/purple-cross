@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Table.tsx - Table
+ * Purpose: React component for Table functionality
+ * Dependencies: react
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import { ReactNode } from 'react';
 import clsx from 'clsx';
 

@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | HIPAA.tsx - H I P A A
+ * Purpose: React component for HIPAA functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const HIPAA = () => {

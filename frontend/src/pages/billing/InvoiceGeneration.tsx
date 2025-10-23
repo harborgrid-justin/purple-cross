@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | InvoiceGeneration.tsx - Invoice Generation
+ * Purpose: React component for InvoiceGeneration functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const InvoiceGeneration = () => {

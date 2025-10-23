@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | NotFound.tsx - Not Found
+ * Purpose: React component for NotFound functionality
+ * Dependencies: react
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import { Link } from 'react-router-dom';
 import '../styles/Page.css';
 

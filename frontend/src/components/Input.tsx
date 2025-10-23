@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Input.tsx - Input
+ * Purpose: React component for Input functionality
+ * Dependencies: react
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import { InputHTMLAttributes, forwardRef } from 'react';
 import clsx from 'clsx';
 

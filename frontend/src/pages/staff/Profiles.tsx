@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Profiles.tsx - Profiles
+ * Purpose: React component for Profiles functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const Profiles = () => {

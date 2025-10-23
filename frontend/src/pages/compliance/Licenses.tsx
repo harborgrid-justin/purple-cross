@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Licenses.tsx - Licenses
+ * Purpose: React component for Licenses functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const Licenses = () => {

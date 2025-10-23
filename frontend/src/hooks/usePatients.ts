@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | usePatients.ts - use Patients
+ * Purpose: React hook for managing Patients data and operations
+ * Dependencies: react, @tanstack/react-query
+ * Last Updated: 2025-10-23 | File Type: .ts
+ */
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/services/api';
 

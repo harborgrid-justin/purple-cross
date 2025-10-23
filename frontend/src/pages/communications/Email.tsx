@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Email.tsx - Email
+ * Purpose: React component for Email functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const Email = () => {

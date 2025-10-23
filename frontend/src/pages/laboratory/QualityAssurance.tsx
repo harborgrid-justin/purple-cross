@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | QualityAssurance.tsx - Quality Assurance
+ * Purpose: React component for QualityAssurance functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const QualityAssurance = () => {

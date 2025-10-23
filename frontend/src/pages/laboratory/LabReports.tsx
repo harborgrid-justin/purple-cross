@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | LabReports.tsx - Lab Reports
+ * Purpose: React component for LabReports functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const LabReports = () => {

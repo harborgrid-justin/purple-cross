@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | DosageCalculator.tsx - Dosage Calculator
+ * Purpose: React component for DosageCalculator functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const DosageCalculator = () => {

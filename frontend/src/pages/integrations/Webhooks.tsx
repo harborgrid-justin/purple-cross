@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Webhooks.tsx - Webhooks
+ * Purpose: React hook for managing Webhooksx data and operations
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const Webhooks = () => {

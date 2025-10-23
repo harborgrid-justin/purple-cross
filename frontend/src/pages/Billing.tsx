@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Billing.tsx - Billing
+ * Purpose: React component for Billing functionality
+ * Dependencies: react
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import { useState, Suspense, lazy } from 'react';
 import { Link, Routes, Route, useLocation } from 'react-router-dom';
 import '../styles/Page.css';

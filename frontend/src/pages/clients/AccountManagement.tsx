@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | AccountManagement.tsx - Account Management
+ * Purpose: React component for AccountManagement functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const AccountManagement = () => {

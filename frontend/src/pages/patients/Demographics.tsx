@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Demographics.tsx - Demographics
+ * Purpose: React component for Demographics functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const PatientDemographics = () => {

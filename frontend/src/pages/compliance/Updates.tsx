@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Updates.tsx - Updates
+ * Purpose: React component for Updates functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const Updates = () => {

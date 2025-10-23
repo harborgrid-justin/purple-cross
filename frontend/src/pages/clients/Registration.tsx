@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Registration.tsx - Registration
+ * Purpose: React component for Registration functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const Registration = () => {

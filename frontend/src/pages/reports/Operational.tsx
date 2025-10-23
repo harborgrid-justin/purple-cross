@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Operational.tsx - Operational
+ * Purpose: React component for Operational functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const Operational = () => {

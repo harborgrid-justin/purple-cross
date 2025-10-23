@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Financial.tsx - Financial
+ * Purpose: React component for Financial functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const Financial = () => {

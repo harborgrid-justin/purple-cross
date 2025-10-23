@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Alert.tsx - Alert
+ * Purpose: React component for Alert functionality
+ * Dependencies: react
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import { ReactNode } from 'react';
 import clsx from 'clsx';
 

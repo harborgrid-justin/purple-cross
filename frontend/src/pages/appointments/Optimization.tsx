@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Optimization.tsx - Optimization
+ * Purpose: React component for Optimization functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const Optimization = () => {

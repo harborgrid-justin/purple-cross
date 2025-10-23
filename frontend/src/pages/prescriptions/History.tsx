@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | History.tsx - History
+ * Purpose: React component for History functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const History = () => {

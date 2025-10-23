@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Button.tsx - Button
+ * Purpose: React component for Button functionality
+ * Dependencies: react
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import { ButtonHTMLAttributes, ReactNode } from 'react';
 import clsx from 'clsx';
 

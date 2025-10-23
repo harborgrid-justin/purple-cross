@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | AccessControl.tsx - Access Control
+ * Purpose: React component for AccessControl functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const AccessControl = () => {

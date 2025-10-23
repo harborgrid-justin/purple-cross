@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Sync.tsx - Sync
+ * Purpose: React component for Sync functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const Sync = () => {

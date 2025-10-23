@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | Attendance.tsx - Attendance
+ * Purpose: React component for Attendance functionality
+ * Dependencies: None
+ * Last Updated: 2025-10-23 | File Type: .tsx
+ */
+
 import '../../styles/Page.css';
 
 const Attendance = () => {

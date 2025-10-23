@@ -1,3 +1,10 @@
+/**
+ * WF-COMP-XXX | clientsSlice.ts - clients Slice
+ * Purpose: Redux slice for managing clients state
+ * Dependencies: @reduxjs/toolkit
+ * Last Updated: 2025-10-23 | File Type: .ts
+ */
+
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { api } from '@/services/api';
 
