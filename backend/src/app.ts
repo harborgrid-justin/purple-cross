@@ -48,6 +48,7 @@ import reportTemplateRoutes from './routes/report-template.routes';
 import documentTemplateRoutes from './routes/document-template.routes';
 import healthRoutes from './routes/health.routes';
 import metricsRoutes from './routes/metrics.routes';
+import { serverAdapter } from './config/bull-board';
 
 export function createApp(): Application {
   // Initialize Sentry FIRST - before creating app
@@ -102,6 +103,10 @@ export function createApp(): Application {
   // Health check and metrics endpoints (before rate limiting)
   app.use('/health', healthRoutes);
   app.use('/metrics', metricsRoutes);
+
+  // Bull Board - Queue monitoring dashboard (protected, before rate limiting)
+  // TODO: Add authentication middleware to protect this endpoint in production
+  app.use('/admin/queues', serverAdapter.getRouter());
 
   // Rate limiting middleware (after health checks)
   app.use(apiRateLimiter);

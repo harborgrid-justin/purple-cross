@@ -1,6 +1,8 @@
 import { Router, Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { logger } from '../config/logger';
+import { checkRedisHealth } from '../config/redis';
+import { cacheService } from '../services/cache.service';
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -34,6 +36,7 @@ router.get('/live', (_req: Request, res: Response) => {
 router.get('/ready', async (req: Request, res: Response) => {
   const checks = {
     database: false,
+    redis: false,
     timestamp: new Date().toISOString(),
   };
 
@@ -41,6 +44,9 @@ router.get('/ready', async (req: Request, res: Response) => {
     // Check database connection
     await prisma.$queryRaw`SELECT 1`;
     checks.database = true;
+
+    // Check Redis connection
+    checks.redis = await checkRedisHealth();
 
     const allReady = Object.values(checks).every(
       (check) => check === true || typeof check === 'string'
@@ -67,7 +73,7 @@ router.get('/ready', async (req: Request, res: Response) => {
     res.status(503).json({
       status: 'not_ready',
       checks,
-      error: 'Database connection failed',
+      error: 'Health check failed',
     });
   }
 });
@@ -98,13 +104,21 @@ router.get('/detailed', async (req: Request, res: Response) => {
     // Check database
     await prisma.$queryRaw`SELECT 1`;
 
+    // Check Redis and get cache stats
+    const redisHealthy = await checkRedisHealth();
+    const cacheStats = redisHealthy ? await cacheService.getStats() : null;
+
     res.status(200).json({
       ...health,
       database: { status: 'connected' },
+      redis: {
+        status: redisHealthy ? 'connected' : 'disconnected',
+        stats: cacheStats,
+      },
     });
   } catch (error) {
     logger.error({
-      message: 'Health check database error',
+      message: 'Health check error',
       error: error instanceof Error ? error.message : 'Unknown error',
       correlationId: req.correlationId,
     });
@@ -112,10 +126,7 @@ router.get('/detailed', async (req: Request, res: Response) => {
     res.status(503).json({
       ...health,
       status: 'degraded',
-      database: {
-        status: 'disconnected',
-        error: error instanceof Error ? error.message : 'Unknown error',
-      },
+      error: error instanceof Error ? error.message : 'Unknown error',
     });
   }
 });
