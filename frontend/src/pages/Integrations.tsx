@@ -15,6 +15,7 @@ const API = lazy(() => import('./integrations/API'));
 const ImportExport = lazy(() => import('./integrations/ImportExport'));
 const HL7FHIR = lazy(() => import('./integrations/HL7FHIR'));
 const Webhooks = lazy(() => import('./integrations/Webhooks'));
+const WebhookDetail = lazy(() => import('./integrations/WebhookDetail'));
 const SSO = lazy(() => import('./integrations/SSO'));
 const Accounting = lazy(() => import('./integrations/Accounting'));
 const APIAnalytics = lazy(() => import('./integrations/APIAnalytics'));
@@ -153,6 +154,7 @@ const Integrations = () => {
           <Route path="/import-export" element={<ImportExport />} />
           <Route path="/hl7-fhir" element={<HL7FHIR />} />
           <Route path="/webhooks" element={<Webhooks />} />
+          <Route path="/webhooks/:id" element={<WebhookDetail />} />
           <Route path="/sso" element={<SSO />} />
           <Route path="/accounting" element={<Accounting />} />
           <Route path="/analytics" element={<APIAnalytics />} />
