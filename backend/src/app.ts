@@ -4,6 +4,7 @@ import cors from 'cors';
 import compression from 'compression';
 import morgan from 'morgan';
 import 'express-async-errors';
+import { initializeSentry, Sentry } from './config/sentry';
 import env from './config/env';
 import { logger } from './config/logger';
 import { errorHandler, notFoundHandler } from './middleware/error-handler';
@@ -49,12 +50,17 @@ import healthRoutes from './routes/health.routes';
 import metricsRoutes from './routes/metrics.routes';
 
 export function createApp(): Application {
+  // Initialize Sentry FIRST - before creating app
+  initializeSentry();
+  
   const app = express();
 
   // Trust proxy - important for rate limiting and getting correct client IP
   app.set('trust proxy', 1);
 
-  // Correlation ID middleware - must be first to track all requests
+  // Sentry request and tracing handled by expressIntegration in init
+
+  // Correlation ID middleware - track all requests
   app.use(correlationIdMiddleware);
 
   // Metrics collection middleware
@@ -136,6 +142,9 @@ export function createApp(): Application {
 
   // 404 handler
   app.use(notFoundHandler);
+
+  // Sentry error handler - MUST be before other error handlers
+  Sentry.setupExpressErrorHandler(app);
 
   // Error handler
   app.use(errorHandler);
