@@ -1,7 +1,7 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
 import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION, SORT_ORDER, FIELDS, WORKFLOW_EVENTS } from '../constants';
-import { workflowTriggerService } from './workflow-trigger.service';
+import { domainEvents } from './domain-events.service';
 
 export class MedicalRecordService {
   async createMedicalRecord(data: Record<string, unknown>) {
@@ -13,8 +13,8 @@ export class MedicalRecordService {
       },
     });
 
-    // Trigger workflow event
-    workflowTriggerService.emitWorkflowEvent(WORKFLOW_EVENTS.MEDICAL_RECORD_CREATED, {
+    // Emit domain event (triggers both webhooks and workflows)
+    domainEvents.emit(WORKFLOW_EVENTS.MEDICAL_RECORD_CREATED, {
       medicalRecordId: medicalRecord.id,
       medicalRecord,
     });
@@ -102,8 +102,8 @@ export class MedicalRecordService {
       },
     });
 
-    // Trigger workflow event
-    workflowTriggerService.emitWorkflowEvent(WORKFLOW_EVENTS.MEDICAL_RECORD_UPDATED, {
+    // Emit domain event (triggers both webhooks and workflows)
+    domainEvents.emit(WORKFLOW_EVENTS.MEDICAL_RECORD_UPDATED, {
       medicalRecordId: updatedRecord.id,
       medicalRecord: updatedRecord,
       previousData: record,

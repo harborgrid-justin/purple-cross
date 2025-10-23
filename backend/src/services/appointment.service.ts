@@ -1,7 +1,7 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
 import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION, STATUS, WORKFLOW_EVENTS } from '../constants';
-import { workflowTriggerService } from './workflow-trigger.service';
+import { domainEvents } from './domain-events.service';
 
 export class AppointmentService {
   async createAppointment(data: Record<string, unknown>) {
@@ -39,8 +39,8 @@ export class AppointmentService {
       },
     });
 
-    // Trigger workflow event
-    workflowTriggerService.emitWorkflowEvent(WORKFLOW_EVENTS.APPOINTMENT_CREATED, {
+    // Emit domain event (triggers both webhooks and workflows)
+    domainEvents.emit(WORKFLOW_EVENTS.APPOINTMENT_CREATED, {
       appointmentId: appointment.id,
       appointment,
     });
@@ -154,8 +154,8 @@ export class AppointmentService {
       },
     });
 
-    // Trigger workflow event
-    workflowTriggerService.emitWorkflowEvent(WORKFLOW_EVENTS.APPOINTMENT_UPDATED, {
+    // Emit domain event (triggers both webhooks and workflows)
+    domainEvents.emit(WORKFLOW_EVENTS.APPOINTMENT_UPDATED, {
       appointmentId: updatedAppointment.id,
       appointment: updatedAppointment,
       previousData: appointment,
@@ -177,8 +177,8 @@ export class AppointmentService {
       data: { status: 'cancelled' },
     });
 
-    // Trigger workflow event
-    workflowTriggerService.emitWorkflowEvent(WORKFLOW_EVENTS.APPOINTMENT_CANCELLED, {
+    // Emit domain event (triggers both webhooks and workflows)
+    domainEvents.emit(WORKFLOW_EVENTS.APPOINTMENT_CANCELLED, {
       appointmentId: cancelledAppointment.id,
       appointment: cancelledAppointment,
     });
@@ -203,8 +203,8 @@ export class AppointmentService {
       },
     });
 
-    // Trigger workflow event
-    workflowTriggerService.emitWorkflowEvent(WORKFLOW_EVENTS.APPOINTMENT_COMPLETED, {
+    // Emit domain event (triggers both webhooks and workflows)
+    domainEvents.emit(WORKFLOW_EVENTS.APPOINTMENT_COMPLETED, {
       appointmentId: completedAppointment.id,
       appointment: completedAppointment,
     });

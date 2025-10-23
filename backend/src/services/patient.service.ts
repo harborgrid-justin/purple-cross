@@ -10,7 +10,7 @@ import {
   FIELDS,
   WORKFLOW_EVENTS,
 } from '../constants';
-import { workflowTriggerService } from './workflow-trigger.service';
+import { domainEvents } from './domain-events.service';
 
 export class PatientService {
   async createPatient(data: Record<string, unknown>) {
@@ -21,8 +21,8 @@ export class PatientService {
       },
     });
 
-    // Trigger workflow event
-    workflowTriggerService.emitWorkflowEvent(WORKFLOW_EVENTS.PATIENT_CREATED, {
+    // Emit domain event (triggers both webhooks and workflows)
+    domainEvents.emit(WORKFLOW_EVENTS.PATIENT_CREATED, {
       patientId: patient.id,
       patient,
     });
@@ -125,8 +125,8 @@ export class PatientService {
       },
     });
 
-    // Trigger workflow event
-    workflowTriggerService.emitWorkflowEvent(WORKFLOW_EVENTS.PATIENT_UPDATED, {
+    // Emit domain event (triggers both webhooks and workflows)
+    domainEvents.emit(WORKFLOW_EVENTS.PATIENT_UPDATED, {
       patientId: updatedPatient.id,
       patient: updatedPatient,
       previousData: patient,
@@ -148,8 +148,8 @@ export class PatientService {
       data: { status: 'inactive' },
     });
 
-    // Trigger workflow event
-    workflowTriggerService.emitWorkflowEvent(WORKFLOW_EVENTS.PATIENT_DELETED, {
+    // Emit domain event (triggers both webhooks and workflows)
+    domainEvents.emit(WORKFLOW_EVENTS.PATIENT_DELETED, {
       patientId: deletedPatient.id,
       patient: deletedPatient,
     });

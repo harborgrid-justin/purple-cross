@@ -1,7 +1,7 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
 import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION, SORT_ORDER, FIELDS, WORKFLOW_EVENTS } from '../constants';
-import { workflowTriggerService } from './workflow-trigger.service';
+import { domainEvents } from './domain-events.service';
 
 export class InvoiceService {
   async createInvoice(data: Record<string, unknown>) {
@@ -14,8 +14,8 @@ export class InvoiceService {
       },
     });
 
-    // Trigger workflow event
-    workflowTriggerService.emitWorkflowEvent(WORKFLOW_EVENTS.INVOICE_CREATED, {
+    // Emit domain event (triggers both webhooks and workflows)
+    domainEvents.emit(WORKFLOW_EVENTS.INVOICE_CREATED, {
       invoiceId: invoice.id,
       invoice,
     });
@@ -139,8 +139,8 @@ export class InvoiceService {
       },
     });
 
-    // Trigger workflow event
-    workflowTriggerService.emitWorkflowEvent(WORKFLOW_EVENTS.INVOICE_PAID, {
+    // Emit domain event (triggers both webhooks and workflows)
+    domainEvents.emit(WORKFLOW_EVENTS.INVOICE_PAID, {
       invoiceId: paidInvoice.id,
       invoice: paidInvoice,
     });
@@ -165,8 +165,8 @@ export class InvoiceService {
       },
     });
 
-    // Trigger workflow event
-    workflowTriggerService.emitWorkflowEvent(WORKFLOW_EVENTS.INVOICE_OVERDUE, {
+    // Emit domain event (triggers both webhooks and workflows)
+    domainEvents.emit(WORKFLOW_EVENTS.INVOICE_OVERDUE, {
       invoiceId: overdueInvoice.id,
       invoice: overdueInvoice,
     });

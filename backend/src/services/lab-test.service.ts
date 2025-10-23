@@ -1,7 +1,7 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
 import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION, WORKFLOW_EVENTS } from '../constants';
-import { workflowTriggerService } from './workflow-trigger.service';
+import { domainEvents } from './domain-events.service';
 
 export class LabTestService {
   async createLabTest(data: Record<string, unknown>) {
@@ -13,8 +13,8 @@ export class LabTestService {
       },
     });
 
-    // Trigger workflow event
-    workflowTriggerService.emitWorkflowEvent(WORKFLOW_EVENTS.LAB_TEST_ORDERED, {
+    // Emit domain event (triggers both webhooks and workflows)
+    domainEvents.emit(WORKFLOW_EVENTS.LAB_TEST_ORDERED, {
       labTestId: labTest.id,
       labTest,
     });
@@ -138,8 +138,8 @@ export class LabTestService {
       },
     });
 
-    // Trigger workflow event
-    workflowTriggerService.emitWorkflowEvent(WORKFLOW_EVENTS.LAB_TEST_COMPLETED, {
+    // Emit domain event (triggers both webhooks and workflows)
+    domainEvents.emit(WORKFLOW_EVENTS.LAB_TEST_COMPLETED, {
       labTestId: completedLabTest.id,
       labTest: completedLabTest,
     });

@@ -1,7 +1,7 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
 import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION, WORKFLOW_EVENTS } from '../constants';
-import { workflowTriggerService } from './workflow-trigger.service';
+import { domainEvents } from './domain-events.service';
 
 export class PrescriptionService {
   async createPrescription(data: Record<string, unknown>) {
@@ -14,8 +14,8 @@ export class PrescriptionService {
       },
     });
 
-    // Trigger workflow event
-    workflowTriggerService.emitWorkflowEvent(WORKFLOW_EVENTS.PRESCRIPTION_CREATED, {
+    // Emit domain event (triggers both webhooks and workflows)
+    domainEvents.emit(WORKFLOW_EVENTS.PRESCRIPTION_CREATED, {
       prescriptionId: prescription.id,
       prescription,
     });
@@ -143,8 +143,8 @@ export class PrescriptionService {
       },
     });
 
-    // Trigger workflow event
-    workflowTriggerService.emitWorkflowEvent(WORKFLOW_EVENTS.PRESCRIPTION_REFILLED, {
+    // Emit domain event (triggers both webhooks and workflows)
+    domainEvents.emit(WORKFLOW_EVENTS.PRESCRIPTION_REFILLED, {
       prescriptionId: refilledPrescription.id,
       prescription: refilledPrescription,
     });

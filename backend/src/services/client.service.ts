@@ -10,7 +10,7 @@ import {
   QUERY_LIMITS,
   WORKFLOW_EVENTS,
 } from '../constants';
-import { workflowTriggerService } from './workflow-trigger.service';
+import { domainEvents } from './domain-events.service';
 
 export class ClientService {
   async createClient(data: Record<string, unknown>) {
@@ -33,8 +33,8 @@ export class ClientService {
       },
     });
 
-    // Trigger workflow event
-    workflowTriggerService.emitWorkflowEvent(WORKFLOW_EVENTS.CLIENT_CREATED, {
+    // Emit domain event (triggers both webhooks and workflows)
+    domainEvents.emit(WORKFLOW_EVENTS.CLIENT_CREATED, {
       clientId: client.id,
       client,
     });
@@ -138,8 +138,8 @@ export class ClientService {
       },
     });
 
-    // Trigger workflow event
-    workflowTriggerService.emitWorkflowEvent(WORKFLOW_EVENTS.CLIENT_UPDATED, {
+    // Emit domain event (triggers both webhooks and workflows)
+    domainEvents.emit(WORKFLOW_EVENTS.CLIENT_UPDATED, {
       clientId: updatedClient.id,
       client: updatedClient,
       previousData: client,
@@ -161,8 +161,8 @@ export class ClientService {
       data: { status: 'inactive' },
     });
 
-    // Trigger workflow event
-    workflowTriggerService.emitWorkflowEvent(WORKFLOW_EVENTS.CLIENT_DELETED, {
+    // Emit domain event (triggers both webhooks and workflows)
+    domainEvents.emit(WORKFLOW_EVENTS.CLIENT_DELETED, {
       clientId: deletedClient.id,
       client: deletedClient,
     });
