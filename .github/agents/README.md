@@ -260,19 +260,145 @@ The initial documentation was generated using an automated Python script that:
 - **CLAUDE.md** - Project guidelines and standards
 - **docs/TYPESCRIPT_GUIDELINES.md** - TypeScript standards and patterns
 
+## Phase 2: Function-Level Documentation (NEW)
+
+### Function-Level Agents (PR #63)
+
+Building on the file-level documentation from PR #62, these agents provide patterns for documenting individual functions, methods, and components:
+
+#### 1. Hooks Functions Agent
+**File**: `jsdoc-hooks-functions.md` (9.4 KB)
+
+**Purpose**: Add function-level JSDoc to React hooks with TanStack Query
+
+**Covers**:
+- Query hooks (list and single item)
+- Mutation hooks (create, update, delete)
+- Composite hooks (multiple queries)
+- Parameters, return values, examples, query keys
+
+**Reference**: `frontend/src/hooks/usePatients.ts`, `useAppointments.ts`
+
+#### 2. Components Functions Agent
+**File**: `jsdoc-components-functions.md` (12.3 KB)
+
+**Purpose**: Add comprehensive documentation to React components
+
+**Covers**:
+- Props interfaces with @property tags
+- Component functions with @component tag
+- Form, layout, modal, table components
+- Multiple usage examples
+
+**Reference**: `frontend/src/components/Button.tsx`
+
+#### 3. Services Functions Agent
+**File**: `jsdoc-services-functions.md` (12.0 KB)
+
+**Purpose**: Document API service methods and HTTP operations
+
+**Covers**:
+- HTTP methods (GET, POST, PUT, PATCH, DELETE)
+- Resource endpoint groups
+- Error handling and interceptors
+- Generic types and error codes
+
+**Reference**: Patterns defined for `frontend/src/services/api.ts`
+
+### Phase 2 Documentation
+
+- **JSDOC_PHASE2_COMPLETION_GUIDE.md** - Complete implementation guide
+- **docs/JSDOC_VALIDATION_GUIDE.md** - CI/CD validation setup
+- **JSDOC_PHASE2_SUMMARY.md** - Executive summary
+
+### Coverage Statistics
+
+#### Phase 1 (PR #62): File-Level
+- **Status**: ✅ Complete
+- **Coverage**: 100% (335/335 files)
+- **Agent Count**: 6 agents
+- **Documentation**: File headers only
+
+#### Phase 2 (PR #63): Function-Level
+- **Status**: 🟡 Foundation Complete
+- **Coverage**: ~3% (15/500+ functions)
+- **Agent Count**: 3 new agents
+- **Documentation**: Functions, params, returns, examples
+
+#### Target
+- **Hooks**: 100% of exported functions (31 files)
+- **Components**: 100% of components (9 files)
+- **Services**: 100% of public methods (25 files)
+- **Pages**: 50% of high-priority pages (15-20 files)
+
+### Implementation Progress
+
+| Category | Files | Documented | Pattern Ready | Remaining |
+|----------|-------|------------|---------------|-----------|
+| Hooks | 31 | 2 | ✅ | 29 |
+| Components | 9 | 1 | ✅ | 8 |
+| Services | 25 | 0 | ✅ | 25 |
+| **Total** | **65** | **3** | **✅** | **62** |
+
+## Agent Usage Workflow
+
+### For File-Level Documentation (PR #62 Agents)
+
+1. Identify file type (hooks, components, services, etc.)
+2. Reference appropriate file-level agent
+3. Add file header JSDoc
+4. Document file purpose and dependencies
+
+### For Function-Level Documentation (PR #63 Agents)
+
+1. Identify function type (query, mutation, component, etc.)
+2. Reference appropriate function-level agent
+3. Document each exported function with:
+   - @param for parameters
+   - @returns for return value
+   - @example for usage
+   - @remarks for context
+4. Follow reference implementation patterns
+
+### Complete Documentation Process
+
+```
+New File → File-Level Agent → Function-Level Agent → Validation
+    ↓            ↓                    ↓                    ↓
+  Create    Add Header        Document Functions      Lint/Type Check
+```
+
 ## Future Enhancements
 
-Potential improvements to consider:
+Completed:
+- ✅ **Function-level JSDoc**: Agents and patterns created (PR #63)
+- ✅ **Documentation guides**: Comprehensive guides created
 
-1. **Function-level JSDoc**: Detailed docs for all public functions
-2. **Automated validation**: Script to verify JSDoc completeness
-3. **Documentation site**: Generate browsable docs from JSDoc
-4. **Pre-commit hooks**: Ensure new files have JSDoc
-5. **VSCode snippets**: Quick JSDoc templates
-6. **ESLint rules**: Enforce JSDoc requirements
+Remaining:
+1. **Automated validation**: Script to verify JSDoc completeness (Guide ready)
+2. **Documentation site**: Generate browsable docs from JSDoc
+3. **Pre-commit hooks**: Ensure new files have JSDoc (Guide ready)
+4. **VSCode snippets**: Quick JSDoc templates
+5. **ESLint rules**: Enforce JSDoc requirements (Guide ready)
+
+## Related Documentation
+
+### Phase 1 (PR #62)
+- `JSDOC_GENERATION_SUMMARY.md` - File-level completion summary
+
+### Phase 2 (PR #63)
+- `JSDOC_PHASE2_COMPLETION_GUIDE.md` - How to complete remaining work
+- `docs/JSDOC_VALIDATION_GUIDE.md` - CI/CD validation setup
+- `JSDOC_PHASE2_SUMMARY.md` - Executive summary
+
+### Project Guidelines
+- `CLAUDE.md` - Project overview and standards
+- `docs/TYPESCRIPT_GUIDELINES.md` - TypeScript patterns
 
 ---
 
 **Last Updated**: 2025-10-23  
+**Phase 1 (File-Level)**: ✅ Complete (PR #62)  
+**Phase 2 (Function-Level)**: 🟡 Foundation Complete (PR #63)  
 **Maintained By**: Development Team  
-**Related Issues**: PR #[number]
+**Related PRs**: #62, #63
