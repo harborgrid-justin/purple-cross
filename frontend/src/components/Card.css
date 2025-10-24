@@ -1,0 +1,106 @@
+/* Card Component Styles */
+
+.card {
+  background-color: var(--bg-primary, #ffffff);
+  border-radius: var(--radius-lg, 0.75rem);
+  box-shadow: var(--shadow, 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06));
+  overflow: hidden;
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05));
+}
+
+/* Card Header */
+.card-header {
+  padding: var(--spacing-lg, 1.5rem);
+  border-bottom: 1px solid var(--border-color, #e5e7eb);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-header-content {
+  flex: 1;
+  min-width: 0; /* Allows text truncation */
+}
+
+.card-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary, #1f2937);
+  line-height: 1.5;
+}
+
+.card-subtitle {
+  margin: 0.25rem 0 0;
+  font-size: 0.875rem;
+  color: var(--text-secondary, #6b7280);
+  line-height: 1.5;
+}
+
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm, 0.5rem);
+  margin-left: var(--spacing-md, 1rem);
+}
+
+/* Card Body */
+.card-body {
+  padding: var(--spacing-lg, 1.5rem);
+}
+
+.card-body-no-padding {
+  padding: 0;
+}
+
+/* Card Footer */
+.card-footer {
+  padding: var(--spacing-lg, 1.5rem);
+  border-top: 1px solid var(--border-color, #e5e7eb);
+  background-color: var(--bg-secondary, #f9fafb);
+}
+
+/* Card Variants */
+.card-bordered {
+  border: 1px solid var(--border-color, #e5e7eb);
+  box-shadow: none;
+}
+
+.card-flat {
+  box-shadow: none;
+}
+
+.card-elevated {
+  box-shadow: var(--shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05));
+}
+
+/* Interactive Card */
+.card-interactive {
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card-interactive:hover {
+  transform: translateY(-2px);
+}
+
+.card-interactive:active {
+  transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card-header,
+  .card-body,
+  .card-footer {
+    padding: var(--spacing-md, 1rem);
+  }
+
+  .card-title {
+    font-size: 1.125rem;
+  }
+}
