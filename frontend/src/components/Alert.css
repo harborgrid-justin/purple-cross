@@ -1,0 +1,141 @@
+/* Alert Component Styles */
+
+.alert {
+  padding: var(--spacing-md, 1rem) var(--spacing-lg, 1.5rem);
+  border-radius: var(--radius-md, 0.5rem);
+  border-left: 4px solid;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md, 1rem);
+  margin-bottom: var(--spacing-md, 1rem);
+}
+
+.alert-icon {
+  flex-shrink: 0;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.alert-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.alert-title {
+  margin: 0 0 0.25rem;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.alert-message {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.alert-close {
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: var(--radius-sm, 0.25rem);
+  color: inherit;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  font-size: 1.25rem;
+  line-height: 1;
+  margin: -0.25rem -0.5rem -0.25rem 0;
+}
+
+.alert-close:hover {
+  opacity: 1;
+}
+
+.alert-close:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+  opacity: 1;
+}
+
+/* Alert Variants */
+.alert-success {
+  background-color: #d1fae5;
+  border-color: #10b981;
+  color: #065f46;
+}
+
+.alert-error {
+  background-color: #fee2e2;
+  border-color: #ef4444;
+  color: #991b1b;
+}
+
+.alert-warning {
+  background-color: #fef3c7;
+  border-color: #f59e0b;
+  color: #92400e;
+}
+
+.alert-info {
+  background-color: #dbeafe;
+  border-color: #3b82f6;
+  color: #1e40af;
+}
+
+/* Dismissible Alert */
+.alert-dismissible {
+  padding-right: var(--spacing-xl, 2rem);
+}
+
+/* Compact Variant */
+.alert-compact {
+  padding: var(--spacing-sm, 0.5rem) var(--spacing-md, 1rem);
+}
+
+.alert-compact .alert-icon {
+  font-size: 1rem;
+}
+
+.alert-compact .alert-title {
+  font-size: 0.875rem;
+}
+
+.alert-compact .alert-message {
+  font-size: 0.8125rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .alert {
+    padding: var(--spacing-sm, 0.5rem) var(--spacing-md, 1rem);
+    gap: var(--spacing-sm, 0.5rem);
+  }
+
+  .alert-icon {
+    font-size: 1rem;
+  }
+}
+
+/* Animation for entering/leaving */
+@keyframes alertSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.alert {
+  animation: alertSlideIn 0.2s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alert {
+    animation: none;
+  }
+}
