@@ -1,0 +1,70 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Card Component > Snapshot Tests > should match snapshot for card with all features 1`] = `
+<div
+  class="card custom-class"
+>
+  <div
+    class="card-header"
+  >
+    <div
+      class="card-header-content"
+    >
+      <h2
+        class="card-title"
+      >
+        Full Featured Card
+      </h2>
+      <p
+        class="card-subtitle"
+      >
+        With all props
+      </p>
+    </div>
+    <div
+      class="card-actions"
+    >
+      <button
+        class="btn btn-primary btn-md"
+      >
+        Action
+      </button>
+    </div>
+  </div>
+  <div
+    class="card-body"
+  >
+    <p>
+      Card content
+    </p>
+  </div>
+</div>
+`;
+
+exports[`Card Component > Snapshot Tests > should match snapshot for card with no padding 1`] = `
+<div
+  class="card"
+>
+  <div
+    class="card-body card-body-no-padding"
+  >
+    <p>
+      No padding content
+    </p>
+  </div>
+</div>
+`;
+
+exports[`Card Component > Snapshot Tests > should match snapshot for simple card 1`] = `
+<div
+  class="card"
+>
+  <div
+    class="card-body"
+  >
+    <p>
+      Simple content
+    </p>
+  </div>
+</div>
+`;

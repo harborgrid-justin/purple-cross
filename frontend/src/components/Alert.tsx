@@ -7,6 +7,7 @@
 
 import { ReactNode } from 'react';
 import clsx from 'clsx';
+import './Alert.css';
 
 interface AlertProps {
   type?: 'success' | 'error' | 'warning' | 'info';

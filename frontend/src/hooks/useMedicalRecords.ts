@@ -7,6 +7,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/services/api';
+import { QUERY_KEYS } from '@/constants';
 
 export const useMedicalRecords = (params?: {
   page?: number;
@@ -14,14 +15,14 @@ export const useMedicalRecords = (params?: {
   patientId?: string;
 }) => {
   return useQuery({
-    queryKey: ['medicalRecords', params],
+    queryKey: [QUERY_KEYS.MEDICAL_RECORDS, params],
     queryFn: () => api.medicalRecords.getAll(params),
   });
 };
 
 export const useMedicalRecord = (id: string) => {
   return useQuery({
-    queryKey: ['medicalRecord', id],
+    queryKey: [QUERY_KEYS.MEDICAL_RECORD, id],
     queryFn: () => api.medicalRecords.getById(id),
     enabled: !!id,
   });
@@ -33,7 +34,7 @@ export const useCreateMedicalRecord = () => {
   return useMutation({
     mutationFn: (data: unknown) => api.medicalRecords.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['medicalRecords'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.MEDICAL_RECORDS] });
     },
   });
 };
@@ -45,7 +46,7 @@ export const useUpdateMedicalRecord = () => {
     mutationFn: ({ id, data }: { id: string; data: unknown }) =>
       api.medicalRecords.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['medicalRecords'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.MEDICAL_RECORDS] });
     },
   });
 };
@@ -56,7 +57,7 @@ export const useDeleteMedicalRecord = () => {
   return useMutation({
     mutationFn: (id: string) => api.medicalRecords.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['medicalRecords'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.MEDICAL_RECORDS] });
     },
   });
 };
@@ -66,7 +67,7 @@ export const useMedicalRecordWithPatient = (id: string) => {
   const recordQuery = useMedicalRecord(id);
   const patientId = (recordQuery.data as { data?: { patientId?: string } })?.data?.patientId;
   const patientQuery = useQuery({
-    queryKey: ['patient', patientId],
+    queryKey: [QUERY_KEYS.PATIENT, patientId],
     queryFn: () => api.patients.getById(patientId as string),
     enabled: !!patientId,
   });
@@ -82,12 +83,12 @@ export const useMedicalRecordWithPatient = (id: string) => {
 export const usePatientMedicalHistory = (patientId: string) => {
   const recordsQuery = useMedicalRecords({ patientId });
   const prescriptionsQuery = useQuery({
-    queryKey: ['prescriptions', { patientId }],
+    queryKey: [QUERY_KEYS.PRESCRIPTIONS, { patientId }],
     queryFn: () => api.prescriptions.getAll({ patientId }),
     enabled: !!patientId,
   });
   const labTestsQuery = useQuery({
-    queryKey: ['labTests', { patientId }],
+    queryKey: [QUERY_KEYS.LAB_TESTS, { patientId }],
     queryFn: () => api.labTests.getAll({ patientId }),
     enabled: !!patientId,
   });

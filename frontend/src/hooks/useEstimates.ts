@@ -7,10 +7,11 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/services/api';
+import { QUERY_KEYS } from '@/constants';
 
 export const useEstimates = (params?: { page?: number; limit?: number }) => {
   return useQuery({
-    queryKey: ['estimates', params],
+    queryKey: [QUERY_KEYS.ESTIMATES, params],
     queryFn: () => api.estimates.getAll(params),
   });
 };
@@ -29,7 +30,7 @@ export const useCreateEstimate = () => {
   return useMutation({
     mutationFn: (data: unknown) => api.estimates.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['estimates'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ESTIMATES] });
     },
   });
 };
@@ -40,7 +41,7 @@ export const useUpdateEstimate = () => {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: unknown }) => api.estimates.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['estimates'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ESTIMATES] });
     },
   });
 };
@@ -51,7 +52,7 @@ export const useApproveEstimate = () => {
   return useMutation({
     mutationFn: (id: string) => api.estimates.approve(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['estimates'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ESTIMATES] });
     },
   });
 };
@@ -62,7 +63,7 @@ export const useRejectEstimate = () => {
   return useMutation({
     mutationFn: (id: string) => api.estimates.reject(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['estimates'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ESTIMATES] });
     },
   });
 };
@@ -73,8 +74,8 @@ export const useConvertEstimateToInvoice = () => {
   return useMutation({
     mutationFn: (id: string) => api.estimates.convertToInvoice(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['estimates'] });
-      queryClient.invalidateQueries({ queryKey: ['invoices'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ESTIMATES] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.INVOICES] });
     },
   });
 };
@@ -85,7 +86,7 @@ export const useDeleteEstimate = () => {
   return useMutation({
     mutationFn: (id: string) => api.estimates.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['estimates'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ESTIMATES] });
     },
   });
 };
@@ -95,7 +96,7 @@ export const useEstimateWithClient = (id: string) => {
   const estimateQuery = useEstimate(id);
   const clientId = (estimateQuery.data as { data?: { clientId?: string } })?.data?.clientId;
   const clientQuery = useQuery({
-    queryKey: ['client', clientId],
+    queryKey: [QUERY_KEYS.CLIENT, clientId],
     queryFn: () => api.clients.getById(clientId as string),
     enabled: !!clientId,
   });

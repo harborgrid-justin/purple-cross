@@ -1,0 +1,33 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Button Component > Snapshot Tests > should match snapshot for default button 1`] = `
+<button
+  class="btn btn-primary btn-md"
+>
+  Click me
+</button>
+`;
+
+exports[`Button Component > Snapshot Tests > should match snapshot for disabled button 1`] = `
+<button
+  class="btn btn-primary btn-md"
+  disabled=""
+>
+  Disabled
+</button>
+`;
+
+exports[`Button Component > Snapshot Tests > should match snapshot for loading button 1`] = `
+<button
+  class="btn btn-primary btn-md btn-loading"
+  disabled=""
+>
+  <span
+    aria-hidden="true"
+    class="spinner"
+  />
+  <span>
+    Loading...
+  </span>
+</button>
+`;

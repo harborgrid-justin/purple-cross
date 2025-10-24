@@ -7,10 +7,11 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/services/api';
+import { QUERY_KEYS } from '@/constants';
 
 export const useLoyaltyPrograms = (params?: { page?: number; limit?: number }) => {
   return useQuery({
-    queryKey: ['loyaltyPrograms', params],
+    queryKey: [QUERY_KEYS.LOYALTY_PROGRAMS, params],
     queryFn: () => api.loyaltyPrograms.getAll(params),
   });
 };
@@ -45,7 +46,7 @@ export const useCreateLoyaltyProgram = () => {
   return useMutation({
     mutationFn: (data: unknown) => api.loyaltyPrograms.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['loyaltyPrograms'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.LOYALTY_PROGRAMS] });
     },
   });
 };
@@ -57,7 +58,7 @@ export const useUpdateLoyaltyProgram = () => {
     mutationFn: ({ id, data }: { id: string; data: unknown }) =>
       api.loyaltyPrograms.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['loyaltyPrograms'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.LOYALTY_PROGRAMS] });
     },
   });
 };
@@ -69,7 +70,7 @@ export const useAddLoyaltyPoints = () => {
     mutationFn: (data: { loyaltyProgramId: string; points: number; reason?: string }) =>
       api.loyaltyPrograms.addPoints(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['loyaltyPrograms'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.LOYALTY_PROGRAMS] });
     },
   });
 };
@@ -81,7 +82,7 @@ export const useRedeemLoyaltyPoints = () => {
     mutationFn: (data: { loyaltyProgramId: string; points: number; reason?: string }) =>
       api.loyaltyPrograms.redeemPoints(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['loyaltyPrograms'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.LOYALTY_PROGRAMS] });
     },
   });
 };
@@ -92,7 +93,7 @@ export const useDeleteLoyaltyProgram = () => {
   return useMutation({
     mutationFn: (id: string) => api.loyaltyPrograms.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['loyaltyPrograms'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.LOYALTY_PROGRAMS] });
     },
   });
 };

@@ -7,17 +7,18 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/services/api';
+import { QUERY_KEYS } from '@/constants';
 
 export const useClients = (params?: { page?: number; limit?: number; search?: string }) => {
   return useQuery({
-    queryKey: ['clients', params],
+    queryKey: [QUERY_KEYS.CLIENTS, params],
     queryFn: () => api.clients.getAll(params),
   });
 };
 
 export const useClient = (id: string) => {
   return useQuery({
-    queryKey: ['client', id],
+    queryKey: [QUERY_KEYS.CLIENT, id],
     queryFn: () => api.clients.getById(id),
     enabled: !!id,
   });
@@ -29,7 +30,7 @@ export const useCreateClient = () => {
   return useMutation({
     mutationFn: (data: unknown) => api.clients.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['clients'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.CLIENTS] });
     },
   });
 };
@@ -40,7 +41,7 @@ export const useUpdateClient = () => {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: unknown }) => api.clients.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['clients'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.CLIENTS] });
     },
   });
 };
@@ -51,7 +52,7 @@ export const useDeleteClient = () => {
   return useMutation({
     mutationFn: (id: string) => api.clients.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['clients'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.CLIENTS] });
     },
   });
 };
@@ -60,7 +61,7 @@ export const useDeleteClient = () => {
 export const useClientWithPatients = (id: string) => {
   const clientQuery = useClient(id);
   const patientsQuery = useQuery({
-    queryKey: ['patients', { ownerId: id }],
+    queryKey: [QUERY_KEYS.PATIENTS, { ownerId: id }],
     queryFn: () => api.patients.getAll({ ownerId: id }),
     enabled: !!id,
   });
@@ -76,7 +77,7 @@ export const useClientWithPatients = (id: string) => {
 export const useClientWithAppointments = (id: string) => {
   const clientQuery = useClient(id);
   const patientsQuery = useQuery({
-    queryKey: ['patients', { ownerId: id }],
+    queryKey: [QUERY_KEYS.PATIENTS, { ownerId: id }],
     queryFn: () => api.patients.getAll({ ownerId: id }),
     enabled: !!id,
   });
@@ -92,7 +93,7 @@ export const useClientWithAppointments = (id: string) => {
 export const useClientWithInvoices = (id: string) => {
   const clientQuery = useClient(id);
   const invoicesQuery = useQuery({
-    queryKey: ['invoices', { clientId: id }],
+    queryKey: [QUERY_KEYS.INVOICES, { clientId: id }],
     queryFn: () => api.invoices.getAll({ clientId: id }),
     enabled: !!id,
   });

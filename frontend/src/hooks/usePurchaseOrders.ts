@@ -7,10 +7,11 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/services/api';
+import { QUERY_KEYS } from '@/constants';
 
 export const usePurchaseOrders = (params?: { page?: number; limit?: number }) => {
   return useQuery({
-    queryKey: ['purchaseOrders', params],
+    queryKey: [QUERY_KEYS.PURCHASE_ORDERS, params],
     queryFn: () => api.purchaseOrders.getAll(params),
   });
 };
@@ -29,7 +30,7 @@ export const useCreatePurchaseOrder = () => {
   return useMutation({
     mutationFn: (data: unknown) => api.purchaseOrders.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['purchaseOrders'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PURCHASE_ORDERS] });
     },
   });
 };
@@ -41,7 +42,7 @@ export const useUpdatePurchaseOrder = () => {
     mutationFn: ({ id, data }: { id: string; data: unknown }) =>
       api.purchaseOrders.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['purchaseOrders'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PURCHASE_ORDERS] });
     },
   });
 };
@@ -52,7 +53,7 @@ export const useApprovePurchaseOrder = () => {
   return useMutation({
     mutationFn: (id: string) => api.purchaseOrders.approve(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['purchaseOrders'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PURCHASE_ORDERS] });
     },
   });
 };
@@ -64,8 +65,8 @@ export const useReceivePurchaseOrderItems = () => {
     mutationFn: ({ id, itemsData }: { id: string; itemsData: unknown }) =>
       api.purchaseOrders.receiveItems(id, itemsData),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['purchaseOrders'] });
-      queryClient.invalidateQueries({ queryKey: ['inventory'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PURCHASE_ORDERS] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.INVENTORY] });
     },
   });
 };
@@ -76,7 +77,7 @@ export const useCancelPurchaseOrder = () => {
   return useMutation({
     mutationFn: (id: string) => api.purchaseOrders.cancel(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['purchaseOrders'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PURCHASE_ORDERS] });
     },
   });
 };
@@ -87,7 +88,7 @@ export const useDeletePurchaseOrder = () => {
   return useMutation({
     mutationFn: (id: string) => api.purchaseOrders.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['purchaseOrders'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PURCHASE_ORDERS] });
     },
   });
 };
@@ -100,7 +101,7 @@ export const usePendingPurchaseOrders = () => {
 export const usePurchaseOrderWithInventory = (id: string) => {
   const purchaseOrderQuery = usePurchaseOrder(id);
   const inventoryQuery = useQuery({
-    queryKey: ['inventory', { lowStock: true }],
+    queryKey: [QUERY_KEYS.INVENTORY, { lowStock: true }],
     queryFn: () => api.inventory.getAll({ lowStock: true }),
   });
 

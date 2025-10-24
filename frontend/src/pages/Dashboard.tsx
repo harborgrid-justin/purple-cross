@@ -5,18 +5,12 @@
  * Last Updated: 2025-10-23 | File Type: .tsx
  */
 
-import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../store';
-import { fetchDashboardStats } from '../store/slices/analyticsSlice';
+import { useDashboardAnalytics } from '../hooks/useAnalytics';
 import '../styles/Page.css';
 
 const Dashboard = () => {
-  const dispatch = useAppDispatch();
-  const { dashboardStats: stats, loading, error } = useAppSelector((state) => state.analytics);
-
-  useEffect(() => {
-    dispatch(fetchDashboardStats());
-  }, [dispatch]);
+  const { data: response, isLoading: loading, error } = useDashboardAnalytics();
+  const stats = (response as { data?: any })?.data;
 
   const recentActivities = [
     { time: '10:30 AM', activity: 'Appointment with Max (Labrador)', type: 'appointment' },
@@ -53,7 +47,7 @@ const Dashboard = () => {
         <p className="page-subtitle">Welcome back! Here&apos;s what&apos;s happening today.</p>
         {error && (
           <div role="alert" className="error-message">
-            {error}
+            {error instanceof Error ? error.message : 'An error occurred loading dashboard data'}
           </div>
         )}
       </header>

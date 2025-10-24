@@ -1,5 +1,6 @@
 /**
  * WF-COMP-031 | routes.tsx - Appointments page routes
+ * NOTE: Migrated from Redux to TanStack Query hooks - 2025-10-24
  * Purpose: Appointments route configuration with role-based protection
  * Related: ProtectedRoute, appointments components
  * Last Updated: 2025-10-22 | File Type: .tsx

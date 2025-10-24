@@ -1,5 +1,6 @@
 /**
  * WF-COMP-014 | ClientsCreate.tsx - Create client page
+ * NOTE: Migrated from Redux to TanStack Query hooks - 2025-10-24
  * Purpose: Form page for creating new clients
  * Related: Client form component, clients store
  * Last Updated: 2025-10-22 | File Type: .tsx
@@ -7,7 +8,7 @@
 
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAppDispatch } from '../../hooks/redux';
+
 import { createClient } from './store';
 import '../../styles/Page.css';
 

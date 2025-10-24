@@ -7,6 +7,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/services/api';
+import { QUERY_KEYS } from '@/constants';
 
 /**
  * Fetches a paginated list of patients with optional filtering.
@@ -43,7 +44,7 @@ export const usePatients = (params?: {
   ownerId?: string;
 }) => {
   return useQuery({
-    queryKey: ['patients', params],
+    queryKey: [QUERY_KEYS.PATIENTS, params],
     queryFn: () => api.patients.getAll(params),
   });
 };
@@ -65,7 +66,7 @@ export const usePatients = (params?: {
  */
 export const usePatient = (id: string) => {
   return useQuery({
-    queryKey: ['patient', id],
+    queryKey: [QUERY_KEYS.PATIENT, id],
     queryFn: () => api.patients.getById(id),
     enabled: !!id,
   });
@@ -106,7 +107,7 @@ export const useCreatePatient = () => {
   return useMutation({
     mutationFn: (data: unknown) => api.patients.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['patients'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PATIENTS] });
     },
   });
 };
@@ -134,7 +135,7 @@ export const useUpdatePatient = () => {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: unknown }) => api.patients.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['patients'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PATIENTS] });
     },
   });
 };
@@ -164,7 +165,7 @@ export const useDeletePatient = () => {
   return useMutation({
     mutationFn: (id: string) => api.patients.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['patients'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PATIENTS] });
     },
   });
 };
@@ -206,7 +207,7 @@ export const usePatientWithOwner = (id: string) => {
   const patientQuery = usePatient(id);
   const ownerId = (patientQuery.data as { data?: { ownerId?: string } })?.data?.ownerId;
   const clientQuery = useQuery({
-    queryKey: ['client', ownerId],
+    queryKey: [QUERY_KEYS.CLIENT, ownerId],
     queryFn: () => api.clients.getById(ownerId as string),
     enabled: !!ownerId,
   });
@@ -249,7 +250,7 @@ export const usePatientWithOwner = (id: string) => {
 export const usePatientWithRecords = (id: string) => {
   const patientQuery = usePatient(id);
   const recordsQuery = useQuery({
-    queryKey: ['medicalRecords', { patientId: id }],
+    queryKey: [QUERY_KEYS.MEDICAL_RECORDS, { patientId: id }],
     queryFn: () => api.medicalRecords.getAll({ patientId: id }),
     enabled: !!id,
   });
@@ -289,7 +290,7 @@ export const usePatientWithRecords = (id: string) => {
 export const usePatientWithPrescriptions = (id: string) => {
   const patientQuery = usePatient(id);
   const prescriptionsQuery = useQuery({
-    queryKey: ['prescriptions', { patientId: id }],
+    queryKey: [QUERY_KEYS.PRESCRIPTIONS, { patientId: id }],
     queryFn: () => api.prescriptions.getAll({ patientId: id }),
     enabled: !!id,
   });

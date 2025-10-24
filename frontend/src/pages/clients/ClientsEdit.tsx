@@ -1,5 +1,6 @@
 /**
  * WF-COMP-015 | ClientsEdit.tsx - Edit client page
+ * NOTE: Migrated from Redux to TanStack Query hooks - 2025-10-24
  * Purpose: Form page for editing existing clients
  * Related: Client form component, clients store
  * Last Updated: 2025-10-22 | File Type: .tsx
@@ -7,7 +8,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+
 import { fetchClientById, updateClient } from './store';
 import '../../styles/Page.css';
 

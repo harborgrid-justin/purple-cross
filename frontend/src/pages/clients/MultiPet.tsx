@@ -1,5 +1,6 @@
 /**
  * WF-COMP-XXX | MultiPet.tsx - Multi Pet
+ * NOTE: Migrated from Redux to TanStack Query hooks - 2025-10-24
  * Purpose: React component for MultiPet functionality
  * Dependencies: None
  * Last Updated: 2025-10-23 | File Type: .tsx

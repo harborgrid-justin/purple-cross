@@ -1,5 +1,6 @@
 /**
  * WF-COMP-033 | AppointmentsDetail.tsx - Appointment detail page
+ * NOTE: Migrated from Redux to TanStack Query hooks - 2025-10-24
  * Purpose: Display detailed information for a single appointment
  * Related: Appointment details component, appointments store
  * Last Updated: 2025-10-22 | File Type: .tsx
@@ -7,7 +8,7 @@
 
 import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+
 import { fetchAppointmentById } from './store';
 import '../../styles/Page.css';
 

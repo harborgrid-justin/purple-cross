@@ -1,5 +1,6 @@
 /**
  * WF-COMP-035 | AppointmentsEdit.tsx - Edit appointment page
+ * NOTE: Migrated from Redux to TanStack Query hooks - 2025-10-24
  * Purpose: Form page for editing existing appointments
  * Related: Appointment form component, appointments store
  * Last Updated: 2025-10-22 | File Type: .tsx
@@ -7,7 +8,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+
 import { fetchAppointmentById, updateAppointment } from './store';
 import '../../styles/Page.css';
 

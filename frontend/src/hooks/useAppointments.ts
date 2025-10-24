@@ -7,6 +7,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/services/api';
+import { QUERY_KEYS, QUERY_STALE_TIME } from '@/constants';
 
 /**
  * Fetches a paginated list of appointments with optional filtering.
@@ -37,8 +38,11 @@ import { api } from '@/services/api';
  */
 export const useAppointments = (params?: { page?: number; limit?: number; date?: string }) => {
   return useQuery({
-    queryKey: ['appointments', params],
+    queryKey: [QUERY_KEYS.APPOINTMENTS, params],
     queryFn: () => api.appointments.getAll(params),
+    // Dynamic staleTime: Appointments change frequently throughout the day
+    // Staff needs near real-time updates for scheduling and patient flow
+    staleTime: QUERY_STALE_TIME.DYNAMIC,
   });
 };
 
@@ -59,9 +63,11 @@ export const useAppointments = (params?: { page?: number; limit?: number; date?:
  */
 export const useAppointment = (id: string) => {
   return useQuery({
-    queryKey: ['appointment', id],
+    queryKey: [QUERY_KEYS.APPOINTMENT, id],
     queryFn: () => api.appointments.getById(id),
     enabled: !!id,
+    // Dynamic staleTime: Individual appointment details may update frequently
+    staleTime: QUERY_STALE_TIME.DYNAMIC,
   });
 };
 
@@ -101,7 +107,7 @@ export const useCreateAppointment = () => {
   return useMutation({
     mutationFn: (data: unknown) => api.appointments.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.APPOINTMENTS] });
     },
   });
 };
@@ -129,7 +135,7 @@ export const useUpdateAppointment = () => {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: unknown }) => api.appointments.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.APPOINTMENTS] });
     },
   });
 };
@@ -159,7 +165,7 @@ export const useDeleteAppointment = () => {
   return useMutation({
     mutationFn: (id: string) => api.appointments.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.APPOINTMENTS] });
     },
   });
 };
@@ -201,7 +207,7 @@ export const useAppointmentWithPatient = (id: string) => {
   const appointmentQuery = useAppointment(id);
   const patientId = (appointmentQuery.data as { data?: { patientId?: string } })?.data?.patientId;
   const patientQuery = useQuery({
-    queryKey: ['patient', patientId],
+    queryKey: [QUERY_KEYS.PATIENT, patientId],
     queryFn: () => api.patients.getById(patientId as string),
     enabled: !!patientId,
   });
@@ -250,7 +256,7 @@ export const useAppointmentWithClient = (id: string) => {
   const appointmentQuery = useAppointment(id);
   const clientId = (appointmentQuery.data as { data?: { clientId?: string } })?.data?.clientId;
   const clientQuery = useQuery({
-    queryKey: ['client', clientId],
+    queryKey: [QUERY_KEYS.CLIENT, clientId],
     queryFn: () => api.clients.getById(clientId as string),
     enabled: !!clientId,
   });

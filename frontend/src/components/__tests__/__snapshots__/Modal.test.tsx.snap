@@ -1,0 +1,81 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Modal Component > Snapshot Tests > should match snapshot for modal with all features 1`] = `
+<div
+  aria-labelledby="modal-title"
+  aria-modal="true"
+  class="modal-overlay"
+  role="dialog"
+>
+  <div
+    class="modal-content modal-lg"
+  >
+    <div
+      class="modal-header"
+    >
+      <h2
+        class="modal-title"
+        id="modal-title"
+      >
+        Full Featured Modal
+      </h2>
+      <button
+        aria-label="Close modal"
+        class="modal-close"
+        type="button"
+      >
+        ×
+      </button>
+    </div>
+    <div
+      class="modal-body"
+    >
+      <p>
+        Modal content
+      </p>
+    </div>
+    <div
+      class="modal-footer"
+    >
+      <button
+        class="btn btn-primary btn-md"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Modal Component > Snapshot Tests > should match snapshot for simple modal 1`] = `
+<div
+  aria-modal="true"
+  class="modal-overlay"
+  role="dialog"
+>
+  <div
+    class="modal-content modal-md"
+  >
+    <div
+      class="modal-header"
+    >
+      <button
+        aria-label="Close modal"
+        class="modal-close"
+        type="button"
+      >
+        ×
+      </button>
+    </div>
+    <div
+      class="modal-body"
+    >
+      <p>
+        Simple content
+      </p>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Modal Component > Snapshot Tests > should match snapshot when closed 1`] = `null`;

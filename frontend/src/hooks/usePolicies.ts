@@ -7,10 +7,11 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/services/api';
+import { QUERY_KEYS } from '@/constants';
 
 export const usePolicies = (params?: { page?: number; limit?: number }) => {
   return useQuery({
-    queryKey: ['policies', params],
+    queryKey: [QUERY_KEYS.POLICIES, params],
     queryFn: () => api.policies.getAll(params),
   });
 };
@@ -25,7 +26,7 @@ export const usePolicy = (id: string) => {
 
 export const useUserAcknowledgments = (userId: string) => {
   return useQuery({
-    queryKey: ['policies', 'acknowledgments', userId],
+    queryKey: [QUERY_KEYS.POLICIES, 'acknowledgments', userId],
     queryFn: () => api.policies.getUserAcknowledgments(userId),
     enabled: !!userId,
   });
@@ -37,7 +38,7 @@ export const useCreatePolicy = () => {
   return useMutation({
     mutationFn: (data: unknown) => api.policies.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['policies'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.POLICIES] });
     },
   });
 };
@@ -48,7 +49,7 @@ export const useUpdatePolicy = () => {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: unknown }) => api.policies.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['policies'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.POLICIES] });
     },
   });
 };
@@ -60,7 +61,7 @@ export const useAcknowledgePolicy = () => {
     mutationFn: ({ id, acknowledgmentData }: { id: string; acknowledgmentData: unknown }) =>
       api.policies.acknowledge(id, acknowledgmentData),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['policies'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.POLICIES] });
     },
   });
 };
@@ -71,7 +72,7 @@ export const useDeletePolicy = () => {
   return useMutation({
     mutationFn: (id: string) => api.policies.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['policies'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.POLICIES] });
     },
   });
 };

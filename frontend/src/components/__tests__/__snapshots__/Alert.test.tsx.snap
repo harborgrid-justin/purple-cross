@@ -1,0 +1,84 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Alert Component > Snapshot Tests > should match snapshot for default alert 1`] = `
+<div
+  class="alert alert-info"
+  role="alert"
+>
+  <span
+    aria-hidden="true"
+    class="alert-icon"
+  >
+    ℹ
+  </span>
+  <div
+    class="alert-content"
+  >
+    Default alert
+  </div>
+</div>
+`;
+
+exports[`Alert Component > Snapshot Tests > should match snapshot for error alert 1`] = `
+<div
+  class="alert alert-error"
+  role="alert"
+>
+  <span
+    aria-hidden="true"
+    class="alert-icon"
+  >
+    ✕
+  </span>
+  <div
+    class="alert-content"
+  >
+    Error alert
+  </div>
+</div>
+`;
+
+exports[`Alert Component > Snapshot Tests > should match snapshot for success alert with close button 1`] = `
+<div
+  class="alert alert-success"
+  role="alert"
+>
+  <span
+    aria-hidden="true"
+    class="alert-icon"
+  >
+    ✓
+  </span>
+  <div
+    class="alert-content"
+  >
+    Success alert
+  </div>
+  <button
+    aria-label="Close alert"
+    class="alert-close"
+    type="button"
+  >
+    ×
+  </button>
+</div>
+`;
+
+exports[`Alert Component > Snapshot Tests > should match snapshot for warning alert 1`] = `
+<div
+  class="alert alert-warning"
+  role="alert"
+>
+  <span
+    aria-hidden="true"
+    class="alert-icon"
+  >
+    ⚠
+  </span>
+  <div
+    class="alert-content"
+  >
+    Warning alert
+  </div>
+</div>
+`;

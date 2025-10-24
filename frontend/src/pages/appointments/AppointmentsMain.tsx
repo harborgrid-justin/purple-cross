@@ -1,5 +1,6 @@
 /**
  * WF-COMP-032 | AppointmentsMain.tsx - Main appointments page
+ * NOTE: Migrated from Redux to TanStack Query hooks - 2025-10-24
  * Purpose: Main appointments list and navigation page
  * Related: AppointmentsList component, appointments routes
  * Last Updated: 2025-10-22 | File Type: .tsx
