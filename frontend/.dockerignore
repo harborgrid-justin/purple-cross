@@ -1,12 +1,103 @@
+# =============================================================================
+# Frontend .dockerignore
+# =============================================================================
+# Prevent unnecessary files from being sent to Docker build context
+# This speeds up builds and reduces image size
+# =============================================================================
+
+# Dependencies
 node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Build outputs
 dist
-npm-debug.log
+build
+*.tsbuildinfo
+.vite
+.turbo
+
+# Environment files
 .env
 .env.local
+.env.development
+.env.test
+.env.production
+.env.*.local
+
+# Testing
 coverage
+*.lcov
+.nyc_output
+jest-results.json
+test-results/
+__tests__/
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+
+# Logs
 *.log
-.git
-.gitignore
-README.md
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE and Editor files
 .vscode
 .idea
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-workspace
+*.sublime-project
+
+# Git
+.git
+.gitignore
+.gitattributes
+.github
+
+# Documentation
+README.md
+CHANGELOG.md
+LICENSE
+*.md
+docs/
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+nginx.conf
+
+# CI/CD
+.gitlab-ci.yml
+.travis.yml
+.circleci
+azure-pipelines.yml
+Jenkinsfile
+
+# Misc
+tmp/
+temp/
+.cache/
+.pytest_cache/
+.eslintcache
+.stylelintcache
+.storybook/
+storybook-static/
+
+# OS files
+Thumbs.db
+Desktop.ini
+
+# Dev tools
+.prettierrc
+.eslintrc*
+.editorconfig
