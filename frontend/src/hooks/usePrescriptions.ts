@@ -7,6 +7,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/services/api';
+import { QUERY_KEYS } from '@/constants';
 
 export const usePrescriptions = (params?: {
   page?: number;
@@ -14,14 +15,14 @@ export const usePrescriptions = (params?: {
   patientId?: string;
 }) => {
   return useQuery({
-    queryKey: ['prescriptions', params],
+    queryKey: [QUERY_KEYS.PRESCRIPTIONS, params],
     queryFn: () => api.prescriptions.getAll(params),
   });
 };
 
 export const usePrescription = (id: string) => {
   return useQuery({
-    queryKey: ['prescription', id],
+    queryKey: [QUERY_KEYS.PRESCRIPTION, id],
     queryFn: () => api.prescriptions.getById(id),
     enabled: !!id,
   });
@@ -33,7 +34,7 @@ export const useCreatePrescription = () => {
   return useMutation({
     mutationFn: (data: unknown) => api.prescriptions.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['prescriptions'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PRESCRIPTIONS] });
     },
   });
 };
@@ -44,7 +45,7 @@ export const useUpdatePrescription = () => {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: unknown }) => api.prescriptions.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['prescriptions'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PRESCRIPTIONS] });
     },
   });
 };
@@ -55,7 +56,7 @@ export const useDeletePrescription = () => {
   return useMutation({
     mutationFn: (id: string) => api.prescriptions.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['prescriptions'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PRESCRIPTIONS] });
     },
   });
 };
@@ -65,7 +66,7 @@ export const usePrescriptionWithPatient = (id: string) => {
   const prescriptionQuery = usePrescription(id);
   const patientId = (prescriptionQuery.data as { data?: { patientId?: string } })?.data?.patientId;
   const patientQuery = useQuery({
-    queryKey: ['patient', patientId],
+    queryKey: [QUERY_KEYS.PATIENT, patientId],
     queryFn: () => api.patients.getById(patientId as string),
     enabled: !!patientId,
   });

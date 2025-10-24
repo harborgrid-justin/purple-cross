@@ -7,17 +7,18 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/services/api';
+import { QUERY_KEYS } from '@/constants';
 
 export const useEquipment = (params?: { page?: number; limit?: number }) => {
   return useQuery({
-    queryKey: ['equipment', params],
+    queryKey: [QUERY_KEYS.EQUIPMENT, params],
     queryFn: () => api.equipment.getAll(params),
   });
 };
 
 export const useEquipmentItem = (id: string) => {
   return useQuery({
-    queryKey: ['equipment', id],
+    queryKey: [QUERY_KEYS.EQUIPMENT, id],
     queryFn: () => api.equipment.getById(id),
     enabled: !!id,
   });
@@ -25,14 +26,14 @@ export const useEquipmentItem = (id: string) => {
 
 export const useMaintenanceSchedule = () => {
   return useQuery({
-    queryKey: ['equipment', 'maintenance', 'schedule'],
+    queryKey: [QUERY_KEYS.EQUIPMENT, 'maintenance', 'schedule'],
     queryFn: () => api.equipment.getMaintenanceSchedule(),
   });
 };
 
 export const useUpcomingMaintenance = () => {
   return useQuery({
-    queryKey: ['equipment', 'maintenance', 'upcoming'],
+    queryKey: [QUERY_KEYS.EQUIPMENT, 'maintenance', 'upcoming'],
     queryFn: () => api.equipment.getUpcomingMaintenance(),
   });
 };
@@ -43,7 +44,7 @@ export const useCreateEquipment = () => {
   return useMutation({
     mutationFn: (data: unknown) => api.equipment.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['equipment'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.EQUIPMENT] });
     },
   });
 };
@@ -54,7 +55,7 @@ export const useUpdateEquipment = () => {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: unknown }) => api.equipment.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['equipment'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.EQUIPMENT] });
     },
   });
 };
@@ -65,7 +66,7 @@ export const useScheduleMaintenance = () => {
   return useMutation({
     mutationFn: (maintenanceData: unknown) => api.equipment.scheduleMaintenance(maintenanceData),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['equipment', 'maintenance'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.EQUIPMENT, 'maintenance'] });
     },
   });
 };
@@ -76,7 +77,7 @@ export const useCompleteMaintenance = () => {
   return useMutation({
     mutationFn: (maintenanceId: string) => api.equipment.completeMaintenance(maintenanceId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['equipment', 'maintenance'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.EQUIPMENT, 'maintenance'] });
     },
   });
 };
@@ -87,7 +88,7 @@ export const useDeleteEquipment = () => {
   return useMutation({
     mutationFn: (id: string) => api.equipment.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['equipment'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.EQUIPMENT] });
     },
   });
 };

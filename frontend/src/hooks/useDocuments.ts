@@ -7,6 +7,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/services/api';
+import { QUERY_KEYS } from '@/constants';
 
 export const useDocuments = (params?: {
   page?: number;
@@ -15,14 +16,14 @@ export const useDocuments = (params?: {
   entityId?: string;
 }) => {
   return useQuery({
-    queryKey: ['documents', params],
+    queryKey: [QUERY_KEYS.DOCUMENTS, params],
     queryFn: () => api.documents.getAll(params),
   });
 };
 
 export const useDocument = (id: string) => {
   return useQuery({
-    queryKey: ['document', id],
+    queryKey: [QUERY_KEYS.DOCUMENT, id],
     queryFn: () => api.documents.getById(id),
     enabled: !!id,
   });
@@ -34,7 +35,7 @@ export const useCreateDocument = () => {
   return useMutation({
     mutationFn: (data: unknown) => api.documents.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['documents'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.DOCUMENTS] });
     },
   });
 };
@@ -45,7 +46,7 @@ export const useUpdateDocument = () => {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: unknown }) => api.documents.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['documents'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.DOCUMENTS] });
     },
   });
 };
@@ -56,7 +57,7 @@ export const useDeleteDocument = () => {
   return useMutation({
     mutationFn: (id: string) => api.documents.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['documents'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.DOCUMENTS] });
     },
   });
 };

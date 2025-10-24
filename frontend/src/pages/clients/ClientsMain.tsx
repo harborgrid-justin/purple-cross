@@ -1,5 +1,6 @@
 /**
  * WF-COMP-Clients-004 | ClientsMain.tsx - Main clients page
+ * NOTE: Migrated from Redux to TanStack Query hooks - 2025-10-24
  * Purpose: Main clients list and navigation page
  * Related: ClientsList component, clients routes
  * Last Updated: 2025-10-22 | File Type: .tsx

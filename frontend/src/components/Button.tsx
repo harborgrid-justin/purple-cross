@@ -7,6 +7,7 @@
 
 import { ButtonHTMLAttributes, ReactNode } from 'react';
 import clsx from 'clsx';
+import './Button.css';
 
 /**
  * Props for the Button component.

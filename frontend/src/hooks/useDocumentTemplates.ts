@@ -7,10 +7,11 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/services/api';
+import { QUERY_KEYS } from '@/constants';
 
 export const useDocumentTemplates = (params?: { page?: number; limit?: number }) => {
   return useQuery({
-    queryKey: ['documentTemplates', params],
+    queryKey: [QUERY_KEYS.DOCUMENT_TEMPLATES, params],
     queryFn: () => api.documentTemplates.getAll(params),
   });
 };
@@ -37,7 +38,7 @@ export const useCreateDocumentTemplate = () => {
   return useMutation({
     mutationFn: (data: unknown) => api.documentTemplates.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['documentTemplates'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.DOCUMENT_TEMPLATES] });
     },
   });
 };
@@ -49,7 +50,7 @@ export const useUpdateDocumentTemplate = () => {
     mutationFn: ({ id, data }: { id: string; data: unknown }) =>
       api.documentTemplates.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['documentTemplates'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.DOCUMENT_TEMPLATES] });
     },
   });
 };
@@ -60,7 +61,7 @@ export const useIncrementDocumentTemplateUsage = () => {
   return useMutation({
     mutationFn: (id: string) => api.documentTemplates.incrementUsage(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['documentTemplates'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.DOCUMENT_TEMPLATES] });
     },
   });
 };
@@ -82,7 +83,7 @@ export const useCreateDocumentWorkflow = () => {
   return useMutation({
     mutationFn: (workflowData: unknown) => api.documentTemplates.createWorkflow(workflowData),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['documentTemplates'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.DOCUMENT_TEMPLATES] });
     },
   });
 };
@@ -94,7 +95,7 @@ export const useAdvanceDocumentWorkflow = () => {
     mutationFn: ({ workflowId, data }: { workflowId: string; data: unknown }) =>
       api.documentTemplates.advanceWorkflow(workflowId, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['documentTemplates'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.DOCUMENT_TEMPLATES] });
     },
   });
 };
@@ -105,7 +106,7 @@ export const useDeleteDocumentTemplate = () => {
   return useMutation({
     mutationFn: (id: string) => api.documentTemplates.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['documentTemplates'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.DOCUMENT_TEMPLATES] });
     },
   });
 };

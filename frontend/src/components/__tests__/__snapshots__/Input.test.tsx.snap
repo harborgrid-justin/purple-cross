@@ -1,0 +1,76 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Input Component > Snapshot Tests > should match snapshot for basic input 1`] = `
+<div
+  class="form-group"
+>
+  <label
+    class="form-label"
+    for="input-jznsq"
+  >
+    Name
+  </label>
+  <input
+    aria-invalid="false"
+    class="form-input"
+    id="input-jznsq"
+  />
+</div>
+`;
+
+exports[`Input Component > Snapshot Tests > should match snapshot for input with error 1`] = `
+<div
+  class="form-group"
+>
+  <label
+    class="form-label"
+    for="input-i24uw"
+  >
+    Email
+  </label>
+  <input
+    aria-describedby="input-i24uw-error"
+    aria-invalid="true"
+    class="form-input form-input-error"
+    id="input-i24uw"
+  />
+  <p
+    class="form-error"
+    id="input-i24uw-error"
+    role="alert"
+  >
+    Invalid email
+  </p>
+</div>
+`;
+
+exports[`Input Component > Snapshot Tests > should match snapshot for required input with helper text 1`] = `
+<div
+  class="form-group"
+>
+  <label
+    class="form-label"
+    for="input-kxb6jj"
+  >
+    Password
+    <span
+      class="form-required"
+    >
+      *
+    </span>
+  </label>
+  <input
+    aria-describedby="input-kxb6jj-helper"
+    aria-invalid="false"
+    class="form-input"
+    id="input-kxb6jj"
+    required=""
+  />
+  <p
+    class="form-helper"
+    id="input-kxb6jj-helper"
+  >
+    Must be 8+ characters
+  </p>
+</div>
+`;

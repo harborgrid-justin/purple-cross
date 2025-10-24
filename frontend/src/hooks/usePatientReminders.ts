@@ -7,6 +7,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/services/api';
+import { QUERY_KEYS } from '@/constants';
 
 export const usePatientReminders = (params?: { page?: number; limit?: number }) => {
   return useQuery({

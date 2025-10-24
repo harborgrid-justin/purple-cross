@@ -5,22 +5,15 @@
  * Last Updated: 2025-10-22 | File Type: .tsx
  */
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { fetchPatientById } from './store';
+import { usePatient } from '../../hooks/usePatients';
 import '../../styles/Page.css';
 
 const PatientsDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const dispatch = useAppDispatch();
-  const { selectedPatient: patient, loading, error } = useAppSelector((state) => state.patients);
-
-  useEffect(() => {
-    if (id) {
-      dispatch(fetchPatientById(id));
-    }
-  }, [dispatch, id]);
+  const { data: response, isLoading: loading, error } = usePatient(id || '');
+  const patient = (response as { data?: any })?.data;
 
   if (loading) {
     return (
@@ -36,7 +29,7 @@ const PatientsDetail: React.FC = () => {
     return (
       <div className="page">
         <div className="alert alert-error" role="alert">
-          <p>Error: {error}</p>
+          <p>Error: {error instanceof Error ? error.message : 'Failed to load patient details'}</p>
         </div>
         <Link to="/patients" className="btn-secondary">
           Back to Patients

@@ -7,6 +7,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/services/api';
+import { QUERY_KEYS } from '@/constants';
 
 export const useInvoices = (params?: {
   page?: number;
@@ -15,14 +16,14 @@ export const useInvoices = (params?: {
   status?: string;
 }) => {
   return useQuery({
-    queryKey: ['invoices', params],
+    queryKey: [QUERY_KEYS.INVOICES, params],
     queryFn: () => api.invoices.getAll(params),
   });
 };
 
 export const useInvoice = (id: string) => {
   return useQuery({
-    queryKey: ['invoice', id],
+    queryKey: [QUERY_KEYS.INVOICE, id],
     queryFn: () => api.invoices.getById(id),
     enabled: !!id,
   });
@@ -34,7 +35,7 @@ export const useCreateInvoice = () => {
   return useMutation({
     mutationFn: (data: unknown) => api.invoices.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['invoices'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.INVOICES] });
     },
   });
 };
@@ -45,7 +46,7 @@ export const useUpdateInvoice = () => {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: unknown }) => api.invoices.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['invoices'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.INVOICES] });
     },
   });
 };
@@ -56,7 +57,7 @@ export const useDeleteInvoice = () => {
   return useMutation({
     mutationFn: (id: string) => api.invoices.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['invoices'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.INVOICES] });
     },
   });
 };
@@ -66,7 +67,7 @@ export const useInvoiceWithClient = (id: string) => {
   const invoiceQuery = useInvoice(id);
   const clientId = (invoiceQuery.data as { data?: { clientId?: string } })?.data?.clientId;
   const clientQuery = useQuery({
-    queryKey: ['client', clientId],
+    queryKey: [QUERY_KEYS.CLIENT, clientId],
     queryFn: () => api.clients.getById(clientId as string),
     enabled: !!clientId,
   });
@@ -82,12 +83,12 @@ export const useInvoiceWithClient = (id: string) => {
 export const useClientBilling = (clientId: string) => {
   const invoicesQuery = useInvoices({ clientId });
   const estimatesQuery = useQuery({
-    queryKey: ['estimates', clientId],
+    queryKey: [QUERY_KEYS.ESTIMATES, clientId],
     queryFn: () => api.estimates.getAll(),
     enabled: !!clientId,
   });
   const paymentPlansQuery = useQuery({
-    queryKey: ['paymentPlans', clientId],
+    queryKey: [QUERY_KEYS.PAYMENT_PLANS, clientId],
     queryFn: () => api.paymentPlans.getAll(),
     enabled: !!clientId,
   });

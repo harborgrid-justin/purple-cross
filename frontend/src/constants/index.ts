@@ -628,3 +628,74 @@ export const QUERY_KEYS = {
   REPORT_TEMPLATES: 'reportTemplates',
   DOCUMENT_TEMPLATES: 'documentTemplates',
 } as const;
+
+// ============================================================================
+// React Query Performance Configuration
+// ============================================================================
+
+/**
+ * Stale time constants for different data types in milliseconds
+ *
+ * staleTime: The time in milliseconds after data is considered stale.
+ * - Fresh data: Won't refetch automatically
+ * - Stale data: Will refetch in background on certain triggers
+ *
+ * Choose based on data change frequency and user experience needs
+ */
+export const QUERY_STALE_TIME = {
+  // Real-time data (changes frequently, needs immediate updates)
+  // Examples: Appointment status, active waitlist, current inventory levels
+  REAL_TIME: 0, // 0ms - Always stale, refetch on every mount
+
+  // Dynamic data (changes often during active use)
+  // Examples: Dashboard metrics, today's appointments, recent activities
+  DYNAMIC: 30000, // 30 seconds
+
+  // Standard data (moderate change frequency)
+  // Examples: Patient lists, client lists, medical records lists
+  STANDARD: 300000, // 5 minutes
+
+  // Semi-static data (changes infrequently)
+  // Examples: Staff lists, inventory items, appointment types
+  SEMI_STATIC: 600000, // 10 minutes
+
+  // Static data (rarely changes)
+  // Examples: Breed info, medication database, document templates
+  STATIC: 3600000, // 1 hour
+
+  // Cached data (almost never changes during session)
+  // Examples: Policy documents, system configuration, report templates
+  CACHED: 86400000, // 24 hours
+} as const;
+
+/**
+ * Cache time (garbage collection time) for queries
+ * Data remains in cache for this duration after becoming inactive
+ * Should typically be longer than staleTime
+ */
+export const QUERY_CACHE_TIME = {
+  DEFAULT: 600000, // 10 minutes
+  SHORT: 300000, // 5 minutes
+  LONG: 1800000, // 30 minutes
+  PERSISTENT: 86400000, // 24 hours
+} as const;
+
+/**
+ * Retry configuration for failed queries
+ */
+export const QUERY_RETRY = {
+  DEFAULT: 3, // Retry 3 times
+  CRITICAL: 5, // Retry 5 times for critical data
+  NO_RETRY: 0, // No retries
+  MINIMAL: 1, // Single retry
+} as const;
+
+/**
+ * Refetch intervals for polling queries (in milliseconds)
+ */
+export const QUERY_REFETCH_INTERVAL = {
+  FAST: 5000, // 5 seconds - Real-time dashboards
+  MODERATE: 30000, // 30 seconds - Active monitoring
+  SLOW: 60000, // 1 minute - Background updates
+  VERY_SLOW: 300000, // 5 minutes - Periodic checks
+} as const;

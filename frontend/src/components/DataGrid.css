@@ -1,4 +1,4 @@
-/* DataGrid Component Styles */
+/* DataGrid Component Styles - WCAG 2.1 AA Accessible */
 
 .data-grid {
   width: 100%;
@@ -6,6 +6,21 @@
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+}
+
+/* Accessibility: Focus indicators for keyboard navigation */
+.data-grid *:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.data-grid *:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.data-grid *:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
 }
 
 /* Filter Section */
@@ -57,15 +72,30 @@
   display: flex;
   align-items: center;
   gap: 4px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  width: 100%;
+  text-align: left;
+  font-weight: inherit;
+  font-size: inherit;
+  color: inherit;
 }
 
 .data-grid-header-sortable {
   cursor: pointer;
   user-select: none;
+  transition: color 0.2s;
 }
 
 .data-grid-header-sortable:hover {
   color: #1f2937;
+}
+
+.data-grid-header-sortable:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 .data-grid-sort-indicator {
@@ -77,10 +107,30 @@
   padding: 12px 16px;
   border-bottom: 1px solid #e5e7eb;
   color: #1f2937;
+  position: relative;
+}
+
+/* Accessibility: Keyboard navigation focus state for grid cells */
+.data-grid-td:focus {
+  background: #eff6ff;
+  outline: 2px solid #3b82f6;
+  outline-offset: -2px;
+  z-index: 1;
+}
+
+.data-grid-td:focus-visible {
+  background: #eff6ff;
+  outline: 2px solid #3b82f6;
+  outline-offset: -2px;
+  z-index: 1;
 }
 
 .data-grid-row:hover {
   background: #f9fafb;
+}
+
+.data-grid-row:hover .data-grid-td:focus {
+  background: #eff6ff;
 }
 
 /* Loading State */

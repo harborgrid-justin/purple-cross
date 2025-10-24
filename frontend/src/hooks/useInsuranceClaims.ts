@@ -7,10 +7,11 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/services/api';
+import { QUERY_KEYS } from '@/constants';
 
 export const useInsuranceClaims = (params?: { page?: number; limit?: number }) => {
   return useQuery({
-    queryKey: ['insuranceClaims', params],
+    queryKey: [QUERY_KEYS.INSURANCE_CLAIMS, params],
     queryFn: () => api.insuranceClaims.getAll(params),
   });
 };
@@ -29,7 +30,7 @@ export const useCreateInsuranceClaim = () => {
   return useMutation({
     mutationFn: (data: unknown) => api.insuranceClaims.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['insuranceClaims'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.INSURANCE_CLAIMS] });
     },
   });
 };
@@ -41,7 +42,7 @@ export const useUpdateInsuranceClaim = () => {
     mutationFn: ({ id, data }: { id: string; data: unknown }) =>
       api.insuranceClaims.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['insuranceClaims'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.INSURANCE_CLAIMS] });
     },
   });
 };
@@ -53,7 +54,7 @@ export const useUpdateInsuranceClaimStatus = () => {
     mutationFn: ({ id, statusData }: { id: string; statusData: unknown }) =>
       api.insuranceClaims.updateStatus(id, statusData),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['insuranceClaims'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.INSURANCE_CLAIMS] });
     },
   });
 };
@@ -64,7 +65,7 @@ export const useProcessInsuranceClaim = () => {
   return useMutation({
     mutationFn: (id: string) => api.insuranceClaims.processClaim(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['insuranceClaims'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.INSURANCE_CLAIMS] });
     },
   });
 };
@@ -75,7 +76,7 @@ export const useDeleteInsuranceClaim = () => {
   return useMutation({
     mutationFn: (id: string) => api.insuranceClaims.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['insuranceClaims'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.INSURANCE_CLAIMS] });
     },
   });
 };

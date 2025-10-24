@@ -7,10 +7,11 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/services/api';
+import { QUERY_KEYS } from '@/constants';
 
 export const useRefunds = (params?: { page?: number; limit?: number }) => {
   return useQuery({
-    queryKey: ['refunds', params],
+    queryKey: [QUERY_KEYS.REFUNDS, params],
     queryFn: () => api.refunds.getAll(params),
   });
 };
@@ -29,7 +30,7 @@ export const useCreateRefund = () => {
   return useMutation({
     mutationFn: (data: unknown) => api.refunds.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['refunds'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.REFUNDS] });
     },
   });
 };
@@ -40,7 +41,7 @@ export const useUpdateRefund = () => {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: unknown }) => api.refunds.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['refunds'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.REFUNDS] });
     },
   });
 };
@@ -51,7 +52,7 @@ export const useProcessRefund = () => {
   return useMutation({
     mutationFn: (id: string) => api.refunds.process(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['refunds'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.REFUNDS] });
     },
   });
 };
@@ -62,7 +63,7 @@ export const useDeleteRefund = () => {
   return useMutation({
     mutationFn: (id: string) => api.refunds.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['refunds'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.REFUNDS] });
     },
   });
 };

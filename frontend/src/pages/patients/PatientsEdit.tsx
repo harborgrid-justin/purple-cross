@@ -1,14 +1,13 @@
 /**
  * WF-COMP-015 | PatientsEdit.tsx - Edit patient page
  * Purpose: Form page for editing existing patients
- * Related: Patient form component, patients store
- * Last Updated: 2025-10-22 | File Type: .tsx
+ * Related: Patient form component, TanStack Query hooks
+ * Last Updated: 2025-10-24 | File Type: .tsx
  */
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { fetchPatientById, updatePatient } from './store';
+import { usePatient, useUpdatePatient } from '../../hooks/usePatients';
 import '../../styles/Page.css';
 
 interface PatientFormData {
@@ -23,10 +22,10 @@ interface PatientFormData {
 const PatientsEdit: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const { selectedPatient: patient, loading: fetchLoading } = useAppSelector(
-    (state) => state.patients
-  );
+  const { data: response, isLoading: fetchLoading } = usePatient(id || '');
+  const patient = response?.data;
+  const updatePatientMutation = useUpdatePatient();
+
   const [formData, setFormData] = useState<PatientFormData>({
     name: '',
     species: '',
@@ -35,14 +34,6 @@ const PatientsEdit: React.FC = () => {
     microchipId: '',
     ownerId: '',
   });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (id) {
-      dispatch(fetchPatientById(id));
-    }
-  }, [dispatch, id]);
 
   useEffect(() => {
     if (patient) {
@@ -71,17 +62,14 @@ const PatientsEdit: React.FC = () => {
     e.preventDefault();
     if (!id) return;
 
-    setLoading(true);
-    setError(null);
-
-    try {
-      await dispatch(updatePatient({ id, data: formData })).unwrap();
-      navigate(`/patients/${id}`);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update patient');
-    } finally {
-      setLoading(false);
-    }
+    updatePatientMutation.mutate(
+      { id, data: formData },
+      {
+        onSuccess: () => {
+          navigate(`/patients/${id}`);
+        },
+      }
+    );
   };
 
   if (fetchLoading) {
@@ -110,119 +98,116 @@ const PatientsEdit: React.FC = () => {
   return (
     <div className="page">
       <header className="page-header">
-        <h1>
-          <span aria-hidden="true">🐕</span> Edit Patient: {patient.name}
-        </h1>
-        <Link to={`/patients/${patient.id}`} className="btn-secondary">
-          Cancel
-        </Link>
+        <h1>Edit Patient</h1>
+        <p className="page-subtitle">Update patient information for {patient.name}</p>
       </header>
 
-      <div className="content-section">
-        {error && (
-          <div className="alert alert-error" role="alert">
-            <p>Error: {error}</p>
-          </div>
-        )}
+      {updatePatientMutation.isError && (
+        <div className="alert alert-error" role="alert">
+          {updatePatientMutation.error instanceof Error
+            ? updatePatientMutation.error.message
+            : 'Failed to update patient'}
+        </div>
+      )}
 
-        <form onSubmit={handleSubmit} className="form">
-          <div className="form-group">
-            <label htmlFor="name">
-              Name <span className="required">*</span>
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              disabled={loading}
-            />
-          </div>
+      <form onSubmit={handleSubmit} className="form-container">
+        <div className="form-group">
+          <label htmlFor="name">
+            Name <span className="required">*</span>
+          </label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+            aria-required="true"
+          />
+        </div>
 
-          <div className="form-group">
-            <label htmlFor="species">
-              Species <span className="required">*</span>
-            </label>
-            <select
-              id="species"
-              name="species"
-              value={formData.species}
-              onChange={handleChange}
-              required
-              disabled={loading}
-            >
-              <option value="">Select species</option>
-              <option value="Dog">Dog</option>
-              <option value="Cat">Cat</option>
-              <option value="Bird">Bird</option>
-              <option value="Rabbit">Rabbit</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
+        <div className="form-group">
+          <label htmlFor="species">
+            Species <span className="required">*</span>
+          </label>
+          <select
+            id="species"
+            name="species"
+            value={formData.species}
+            onChange={handleChange}
+            required
+            aria-required="true"
+          >
+            <option value="">Select Species</option>
+            <option value="Dog">Dog</option>
+            <option value="Cat">Cat</option>
+            <option value="Bird">Bird</option>
+            <option value="Rabbit">Rabbit</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
 
-          <div className="form-group">
-            <label htmlFor="breed">Breed</label>
-            <input
-              type="text"
-              id="breed"
-              name="breed"
-              value={formData.breed}
-              onChange={handleChange}
-              disabled={loading}
-            />
-          </div>
+        <div className="form-group">
+          <label htmlFor="breed">Breed</label>
+          <input
+            type="text"
+            id="breed"
+            name="breed"
+            value={formData.breed}
+            onChange={handleChange}
+          />
+        </div>
 
-          <div className="form-group">
-            <label htmlFor="dateOfBirth">Date of Birth</label>
-            <input
-              type="date"
-              id="dateOfBirth"
-              name="dateOfBirth"
-              value={formData.dateOfBirth}
-              onChange={handleChange}
-              disabled={loading}
-            />
-          </div>
+        <div className="form-group">
+          <label htmlFor="dateOfBirth">Date of Birth</label>
+          <input
+            type="date"
+            id="dateOfBirth"
+            name="dateOfBirth"
+            value={formData.dateOfBirth}
+            onChange={handleChange}
+          />
+        </div>
 
-          <div className="form-group">
-            <label htmlFor="microchipId">Microchip ID</label>
-            <input
-              type="text"
-              id="microchipId"
-              name="microchipId"
-              value={formData.microchipId}
-              onChange={handleChange}
-              disabled={loading}
-            />
-          </div>
+        <div className="form-group">
+          <label htmlFor="microchipId">Microchip ID</label>
+          <input
+            type="text"
+            id="microchipId"
+            name="microchipId"
+            value={formData.microchipId}
+            onChange={handleChange}
+          />
+        </div>
 
-          <div className="form-group">
-            <label htmlFor="ownerId">
-              Owner ID <span className="required">*</span>
-            </label>
-            <input
-              type="text"
-              id="ownerId"
-              name="ownerId"
-              value={formData.ownerId}
-              onChange={handleChange}
-              required
-              disabled={loading}
-            />
-          </div>
+        <div className="form-group">
+          <label htmlFor="ownerId">
+            Owner ID <span className="required">*</span>
+          </label>
+          <input
+            type="text"
+            id="ownerId"
+            name="ownerId"
+            value={formData.ownerId}
+            onChange={handleChange}
+            required
+            aria-required="true"
+          />
+        </div>
 
-          <div className="form-actions">
-            <button type="submit" className="btn-primary" disabled={loading}>
-              {loading ? 'Saving...' : 'Save Changes'}
-            </button>
-            <Link to={`/patients/${patient.id}`} className="btn-secondary">
-              Cancel
-            </Link>
-          </div>
-        </form>
-      </div>
+        <div className="form-actions">
+          <button
+            type="submit"
+            className="btn-primary"
+            disabled={updatePatientMutation.isPending}
+          >
+            {updatePatientMutation.isPending ? 'Saving...' : 'Save Changes'}
+          </button>
+          <Link to={`/patients/${id}`} className="btn-secondary">
+            Cancel
+          </Link>
+        </div>
+      </form>
     </div>
   );
 };

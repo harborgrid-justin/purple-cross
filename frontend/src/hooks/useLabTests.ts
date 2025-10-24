@@ -7,6 +7,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/services/api';
+import { QUERY_KEYS } from '@/constants';
 
 export const useLabTests = (params?: {
   page?: number;
@@ -15,14 +16,14 @@ export const useLabTests = (params?: {
   status?: string;
 }) => {
   return useQuery({
-    queryKey: ['labTests', params],
+    queryKey: [QUERY_KEYS.LAB_TESTS, params],
     queryFn: () => api.labTests.getAll(params),
   });
 };
 
 export const useLabTest = (id: string) => {
   return useQuery({
-    queryKey: ['labTest', id],
+    queryKey: [QUERY_KEYS.LAB_TEST, id],
     queryFn: () => api.labTests.getById(id),
     enabled: !!id,
   });
@@ -34,7 +35,7 @@ export const useCreateLabTest = () => {
   return useMutation({
     mutationFn: (data: unknown) => api.labTests.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['labTests'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.LAB_TESTS] });
     },
   });
 };
@@ -45,7 +46,7 @@ export const useUpdateLabTest = () => {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: unknown }) => api.labTests.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['labTests'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.LAB_TESTS] });
     },
   });
 };
@@ -56,7 +57,7 @@ export const useDeleteLabTest = () => {
   return useMutation({
     mutationFn: (id: string) => api.labTests.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['labTests'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.LAB_TESTS] });
     },
   });
 };
@@ -66,7 +67,7 @@ export const useLabTestWithPatient = (id: string) => {
   const labTestQuery = useLabTest(id);
   const patientId = (labTestQuery.data as { data?: { patientId?: string } })?.data?.patientId;
   const patientQuery = useQuery({
-    queryKey: ['patient', patientId],
+    queryKey: [QUERY_KEYS.PATIENT, patientId],
     queryFn: () => api.patients.getById(patientId as string),
     enabled: !!patientId,
   });

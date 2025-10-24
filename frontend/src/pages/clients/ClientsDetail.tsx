@@ -1,5 +1,6 @@
 /**
  * WF-COMP-013 | ClientsDetail.tsx - Client detail page
+ * NOTE: Migrated from Redux to TanStack Query hooks - 2025-10-24
  * Purpose: Display detailed information for a single client
  * Related: Client details component, clients store
  * Last Updated: 2025-10-22 | File Type: .tsx
@@ -7,7 +8,7 @@
 
 import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+
 import { fetchClientById } from './store';
 import '../../styles/Page.css';
 

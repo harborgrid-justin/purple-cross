@@ -7,6 +7,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/services/api';
+import { QUERY_KEYS } from '@/constants';
 
 export const useCommunications = (params?: {
   page?: number;
@@ -15,14 +16,14 @@ export const useCommunications = (params?: {
   type?: string;
 }) => {
   return useQuery({
-    queryKey: ['communications', params],
+    queryKey: [QUERY_KEYS.COMMUNICATIONS, params],
     queryFn: () => api.communications.getAll(params),
   });
 };
 
 export const useCommunication = (id: string) => {
   return useQuery({
-    queryKey: ['communication', id],
+    queryKey: [QUERY_KEYS.COMMUNICATION, id],
     queryFn: () => api.communications.getById(id),
     enabled: !!id,
   });
@@ -34,7 +35,7 @@ export const useCreateCommunication = () => {
   return useMutation({
     mutationFn: (data: unknown) => api.communications.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['communications'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.COMMUNICATIONS] });
     },
   });
 };
@@ -46,7 +47,7 @@ export const useUpdateCommunication = () => {
     mutationFn: ({ id, data }: { id: string; data: unknown }) =>
       api.communications.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['communications'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.COMMUNICATIONS] });
     },
   });
 };
@@ -57,7 +58,7 @@ export const useDeleteCommunication = () => {
   return useMutation({
     mutationFn: (id: string) => api.communications.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['communications'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.COMMUNICATIONS] });
     },
   });
 };

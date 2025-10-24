@@ -7,6 +7,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/services/api';
+import { QUERY_KEYS } from '@/constants';
 
 export const usePatientRelationship = (id: string) => {
   return useQuery({
@@ -72,7 +73,7 @@ export const useDeletePatientRelationship = () => {
 // Composite hooks
 export const usePatientWithFamily = (patientId: string) => {
   const patientQuery = useQuery({
-    queryKey: ['patient', patientId],
+    queryKey: [QUERY_KEYS.PATIENT, patientId],
     queryFn: () => api.patients.getById(patientId),
     enabled: !!patientId,
   });

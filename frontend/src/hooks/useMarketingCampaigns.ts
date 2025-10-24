@@ -7,10 +7,11 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/services/api';
+import { QUERY_KEYS } from '@/constants';
 
 export const useMarketingCampaigns = (params?: { page?: number; limit?: number }) => {
   return useQuery({
-    queryKey: ['marketingCampaigns', params],
+    queryKey: [QUERY_KEYS.MARKETING_CAMPAIGNS, params],
     queryFn: () => api.marketingCampaigns.getAll(params),
   });
 };
@@ -29,7 +30,7 @@ export const useCreateMarketingCampaign = () => {
   return useMutation({
     mutationFn: (data: unknown) => api.marketingCampaigns.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['marketingCampaigns'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.MARKETING_CAMPAIGNS] });
     },
   });
 };
@@ -41,7 +42,7 @@ export const useUpdateMarketingCampaign = () => {
     mutationFn: ({ id, data }: { id: string; data: unknown }) =>
       api.marketingCampaigns.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['marketingCampaigns'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.MARKETING_CAMPAIGNS] });
     },
   });
 };
@@ -52,7 +53,7 @@ export const useLaunchMarketingCampaign = () => {
   return useMutation({
     mutationFn: (id: string) => api.marketingCampaigns.launch(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['marketingCampaigns'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.MARKETING_CAMPAIGNS] });
     },
   });
 };
@@ -64,7 +65,7 @@ export const useUpdateMarketingCampaignMetrics = () => {
     mutationFn: ({ id, metrics }: { id: string; metrics: unknown }) =>
       api.marketingCampaigns.updateMetrics(id, metrics),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['marketingCampaigns'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.MARKETING_CAMPAIGNS] });
     },
   });
 };
@@ -75,7 +76,7 @@ export const useCompleteMarketingCampaign = () => {
   return useMutation({
     mutationFn: (id: string) => api.marketingCampaigns.complete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['marketingCampaigns'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.MARKETING_CAMPAIGNS] });
     },
   });
 };
@@ -86,7 +87,7 @@ export const useDeleteMarketingCampaign = () => {
   return useMutation({
     mutationFn: (id: string) => api.marketingCampaigns.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['marketingCampaigns'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.MARKETING_CAMPAIGNS] });
     },
   });
 };
