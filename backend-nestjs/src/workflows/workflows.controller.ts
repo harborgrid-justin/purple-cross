@@ -93,10 +93,9 @@ export class WorkflowsController {
    * Get workflows by document ID
    */
   async getWorkflowsByDocument(req: Request, res: Response) {
-    const workflows = await workflowService.getWorkflowsByDocumentId(req.params.documentId);
+    const workflows = await workflowService.getWorkflowsByDocumentId(FIXME_documentId);
 
     return workflows;
   }
 }
 
-export const workflowController = new WorkflowController();

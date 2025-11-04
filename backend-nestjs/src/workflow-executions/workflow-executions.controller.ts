@@ -104,4 +104,3 @@ export class WorkflowExecutionsController {
   }
 }
 
-export const workflowExecutionController = new WorkflowExecutionController();

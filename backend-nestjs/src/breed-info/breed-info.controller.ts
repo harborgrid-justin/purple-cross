@@ -31,7 +31,7 @@ export class BreedInfoController {
   }
 
   async getByBreed(req: Request, res: Response) {
-    const breedInfo = await breedInfoService.getBreedInfoByBreed(req.params.breed);
+    const breedInfo = await breedInfoService.getBreedInfoByBreed(FIXME_breed);
     return breedInfo ;
   }
 

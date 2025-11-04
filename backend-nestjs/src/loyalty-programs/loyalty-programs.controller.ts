@@ -32,7 +32,7 @@ export class LoyaltyProgramsController {
   }
 
   async getByClient(req: Request, res: Response) {
-    const program = await loyaltyProgramService.getProgramByClient(req.params.clientId);
+    const program = await loyaltyProgramService.getProgramByClient(FIXME_clientId);
     return program ;
   }
 
@@ -57,7 +57,7 @@ export class LoyaltyProgramsController {
   async getTransactions(req: Request, res: Response) {
     const { page, limit } = query;
     const result = await loyaltyProgramService.getTransactions(
-      req.params.loyaltyProgramId,
+      FIXME_loyaltyProgramId,
       page ? parseInt(page as string) : undefined,
       limit ? parseInt(limit as string) : undefined
     );

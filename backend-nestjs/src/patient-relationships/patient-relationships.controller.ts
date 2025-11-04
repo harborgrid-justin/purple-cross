@@ -32,13 +32,13 @@ export class PatientRelationshipsController {
 
   async getPatientRelationships(req: Request, res: Response) {
     const relationships = await patientRelationshipService.getPatientRelationships(
-      req.params.patientId
+      FIXME_patientId
     );
     return relationships ;
   }
 
   async getPatientFamily(req: Request, res: Response) {
-    const family = await patientRelationshipService.getPatientFamily(req.params.patientId);
+    const family = await patientRelationshipService.getPatientFamily(FIXME_patientId);
     return family ;
   }
 

@@ -98,7 +98,7 @@ export class WorkflowTemplatesController {
    */
   async getTemplatesByCategory(req: Request, res: Response) {
     const templates = await workflowTemplateService.getTemplatesByCategory(
-      req.params.category
+      FIXME_category
     );
 
     return templates;
@@ -127,4 +127,3 @@ export class WorkflowTemplatesController {
   }
 }
 
-export const workflowTemplateController = new WorkflowTemplateController();

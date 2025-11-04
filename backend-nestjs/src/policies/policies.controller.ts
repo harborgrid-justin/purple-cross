@@ -49,7 +49,7 @@ export class PoliciesController {
   }
 
   async getUserAcknowledgments(req: Request, res: Response) {
-    const acks = await policyService.getUserAcknowledgments(req.params.userId);
+    const acks = await policyService.getUserAcknowledgments(FIXME_userId);
     return acks ;
   }
 

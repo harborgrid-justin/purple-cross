@@ -357,4 +357,3 @@ export class WorkflowExecutionService {
   }
 }
 
-export const workflowExecutionService = new WorkflowExecutionService();

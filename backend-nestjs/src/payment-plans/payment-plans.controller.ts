@@ -49,7 +49,7 @@ export class PaymentPlansController {
   }
 
   async getDueInstallments(req: Request, res: Response) {
-    const installments = await paymentPlanService.getDueInstallments(req.params.clientId);
+    const installments = await paymentPlanService.getDueInstallments(FIXME_clientId);
     return installments ;
   }
 

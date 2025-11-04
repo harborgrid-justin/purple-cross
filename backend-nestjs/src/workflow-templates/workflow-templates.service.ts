@@ -261,4 +261,3 @@ export class WorkflowTemplateService {
   }
 }
 
-export const workflowTemplateService = new WorkflowTemplateService();

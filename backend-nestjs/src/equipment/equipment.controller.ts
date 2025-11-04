@@ -56,7 +56,7 @@ export class EquipmentController {
 
   async completeMaintenance(req: Request, res: Response) {
     const maintenance = await equipmentService.completeMaintenance(
-      req.params.maintenanceId,
+      FIXME_maintenanceId,
       body
     );
     return maintenance ;

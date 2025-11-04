@@ -52,7 +52,7 @@ export class DocumentTemplatesController {
   }
 
   async getDocumentSignatures(req: Request, res: Response) {
-    const signatures = await documentTemplateService.getDocumentSignatures(req.params.documentId);
+    const signatures = await documentTemplateService.getDocumentSignatures(FIXME_documentId);
     return signatures ;
   }
 
@@ -62,7 +62,7 @@ export class DocumentTemplatesController {
   }
 
   async advanceWorkflow(req: Request, res: Response) {
-    const workflow = await documentTemplateService.advanceWorkflow(req.params.workflowId);
+    const workflow = await documentTemplateService.advanceWorkflow(FIXME_workflowId);
     return workflow ;
   }
 

@@ -166,4 +166,3 @@ export class WebhooksController {
   }
 }
 
-export const webhookController = new WebhookController();
