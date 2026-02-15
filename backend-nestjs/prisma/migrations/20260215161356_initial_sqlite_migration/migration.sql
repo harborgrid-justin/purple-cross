@@ -1,27 +1,26 @@
 -- CreateTable
 CREATE TABLE "patients" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
     "species" TEXT NOT NULL,
     "breed" TEXT,
-    "dateOfBirth" TIMESTAMP(3) NOT NULL,
+    "dateOfBirth" DATETIME NOT NULL,
     "gender" TEXT NOT NULL,
     "color" TEXT,
-    "weight" DOUBLE PRECISION,
+    "weight" REAL,
     "microchipId" TEXT,
     "insuranceProvider" TEXT,
     "insurancePolicy" TEXT,
     "status" TEXT NOT NULL DEFAULT 'active',
     "ownerId" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "patients_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    CONSTRAINT "patients_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "clients" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "clients" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
     "email" TEXT NOT NULL,
@@ -35,49 +34,47 @@ CREATE TABLE "clients" (
     "emergencyPhone" TEXT,
     "preferredContact" TEXT NOT NULL DEFAULT 'email',
     "status" TEXT NOT NULL DEFAULT 'active',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "clients_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "appointments" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "patientId" TEXT NOT NULL,
     "clientId" TEXT NOT NULL,
     "appointmentType" TEXT NOT NULL,
-    "startTime" TIMESTAMP(3) NOT NULL,
-    "endTime" TIMESTAMP(3) NOT NULL,
+    "startTime" DATETIME NOT NULL,
+    "endTime" DATETIME NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'scheduled',
     "reason" TEXT NOT NULL,
     "notes" TEXT,
     "veterinarianId" TEXT NOT NULL,
     "roomId" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "appointments_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    CONSTRAINT "appointments_patientId_fkey" FOREIGN KEY ("patientId") REFERENCES "patients" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "appointments_clientId_fkey" FOREIGN KEY ("clientId") REFERENCES "clients" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "appointments_veterinarianId_fkey" FOREIGN KEY ("veterinarianId") REFERENCES "staff" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "appointment_reminders" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "appointmentId" TEXT NOT NULL,
     "reminderType" TEXT NOT NULL,
-    "reminderTime" TIMESTAMP(3) NOT NULL,
+    "reminderTime" DATETIME NOT NULL,
     "sent" BOOLEAN NOT NULL DEFAULT false,
-    "sentAt" TIMESTAMP(3),
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "appointment_reminders_pkey" PRIMARY KEY ("id")
+    "sentAt" DATETIME,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "appointment_reminders_appointmentId_fkey" FOREIGN KEY ("appointmentId") REFERENCES "appointments" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "medical_records" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "patientId" TEXT NOT NULL,
-    "visitDate" TIMESTAMP(3) NOT NULL,
+    "visitDate" DATETIME NOT NULL,
     "chiefComplaint" TEXT NOT NULL,
     "diagnosis" TEXT NOT NULL,
     "treatment" TEXT NOT NULL,
@@ -85,15 +82,15 @@ CREATE TABLE "medical_records" (
     "veterinarianId" TEXT NOT NULL,
     "vitalSigns" JSONB,
     "attachments" JSONB,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "medical_records_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    CONSTRAINT "medical_records_patientId_fkey" FOREIGN KEY ("patientId") REFERENCES "patients" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "medical_records_veterinarianId_fkey" FOREIGN KEY ("veterinarianId") REFERENCES "staff" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "prescriptions" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "patientId" TEXT NOT NULL,
     "medicationId" TEXT NOT NULL,
     "dosage" TEXT NOT NULL,
@@ -103,18 +100,19 @@ CREATE TABLE "prescriptions" (
     "refillsAllowed" INTEGER NOT NULL DEFAULT 0,
     "refillsUsed" INTEGER NOT NULL DEFAULT 0,
     "prescribedBy" TEXT NOT NULL,
-    "prescribedDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "expirationDate" TIMESTAMP(3) NOT NULL,
+    "prescribedDate" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "expirationDate" DATETIME NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'active',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "prescriptions_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    CONSTRAINT "prescriptions_patientId_fkey" FOREIGN KEY ("patientId") REFERENCES "patients" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "prescriptions_medicationId_fkey" FOREIGN KEY ("medicationId") REFERENCES "medications" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "prescriptions_prescribedBy_fkey" FOREIGN KEY ("prescribedBy") REFERENCES "staff" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "medications" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
     "genericName" TEXT,
     "category" TEXT NOT NULL,
@@ -124,15 +122,13 @@ CREATE TABLE "medications" (
     "ndcCode" TEXT,
     "controlled" BOOLEAN NOT NULL DEFAULT false,
     "controlSchedule" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "medications_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "inventory_items" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "itemType" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "sku" TEXT NOT NULL,
@@ -141,96 +137,91 @@ CREATE TABLE "inventory_items" (
     "quantityOnHand" INTEGER NOT NULL,
     "minimumQuantity" INTEGER NOT NULL,
     "reorderPoint" INTEGER NOT NULL,
-    "unitCost" DOUBLE PRECISION NOT NULL,
-    "sellingPrice" DOUBLE PRECISION NOT NULL,
+    "unitCost" REAL NOT NULL,
+    "sellingPrice" REAL NOT NULL,
     "supplier" TEXT,
     "supplierSku" TEXT,
-    "expirationDate" TIMESTAMP(3),
+    "expirationDate" DATETIME,
     "lotNumber" TEXT,
     "location" TEXT,
     "status" TEXT NOT NULL DEFAULT 'active',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "inventory_items_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    CONSTRAINT "inventory_items_medicationId_fkey" FOREIGN KEY ("medicationId") REFERENCES "medications" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "invoices" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "invoiceNumber" TEXT NOT NULL,
     "clientId" TEXT NOT NULL,
-    "invoiceDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "dueDate" TIMESTAMP(3) NOT NULL,
-    "subtotal" DOUBLE PRECISION NOT NULL,
-    "tax" DOUBLE PRECISION NOT NULL,
-    "discount" DOUBLE PRECISION NOT NULL DEFAULT 0,
-    "total" DOUBLE PRECISION NOT NULL,
+    "invoiceDate" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "dueDate" DATETIME NOT NULL,
+    "subtotal" REAL NOT NULL,
+    "tax" REAL NOT NULL,
+    "discount" REAL NOT NULL DEFAULT 0,
+    "total" REAL NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'unpaid',
     "notes" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "invoices_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    CONSTRAINT "invoices_clientId_fkey" FOREIGN KEY ("clientId") REFERENCES "clients" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "invoice_line_items" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "invoiceId" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "quantity" INTEGER NOT NULL,
-    "unitPrice" DOUBLE PRECISION NOT NULL,
-    "total" DOUBLE PRECISION NOT NULL,
+    "unitPrice" REAL NOT NULL,
+    "total" REAL NOT NULL,
     "itemType" TEXT NOT NULL,
     "itemId" TEXT,
-
-    CONSTRAINT "invoice_line_items_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "invoice_line_items_invoiceId_fkey" FOREIGN KEY ("invoiceId") REFERENCES "invoices" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "payments" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "invoiceId" TEXT NOT NULL,
-    "amount" DOUBLE PRECISION NOT NULL,
+    "amount" REAL NOT NULL,
     "paymentMethod" TEXT NOT NULL,
-    "paymentDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "paymentDate" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "transactionId" TEXT,
     "status" TEXT NOT NULL DEFAULT 'completed',
     "notes" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "payments_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "payments_invoiceId_fkey" FOREIGN KEY ("invoiceId") REFERENCES "invoices" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "lab_tests" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "patientId" TEXT NOT NULL,
     "testType" TEXT NOT NULL,
     "testName" TEXT NOT NULL,
     "orderedBy" TEXT NOT NULL,
-    "orderedDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "orderedDate" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "labType" TEXT NOT NULL,
     "externalLabName" TEXT,
     "status" TEXT NOT NULL DEFAULT 'ordered',
     "sampleId" TEXT,
-    "collectionDate" TIMESTAMP(3),
-    "receivedDate" TIMESTAMP(3),
-    "completedDate" TIMESTAMP(3),
+    "collectionDate" DATETIME,
+    "receivedDate" DATETIME,
+    "completedDate" DATETIME,
     "results" JSONB,
     "interpretation" TEXT,
     "notes" TEXT,
     "urgency" TEXT NOT NULL DEFAULT 'routine',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "lab_tests_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    CONSTRAINT "lab_tests_patientId_fkey" FOREIGN KEY ("patientId") REFERENCES "patients" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "staff" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
     "email" TEXT NOT NULL,
@@ -238,51 +229,47 @@ CREATE TABLE "staff" (
     "role" TEXT NOT NULL,
     "specialization" TEXT,
     "licenseNumber" TEXT,
-    "licenseExpiry" TIMESTAMP(3),
+    "licenseExpiry" DATETIME,
     "employmentType" TEXT NOT NULL,
-    "hireDate" TIMESTAMP(3) NOT NULL,
-    "terminationDate" TIMESTAMP(3),
+    "hireDate" DATETIME NOT NULL,
+    "terminationDate" DATETIME,
     "status" TEXT NOT NULL DEFAULT 'active',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "staff_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "staff_schedules" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "staffId" TEXT NOT NULL,
     "dayOfWeek" INTEGER NOT NULL,
     "startTime" TEXT NOT NULL,
     "endTime" TEXT NOT NULL,
-    "effectiveFrom" TIMESTAMP(3) NOT NULL,
-    "effectiveTo" TIMESTAMP(3),
-
-    CONSTRAINT "staff_schedules_pkey" PRIMARY KEY ("id")
+    "effectiveFrom" DATETIME NOT NULL,
+    "effectiveTo" DATETIME,
+    CONSTRAINT "staff_schedules_staffId_fkey" FOREIGN KEY ("staffId") REFERENCES "staff" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "communications" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "clientId" TEXT NOT NULL,
     "type" TEXT NOT NULL,
     "direction" TEXT NOT NULL,
     "subject" TEXT,
     "message" TEXT NOT NULL,
-    "sentAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "deliveredAt" TIMESTAMP(3),
-    "readAt" TIMESTAMP(3),
+    "sentAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "deliveredAt" DATETIME,
+    "readAt" DATETIME,
     "status" TEXT NOT NULL DEFAULT 'sent',
     "metadata" JSONB,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "communications_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "communications_clientId_fkey" FOREIGN KEY ("clientId") REFERENCES "clients" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "documents" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "title" TEXT NOT NULL,
     "description" TEXT,
     "category" TEXT NOT NULL,
@@ -293,36 +280,32 @@ CREATE TABLE "documents" (
     "relatedType" TEXT,
     "relatedId" TEXT,
     "uploadedBy" TEXT NOT NULL,
-    "uploadedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "tags" TEXT[],
+    "uploadedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "tags" JSONB,
     "status" TEXT NOT NULL DEFAULT 'active',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "documents_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "compliance_incidents" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "incidentType" TEXT NOT NULL,
     "severity" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "dateOccurred" TIMESTAMP(3) NOT NULL,
+    "dateOccurred" DATETIME NOT NULL,
     "reportedBy" TEXT NOT NULL,
-    "reportedDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "reportedDate" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "status" TEXT NOT NULL DEFAULT 'reported',
     "investigation" JSONB,
     "resolution" JSONB,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "compliance_incidents_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "audit_logs" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "userId" TEXT NOT NULL,
     "action" TEXT NOT NULL,
     "resource" TEXT NOT NULL,
@@ -331,44 +314,57 @@ CREATE TABLE "audit_logs" (
     "metadata" JSONB,
     "ipAddress" TEXT,
     "userAgent" TEXT,
-    "timestamp" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "audit_logs_pkey" PRIMARY KEY ("id")
+    "timestamp" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- CreateTable
 CREATE TABLE "api_keys" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
     "key" TEXT NOT NULL,
-    "permissions" TEXT[],
+    "permissions" JSONB,
     "rateLimit" INTEGER,
-    "expiresAt" TIMESTAMP(3),
-    "lastUsedAt" TIMESTAMP(3),
+    "expiresAt" DATETIME,
+    "lastUsedAt" DATETIME,
     "status" TEXT NOT NULL DEFAULT 'active',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "api_keys_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "webhook_subscriptions" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
     "url" TEXT NOT NULL,
-    "events" TEXT[],
+    "events" JSONB,
     "secret" TEXT NOT NULL,
     "active" BOOLEAN NOT NULL DEFAULT true,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
+);
 
-    CONSTRAINT "webhook_subscriptions_pkey" PRIMARY KEY ("id")
+-- CreateTable
+CREATE TABLE "webhook_deliveries" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "webhookId" TEXT NOT NULL,
+    "event" TEXT NOT NULL,
+    "payload" JSONB NOT NULL,
+    "status" TEXT NOT NULL DEFAULT 'pending',
+    "statusCode" INTEGER,
+    "responseBody" TEXT,
+    "errorMessage" TEXT,
+    "attempt" INTEGER NOT NULL DEFAULT 1,
+    "maxAttempts" INTEGER NOT NULL DEFAULT 3,
+    "deliveredAt" DATETIME,
+    "nextRetryAt" DATETIME,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    CONSTRAINT "webhook_deliveries_webhookId_fkey" FOREIGN KEY ("webhookId") REFERENCES "webhook_subscriptions" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "breed_information" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "breed" TEXT NOT NULL,
     "species" TEXT NOT NULL,
     "commonHealthIssues" JSONB,
@@ -377,93 +373,82 @@ CREATE TABLE "breed_information" (
     "nutritionalNeeds" JSONB,
     "averageLifespan" INTEGER,
     "temperament" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "breed_information_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "patient_relationships" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "patientId" TEXT NOT NULL,
     "relatedPatientId" TEXT NOT NULL,
     "relationshipType" TEXT NOT NULL,
     "notes" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "patient_relationships_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "patient_reminders" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "patientId" TEXT NOT NULL,
     "reminderType" TEXT NOT NULL,
-    "reminderDate" TIMESTAMP(3) NOT NULL,
+    "reminderDate" DATETIME NOT NULL,
     "description" TEXT NOT NULL,
     "recurring" BOOLEAN NOT NULL DEFAULT false,
     "frequency" TEXT,
     "status" TEXT NOT NULL DEFAULT 'pending',
-    "completedAt" TIMESTAMP(3),
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "patient_reminders_pkey" PRIMARY KEY ("id")
+    "completedAt" DATETIME,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "client_portal_access" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "clientId" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "passwordHash" TEXT NOT NULL,
     "twoFactorEnabled" BOOLEAN NOT NULL DEFAULT false,
     "twoFactorSecret" TEXT,
-    "lastLoginAt" TIMESTAMP(3),
+    "lastLoginAt" DATETIME,
     "loginAttempts" INTEGER NOT NULL DEFAULT 0,
-    "lockedUntil" TIMESTAMP(3),
+    "lockedUntil" DATETIME,
     "status" TEXT NOT NULL DEFAULT 'active',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "client_portal_access_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "loyalty_programs" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "clientId" TEXT NOT NULL,
     "pointsBalance" INTEGER NOT NULL DEFAULT 0,
     "tier" TEXT NOT NULL DEFAULT 'bronze',
     "lifetimePoints" INTEGER NOT NULL DEFAULT 0,
-    "lifetimeSpending" DOUBLE PRECISION NOT NULL DEFAULT 0,
-    "joinDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "lastActivityDate" TIMESTAMP(3),
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "loyalty_programs_pkey" PRIMARY KEY ("id")
+    "lifetimeSpending" REAL NOT NULL DEFAULT 0,
+    "joinDate" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "lastActivityDate" DATETIME,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "loyalty_transactions" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "loyaltyProgramId" TEXT NOT NULL,
     "transactionType" TEXT NOT NULL,
     "points" INTEGER NOT NULL,
     "description" TEXT,
     "relatedType" TEXT,
     "relatedId" TEXT,
-    "transactionDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "loyalty_transactions_pkey" PRIMARY KEY ("id")
+    "transactionDate" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "loyalty_transactions_loyaltyProgramId_fkey" FOREIGN KEY ("loyaltyProgramId") REFERENCES "loyalty_programs" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "client_feedback" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "clientId" TEXT NOT NULL,
     "feedbackType" TEXT NOT NULL,
     "rating" INTEGER,
@@ -473,129 +458,114 @@ CREATE TABLE "client_feedback" (
     "npsScore" INTEGER,
     "status" TEXT NOT NULL DEFAULT 'new',
     "reviewedBy" TEXT,
-    "reviewedAt" TIMESTAMP(3),
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "client_feedback_pkey" PRIMARY KEY ("id")
+    "reviewedAt" DATETIME,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "surveys" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "title" TEXT NOT NULL,
     "description" TEXT,
     "questions" JSONB NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'draft',
-    "publishedAt" TIMESTAMP(3),
-    "expiresAt" TIMESTAMP(3),
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "surveys_pkey" PRIMARY KEY ("id")
+    "publishedAt" DATETIME,
+    "expiresAt" DATETIME,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "survey_responses" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "surveyId" TEXT NOT NULL,
     "clientId" TEXT,
     "answers" JSONB NOT NULL,
-    "submittedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "survey_responses_pkey" PRIMARY KEY ("id")
+    "submittedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "survey_responses_surveyId_fkey" FOREIGN KEY ("surveyId") REFERENCES "surveys" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "client_segments" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
     "description" TEXT,
     "criteria" JSONB NOT NULL,
     "clientCount" INTEGER NOT NULL DEFAULT 0,
-    "lastCalculatedAt" TIMESTAMP(3),
+    "lastCalculatedAt" DATETIME,
     "status" TEXT NOT NULL DEFAULT 'active',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "client_segments_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "waitlist" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "patientId" TEXT NOT NULL,
     "clientId" TEXT NOT NULL,
     "appointmentType" TEXT NOT NULL,
-    "preferredDate" TIMESTAMP(3),
+    "preferredDate" DATETIME,
     "preferredTime" TEXT,
     "priority" INTEGER NOT NULL DEFAULT 0,
     "urgency" TEXT NOT NULL DEFAULT 'routine',
     "reason" TEXT NOT NULL,
     "notes" TEXT,
     "status" TEXT NOT NULL DEFAULT 'active',
-    "notifiedAt" TIMESTAMP(3),
-    "bookedAt" TIMESTAMP(3),
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "waitlist_pkey" PRIMARY KEY ("id")
+    "notifiedAt" DATETIME,
+    "bookedAt" DATETIME,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "time_blocks" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "staffId" TEXT NOT NULL,
     "blockType" TEXT NOT NULL,
     "title" TEXT NOT NULL,
-    "startTime" TIMESTAMP(3) NOT NULL,
-    "endTime" TIMESTAMP(3) NOT NULL,
+    "startTime" DATETIME NOT NULL,
+    "endTime" DATETIME NOT NULL,
     "recurring" BOOLEAN NOT NULL DEFAULT false,
     "recurrenceRule" TEXT,
     "notes" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "time_blocks_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "clinical_templates" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
     "category" TEXT NOT NULL,
     "template" JSONB NOT NULL,
     "quickTexts" JSONB,
     "specialty" TEXT,
     "usageCount" INTEGER NOT NULL DEFAULT 0,
-    "lastUsedAt" TIMESTAMP(3),
+    "lastUsedAt" DATETIME,
     "status" TEXT NOT NULL DEFAULT 'active',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "clinical_templates_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "medical_record_shares" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "medicalRecordId" TEXT NOT NULL,
     "sharedWith" TEXT NOT NULL,
     "sharedBy" TEXT NOT NULL,
     "shareType" TEXT NOT NULL,
     "accessLevel" TEXT NOT NULL,
-    "expiresAt" TIMESTAMP(3),
-    "accessedAt" TIMESTAMP(3),
+    "expiresAt" DATETIME,
+    "accessedAt" DATETIME,
     "status" TEXT NOT NULL DEFAULT 'active',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "medical_record_shares_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "drug_interactions" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "medication1Id" TEXT NOT NULL,
     "medication2Id" TEXT NOT NULL,
     "severity" TEXT NOT NULL,
@@ -603,18 +573,16 @@ CREATE TABLE "drug_interactions" (
     "recommendation" TEXT,
     "references" TEXT,
     "status" TEXT NOT NULL DEFAULT 'active',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "drug_interactions_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "controlled_substance_logs" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "medicationId" TEXT NOT NULL,
     "action" TEXT NOT NULL,
-    "quantity" DOUBLE PRECISION NOT NULL,
+    "quantity" REAL NOT NULL,
     "unit" TEXT NOT NULL,
     "prescriptionId" TEXT,
     "patientId" TEXT,
@@ -622,14 +590,12 @@ CREATE TABLE "controlled_substance_logs" (
     "witnessedBy" TEXT,
     "reason" TEXT,
     "notes" TEXT,
-    "timestamp" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "controlled_substance_logs_pkey" PRIMARY KEY ("id")
+    "timestamp" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- CreateTable
 CREATE TABLE "compounding_formulas" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
     "description" TEXT,
     "ingredients" JSONB NOT NULL,
@@ -638,269 +604,245 @@ CREATE TABLE "compounding_formulas" (
     "storageConditions" TEXT,
     "usageCount" INTEGER NOT NULL DEFAULT 0,
     "status" TEXT NOT NULL DEFAULT 'active',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "compounding_formulas_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "purchase_orders" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "poNumber" TEXT NOT NULL,
     "vendor" TEXT NOT NULL,
     "vendorContact" TEXT,
-    "orderDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "expectedDate" TIMESTAMP(3),
-    "receivedDate" TIMESTAMP(3),
+    "orderDate" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "expectedDate" DATETIME,
+    "receivedDate" DATETIME,
     "status" TEXT NOT NULL DEFAULT 'pending',
-    "subtotal" DOUBLE PRECISION NOT NULL,
-    "tax" DOUBLE PRECISION NOT NULL DEFAULT 0,
-    "shipping" DOUBLE PRECISION NOT NULL DEFAULT 0,
-    "total" DOUBLE PRECISION NOT NULL,
+    "subtotal" REAL NOT NULL,
+    "tax" REAL NOT NULL DEFAULT 0,
+    "shipping" REAL NOT NULL DEFAULT 0,
+    "total" REAL NOT NULL,
     "notes" TEXT,
     "approvedBy" TEXT,
-    "approvedAt" TIMESTAMP(3),
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "purchase_orders_pkey" PRIMARY KEY ("id")
+    "approvedAt" DATETIME,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "purchase_order_items" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "purchaseOrderId" TEXT NOT NULL,
     "itemType" TEXT NOT NULL,
     "itemId" TEXT,
     "description" TEXT NOT NULL,
     "quantityOrdered" INTEGER NOT NULL,
     "quantityReceived" INTEGER NOT NULL DEFAULT 0,
-    "unitCost" DOUBLE PRECISION NOT NULL,
-    "total" DOUBLE PRECISION NOT NULL,
+    "unitCost" REAL NOT NULL,
+    "total" REAL NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'pending',
-
-    CONSTRAINT "purchase_order_items_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "purchase_order_items_purchaseOrderId_fkey" FOREIGN KEY ("purchaseOrderId") REFERENCES "purchase_orders" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "equipment" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
     "category" TEXT NOT NULL,
     "manufacturer" TEXT,
     "modelNumber" TEXT,
     "serialNumber" TEXT,
-    "purchaseDate" TIMESTAMP(3),
-    "purchasePrice" DOUBLE PRECISION,
-    "warrantyExpiration" TIMESTAMP(3),
+    "purchaseDate" DATETIME,
+    "purchasePrice" REAL,
+    "warrantyExpiration" DATETIME,
     "location" TEXT,
     "status" TEXT NOT NULL DEFAULT 'active',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "equipment_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "equipment_maintenance" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "equipmentId" TEXT NOT NULL,
     "maintenanceType" TEXT NOT NULL,
-    "scheduledDate" TIMESTAMP(3) NOT NULL,
-    "completedDate" TIMESTAMP(3),
+    "scheduledDate" DATETIME NOT NULL,
+    "completedDate" DATETIME,
     "performedBy" TEXT,
     "vendor" TEXT,
-    "cost" DOUBLE PRECISION,
+    "cost" REAL,
     "notes" TEXT,
-    "nextMaintenanceDate" TIMESTAMP(3),
+    "nextMaintenanceDate" DATETIME,
     "status" TEXT NOT NULL DEFAULT 'scheduled',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "equipment_maintenance_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    CONSTRAINT "equipment_maintenance_equipmentId_fkey" FOREIGN KEY ("equipmentId") REFERENCES "equipment" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "insurance_claims" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "claimNumber" TEXT NOT NULL,
     "patientId" TEXT NOT NULL,
     "clientId" TEXT NOT NULL,
     "insuranceProvider" TEXT NOT NULL,
     "policyNumber" TEXT NOT NULL,
-    "claimDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "serviceDate" TIMESTAMP(3) NOT NULL,
-    "diagnosisCodes" TEXT[],
-    "procedureCodes" TEXT[],
-    "claimAmount" DOUBLE PRECISION NOT NULL,
-    "approvedAmount" DOUBLE PRECISION,
-    "paidAmount" DOUBLE PRECISION,
+    "claimDate" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "serviceDate" DATETIME NOT NULL,
+    "diagnosisCodes" JSONB,
+    "procedureCodes" JSONB,
+    "claimAmount" REAL NOT NULL,
+    "approvedAmount" REAL,
+    "paidAmount" REAL,
     "status" TEXT NOT NULL DEFAULT 'submitted',
-    "submittedDate" TIMESTAMP(3),
-    "processedDate" TIMESTAMP(3),
-    "paidDate" TIMESTAMP(3),
+    "submittedDate" DATETIME,
+    "processedDate" DATETIME,
+    "paidDate" DATETIME,
     "denialReason" TEXT,
     "notes" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "insurance_claims_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "estimates" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "estimateNumber" TEXT NOT NULL,
     "clientId" TEXT NOT NULL,
     "patientId" TEXT,
     "title" TEXT NOT NULL,
     "description" TEXT,
-    "subtotal" DOUBLE PRECISION NOT NULL,
-    "tax" DOUBLE PRECISION NOT NULL,
-    "total" DOUBLE PRECISION NOT NULL,
-    "validUntil" TIMESTAMP(3) NOT NULL,
+    "subtotal" REAL NOT NULL,
+    "tax" REAL NOT NULL,
+    "total" REAL NOT NULL,
+    "validUntil" DATETIME NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'pending',
-    "approvedAt" TIMESTAMP(3),
-    "convertedToInvoiceAt" TIMESTAMP(3),
+    "approvedAt" DATETIME,
+    "convertedToInvoiceAt" DATETIME,
     "invoiceId" TEXT,
     "notes" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "estimates_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "estimate_line_items" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "estimateId" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "quantity" INTEGER NOT NULL,
-    "unitPrice" DOUBLE PRECISION NOT NULL,
-    "total" DOUBLE PRECISION NOT NULL,
+    "unitPrice" REAL NOT NULL,
+    "total" REAL NOT NULL,
     "itemType" TEXT NOT NULL,
     "itemId" TEXT,
-
-    CONSTRAINT "estimate_line_items_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "estimate_line_items_estimateId_fkey" FOREIGN KEY ("estimateId") REFERENCES "estimates" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "payment_plans" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "clientId" TEXT NOT NULL,
     "invoiceId" TEXT,
-    "totalAmount" DOUBLE PRECISION NOT NULL,
-    "downPayment" DOUBLE PRECISION NOT NULL DEFAULT 0,
-    "remainingBalance" DOUBLE PRECISION NOT NULL,
-    "installmentAmount" DOUBLE PRECISION NOT NULL,
+    "totalAmount" REAL NOT NULL,
+    "downPayment" REAL NOT NULL DEFAULT 0,
+    "remainingBalance" REAL NOT NULL,
+    "installmentAmount" REAL NOT NULL,
     "installmentFrequency" TEXT NOT NULL,
     "numberOfInstallments" INTEGER NOT NULL,
-    "interestRate" DOUBLE PRECISION NOT NULL DEFAULT 0,
-    "startDate" TIMESTAMP(3) NOT NULL,
-    "nextPaymentDate" TIMESTAMP(3) NOT NULL,
+    "interestRate" REAL NOT NULL DEFAULT 0,
+    "startDate" DATETIME NOT NULL,
+    "nextPaymentDate" DATETIME NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'active',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "payment_plans_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "payment_plan_installments" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "paymentPlanId" TEXT NOT NULL,
     "installmentNumber" INTEGER NOT NULL,
-    "dueDate" TIMESTAMP(3) NOT NULL,
-    "amount" DOUBLE PRECISION NOT NULL,
-    "paidAmount" DOUBLE PRECISION NOT NULL DEFAULT 0,
-    "paidDate" TIMESTAMP(3),
+    "dueDate" DATETIME NOT NULL,
+    "amount" REAL NOT NULL,
+    "paidAmount" REAL NOT NULL DEFAULT 0,
+    "paidDate" DATETIME,
     "status" TEXT NOT NULL DEFAULT 'pending',
-
-    CONSTRAINT "payment_plan_installments_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "payment_plan_installments_paymentPlanId_fkey" FOREIGN KEY ("paymentPlanId") REFERENCES "payment_plans" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "refunds" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "refundNumber" TEXT NOT NULL,
     "invoiceId" TEXT,
     "paymentId" TEXT,
     "clientId" TEXT NOT NULL,
-    "amount" DOUBLE PRECISION NOT NULL,
+    "amount" REAL NOT NULL,
     "reason" TEXT NOT NULL,
     "refundMethod" TEXT NOT NULL,
     "processedBy" TEXT NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'pending',
-    "requestedDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "processedDate" TIMESTAMP(3),
+    "requestedDate" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "processedDate" DATETIME,
     "notes" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "refunds_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "external_lab_integrations" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "labName" TEXT NOT NULL,
     "apiEndpoint" TEXT,
     "apiKey" TEXT,
     "apiSecret" TEXT,
     "integrationStatus" TEXT NOT NULL DEFAULT 'inactive',
     "supportedTests" JSONB,
-    "lastSyncAt" TIMESTAMP(3),
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "external_lab_integrations_pkey" PRIMARY KEY ("id")
+    "lastSyncAt" DATETIME,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "quality_control_records" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "equipmentId" TEXT,
     "testType" TEXT NOT NULL,
     "controlType" TEXT NOT NULL,
-    "controlDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "controlDate" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "expectedValue" TEXT NOT NULL,
     "actualValue" TEXT NOT NULL,
     "acceptable" BOOLEAN NOT NULL,
     "performedBy" TEXT NOT NULL,
     "reviewedBy" TEXT,
     "correctiveAction" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "quality_control_records_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "time_attendance" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "staffId" TEXT NOT NULL,
-    "clockIn" TIMESTAMP(3) NOT NULL,
-    "clockOut" TIMESTAMP(3),
-    "breakStart" TIMESTAMP(3),
-    "breakEnd" TIMESTAMP(3),
-    "totalHours" DOUBLE PRECISION,
-    "overtimeHours" DOUBLE PRECISION,
+    "clockIn" DATETIME NOT NULL,
+    "clockOut" DATETIME,
+    "breakStart" DATETIME,
+    "breakEnd" DATETIME,
+    "totalHours" REAL,
+    "overtimeHours" REAL,
     "status" TEXT NOT NULL DEFAULT 'active',
     "notes" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "time_attendance_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "performance_reviews" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "staffId" TEXT NOT NULL,
-    "reviewPeriodStart" TIMESTAMP(3) NOT NULL,
-    "reviewPeriodEnd" TIMESTAMP(3) NOT NULL,
-    "reviewDate" TIMESTAMP(3) NOT NULL,
+    "reviewPeriodStart" DATETIME NOT NULL,
+    "reviewPeriodEnd" DATETIME NOT NULL,
+    "reviewDate" DATETIME NOT NULL,
     "reviewedBy" TEXT NOT NULL,
     "overallRating" INTEGER,
     "ratings" JSONB NOT NULL,
@@ -909,35 +851,31 @@ CREATE TABLE "performance_reviews" (
     "goals" JSONB,
     "comments" TEXT,
     "status" TEXT NOT NULL DEFAULT 'draft',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "performance_reviews_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "continuing_education" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "staffId" TEXT NOT NULL,
     "courseTitle" TEXT NOT NULL,
     "provider" TEXT NOT NULL,
-    "courseDate" TIMESTAMP(3) NOT NULL,
-    "completionDate" TIMESTAMP(3),
-    "credits" DOUBLE PRECISION NOT NULL,
+    "courseDate" DATETIME NOT NULL,
+    "completionDate" DATETIME,
+    "credits" REAL NOT NULL,
     "certificateNumber" TEXT,
     "category" TEXT NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'registered',
-    "expirationDate" TIMESTAMP(3),
+    "expirationDate" DATETIME,
     "documentUrl" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "continuing_education_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "report_templates" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
     "description" TEXT,
     "reportType" TEXT NOT NULL,
@@ -946,179 +884,210 @@ CREATE TABLE "report_templates" (
     "isPublic" BOOLEAN NOT NULL DEFAULT false,
     "createdBy" TEXT NOT NULL,
     "usageCount" INTEGER NOT NULL DEFAULT 0,
-    "lastUsedAt" TIMESTAMP(3),
+    "lastUsedAt" DATETIME,
     "status" TEXT NOT NULL DEFAULT 'active',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "report_templates_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "report_schedules" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "reportTemplateId" TEXT,
     "name" TEXT NOT NULL,
     "description" TEXT,
     "frequency" TEXT NOT NULL,
     "schedule" JSONB NOT NULL,
-    "recipients" TEXT[],
+    "recipients" JSONB,
     "format" TEXT NOT NULL DEFAULT 'pdf',
-    "lastRunAt" TIMESTAMP(3),
-    "nextRunAt" TIMESTAMP(3),
+    "lastRunAt" DATETIME,
+    "nextRunAt" DATETIME,
     "status" TEXT NOT NULL DEFAULT 'active',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "report_schedules_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "marketing_campaigns" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
     "description" TEXT,
     "campaignType" TEXT NOT NULL,
-    "channel" TEXT[],
+    "channel" JSONB,
     "targetSegment" JSONB,
-    "startDate" TIMESTAMP(3) NOT NULL,
-    "endDate" TIMESTAMP(3),
+    "startDate" DATETIME NOT NULL,
+    "endDate" DATETIME,
     "content" JSONB NOT NULL,
     "metrics" JSONB,
     "status" TEXT NOT NULL DEFAULT 'draft',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "marketing_campaigns_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "push_subscriptions" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "userId" TEXT NOT NULL,
     "endpoint" TEXT NOT NULL,
     "keys" JSONB NOT NULL,
     "deviceType" TEXT,
     "status" TEXT NOT NULL DEFAULT 'active',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "push_subscriptions_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "social_media_posts" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "platform" TEXT NOT NULL,
     "content" TEXT NOT NULL,
-    "mediaUrls" TEXT[],
-    "scheduledFor" TIMESTAMP(3),
-    "publishedAt" TIMESTAMP(3),
+    "mediaUrls" JSONB,
+    "scheduledFor" DATETIME,
+    "publishedAt" DATETIME,
     "externalPostId" TEXT,
     "metrics" JSONB,
     "status" TEXT NOT NULL DEFAULT 'draft',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "social_media_posts_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "document_templates" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
     "category" TEXT NOT NULL,
     "template" JSONB NOT NULL,
     "fields" JSONB,
     "usageCount" INTEGER NOT NULL DEFAULT 0,
-    "lastUsedAt" TIMESTAMP(3),
+    "lastUsedAt" DATETIME,
     "status" TEXT NOT NULL DEFAULT 'active',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "document_templates_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "document_signatures" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "documentId" TEXT NOT NULL,
     "signerId" TEXT NOT NULL,
     "signerName" TEXT NOT NULL,
     "signerEmail" TEXT NOT NULL,
     "signatureData" TEXT NOT NULL,
-    "signedAt" TIMESTAMP(3) NOT NULL,
+    "signedAt" DATETIME NOT NULL,
     "ipAddress" TEXT,
     "status" TEXT NOT NULL DEFAULT 'signed',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "document_signatures_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- CreateTable
 CREATE TABLE "document_workflows" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "documentId" TEXT NOT NULL,
     "workflowName" TEXT NOT NULL,
     "currentStep" INTEGER NOT NULL DEFAULT 1,
     "totalSteps" INTEGER NOT NULL,
     "steps" JSONB NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'in_progress',
-    "completedAt" TIMESTAMP(3),
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "completedAt" DATETIME,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
+);
 
-    CONSTRAINT "document_workflows_pkey" PRIMARY KEY ("id")
+-- CreateTable
+CREATE TABLE "workflow_templates" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "name" TEXT NOT NULL,
+    "description" TEXT,
+    "category" TEXT NOT NULL DEFAULT 'general',
+    "triggerType" TEXT NOT NULL,
+    "triggerConfig" JSONB NOT NULL,
+    "actions" JSONB NOT NULL,
+    "isPublic" BOOLEAN NOT NULL DEFAULT false,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "usageCount" INTEGER NOT NULL DEFAULT 0,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "workflow_executions" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "templateId" TEXT,
+    "workflowName" TEXT NOT NULL,
+    "triggerType" TEXT NOT NULL,
+    "triggerData" JSONB NOT NULL,
+    "status" TEXT NOT NULL DEFAULT 'pending',
+    "currentActionId" TEXT,
+    "variables" JSONB,
+    "startedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "completedAt" DATETIME,
+    "error" TEXT,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    CONSTRAINT "workflow_executions_templateId_fkey" FOREIGN KEY ("templateId") REFERENCES "workflow_templates" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "workflow_execution_steps" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "executionId" TEXT NOT NULL,
+    "actionId" TEXT NOT NULL,
+    "actionType" TEXT NOT NULL,
+    "actionName" TEXT NOT NULL,
+    "actionConfig" JSONB NOT NULL,
+    "status" TEXT NOT NULL DEFAULT 'pending',
+    "output" JSONB,
+    "error" TEXT,
+    "startedAt" DATETIME,
+    "completedAt" DATETIME,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    CONSTRAINT "workflow_execution_steps_executionId_fkey" FOREIGN KEY ("executionId") REFERENCES "workflow_executions" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "policies" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "title" TEXT NOT NULL,
     "category" TEXT NOT NULL,
     "content" TEXT NOT NULL,
     "version" TEXT NOT NULL,
-    "effectiveDate" TIMESTAMP(3) NOT NULL,
-    "reviewDate" TIMESTAMP(3),
+    "effectiveDate" DATETIME NOT NULL,
+    "reviewDate" DATETIME,
     "status" TEXT NOT NULL DEFAULT 'active',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "policies_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "policy_acknowledgments" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "policyId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "acknowledgedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "acknowledgedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "ipAddress" TEXT,
-
-    CONSTRAINT "policy_acknowledgments_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "policy_acknowledgments_policyId_fkey" FOREIGN KEY ("policyId") REFERENCES "policies" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "regulatory_updates" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "title" TEXT NOT NULL,
     "category" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "effectiveDate" TIMESTAMP(3) NOT NULL,
+    "effectiveDate" DATETIME NOT NULL,
     "impact" TEXT NOT NULL,
     "actionRequired" TEXT,
     "status" TEXT NOT NULL DEFAULT 'new',
     "assignedTo" TEXT,
-    "completedAt" TIMESTAMP(3),
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "regulatory_updates_pkey" PRIMARY KEY ("id")
+    "completedAt" DATETIME,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "data_import_jobs" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "jobType" TEXT NOT NULL,
     "fileName" TEXT NOT NULL,
     "fileUrl" TEXT NOT NULL,
@@ -1128,29 +1097,25 @@ CREATE TABLE "data_import_jobs" (
     "errorCount" INTEGER NOT NULL DEFAULT 0,
     "errors" JSONB,
     "status" TEXT NOT NULL DEFAULT 'pending',
-    "startedAt" TIMESTAMP(3),
-    "completedAt" TIMESTAMP(3),
+    "startedAt" DATETIME,
+    "completedAt" DATETIME,
     "createdBy" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "data_import_jobs_pkey" PRIMARY KEY ("id")
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "api_usage_metrics" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "apiKeyId" TEXT,
     "endpoint" TEXT NOT NULL,
     "method" TEXT NOT NULL,
     "statusCode" INTEGER NOT NULL,
     "responseTime" INTEGER NOT NULL,
-    "timestamp" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "timestamp" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "ipAddress" TEXT,
     "userAgent" TEXT,
-    "error" TEXT,
-
-    CONSTRAINT "api_usage_metrics_pkey" PRIMARY KEY ("id")
+    "error" TEXT
 );
 
 -- CreateIndex
@@ -1313,6 +1278,18 @@ CREATE UNIQUE INDEX "api_keys_key_key" ON "api_keys"("key");
 CREATE INDEX "api_keys_key_idx" ON "api_keys"("key");
 
 -- CreateIndex
+CREATE INDEX "webhook_deliveries_webhookId_idx" ON "webhook_deliveries"("webhookId");
+
+-- CreateIndex
+CREATE INDEX "webhook_deliveries_status_idx" ON "webhook_deliveries"("status");
+
+-- CreateIndex
+CREATE INDEX "webhook_deliveries_event_idx" ON "webhook_deliveries"("event");
+
+-- CreateIndex
+CREATE INDEX "webhook_deliveries_createdAt_idx" ON "webhook_deliveries"("createdAt");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "breed_information_breed_key" ON "breed_information"("breed");
 
 -- CreateIndex
@@ -1325,7 +1302,7 @@ CREATE INDEX "patient_relationships_patientId_idx" ON "patient_relationships"("p
 CREATE INDEX "patient_relationships_relatedPatientId_idx" ON "patient_relationships"("relatedPatientId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "patient_relationships_patientId_relatedPatientId_relationsh_key" ON "patient_relationships"("patientId", "relatedPatientId", "relationshipType");
+CREATE UNIQUE INDEX "patient_relationships_patientId_relatedPatientId_relationshipType_key" ON "patient_relationships"("patientId", "relatedPatientId", "relationshipType");
 
 -- CreateIndex
 CREATE INDEX "patient_reminders_patientId_idx" ON "patient_reminders"("patientId");
@@ -1544,6 +1521,30 @@ CREATE INDEX "document_workflows_documentId_idx" ON "document_workflows"("docume
 CREATE INDEX "document_workflows_status_idx" ON "document_workflows"("status");
 
 -- CreateIndex
+CREATE INDEX "workflow_templates_category_idx" ON "workflow_templates"("category");
+
+-- CreateIndex
+CREATE INDEX "workflow_templates_triggerType_idx" ON "workflow_templates"("triggerType");
+
+-- CreateIndex
+CREATE INDEX "workflow_templates_isActive_idx" ON "workflow_templates"("isActive");
+
+-- CreateIndex
+CREATE INDEX "workflow_executions_templateId_idx" ON "workflow_executions"("templateId");
+
+-- CreateIndex
+CREATE INDEX "workflow_executions_status_idx" ON "workflow_executions"("status");
+
+-- CreateIndex
+CREATE INDEX "workflow_executions_startedAt_idx" ON "workflow_executions"("startedAt");
+
+-- CreateIndex
+CREATE INDEX "workflow_execution_steps_executionId_idx" ON "workflow_execution_steps"("executionId");
+
+-- CreateIndex
+CREATE INDEX "workflow_execution_steps_status_idx" ON "workflow_execution_steps"("status");
+
+-- CreateIndex
 CREATE INDEX "policies_category_idx" ON "policies"("category");
 
 -- CreateIndex
@@ -1569,75 +1570,3 @@ CREATE INDEX "api_usage_metrics_endpoint_idx" ON "api_usage_metrics"("endpoint")
 
 -- CreateIndex
 CREATE INDEX "api_usage_metrics_timestamp_idx" ON "api_usage_metrics"("timestamp");
-
--- AddForeignKey
-ALTER TABLE "patients" ADD CONSTRAINT "patients_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "clients"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "appointments" ADD CONSTRAINT "appointments_patientId_fkey" FOREIGN KEY ("patientId") REFERENCES "patients"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "appointments" ADD CONSTRAINT "appointments_clientId_fkey" FOREIGN KEY ("clientId") REFERENCES "clients"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "appointments" ADD CONSTRAINT "appointments_veterinarianId_fkey" FOREIGN KEY ("veterinarianId") REFERENCES "staff"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "appointment_reminders" ADD CONSTRAINT "appointment_reminders_appointmentId_fkey" FOREIGN KEY ("appointmentId") REFERENCES "appointments"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "medical_records" ADD CONSTRAINT "medical_records_patientId_fkey" FOREIGN KEY ("patientId") REFERENCES "patients"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "medical_records" ADD CONSTRAINT "medical_records_veterinarianId_fkey" FOREIGN KEY ("veterinarianId") REFERENCES "staff"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "prescriptions" ADD CONSTRAINT "prescriptions_patientId_fkey" FOREIGN KEY ("patientId") REFERENCES "patients"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "prescriptions" ADD CONSTRAINT "prescriptions_medicationId_fkey" FOREIGN KEY ("medicationId") REFERENCES "medications"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "prescriptions" ADD CONSTRAINT "prescriptions_prescribedBy_fkey" FOREIGN KEY ("prescribedBy") REFERENCES "staff"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "inventory_items" ADD CONSTRAINT "inventory_items_medicationId_fkey" FOREIGN KEY ("medicationId") REFERENCES "medications"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "invoices" ADD CONSTRAINT "invoices_clientId_fkey" FOREIGN KEY ("clientId") REFERENCES "clients"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "invoice_line_items" ADD CONSTRAINT "invoice_line_items_invoiceId_fkey" FOREIGN KEY ("invoiceId") REFERENCES "invoices"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "payments" ADD CONSTRAINT "payments_invoiceId_fkey" FOREIGN KEY ("invoiceId") REFERENCES "invoices"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "lab_tests" ADD CONSTRAINT "lab_tests_patientId_fkey" FOREIGN KEY ("patientId") REFERENCES "patients"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "staff_schedules" ADD CONSTRAINT "staff_schedules_staffId_fkey" FOREIGN KEY ("staffId") REFERENCES "staff"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "communications" ADD CONSTRAINT "communications_clientId_fkey" FOREIGN KEY ("clientId") REFERENCES "clients"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "loyalty_transactions" ADD CONSTRAINT "loyalty_transactions_loyaltyProgramId_fkey" FOREIGN KEY ("loyaltyProgramId") REFERENCES "loyalty_programs"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "survey_responses" ADD CONSTRAINT "survey_responses_surveyId_fkey" FOREIGN KEY ("surveyId") REFERENCES "surveys"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "purchase_order_items" ADD CONSTRAINT "purchase_order_items_purchaseOrderId_fkey" FOREIGN KEY ("purchaseOrderId") REFERENCES "purchase_orders"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "equipment_maintenance" ADD CONSTRAINT "equipment_maintenance_equipmentId_fkey" FOREIGN KEY ("equipmentId") REFERENCES "equipment"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "estimate_line_items" ADD CONSTRAINT "estimate_line_items_estimateId_fkey" FOREIGN KEY ("estimateId") REFERENCES "estimates"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "payment_plan_installments" ADD CONSTRAINT "payment_plan_installments_paymentPlanId_fkey" FOREIGN KEY ("paymentPlanId") REFERENCES "payment_plans"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "policy_acknowledgments" ADD CONSTRAINT "policy_acknowledgments_policyId_fkey" FOREIGN KEY ("policyId") REFERENCES "policies"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
