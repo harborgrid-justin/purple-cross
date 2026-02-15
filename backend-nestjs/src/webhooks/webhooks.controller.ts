@@ -20,8 +20,9 @@ export class WebhooksController {
   /**
    * Create a new webhook subscription
    */
-  async createWebhook(req: Request, res: Response) {
-    const webhook = await webhookService.createWebhook(body);
+  @Post()
+  async createWebhook(@Body() body: any) {
+    const webhook = await this.webhooksService.createWebhook(body);
 
     return webhook;
   }
@@ -29,8 +30,9 @@ export class WebhooksController {
   /**
    * Get webhook by ID
    */
-  async getWebhook(req: Request, res: Response) {
-    const webhook = await webhookService.getWebhookById(id);
+  @Get(':id')
+  async getWebhook(@Param('id', ParseUUIDPipe) id: string) {
+    const webhook = await this.webhooksService.getWebhookById(id);
 
     return webhook;
   }
@@ -38,25 +40,28 @@ export class WebhooksController {
   /**
    * Get all webhooks
    */
-  async getWebhooks(req: Request, res: Response) {
+  @Get()
+  async getWebhooks(@Query() query: any) {
     const { page, limit, active } = query;
 
-    const result = await webhookService.getWebhooks({
+    const result = await this.webhooksService.getWebhooks({
       page: page ? parseInt(page as string) : undefined,
       limit: limit ? parseInt(limit as string) : undefined,
       active: active === 'true' ? true : active === 'false' ? false : undefined,
     });
 
-    return result.webhooks,
+    return {
+      webhooks: result.webhooks,
       pagination: result.pagination,
-    ;
+    };
   }
 
   /**
    * Update a webhook subscription
    */
-  async updateWebhook(req: Request, res: Response) {
-    const webhook = await webhookService.updateWebhook(id, body);
+  @Put(':id')
+  async updateWebhook(@Param('id', ParseUUIDPipe) id: string, @Body() body: any) {
+    const webhook = await this.webhooksService.updateWebhook(id, body);
 
     return webhook;
   }
@@ -64,17 +69,18 @@ export class WebhooksController {
   /**
    * Delete a webhook subscription
    */
-  async deleteWebhook(req: Request, res: Response) {
-    await webhookService.deleteWebhook(id);
-
-    return;
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteWebhook(@Param('id', ParseUUIDPipe) id: string) {
+    await this.webhooksService.deleteWebhook(id);
   }
 
   /**
    * Regenerate webhook secret
    */
-  async regenerateSecret(req: Request, res: Response) {
-    const webhook = await webhookService.regenerateSecret(id);
+  @Post(':id/regenerate-secret')
+  async regenerateSecret(@Param('id', ParseUUIDPipe) id: string) {
+    const webhook = await this.webhooksService.regenerateSecret(id);
 
     return webhook;
   }
@@ -82,9 +88,10 @@ export class WebhooksController {
   /**
    * Test webhook delivery
    */
-  async testWebhook(req: Request, res: Response) {
-    const webhook = await webhookService.getWebhookById(id);
-    const { queueWebhook } = await import('../jobs');
+  @Post(':id/test')
+  async testWebhook(@Param('id', ParseUUIDPipe) id: string) {
+    const webhook = await this.webhooksService.getWebhookById(id);
+    const { queueWebhook } = await import('../jobs.js');
 
     // Queue a test webhook
     await queueWebhook(webhook.id, 'webhook.test', {
@@ -93,21 +100,22 @@ export class WebhooksController {
       message: 'This is a test webhook delivery',
     });
 
-    res.status(HTTP_STATUS.OK).json({
+    return {
       status: 'success',
       message: 'Test webhook queued for delivery',
       data: {
         webhookId: webhook.id,
         url: webhook.url,
       },
-    });
+    };
   }
 
   /**
    * Get webhook deliveries
    */
-  async getWebhookDeliveries(req: Request, res: Response) {
-    const { webhookDeliveryService } = await import('../services/webhook-delivery.service');
+  @Get(':id/deliveries')
+  async getWebhookDeliveries(@Param('id', ParseUUIDPipe) id: string, @Query() query: any) {
+    const { webhookDeliveryService } = await import('../services/webhook-delivery.service.js');
     const { page, limit, status, event } = query;
 
     const result = await webhookDeliveryService.getDeliveries({
@@ -118,16 +126,18 @@ export class WebhooksController {
       event: event as string | undefined,
     });
 
-    return result.deliveries,
+    return {
+      deliveries: result.deliveries,
       pagination: result.pagination,
-    ;
+    };
   }
 
   /**
    * Get webhook delivery statistics
    */
-  async getWebhookStats(req: Request, res: Response) {
-    const { webhookDeliveryService } = await import('../services/webhook-delivery.service');
+  @Get(':id/stats')
+  async getWebhookStats(@Param('id', ParseUUIDPipe) id: string) {
+    const { webhookDeliveryService } = await import('../services/webhook-delivery.service.js');
 
     const stats = await webhookDeliveryService.getDeliveryStats(id);
 
@@ -137,8 +147,9 @@ export class WebhooksController {
   /**
    * Get all webhook deliveries (admin view)
    */
-  async getAllDeliveries(req: Request, res: Response) {
-    const { webhookDeliveryService } = await import('../services/webhook-delivery.service');
+  @Get('deliveries/all')
+  async getAllDeliveries(@Query() query: any) {
+    const { webhookDeliveryService } = await import('../services/webhook-delivery.service.js');
     const { page, limit, status, event, webhookId } = query;
 
     const result = await webhookDeliveryService.getDeliveries({
@@ -149,16 +160,18 @@ export class WebhooksController {
       webhookId: webhookId as string | undefined,
     });
 
-    return result.deliveries,
+    return {
+      deliveries: result.deliveries,
       pagination: result.pagination,
-    ;
+    };
   }
 
   /**
    * Get delivery analytics
    */
-  async getDeliveryAnalytics(_req: Request, res: Response) {
-    const { webhookDeliveryService } = await import('../services/webhook-delivery.service');
+  @Get('analytics/deliveries')
+  async getDeliveryAnalytics() {
+    const { webhookDeliveryService } = await import('../services/webhook-delivery.service.js');
 
     const overallStats = await webhookDeliveryService.getDeliveryStats();
 

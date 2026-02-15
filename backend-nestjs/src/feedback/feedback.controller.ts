@@ -17,23 +17,24 @@ import { FeedbackService } from './feedback.service';
 @Controller('feedback')
 export class FeedbackController {
   constructor(private readonly feedbackService: FeedbackService) {}
+
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body(ValidationPipe) body: any) {
-    const feedback = await feedbackService.createFeedback(body);
-    return feedback ;
+    const feedback = await this.feedbackService.createFeedback(body);
+    return feedback;
   }
 
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: string) {
-    const feedback = await feedbackService.getFeedback(id);
-    return feedback ;
+    const feedback = await this.feedbackService.getFeedback(id);
+    return feedback;
   }
 
   @Get()
   async getAll(@Query() query: any) {
     const { clientId, feedbackType, rating, status, page, limit } = query;
-    const result = await feedbackService.listFeedback({
+    const result = await this.feedbackService.listFeedback({
       clientId: clientId as string,
       feedbackType: feedbackType as string,
       rating: rating ? parseInt(rating as string) : undefined,
@@ -41,58 +42,65 @@ export class FeedbackController {
       page: page ? parseInt(page as string) : undefined,
       limit: limit ? parseInt(limit as string) : undefined,
     });
-    return result ;
+    return result;
   }
 
-  async review(req: Request, res: Response) {
+  @Post(':id/review')
+  async review(@Param('id', ParseUUIDPipe) id: string, @Body() body: any) {
     const { reviewedBy } = body;
-    const feedback = await feedbackService.reviewFeedback(id, reviewedBy);
-    return feedback ;
+    const feedback = await this.feedbackService.reviewFeedback(id, reviewedBy);
+    return feedback;
   }
 
-  async getNPSScore(req: Request, res: Response) {
+  @Get('nps/score')
+  async getNPSScore(@Query() query: any) {
     const { startDate, endDate } = query;
-    const nps = await feedbackService.getNPSScore(
+    const nps = await this.feedbackService.getNPSScore(
       startDate ? new Date(startDate as string) : undefined,
       endDate ? new Date(endDate as string) : undefined
     );
-    return nps ;
+    return nps;
   }
 
-  async createSurvey(req: Request, res: Response) {
-    const survey = await feedbackService.createSurvey(body);
-    return survey ;
+  @Post('surveys')
+  @HttpCode(HttpStatus.CREATED)
+  async createSurvey(@Body() body: any) {
+    const survey = await this.feedbackService.createSurvey(body);
+    return survey;
   }
 
-  async getSurvey(req: Request, res: Response) {
-    const survey = await feedbackService.getSurvey(id);
-    return survey ;
+  @Get('surveys/:id')
+  async getSurvey(@Param('id', ParseUUIDPipe) id: string) {
+    const survey = await this.feedbackService.getSurvey(id);
+    return survey;
   }
 
-  async publishSurvey(req: Request, res: Response) {
+  @Post('surveys/:id/publish')
+  async publishSurvey(@Param('id', ParseUUIDPipe) id: string, @Body() body: any) {
     const { expiresAt } = body;
-    const survey = await feedbackService.publishSurvey(
+    const survey = await this.feedbackService.publishSurvey(
       id,
       expiresAt ? new Date(expiresAt) : undefined
     );
-    return survey ;
+    return survey;
   }
 
-  async submitSurveyResponse(req: Request, res: Response) {
-    const response = await feedbackService.submitSurveyResponse(body);
-    return response ;
+  @Post('surveys/responses')
+  @HttpCode(HttpStatus.CREATED)
+  async submitSurveyResponse(@Body() body: any) {
+    const response = await this.feedbackService.submitSurveyResponse(body);
+    return response;
   }
 
   @Put(':id')
   async update(@Param('id', ParseUUIDPipe) id: string, @Body(ValidationPipe) body: any) {
-    const feedback = await feedbackService.updateFeedback(id, body);
-    return feedback ;
+    const feedback = await this.feedbackService.updateFeedback(id, body);
+    return feedback;
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    await feedbackService.deleteFeedback(id);
-    return;
+    await this.feedbackService.deleteFeedback(id);
   }
 }

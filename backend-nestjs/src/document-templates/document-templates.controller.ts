@@ -20,20 +20,20 @@ export class DocumentTemplatesController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body(ValidationPipe) body: any) {
-    const template = await documentTemplateService.createTemplate(body);
+    const template = await this.documentTemplatesService.createTemplate(body);
     return template ;
   }
 
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: string) {
-    const template = await documentTemplateService.getTemplate(id);
+    const template = await this.documentTemplatesService.getTemplate(id);
     return template ;
   }
 
   @Get()
   async getAll(@Query() query: any) {
     const { category, page, limit } = query;
-    const result = await documentTemplateService.listTemplates({
+    const result = await this.documentTemplatesService.listTemplates({
       category: category as string,
       page: page ? parseInt(page as string) : undefined,
       limit: limit ? parseInt(limit as string) : undefined,
@@ -41,41 +41,46 @@ export class DocumentTemplatesController {
     return result ;
   }
 
-  async incrementUsage(req: Request, res: Response) {
-    const template = await documentTemplateService.incrementUsage(id);
+  @Get(':id/incrementusage')
+  async incrementUsage(@Param('id', ParseUUIDPipe) id: string, @Body() body: any) {
+    const template = await this.documentTemplatesService.incrementUsage(id);
     return template ;
   }
 
-  async signDocument(req: Request, res: Response) {
-    const signature = await documentTemplateService.signDocument(body);
+  @Get(':id/signdocument')
+  async signDocument(@Param('id', ParseUUIDPipe) id: string, @Body() body: any) {
+    const signature = await this.documentTemplatesService.signDocument(body);
     return signature ;
   }
 
-  async getDocumentSignatures(req: Request, res: Response) {
-    const signatures = await documentTemplateService.getDocumentSignatures(FIXME_documentId);
-    return signatures ;
+  @Get('document/:documentId/signatures')
+  async getDocumentSignatures(@Param('documentId', ParseUUIDPipe) documentId: string) {
+    const signatures = await this.documentTemplatesService.getDocumentSignatures(documentId);
+    return signatures;
   }
 
-  async createWorkflow(req: Request, res: Response) {
-    const workflow = await documentTemplateService.createWorkflow(body);
+  @Post()
+  async createWorkflow(@Param('id', ParseUUIDPipe) id: string, @Body() body: any) {
+    const workflow = await this.documentTemplatesService.createWorkflow(body);
     return workflow ;
   }
 
-  async advanceWorkflow(req: Request, res: Response) {
-    const workflow = await documentTemplateService.advanceWorkflow(FIXME_workflowId);
-    return workflow ;
+  @Post('workflow/:workflowId/advance')
+  async advanceWorkflow(@Param('workflowId', ParseUUIDPipe) workflowId: string) {
+    const workflow = await this.documentTemplatesService.advanceWorkflow(workflowId);
+    return workflow;
   }
 
   @Put(':id')
   async update(@Param('id', ParseUUIDPipe) id: string, @Body(ValidationPipe) body: any) {
-    const template = await documentTemplateService.updateTemplate(id, body);
+    const template = await this.documentTemplatesService.updateTemplate(id, body);
     return template ;
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    await documentTemplateService.deleteTemplate(id);
+    await this.documentTemplatesService.deleteTemplate(id);
     return;
   }
 }

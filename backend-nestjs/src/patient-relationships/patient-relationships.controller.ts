@@ -20,31 +20,33 @@ export class PatientRelationshipsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body(ValidationPipe) body: any) {
-    const relationship = await patientRelationshipService.createRelationship(body);
+    const relationship = await this.patientRelationshipsService.createRelationship(body);
     return relationship ;
   }
 
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: string) {
-    const relationship = await patientRelationshipService.getRelationship(id);
+    const relationship = await this.patientRelationshipsService.getRelationship(id);
     return relationship ;
   }
 
-  async getPatientRelationships(req: Request, res: Response) {
-    const relationships = await patientRelationshipService.getPatientRelationships(
-      FIXME_patientId
+  @Get('patient/:patientId/relationships')
+  async getPatientRelationships(@Param('patientId', ParseUUIDPipe) patientId: string) {
+    const relationships = await this.patientRelationshipsService.getPatientRelationships(
+      patientId
     );
     return relationships ;
   }
 
-  async getPatientFamily(req: Request, res: Response) {
-    const family = await patientRelationshipService.getPatientFamily(FIXME_patientId);
+  @Get('patient/:patientId/family')
+  async getPatientFamily(@Param('patientId', ParseUUIDPipe) patientId: string) {
+    const family = await this.patientRelationshipsService.getPatientFamily(patientId);
     return family ;
   }
 
   @Put(':id')
   async update(@Param('id', ParseUUIDPipe) id: string, @Body(ValidationPipe) body: any) {
-    const relationship = await patientRelationshipService.updateRelationship(
+    const relationship = await this.patientRelationshipsService.updateRelationship(
       id,
       body
     );
@@ -54,7 +56,7 @@ export class PatientRelationshipsController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    await patientRelationshipService.deleteRelationship(id);
+    await this.patientRelationshipsService.deleteRelationship(id);
     return;
   }
 }

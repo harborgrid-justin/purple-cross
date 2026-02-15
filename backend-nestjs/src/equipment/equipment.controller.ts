@@ -20,20 +20,20 @@ export class EquipmentController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body(ValidationPipe) body: any) {
-    const equipment = await equipmentService.createEquipment(body);
+    const equipment = await this.equipmentService.createEquipment(body);
     return equipment ;
   }
 
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: string) {
-    const equipment = await equipmentService.getEquipment(id);
+    const equipment = await this.equipmentService.getEquipment(id);
     return equipment ;
   }
 
   @Get()
   async getAll(@Query() query: any) {
     const { category, status, location, page, limit } = query;
-    const result = await equipmentService.listEquipment({
+    const result = await this.equipmentService.listEquipment({
       category: category as string,
       status: status as string,
       location: location as string,
@@ -45,26 +45,29 @@ export class EquipmentController {
 
   @Put(':id')
   async update(@Param('id', ParseUUIDPipe) id: string, @Body(ValidationPipe) body: any) {
-    const equipment = await equipmentService.updateEquipment(id, body);
+    const equipment = await this.equipmentService.updateEquipment(id, body);
     return equipment ;
   }
 
-  async scheduleMaintenance(req: Request, res: Response) {
-    const maintenance = await equipmentService.scheduleMaintenance(body);
+  @Get(':id/schedulemaintenance')
+  async scheduleMaintenance(@Param('id', ParseUUIDPipe) id: string, @Body() body: any) {
+    const maintenance = await this.equipmentService.scheduleMaintenance(body);
     return maintenance ;
   }
 
-  async completeMaintenance(req: Request, res: Response) {
-    const maintenance = await equipmentService.completeMaintenance(
-      FIXME_maintenanceId,
+  @Post('maintenance/:maintenanceId/complete')
+  async completeMaintenance(@Param('maintenanceId', ParseUUIDPipe) maintenanceId: string, @Body() body: any) {
+    const maintenance = await this.equipmentService.completeMaintenance(
+      maintenanceId,
       body
     );
-    return maintenance ;
+    return maintenance;
   }
 
-  async getMaintenanceSchedule(req: Request, res: Response) {
+  @Get('maintenance/schedule')
+  async getMaintenanceSchedule(@Query() query: any) {
     const { equipmentId, status, startDate, endDate, page, limit } = query;
-    const result = await equipmentService.getMaintenanceSchedule({
+    const result = await this.equipmentService.getMaintenanceSchedule({
       equipmentId: equipmentId as string,
       status: status as string,
       startDate: startDate ? new Date(startDate as string) : undefined,
@@ -75,9 +78,10 @@ export class EquipmentController {
     return result ;
   }
 
-  async getUpcomingMaintenance(req: Request, res: Response) {
+  @Get('maintenance/upcoming')
+  async getUpcomingMaintenance(@Query() query: any) {
     const { daysAhead } = query;
-    const maintenance = await equipmentService.getUpcomingMaintenance(
+    const maintenance = await this.equipmentService.getUpcomingMaintenance(
       daysAhead ? parseInt(daysAhead as string) : undefined
     );
     return maintenance ;
@@ -86,7 +90,7 @@ export class EquipmentController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    await equipmentService.deleteEquipment(id);
+    await this.equipmentService.deleteEquipment(id);
     return;
   }
 }

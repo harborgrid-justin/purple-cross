@@ -20,20 +20,20 @@ export class PoliciesController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body(ValidationPipe) body: any) {
-    const policy = await policyService.createPolicy(body);
+    const policy = await this.policiesService.createPolicy(body);
     return policy ;
   }
 
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: string) {
-    const policy = await policyService.getPolicy(id);
+    const policy = await this.policiesService.getPolicy(id);
     return policy ;
   }
 
   @Get()
   async getAll(@Query() query: any) {
     const { category, status, page, limit } = query;
-    const result = await policyService.listPolicies({
+    const result = await this.policiesService.listPolicies({
       category: category as string,
       status: status as string,
       page: page ? parseInt(page as string) : undefined,
@@ -42,27 +42,29 @@ export class PoliciesController {
     return result ;
   }
 
-  async acknowledge(req: Request, res: Response) {
+  @Get(':id/acknowledge')
+  async acknowledge(@Param('id', ParseUUIDPipe) id: string, @Body() body: any) {
     const { userId, ipAddress } = body;
-    const ack = await policyService.acknowledgePolicy(id, userId, ipAddress);
+    const ack = await this.policiesService.acknowledgePolicy(id, userId, ipAddress);
     return ack ;
   }
 
-  async getUserAcknowledgments(req: Request, res: Response) {
-    const acks = await policyService.getUserAcknowledgments(FIXME_userId);
-    return acks ;
+  @Get('user/:userId/acknowledgments')
+  async getUserAcknowledgments(@Param('userId', ParseUUIDPipe) userId: string) {
+    const acks = await this.policiesService.getUserAcknowledgments(userId);
+    return acks;
   }
 
   @Put(':id')
   async update(@Param('id', ParseUUIDPipe) id: string, @Body(ValidationPipe) body: any) {
-    const policy = await policyService.updatePolicy(id, body);
+    const policy = await this.policiesService.updatePolicy(id, body);
     return policy ;
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    await policyService.deletePolicy(id);
+    await this.policiesService.deletePolicy(id);
     return;
   }
 }

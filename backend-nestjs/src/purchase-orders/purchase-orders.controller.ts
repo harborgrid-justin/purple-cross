@@ -20,20 +20,20 @@ export class PurchaseOrdersController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body(ValidationPipe) body: any) {
-    const po = await purchaseOrderService.createPurchaseOrder(body);
+    const po = await this.purchaseOrdersService.createPurchaseOrder(body);
     return po ;
   }
 
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: string) {
-    const po = await purchaseOrderService.getPurchaseOrder(id);
+    const po = await this.purchaseOrdersService.getPurchaseOrder(id);
     return po ;
   }
 
   @Get()
   async getAll(@Query() query: any) {
     const { status, vendor, page, limit } = query;
-    const result = await purchaseOrderService.listPurchaseOrders({
+    const result = await this.purchaseOrdersService.listPurchaseOrders({
       status: status as string,
       vendor: vendor as string,
       page: page ? parseInt(page as string) : undefined,
@@ -42,33 +42,36 @@ export class PurchaseOrdersController {
     return result ;
   }
 
-  async approve(req: Request, res: Response) {
+  @Post(':id/approve')
+  async approve(@Param('id', ParseUUIDPipe) id: string, @Body() body: any) {
     const { approvedBy } = body;
-    const po = await purchaseOrderService.approvePurchaseOrder(id, approvedBy);
+    const po = await this.purchaseOrdersService.approvePurchaseOrder(id, approvedBy);
     return po ;
   }
 
-  async receiveItems(req: Request, res: Response) {
+  @Get(':id/receiveitems')
+  async receiveItems(@Param('id', ParseUUIDPipe) id: string, @Body() body: any) {
     const { itemReceipts } = body;
-    const po = await purchaseOrderService.receiveItems(id, itemReceipts);
+    const po = await this.purchaseOrdersService.receiveItems(id, itemReceipts);
     return po ;
   }
 
-  async cancel(req: Request, res: Response) {
-    const po = await purchaseOrderService.cancelPurchaseOrder(id);
+  @Post(':id/cancel')
+  async cancel(@Param('id', ParseUUIDPipe) id: string, @Body() body: any) {
+    const po = await this.purchaseOrdersService.cancelPurchaseOrder(id);
     return po ;
   }
 
   @Put(':id')
   async update(@Param('id', ParseUUIDPipe) id: string, @Body(ValidationPipe) body: any) {
-    const po = await purchaseOrderService.updatePurchaseOrder(id, body);
+    const po = await this.purchaseOrdersService.updatePurchaseOrder(id, body);
     return po ;
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    await purchaseOrderService.deletePurchaseOrder(id);
+    await this.purchaseOrdersService.deletePurchaseOrder(id);
     return;
   }
 }

@@ -20,20 +20,20 @@ export class CommunicationsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body(ValidationPipe) body: any) {
-    const communication = await communicationService.createCommunication(body);
+    const communication = await this.communicationsService.createCommunication(body);
     return communication;
   }
 
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: string) {
-    const communication = await communicationService.getCommunicationById(id);
+    const communication = await this.communicationsService.getCommunicationById(id);
     return communication;
   }
 
   @Get()
   async getAll(@Query() query: any) {
     const { page, limit, clientId, type } = query;
-    const result = await communicationService.getAllCommunications({
+    const result = await this.communicationsService.getAllCommunications({
       page: page ? parseInt(page as string) : undefined,
       limit: limit ? parseInt(limit as string) : undefined,
       clientId: clientId as string,
@@ -44,14 +44,14 @@ export class CommunicationsController {
 
   @Put(':id')
   async update(@Param('id', ParseUUIDPipe) id: string, @Body(ValidationPipe) body: any) {
-    const communication = await communicationService.updateCommunication(id, body);
+    const communication = await this.communicationsService.updateCommunication(id, body);
     return communication;
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    await communicationService.deleteCommunication(id);
+    await this.communicationsService.deleteCommunication(id);
     return;
   }
 }

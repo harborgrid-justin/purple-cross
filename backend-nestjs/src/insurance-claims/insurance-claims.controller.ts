@@ -20,31 +20,33 @@ export class InsuranceClaimsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body(ValidationPipe) body: any) {
-    const claim = await insuranceClaimService.createClaim(body);
+    const claim = await this.insuranceClaimsService.createClaim(body);
     return claim ;
   }
 
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: string) {
-    const claim = await insuranceClaimService.getClaim(id);
+    const claim = await this.insuranceClaimsService.getClaim(id);
     return claim ;
   }
 
   @Get()
   async getAll(@Query() query: any) {
-    const result = await insuranceClaimService.listClaims(query);
+    const result = await this.insuranceClaimsService.listClaims(query);
     return result ;
   }
 
-  async updateStatus(req: Request, res: Response) {
+  @Put()
+  async updateStatus(@Param('id', ParseUUIDPipe) id: string, @Body() body: any) {
     const { status, ...updates } = body;
-    const claim = await insuranceClaimService.updateClaimStatus(id, status, updates);
+    const claim = await this.insuranceClaimsService.updateClaimStatus(id, status, updates);
     return claim ;
   }
 
-  async processClaim(req: Request, res: Response) {
+  @Get(':id/processclaim')
+  async processClaim(@Param('id', ParseUUIDPipe) id: string, @Body() body: any) {
     const { approvedAmount, paidAmount } = body;
-    const claim = await insuranceClaimService.processClaim(
+    const claim = await this.insuranceClaimsService.processClaim(
       id,
       approvedAmount,
       paidAmount
@@ -54,14 +56,14 @@ export class InsuranceClaimsController {
 
   @Put(':id')
   async update(@Param('id', ParseUUIDPipe) id: string, @Body(ValidationPipe) body: any) {
-    const claim = await insuranceClaimService.updateClaim(id, body);
+    const claim = await this.insuranceClaimsService.updateClaim(id, body);
     return claim ;
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    await insuranceClaimService.deleteClaim(id);
+    await this.insuranceClaimsService.deleteClaim(id);
     return;
   }
 }

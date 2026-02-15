@@ -20,20 +20,20 @@ export class StaffController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body(ValidationPipe) body: any) {
-    const staff = await staffService.createStaff(body);
+    const staff = await this.staffService.createStaff(body);
     return staff;
   }
 
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: string) {
-    const staff = await staffService.getStaffById(id);
+    const staff = await this.staffService.getStaffById(id);
     return staff;
   }
 
   @Get()
   async getAll(@Query() query: any) {
     const { page, limit, role, status, search } = query;
-    const result = await staffService.getAllStaff({
+    const result = await this.staffService.getAllStaff({
       page: page ? parseInt(page as string) : undefined,
       limit: limit ? parseInt(limit as string) : undefined,
       role: role as string,
@@ -45,14 +45,14 @@ export class StaffController {
 
   @Put(':id')
   async update(@Param('id', ParseUUIDPipe) id: string, @Body(ValidationPipe) body: any) {
-    const staff = await staffService.updateStaff(id, body);
+    const staff = await this.staffService.updateStaff(id, body);
     return staff;
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    await staffService.deleteStaff(id);
+    await this.staffService.deleteStaff(id);
     return;
   }
 }

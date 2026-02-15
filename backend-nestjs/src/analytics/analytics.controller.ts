@@ -17,41 +17,48 @@ import { AnalyticsService } from './analytics.service';
 @Controller('analytics')
 export class AnalyticsController {
   constructor(private readonly analyticsService: AnalyticsService) {}
-  async getDashboardStats(_req: Request, res: Response) {
-    const stats = await analyticsService.getDashboardStats();
+
+  @Get('dashboard')
+  async getDashboardStats() {
+    const stats = await this.analyticsService.getDashboardStats();
     return stats;
   }
 
-  async getPatientDemographics(_req: Request, res: Response) {
-    const demographics = await analyticsService.getPatientDemographics();
+  @Get('patient-demographics')
+  async getPatientDemographics() {
+    const demographics = await this.analyticsService.getPatientDemographics();
     return demographics;
   }
 
-  async getAppointmentAnalytics(req: Request, res: Response) {
+  @Get('appointments')
+  async getAppointmentAnalytics(@Query() query: any) {
     const { startDate, endDate } = query;
-    const analytics = await analyticsService.getAppointmentAnalytics(
+    const analytics = await this.analyticsService.getAppointmentAnalytics(
       startDate ? new Date(startDate as string) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
       endDate ? new Date(endDate as string) : new Date()
     );
     return analytics;
   }
 
-  async getFinancialReport(req: Request, res: Response) {
+  @Get('financial')
+  async getFinancialReport(@Query() query: any) {
     const { startDate, endDate } = query;
-    const report = await analyticsService.getFinancialReport(
+    const report = await this.analyticsService.getFinancialReport(
       startDate ? new Date(startDate as string) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
       endDate ? new Date(endDate as string) : new Date()
     );
     return report;
   }
 
-  async getInventoryReport(_req: Request, res: Response) {
-    const report = await analyticsService.getInventoryReport();
+  @Get('inventory')
+  async getInventoryReport() {
+    const report = await this.analyticsService.getInventoryReport();
     return report;
   }
 
-  async getStaffAnalytics(_req: Request, res: Response) {
-    const analytics = await analyticsService.getStaffAnalytics();
+  @Get('staff')
+  async getStaffAnalytics() {
+    const analytics = await this.analyticsService.getStaffAnalytics();
     return analytics;
   }
 }

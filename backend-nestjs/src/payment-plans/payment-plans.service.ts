@@ -44,7 +44,12 @@ export class PaymentPlanService {
     });
 
     // Create installments
-    const installments = [];
+    const installments: Array<{
+      paymentPlanId: string;
+      installmentNumber: number;
+      dueDate: Date;
+      amount: number;
+    }> = [];
     let currentDate = data.startDate;
 
     for (let i = 1; i <= data.numberOfInstallments; i++) {

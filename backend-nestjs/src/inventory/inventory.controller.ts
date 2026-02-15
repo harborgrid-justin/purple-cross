@@ -20,20 +20,20 @@ export class InventoryController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body(ValidationPipe) body: any) {
-    const item = await inventoryService.createInventoryItem(body);
+    const item = await this.inventoryService.createInventoryItem(body);
     return item;
   }
 
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: string) {
-    const item = await inventoryService.getInventoryItemById(id);
+    const item = await this.inventoryService.getInventoryItemById(id);
     return item;
   }
 
   @Get()
   async getAll(@Query() query: any) {
     const { page, limit, category, search, lowStock } = query;
-    const result = await inventoryService.getAllInventoryItems({
+    const result = await this.inventoryService.getAllInventoryItems({
       page: page ? parseInt(page as string) : undefined,
       limit: limit ? parseInt(limit as string) : undefined,
       category: category as string,
@@ -45,14 +45,14 @@ export class InventoryController {
 
   @Put(':id')
   async update(@Param('id', ParseUUIDPipe) id: string, @Body(ValidationPipe) body: any) {
-    const item = await inventoryService.updateInventoryItem(id, body);
+    const item = await this.inventoryService.updateInventoryItem(id, body);
     return item;
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    await inventoryService.deleteInventoryItem(id);
+    await this.inventoryService.deleteInventoryItem(id);
     return;
   }
 }

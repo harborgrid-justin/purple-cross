@@ -2,6 +2,7 @@ import { Injectable, NotFoundException, BadRequestException, ConflictException }
 import { PrismaService } from '../prisma/prisma.service';
 import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION, QUERY_MODE, SORT_ORDER, FIELDS, WORKFLOW_EVENTS, QUERY_LIMITS } from '../common/constants';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class ClientPortalService {

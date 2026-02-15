@@ -20,20 +20,20 @@ export class PrescriptionsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body(ValidationPipe) body: any) {
-    const prescription = await prescriptionService.createPrescription(body);
+    const prescription = await this.prescriptionsService.createPrescription(body);
     return prescription;
   }
 
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: string) {
-    const prescription = await prescriptionService.getPrescriptionById(id);
+    const prescription = await this.prescriptionsService.getPrescriptionById(id);
     return prescription;
   }
 
   @Get()
   async getAll(@Query() query: any) {
     const { page, limit, patientId, prescribedById, status } = query;
-    const result = await prescriptionService.getAllPrescriptions({
+    const result = await this.prescriptionsService.getAllPrescriptions({
       page: page ? parseInt(page as string) : undefined,
       limit: limit ? parseInt(limit as string) : undefined,
       patientId: patientId as string,
@@ -45,14 +45,14 @@ export class PrescriptionsController {
 
   @Put(':id')
   async update(@Param('id', ParseUUIDPipe) id: string, @Body(ValidationPipe) body: any) {
-    const prescription = await prescriptionService.updatePrescription(id, body);
+    const prescription = await this.prescriptionsService.updatePrescription(id, body);
     return prescription;
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    await prescriptionService.deletePrescription(id);
+    await this.prescriptionsService.deletePrescription(id);
     return;
   }
 }

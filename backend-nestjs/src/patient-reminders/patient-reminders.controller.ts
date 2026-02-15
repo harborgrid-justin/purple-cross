@@ -20,20 +20,20 @@ export class PatientRemindersController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body(ValidationPipe) body: any) {
-    const reminder = await patientReminderService.createReminder(body);
+    const reminder = await this.patientRemindersService.createReminder(body);
     return reminder ;
   }
 
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: string) {
-    const reminder = await patientReminderService.getReminder(id);
+    const reminder = await this.patientRemindersService.getReminder(id);
     return reminder ;
   }
 
   @Get()
   async getAll(@Query() query: any) {
     const { patientId, reminderType, status, startDate, endDate, page, limit } = query;
-    const result = await patientReminderService.listReminders({
+    const result = await this.patientRemindersService.listReminders({
       patientId: patientId as string,
       reminderType: reminderType as string,
       status: status as string,
@@ -46,25 +46,26 @@ export class PatientRemindersController {
   }
 
   async getDue(_req: Request, res: Response) {
-    const reminders = await patientReminderService.getDueReminders();
+    const reminders = await this.patientRemindersService.getDueReminders();
     return reminders ;
   }
 
-  async complete(req: Request, res: Response) {
-    const reminder = await patientReminderService.completeReminder(id);
+  @Get(':id/complete')
+  async complete(@Param('id', ParseUUIDPipe) id: string, @Body() body: any) {
+    const reminder = await this.patientRemindersService.completeReminder(id);
     return reminder ;
   }
 
   @Put(':id')
   async update(@Param('id', ParseUUIDPipe) id: string, @Body(ValidationPipe) body: any) {
-    const reminder = await patientReminderService.updateReminder(id, body);
+    const reminder = await this.patientRemindersService.updateReminder(id, body);
     return reminder ;
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    await patientReminderService.deleteReminder(id);
+    await this.patientRemindersService.deleteReminder(id);
     return;
   }
 }

@@ -20,8 +20,9 @@ export class WorkflowsController {
   /**
    * Create a new workflow
    */
-  async createWorkflow(req: Request, res: Response) {
-    const workflow = await workflowService.createWorkflow(body);
+  @Post()
+  async createWorkflow(@Body() body: any) {
+    const workflow = await this.workflowsService.createWorkflow(body);
 
     return workflow;
   }
@@ -29,8 +30,9 @@ export class WorkflowsController {
   /**
    * Get workflow by ID
    */
-  async getWorkflow(req: Request, res: Response) {
-    const workflow = await workflowService.getWorkflowById(id);
+  @Get(':id')
+  async getWorkflow(@Param('id', ParseUUIDPipe) id: string) {
+    const workflow = await this.workflowsService.getWorkflowById(id);
 
     return workflow;
   }
@@ -38,26 +40,29 @@ export class WorkflowsController {
   /**
    * Get all workflows
    */
-  async getWorkflows(req: Request, res: Response) {
+  @Get()
+  async getWorkflows(@Query() query: any) {
     const { page, limit, status, documentId } = query;
 
-    const result = await workflowService.getWorkflows({
+    const result = await this.workflowsService.getWorkflows({
       page: page ? parseInt(page as string) : undefined,
       limit: limit ? parseInt(limit as string) : undefined,
       status: status as string | undefined,
       documentId: documentId as string | undefined,
     });
 
-    return result.workflows,
+    return {
+      workflows: result.workflows,
       pagination: result.pagination,
-    ;
+    };
   }
 
   /**
    * Update a workflow
    */
-  async updateWorkflow(req: Request, res: Response) {
-    const workflow = await workflowService.updateWorkflow(id, body);
+  @Put(':id')
+  async updateWorkflow(@Param('id', ParseUUIDPipe) id: string, @Body() body: any) {
+    const workflow = await this.workflowsService.updateWorkflow(id, body);
 
     return workflow;
   }
@@ -65,8 +70,9 @@ export class WorkflowsController {
   /**
    * Advance workflow to next step
    */
-  async advanceWorkflow(req: Request, res: Response) {
-    const workflow = await workflowService.advanceWorkflow(id);
+  @Post(':id/advance')
+  async advanceWorkflow(@Param('id', ParseUUIDPipe) id: string) {
+    const workflow = await this.workflowsService.advanceWorkflow(id);
 
     return workflow;
   }
@@ -74,8 +80,9 @@ export class WorkflowsController {
   /**
    * Cancel a workflow
    */
-  async cancelWorkflow(req: Request, res: Response) {
-    const workflow = await workflowService.cancelWorkflow(id);
+  @Post(':id/cancel')
+  async cancelWorkflow(@Param('id', ParseUUIDPipe) id: string) {
+    const workflow = await this.workflowsService.cancelWorkflow(id);
 
     return workflow;
   }
@@ -83,8 +90,9 @@ export class WorkflowsController {
   /**
    * Get workflow statistics
    */
-  async getWorkflowStats(_req: Request, res: Response) {
-    const stats = await workflowService.getWorkflowStats();
+  @Get('stats')
+  async getWorkflowStats() {
+    const stats = await this.workflowsService.getWorkflowStats();
 
     return stats;
   }
@@ -92,8 +100,9 @@ export class WorkflowsController {
   /**
    * Get workflows by document ID
    */
-  async getWorkflowsByDocument(req: Request, res: Response) {
-    const workflows = await workflowService.getWorkflowsByDocumentId(FIXME_documentId);
+  @Get('document/:documentId')
+  async getWorkflowsByDocument(@Param('documentId', ParseUUIDPipe) documentId: string) {
+    const workflows = await this.workflowsService.getWorkflowsByDocumentId(documentId);
 
     return workflows;
   }

@@ -20,20 +20,20 @@ export class InvoicesController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body(ValidationPipe) body: any) {
-    const invoice = await invoiceService.createInvoice(body);
+    const invoice = await this.invoicesService.createInvoice(body);
     return invoice;
   }
 
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: string) {
-    const invoice = await invoiceService.getInvoiceById(id);
+    const invoice = await this.invoicesService.getInvoiceById(id);
     return invoice;
   }
 
   @Get()
   async getAll(@Query() query: any) {
     const { page, limit, clientId, status } = query;
-    const result = await invoiceService.getAllInvoices({
+    const result = await this.invoicesService.getAllInvoices({
       page: page ? parseInt(page as string) : undefined,
       limit: limit ? parseInt(limit as string) : undefined,
       clientId: clientId as string,
@@ -44,14 +44,14 @@ export class InvoicesController {
 
   @Put(':id')
   async update(@Param('id', ParseUUIDPipe) id: string, @Body(ValidationPipe) body: any) {
-    const invoice = await invoiceService.updateInvoice(id, body);
+    const invoice = await this.invoicesService.updateInvoice(id, body);
     return invoice;
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    await invoiceService.deleteInvoice(id);
+    await this.invoicesService.deleteInvoice(id);
     return;
   }
 }

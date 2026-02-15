@@ -20,20 +20,20 @@ export class PatientsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body(ValidationPipe) body: any) {
-    const patient = await patientService.createPatient(body);
+    const patient = await this.patientsService.createPatient(body);
     return patient;
   }
 
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: string) {
-    const patient = await patientService.getPatientById(id);
+    const patient = await this.patientsService.getPatientById(id);
     return patient;
   }
 
   @Get()
   async getAll(@Query() query: any) {
     const { page, limit, search, ownerId } = query;
-    const result = await patientService.getAllPatients({
+    const result = await this.patientsService.getAllPatients({
       page: page ? parseInt(page as string) : undefined,
       limit: limit ? parseInt(limit as string) : undefined,
       search: search as string,
@@ -44,14 +44,14 @@ export class PatientsController {
 
   @Put(':id')
   async update(@Param('id', ParseUUIDPipe) id: string, @Body(ValidationPipe) body: any) {
-    const patient = await patientService.updatePatient(id, body);
+    const patient = await this.patientsService.updatePatient(id, body);
     return patient;
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    await patientService.deletePatient(id);
+    await this.patientsService.deletePatient(id);
     return;
   }
 }

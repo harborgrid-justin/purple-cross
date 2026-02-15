@@ -20,20 +20,20 @@ export class WaitlistController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body(ValidationPipe) body: any) {
-    const entry = await waitlistService.addToWaitlist(body);
+    const entry = await this.waitlistService.addToWaitlist(body);
     return entry ;
   }
 
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: string) {
-    const entry = await waitlistService.getWaitlistEntry(id);
+    const entry = await this.waitlistService.getWaitlistEntry(id);
     return entry ;
   }
 
   @Get()
   async getAll(@Query() query: any) {
     const { appointmentType, urgency, status, page, limit } = query;
-    const result = await waitlistService.listWaitlist({
+    const result = await this.waitlistService.listWaitlist({
       appointmentType: appointmentType as string,
       urgency: urgency as string,
       status: status as string,
@@ -43,31 +43,34 @@ export class WaitlistController {
     return result ;
   }
 
-  async notify(req: Request, res: Response) {
-    const entry = await waitlistService.notifyWaitlistEntry(id);
-    return entry ;
+  @Post(':id/notify')
+  async notify(@Param('id', ParseUUIDPipe) id: string) {
+    const entry = await this.waitlistService.notifyWaitlistEntry(id);
+    return entry;
   }
 
-  async book(req: Request, res: Response) {
-    const entry = await waitlistService.bookWaitlistEntry(id);
-    return entry ;
+  @Post(':id/book')
+  async book(@Param('id', ParseUUIDPipe) id: string) {
+    const entry = await this.waitlistService.bookWaitlistEntry(id);
+    return entry;
   }
 
-  async cancel(req: Request, res: Response) {
-    const entry = await waitlistService.cancelWaitlistEntry(id);
-    return entry ;
+  @Post(':id/cancel')
+  async cancel(@Param('id', ParseUUIDPipe) id: string) {
+    const entry = await this.waitlistService.cancelWaitlistEntry(id);
+    return entry;
   }
 
   @Put(':id')
   async update(@Param('id', ParseUUIDPipe) id: string, @Body(ValidationPipe) body: any) {
-    const entry = await waitlistService.updateWaitlistEntry(id, body);
+    const entry = await this.waitlistService.updateWaitlistEntry(id, body);
     return entry ;
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    await waitlistService.deleteWaitlistEntry(id);
+    await this.waitlistService.deleteWaitlistEntry(id);
     return;
   }
 }

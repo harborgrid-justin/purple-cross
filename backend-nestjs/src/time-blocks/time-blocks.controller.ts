@@ -20,20 +20,20 @@ export class TimeBlocksController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body(ValidationPipe) body: any) {
-    const timeBlock = await timeBlockService.createTimeBlock(body);
+    const timeBlock = await this.timeBlocksService.createTimeBlock(body);
     return timeBlock ;
   }
 
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: string) {
-    const timeBlock = await timeBlockService.getTimeBlock(id);
+    const timeBlock = await this.timeBlocksService.getTimeBlock(id);
     return timeBlock ;
   }
 
   @Get()
   async getAll(@Query() query: any) {
     const { staffId, blockType, startDate, endDate, page, limit } = query;
-    const result = await timeBlockService.listTimeBlocks({
+    const result = await this.timeBlocksService.listTimeBlocks({
       staffId: staffId as string,
       blockType: blockType as string,
       startDate: startDate ? new Date(startDate as string) : undefined,
@@ -46,14 +46,14 @@ export class TimeBlocksController {
 
   @Put(':id')
   async update(@Param('id', ParseUUIDPipe) id: string, @Body(ValidationPipe) body: any) {
-    const timeBlock = await timeBlockService.updateTimeBlock(id, body);
+    const timeBlock = await this.timeBlocksService.updateTimeBlock(id, body);
     return timeBlock ;
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    await timeBlockService.deleteTimeBlock(id);
+    await this.timeBlocksService.deleteTimeBlock(id);
     return;
   }
 }

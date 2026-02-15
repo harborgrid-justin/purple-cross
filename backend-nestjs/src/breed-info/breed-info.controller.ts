@@ -20,25 +20,26 @@ export class BreedInfoController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body(ValidationPipe) body: any) {
-    const breedInfo = await breedInfoService.createBreedInfo(body);
+    const breedInfo = await this.breedInfoService.createBreedInfo(body);
     return breedInfo ;
   }
 
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: string) {
-    const breedInfo = await breedInfoService.getBreedInfo(id);
+    const breedInfo = await this.breedInfoService.getBreedInfo(id);
     return breedInfo ;
   }
 
-  async getByBreed(req: Request, res: Response) {
-    const breedInfo = await breedInfoService.getBreedInfoByBreed(FIXME_breed);
-    return breedInfo ;
+  @Get('breed/:breed')
+  async getByBreed(@Param('breed') breed: string) {
+    const breedInfo = await this.breedInfoService.getBreedInfoByBreed(breed);
+    return breedInfo;
   }
 
   @Get()
   async getAll(@Query() query: any) {
     const { species, page, limit } = query;
-    const result = await breedInfoService.listBreedInfo({
+    const result = await this.breedInfoService.listBreedInfo({
       species: species as string,
       page: page ? parseInt(page as string) : undefined,
       limit: limit ? parseInt(limit as string) : undefined,
@@ -48,14 +49,14 @@ export class BreedInfoController {
 
   @Put(':id')
   async update(@Param('id', ParseUUIDPipe) id: string, @Body(ValidationPipe) body: any) {
-    const breedInfo = await breedInfoService.updateBreedInfo(id, body);
+    const breedInfo = await this.breedInfoService.updateBreedInfo(id, body);
     return breedInfo ;
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    await breedInfoService.deleteBreedInfo(id);
+    await this.breedInfoService.deleteBreedInfo(id);
     return;
   }
 }

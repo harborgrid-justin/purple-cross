@@ -20,20 +20,20 @@ export class DocumentsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body(ValidationPipe) body: any) {
-    const document = await documentService.createDocument(body);
+    const document = await this.documentsService.createDocument(body);
     return document;
   }
 
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: string) {
-    const document = await documentService.getDocumentById(id);
+    const document = await this.documentsService.getDocumentById(id);
     return document;
   }
 
   @Get()
   async getAll(@Query() query: any) {
     const { page, limit, entityType, entityId, category } = query;
-    const result = await documentService.getAllDocuments({
+    const result = await this.documentsService.getAllDocuments({
       page: page ? parseInt(page as string) : undefined,
       limit: limit ? parseInt(limit as string) : undefined,
       entityType: entityType as string,
@@ -45,14 +45,14 @@ export class DocumentsController {
 
   @Put(':id')
   async update(@Param('id', ParseUUIDPipe) id: string, @Body(ValidationPipe) body: any) {
-    const document = await documentService.updateDocument(id, body);
+    const document = await this.documentsService.updateDocument(id, body);
     return document;
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    await documentService.deleteDocument(id);
+    await this.documentsService.deleteDocument(id);
     return;
   }
 }

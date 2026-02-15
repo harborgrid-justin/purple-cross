@@ -20,20 +20,20 @@ export class ClientsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body(ValidationPipe) body: any) {
-    const client = await clientService.createClient(body);
+    const client = await this.clientsService.createClient(body);
     return client;
   }
 
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: string) {
-    const client = await clientService.getClientById(id);
+    const client = await this.clientsService.getClientById(id);
     return client;
   }
 
   @Get()
   async getAll(@Query() query: any) {
     const { page, limit, search, status } = query;
-    const result = await clientService.getAllClients({
+    const result = await this.clientsService.getAllClients({
       page: page ? parseInt(page as string) : undefined,
       limit: limit ? parseInt(limit as string) : undefined,
       search: search as string,
@@ -44,14 +44,13 @@ export class ClientsController {
 
   @Put(':id')
   async update(@Param('id', ParseUUIDPipe) id: string, @Body(ValidationPipe) body: any) {
-    const client = await clientService.updateClient(id, body);
+    const client = await this.clientsService.updateClient(id, body);
     return client;
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    await clientService.deleteClient(id);
-    return;
+    await this.clientsService.deleteClient(id);
   }
 }
