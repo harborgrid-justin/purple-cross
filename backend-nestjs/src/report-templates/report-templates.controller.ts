@@ -20,20 +20,20 @@ export class ReportTemplatesController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body(ValidationPipe) body: any) {
-    const template = await reportTemplateService.createTemplate(body);
+    const template = await this.reportTemplatesService.createTemplate(body);
     return template ;
   }
 
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: string) {
-    const template = await reportTemplateService.getTemplate(id);
+    const template = await this.reportTemplatesService.getTemplate(id);
     return template ;
   }
 
   @Get()
   async getAll(@Query() query: any) {
     const { reportType, category, createdBy, isPublic, page, limit } = query;
-    const result = await reportTemplateService.listTemplates({
+    const result = await this.reportTemplatesService.listTemplates({
       reportType: reportType as string,
       category: category as string,
       createdBy: createdBy as string,
@@ -44,31 +44,33 @@ export class ReportTemplatesController {
     return result ;
   }
 
-  async incrementUsage(req: Request, res: Response) {
-    const template = await reportTemplateService.incrementUsage(id);
+  @Get(':id/incrementusage')
+  async incrementUsage(@Param('id', ParseUUIDPipe) id: string, @Body() body: any) {
+    const template = await this.reportTemplatesService.incrementUsage(id);
     return template ;
   }
 
-  async scheduleReport(req: Request, res: Response) {
-    const schedule = await reportTemplateService.scheduleReport(body);
+  @Get(':id/schedulereport')
+  async scheduleReport(@Param('id', ParseUUIDPipe) id: string, @Body() body: any) {
+    const schedule = await this.reportTemplatesService.scheduleReport(body);
     return schedule ;
   }
 
   async getScheduledReports(_req: Request, res: Response) {
-    const schedules = await reportTemplateService.getScheduledReports();
+    const schedules = await this.reportTemplatesService.getScheduledReports();
     return schedules ;
   }
 
   @Put(':id')
   async update(@Param('id', ParseUUIDPipe) id: string, @Body(ValidationPipe) body: any) {
-    const template = await reportTemplateService.updateTemplate(id, body);
+    const template = await this.reportTemplatesService.updateTemplate(id, body);
     return template ;
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    await reportTemplateService.deleteTemplate(id);
+    await this.reportTemplatesService.deleteTemplate(id);
     return;
   }
 }

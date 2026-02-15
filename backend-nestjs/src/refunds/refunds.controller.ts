@@ -20,37 +20,38 @@ export class RefundsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body(ValidationPipe) body: any) {
-    const refund = await refundService.createRefund(body);
+    const refund = await this.refundsService.createRefund(body);
     return refund ;
   }
 
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: string) {
-    const refund = await refundService.getRefund(id);
+    const refund = await this.refundsService.getRefund(id);
     return refund ;
   }
 
   @Get()
   async getAll(@Query() query: any) {
-    const result = await refundService.listRefunds(query);
+    const result = await this.refundsService.listRefunds(query);
     return result ;
   }
 
-  async process(req: Request, res: Response) {
-    const refund = await refundService.processRefund(id);
+  @Get(':id/process')
+  async process(@Param('id', ParseUUIDPipe) id: string, @Body() body: any) {
+    const refund = await this.refundsService.processRefund(id);
     return refund ;
   }
 
   @Put(':id')
   async update(@Param('id', ParseUUIDPipe) id: string, @Body(ValidationPipe) body: any) {
-    const refund = await refundService.updateRefund(id, body);
+    const refund = await this.refundsService.updateRefund(id, body);
     return refund ;
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    await refundService.deleteRefund(id);
+    await this.refundsService.deleteRefund(id);
     return;
   }
 }

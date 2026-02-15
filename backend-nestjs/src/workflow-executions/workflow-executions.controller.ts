@@ -20,8 +20,9 @@ export class WorkflowExecutionsController {
   /**
    * Get execution by ID
    */
-  async getExecution(req: Request, res: Response) {
-    const execution = await workflowExecutionService.getExecutionById(id);
+  @Get(':id')
+  async getExecution(@Param('id', ParseUUIDPipe) id: string) {
+    const execution = await this.workflowExecutionsService.getExecutionById(id);
 
     return execution;
   }
@@ -29,26 +30,29 @@ export class WorkflowExecutionsController {
   /**
    * Get all executions
    */
-  async getExecutions(req: Request, res: Response) {
+  @Get()
+  async getExecutions(@Query() query: any) {
     const { page, limit, status, templateId } = query;
 
-    const result = await workflowExecutionService.getExecutions({
+    const result = await this.workflowExecutionsService.getExecutions({
       page: page ? parseInt(page as string) : undefined,
       limit: limit ? parseInt(limit as string) : undefined,
       status: status as string | undefined,
       templateId: templateId as string | undefined,
     });
 
-    return result.executions,
+    return {
+      executions: result.executions,
       pagination: result.pagination,
-    ;
+    };
   }
 
   /**
    * Cancel an execution
    */
-  async cancelExecution(req: Request, res: Response) {
-    const execution = await workflowExecutionService.cancelExecution(id);
+  @Post(':id/cancel')
+  async cancelExecution(@Param('id', ParseUUIDPipe) id: string) {
+    const execution = await this.workflowExecutionsService.cancelExecution(id);
 
     return execution;
   }
@@ -56,10 +60,11 @@ export class WorkflowExecutionsController {
   /**
    * Get execution statistics
    */
-  async getExecutionStats(req: Request, res: Response) {
+  @Get('stats')
+  async getExecutionStats(@Query() query: any) {
     const { templateId } = query;
 
-    const stats = await workflowExecutionService.getExecutionStats(
+    const stats = await this.workflowExecutionsService.getExecutionStats(
       templateId as string | undefined
     );
 
@@ -69,10 +74,11 @@ export class WorkflowExecutionsController {
   /**
    * Get recent executions
    */
-  async getRecentExecutions(req: Request, res: Response) {
+  @Get('recent')
+  async getRecentExecutions(@Query() query: any) {
     const { limit } = query;
 
-    const executions = await workflowExecutionService.getRecentExecutions(
+    const executions = await this.workflowExecutionsService.getRecentExecutions(
       limit ? parseInt(limit as string) : undefined
     );
 
@@ -82,8 +88,9 @@ export class WorkflowExecutionsController {
   /**
    * Execute a custom workflow
    */
-  async executeCustomWorkflow(req: Request, res: Response) {
-    const { queueWorkflow } = await import('../jobs');
+  @Post('custom/execute')
+  async executeCustomWorkflow(@Body() body: any) {
+    const { queueWorkflow } = await import('../jobs.js');
     const { workflowName, actions, triggerData } = body;
 
     await queueWorkflow({
@@ -94,13 +101,13 @@ export class WorkflowExecutionsController {
       actions,
     });
 
-    res.status(HTTP_STATUS.OK).json({
+    return {
       status: 'success',
       message: 'Custom workflow queued for execution',
       data: {
         workflowName,
       },
-    });
+    };
   }
 }
 

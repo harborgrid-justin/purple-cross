@@ -20,20 +20,20 @@ export class MarketingCampaignsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body(ValidationPipe) body: any) {
-    const campaign = await marketingCampaignService.createCampaign(body);
+    const campaign = await this.marketingCampaignsService.createCampaign(body);
     return campaign ;
   }
 
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: string) {
-    const campaign = await marketingCampaignService.getCampaign(id);
+    const campaign = await this.marketingCampaignsService.getCampaign(id);
     return campaign ;
   }
 
   @Get()
   async getAll(@Query() query: any) {
     const { status, campaignType, page, limit } = query;
-    const result = await marketingCampaignService.listCampaigns({
+    const result = await this.marketingCampaignsService.listCampaigns({
       status: status as string,
       campaignType: campaignType as string,
       page: page ? parseInt(page as string) : undefined,
@@ -42,32 +42,35 @@ export class MarketingCampaignsController {
     return result ;
   }
 
-  async launch(req: Request, res: Response) {
-    const campaign = await marketingCampaignService.launchCampaign(id);
+  @Get(':id/launch')
+  async launch(@Param('id', ParseUUIDPipe) id: string, @Body() body: any) {
+    const campaign = await this.marketingCampaignsService.launchCampaign(id);
     return campaign ;
   }
 
-  async updateMetrics(req: Request, res: Response) {
+  @Put()
+  async updateMetrics(@Param('id', ParseUUIDPipe) id: string, @Body() body: any) {
     const { metrics } = body;
-    const campaign = await marketingCampaignService.updateCampaignMetrics(id, metrics);
+    const campaign = await this.marketingCampaignsService.updateCampaignMetrics(id, metrics);
     return campaign ;
   }
 
-  async complete(req: Request, res: Response) {
-    const campaign = await marketingCampaignService.completeCampaign(id);
+  @Get(':id/complete')
+  async complete(@Param('id', ParseUUIDPipe) id: string, @Body() body: any) {
+    const campaign = await this.marketingCampaignsService.completeCampaign(id);
     return campaign ;
   }
 
   @Put(':id')
   async update(@Param('id', ParseUUIDPipe) id: string, @Body(ValidationPipe) body: any) {
-    const campaign = await marketingCampaignService.updateCampaign(id, body);
+    const campaign = await this.marketingCampaignsService.updateCampaign(id, body);
     return campaign ;
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    await marketingCampaignService.deleteCampaign(id);
+    await this.marketingCampaignsService.deleteCampaign(id);
     return;
   }
 }

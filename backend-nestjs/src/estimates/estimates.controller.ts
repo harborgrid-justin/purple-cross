@@ -20,20 +20,20 @@ export class EstimatesController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body(ValidationPipe) body: any) {
-    const estimate = await estimateService.createEstimate(body);
+    const estimate = await this.estimatesService.createEstimate(body);
     return estimate ;
   }
 
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: string) {
-    const estimate = await estimateService.getEstimate(id);
+    const estimate = await this.estimatesService.getEstimate(id);
     return estimate ;
   }
 
   @Get()
   async getAll(@Query() query: any) {
     const { clientId, status, page, limit } = query;
-    const result = await estimateService.listEstimates({
+    const result = await this.estimatesService.listEstimates({
       clientId: clientId as string,
       status: status as string,
       page: page ? parseInt(page as string) : undefined,
@@ -42,31 +42,34 @@ export class EstimatesController {
     return result ;
   }
 
-  async approve(req: Request, res: Response) {
-    const estimate = await estimateService.approveEstimate(id);
+  @Post(':id/approve')
+  async approve(@Param('id', ParseUUIDPipe) id: string, @Body() body: any) {
+    const estimate = await this.estimatesService.approveEstimate(id);
     return estimate ;
   }
 
-  async convertToInvoice(req: Request, res: Response) {
-    const invoice = await estimateService.convertToInvoice(id);
+  @Get(':id/converttoinvoice')
+  async convertToInvoice(@Param('id', ParseUUIDPipe) id: string, @Body() body: any) {
+    const invoice = await this.estimatesService.convertToInvoice(id);
     return invoice ;
   }
 
-  async reject(req: Request, res: Response) {
-    const estimate = await estimateService.rejectEstimate(id);
+  @Post(':id/reject')
+  async reject(@Param('id', ParseUUIDPipe) id: string, @Body() body: any) {
+    const estimate = await this.estimatesService.rejectEstimate(id);
     return estimate ;
   }
 
   @Put(':id')
   async update(@Param('id', ParseUUIDPipe) id: string, @Body(ValidationPipe) body: any) {
-    const estimate = await estimateService.updateEstimate(id, body);
+    const estimate = await this.estimatesService.updateEstimate(id, body);
     return estimate ;
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    await estimateService.deleteEstimate(id);
+    await this.estimatesService.deleteEstimate(id);
     return;
   }
 }

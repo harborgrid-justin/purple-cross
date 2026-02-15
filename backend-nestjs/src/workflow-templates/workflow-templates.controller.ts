@@ -20,8 +20,9 @@ export class WorkflowTemplatesController {
   /**
    * Create a new workflow template
    */
-  async createTemplate(req: Request, res: Response) {
-    const template = await workflowTemplateService.createTemplate(body);
+  @Post()
+  async createTemplate(@Body() body: any) {
+    const template = await this.workflowTemplatesService.createTemplate(body);
 
     return template;
   }
@@ -29,8 +30,9 @@ export class WorkflowTemplatesController {
   /**
    * Get template by ID
    */
-  async getTemplate(req: Request, res: Response) {
-    const template = await workflowTemplateService.getTemplateById(id);
+  @Get(':id')
+  async getTemplate(@Param('id', ParseUUIDPipe) id: string) {
+    const template = await this.workflowTemplatesService.getTemplateById(id);
 
     return template;
   }
@@ -38,10 +40,11 @@ export class WorkflowTemplatesController {
   /**
    * Get all templates
    */
-  async getTemplates(req: Request, res: Response) {
+  @Get()
+  async getTemplates(@Query() query: any) {
     const { page, limit, category, triggerType, isActive } = query;
 
-    const result = await workflowTemplateService.getTemplates({
+    const result = await this.workflowTemplatesService.getTemplates({
       page: page ? parseInt(page as string) : undefined,
       limit: limit ? parseInt(limit as string) : undefined,
       category: category as string | undefined,
@@ -49,16 +52,18 @@ export class WorkflowTemplatesController {
       isActive: isActive === 'true' ? true : isActive === 'false' ? false : undefined,
     });
 
-    return result.templates,
+    return {
+      templates: result.templates,
       pagination: result.pagination,
-    ;
+    };
   }
 
   /**
    * Update a template
    */
-  async updateTemplate(req: Request, res: Response) {
-    const template = await workflowTemplateService.updateTemplate(id, body);
+  @Put(':id')
+  async updateTemplate(@Param('id', ParseUUIDPipe) id: string, @Body() body: any) {
+    const template = await this.workflowTemplatesService.updateTemplate(id, body);
 
     return template;
   }
@@ -66,18 +71,19 @@ export class WorkflowTemplatesController {
   /**
    * Delete a template
    */
-  async deleteTemplate(req: Request, res: Response) {
-    await workflowTemplateService.deleteTemplate(id);
-
-    return;
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteTemplate(@Param('id', ParseUUIDPipe) id: string) {
+    await this.workflowTemplatesService.deleteTemplate(id);
   }
 
   /**
    * Get popular templates
    */
-  async getPopularTemplates(req: Request, res: Response) {
+  @Get('popular')
+  async getPopularTemplates(@Query() query: any) {
     const { limit } = query;
-    const templates = await workflowTemplateService.getPopularTemplates(
+    const templates = await this.workflowTemplatesService.getPopularTemplates(
       limit ? parseInt(limit as string) : undefined
     );
 
@@ -87,8 +93,9 @@ export class WorkflowTemplatesController {
   /**
    * Get template categories
    */
-  async getCategories(_req: Request, res: Response) {
-    const categories = await workflowTemplateService.getCategories();
+  @Get('categories')
+  async getCategories() {
+    const categories = await this.workflowTemplatesService.getCategories();
 
     return categories;
   }
@@ -96,9 +103,10 @@ export class WorkflowTemplatesController {
   /**
    * Get templates by category
    */
-  async getTemplatesByCategory(req: Request, res: Response) {
-    const templates = await workflowTemplateService.getTemplatesByCategory(
-      FIXME_category
+  @Get('category/:category')
+  async getTemplatesByCategory(@Param('category') category: string) {
+    const templates = await this.workflowTemplatesService.getTemplatesByCategory(
+      category
     );
 
     return templates;
@@ -107,8 +115,9 @@ export class WorkflowTemplatesController {
   /**
    * Execute a template
    */
-  async executeTemplate(req: Request, res: Response) {
-    const { queueWorkflow } = await import('../jobs');
+  @Post(':id/execute')
+  async executeTemplate(@Param('id', ParseUUIDPipe) id: string, @Body() body: any) {
+    const { queueWorkflow } = await import('../jobs.js');
 
     await queueWorkflow({
       type: 'execute_template',
@@ -117,13 +126,13 @@ export class WorkflowTemplatesController {
       triggerData: body.triggerData || {},
     });
 
-    res.status(HTTP_STATUS.OK).json({
+    return {
       status: 'success',
       message: 'Workflow template queued for execution',
       data: {
         templateId: id,
       },
-    });
+    };
   }
 }
 

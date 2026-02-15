@@ -20,13 +20,13 @@ export class AppointmentsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body(ValidationPipe) body: any) {
-    const appointment = await appointmentService.createAppointment(body);
+    const appointment = await this.appointmentsService.createAppointment(body);
     return appointment;
   }
 
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: string) {
-    const appointment = await appointmentService.getAppointmentById(id);
+    const appointment = await this.appointmentsService.getAppointmentById(id);
     return appointment;
   }
 
@@ -34,7 +34,7 @@ export class AppointmentsController {
   async getAll(@Query() query: any) {
     const { page, limit, patientId, clientId, veterinarianId, status, startDate, endDate } =
       query;
-    const result = await appointmentService.getAllAppointments({
+    const result = await this.appointmentsService.getAllAppointments({
       page: page ? parseInt(page as string) : undefined,
       limit: limit ? parseInt(limit as string) : undefined,
       patientId: patientId as string,
@@ -49,19 +49,19 @@ export class AppointmentsController {
 
   @Put(':id')
   async update(@Param('id', ParseUUIDPipe) id: string, @Body(ValidationPipe) body: any) {
-    const appointment = await appointmentService.updateAppointment(id, body);
+    const appointment = await this.appointmentsService.updateAppointment(id, body);
     return appointment;
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    await appointmentService.deleteAppointment(id);
-    return;
+    await this.appointmentsService.deleteAppointment(id);
   }
 
-  async complete(req: Request, res: Response) {
-    const appointment = await appointmentService.completeAppointment(id);
+  @Post(':id/complete')
+  async complete(@Param('id', ParseUUIDPipe) id: string) {
+    const appointment = await this.appointmentsService.completeAppointment(id);
     return appointment;
   }
 }
