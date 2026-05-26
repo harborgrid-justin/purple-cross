@@ -25,3 +25,6 @@ export const VERSIONED_MODELS = new Set<string>(CORE_MODELS);
 
 /** Models for which mutations write an AuditLog row. */
 export const AUDITED_MODELS = new Set<string>(CORE_MODELS);
+
+/** Models with a `deletedAt` column and soft-delete semantics. */
+export const SOFT_DELETE_MODELS = new Set<string>(CORE_MODELS);

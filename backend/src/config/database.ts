@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { logger } from './logger';
+import { softDeleteExtension } from './prisma-extensions/soft-delete';
 import { auditExtension } from './prisma-extensions/audit';
 
 // Prisma event types for type-safe event handlers
@@ -40,9 +41,10 @@ basePrisma.$on('warn', (e: LogEvent): void => {
 });
 
 // Extended client used throughout the app. The export name is unchanged so the
-// ~37 importers are untouched. Future extensions (soft delete, tenant scoping,
-// field encryption) compose here in order.
-const prisma = basePrisma.$extends(auditExtension);
+// ~37 importers are untouched. Composition order matters: soft-delete is inner
+// (so delete() physically becomes update()), audit is outer (so it still logs
+// the call as a delete and captures stamped results).
+const prisma = basePrisma.$extends(softDeleteExtension).$extends(auditExtension);
 
 export type ExtendedPrismaClient = typeof prisma;
 
