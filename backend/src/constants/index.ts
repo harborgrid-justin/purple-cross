@@ -211,6 +211,13 @@ export const ERROR_MESSAGES = {
   REQUEST_TIMEOUT: 'Request timeout',
   MISSING_ENV_VARS: (vars: string[]) =>
     `Missing required environment variables: ${vars.join(', ')}`,
+  INVALID_ENV: (details: string) => `Invalid environment configuration: ${details}`,
+  INVALID_CREDENTIALS: 'Invalid email or password',
+  ACCOUNT_LOCKED:
+    'Account locked due to too many failed login attempts. Please try again later.',
+  INVALID_REFRESH_TOKEN: 'Invalid or expired refresh token',
+  REGISTRATION_CLOSED:
+    'Public registration is closed. Ask an administrator to create your account.',
 } as const;
 
 // ============================================================================
@@ -222,18 +229,19 @@ export const DEFAULT_ENV = {
   API_PREFIX: '/api/v1',
   REDIS_URL: 'redis://localhost:6379',
   JWT_EXPIRES_IN: '7d',
+  JWT_ACCESS_EXPIRES_IN: '15m',
+  JWT_REFRESH_EXPIRES_IN: '7d',
   CORS_ORIGIN: 'http://localhost:5173',
   RATE_LIMIT_WINDOW_MS: 900000, // 15 minutes
   RATE_LIMIT_MAX_REQUESTS: 100,
   MAX_FILE_SIZE: 10485760,
   UPLOAD_DIR: './uploads',
-  JWT_SECRET_FALLBACK: 'change-me-in-production',
 } as const;
 
 // ============================================================================
 // Required Environment Variables
 // ============================================================================
-export const REQUIRED_ENV_VARS = ['DATABASE_URL', 'JWT_SECRET'] as const;
+export const REQUIRED_ENV_VARS = ['DATABASE_URL', 'JWT_SECRET', 'JWT_REFRESH_SECRET'] as const;
 
 // ============================================================================
 // Database Query Modes
@@ -407,4 +415,41 @@ export const WORKFLOW_EVENTS = {
   // Prescription events
   PRESCRIPTION_CREATED: 'prescription.created',
   PRESCRIPTION_REFILLED: 'prescription.refilled',
+} as const;
+
+// ============================================================================
+// Authentication Roles (RBAC)
+// ============================================================================
+// NOTE: These are the AUTH roles attached to a `User` principal and carried on
+// the JWT. They are intentionally distinct from `STAFF_ROLE` (an HR/clinical
+// attribute on the `Staff` record). Map between them when provisioning logins.
+export const ROLES = {
+  ADMIN: 'ADMIN',
+  VET: 'VET',
+  TECH: 'TECH',
+  RECEPTIONIST: 'RECEPTIONIST',
+  CLIENT_PORTAL: 'CLIENT_PORTAL',
+} as const;
+
+export type Role = (typeof ROLES)[keyof typeof ROLES];
+
+export const ALL_ROLES: Role[] = Object.values(ROLES);
+
+// Staff-facing roles (everything except the external client-portal principal).
+export const STAFF_ROLES: Role[] = [
+  ROLES.ADMIN,
+  ROLES.VET,
+  ROLES.TECH,
+  ROLES.RECEPTIONIST,
+];
+
+// ============================================================================
+// Security / Authentication Configuration
+// ============================================================================
+export const SECURITY = {
+  BCRYPT_ROUNDS: 12,
+  MAX_LOGIN_ATTEMPTS: 5,
+  LOCK_DURATION_MS: 15 * 60 * 1000, // 15 minutes
+  MIN_SECRET_LENGTH: 32,
+  REFRESH_TOKEN_BYTES: 48,
 } as const;

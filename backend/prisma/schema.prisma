@@ -392,10 +392,11 @@ model Staff {
   medicalRecords    MedicalRecord[]
   prescriptions     Prescription[]
   schedules         StaffSchedule[]
-  
+  user              User?
+
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
-  
+
   @@index([email])
   @@index([role])
   @@map("staff")
@@ -1803,4 +1804,71 @@ model ApiUsageMetric {
   @@index([endpoint])
   @@index([timestamp])
   @@map("api_usage_metrics")
+}
+
+// ============================================================================
+// Authentication & Authorization
+// ============================================================================
+
+// Authentication roles carried on the JWT. Distinct from the free-text
+// `Staff.role` HR attribute; map between them when provisioning staff logins.
+enum Role {
+  ADMIN
+  VET
+  TECH
+  RECEPTIONIST
+  CLIENT_PORTAL
+}
+
+// Application principal used to authenticate against the staff-facing API.
+// A staff member's login links to their `Staff` record via `staffId`.
+model User {
+  id                String    @id @default(uuid())
+  email             String    @unique
+  passwordHash      String
+
+  role              Role      @default(RECEPTIONIST)
+  status            String    @default("active")
+
+  firstName         String?
+  lastName          String?
+
+  staffId           String?   @unique
+  staff             Staff?    @relation(fields: [staffId], references: [id])
+
+  lastLoginAt       DateTime?
+  loginAttempts     Int       @default(0)
+  lockedUntil       DateTime?
+  passwordChangedAt DateTime?
+
+  refreshTokens     RefreshToken[]
+
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@index([email])
+  @@index([role])
+  @@map("users")
+}
+
+// Opaque refresh tokens, stored only as SHA-256 hashes. Rotation chains link
+// via `replacedById` so a replayed (revoked) token can be detected.
+model RefreshToken {
+  id            String    @id @default(uuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  tokenHash     String    @unique
+  expiresAt     DateTime
+  revokedAt     DateTime?
+  replacedById  String?
+
+  createdByIp   String?
+  userAgent     String?
+
+  createdAt     DateTime  @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("refresh_tokens")
 }
