@@ -81,7 +81,7 @@ async function main() {
 
   // Create a bootstrap ADMIN login (development only). Override via
   // SEED_ADMIN_EMAIL / SEED_ADMIN_PASSWORD. Never seed this in production.
-  const adminEmail = process.env.SEED_ADMIN_EMAIL ?? 'admin@purplecross.local';
+  const adminEmail = process.env.SEED_ADMIN_EMAIL ?? 'admin@purplecross.vet';
   const adminPassword = process.env.SEED_ADMIN_PASSWORD ?? 'ChangeMe123!';
   const adminUser = await prisma.user.create({
     data: {
