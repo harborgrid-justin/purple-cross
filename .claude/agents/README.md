@@ -27,6 +27,12 @@ migration"* — or let Claude pick based on each agent's `description`.
 | `frontend-testing-architect` | Jest/Vitest/RTL/Playwright/Cypress strategy and tests |
 | `jsdoc-typescript-architect` | TypeScript with comprehensive JSDoc documentation |
 | `server-management-architect` | Deployment infra, scaling, server troubleshooting |
+| `code-reviewer` | **Read-only** review of a diff for correctness/edge-cases/consistency (Writer/Reviewer pattern) |
+| `security-reviewer` | **Read-only** security review (injection, authz, secrets, tenant isolation, PHI/PII) — use proactively after auth/data changes |
+
+The two reviewers are **read-only** (`tools: Read, Grep, Glob, Bash`), demonstrating
+the least-privilege pattern; `security-reviewer` runs on `opus`. The architects
+omit `tools` (inherit all) because they implement as well as design.
 
 ## Authoring / editing an agent
 
