@@ -25,6 +25,9 @@ interface EnvConfig {
   jwtAccessExpiresIn: string;
   jwtRefreshExpiresIn: string;
 
+  // Field-level encryption
+  fieldEncryptionKey: string;
+
   // CORS
   corsOrigin: string;
 
@@ -51,6 +54,7 @@ interface ValidatedEnv {
   JWT_REFRESH_SECRET: string;
   JWT_ACCESS_EXPIRES_IN: string;
   JWT_REFRESH_EXPIRES_IN: string;
+  FIELD_ENCRYPTION_KEY: string;
   CORS_ORIGIN: string;
   RATE_LIMIT_WINDOW_MS: number;
   RATE_LIMIT_MAX_REQUESTS: number;
@@ -69,6 +73,7 @@ const TEST_DEFAULTS = {
   DATABASE_URL: 'postgresql://test:test@localhost:5432/purple_cross_test?schema=public',
   JWT_SECRET: 'test-jwt-secret-please-change-32-bytes-minimum',
   JWT_REFRESH_SECRET: 'test-refresh-secret-please-change-32-bytes-min',
+  FIELD_ENCRYPTION_KEY: 'test-field-encryption-key-please-change-now',
 };
 
 const raw = {
@@ -86,6 +91,8 @@ const raw = {
     DEFAULT_ENV.JWT_ACCESS_EXPIRES_IN,
   JWT_REFRESH_EXPIRES_IN:
     process.env.JWT_REFRESH_EXPIRES_IN ?? DEFAULT_ENV.JWT_REFRESH_EXPIRES_IN,
+  FIELD_ENCRYPTION_KEY:
+    process.env.FIELD_ENCRYPTION_KEY ?? (isTest ? TEST_DEFAULTS.FIELD_ENCRYPTION_KEY : undefined),
   CORS_ORIGIN: process.env.CORS_ORIGIN ?? DEFAULT_ENV.CORS_ORIGIN,
   RATE_LIMIT_WINDOW_MS:
     process.env.RATE_LIMIT_WINDOW_MS ?? String(DEFAULT_ENV.RATE_LIMIT_WINDOW_MS),
@@ -113,6 +120,7 @@ const envSchema = Joi.object<ValidatedEnv, true>({
     .messages({ 'any.invalid': 'JWT_REFRESH_SECRET must differ from JWT_SECRET' }),
   JWT_ACCESS_EXPIRES_IN: Joi.string().required(),
   JWT_REFRESH_EXPIRES_IN: Joi.string().required(),
+  FIELD_ENCRYPTION_KEY: Joi.string().min(16).required(),
   CORS_ORIGIN: Joi.string().required(),
   RATE_LIMIT_WINDOW_MS: Joi.number().positive().required(),
   RATE_LIMIT_MAX_REQUESTS: Joi.number().positive().required(),
@@ -141,6 +149,7 @@ const env: EnvConfig = {
   jwtExpiresIn: v.JWT_ACCESS_EXPIRES_IN,
   jwtAccessExpiresIn: v.JWT_ACCESS_EXPIRES_IN,
   jwtRefreshExpiresIn: v.JWT_REFRESH_EXPIRES_IN,
+  fieldEncryptionKey: v.FIELD_ENCRYPTION_KEY,
   corsOrigin: v.CORS_ORIGIN,
   rateLimitWindowMs: v.RATE_LIMIT_WINDOW_MS,
   rateLimitMaxRequests: v.RATE_LIMIT_MAX_REQUESTS,
