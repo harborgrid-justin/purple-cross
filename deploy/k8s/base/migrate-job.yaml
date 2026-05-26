@@ -1,0 +1,22 @@
+# Runs database migrations before a rollout. Apply this Job (or run it as a Helm
+# pre-upgrade hook / Argo PreSync) and wait for completion before updating the
+# backend Deployment. The backend image must include the Prisma CLI + migrations
+# (see backend/Dockerfile builder stage or a dedicated migration image).
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: purple-cross-migrate
+  namespace: purple-cross
+spec:
+  backoffLimit: 2
+  ttlSecondsAfterFinished: 600
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: migrate
+          image: ghcr.io/harborgrid-justin/purple-cross-backend:latest
+          command: ["npx", "prisma", "migrate", "deploy"]
+          envFrom:
+            - secretRef:
+                name: purple-cross-secrets

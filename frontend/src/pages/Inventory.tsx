@@ -5,8 +5,9 @@
  * Last Updated: 2025-10-23 | File Type: .tsx
  */
 
-import { useState, Suspense, lazy } from 'react';
+import { Suspense, lazy } from 'react';
 import { Link, Routes, Route, useLocation } from 'react-router-dom';
+import { useInventory } from '../hooks/useInventory';
 import '../styles/Page.css';
 
 // Lazy load subfeature pages
@@ -18,50 +19,82 @@ const Valuation = lazy(() => import('./inventory/Valuation'));
 const UsageAnalytics = lazy(() => import('./inventory/UsageAnalytics'));
 const Barcode = lazy(() => import('./inventory/Barcode'));
 const Equipment = lazy(() => import('./inventory/Equipment'));
+const InventoryCreate = lazy(() => import('./inventory/InventoryCreate'));
+const InventoryEdit = lazy(() => import('./inventory/InventoryEdit'));
+
+interface InventoryItem {
+  id: string;
+  name: string;
+  quantity: number;
+  reorderPoint: number;
+  unit?: string;
+}
 
 const InventoryList = () => {
-  const [inventory] = useState([
-    { id: '1', item: 'Amoxicillin 500mg', quantity: 150, reorderLevel: 50, status: 'In Stock' },
-    { id: '2', item: 'Prednisone 10mg', quantity: 25, reorderLevel: 30, status: 'Low Stock' },
-  ]);
+  const { data, isLoading: loading, isError } = useInventory({ limit: 50 });
+
+  const items = (data as { data?: InventoryItem[] } | undefined)?.data ?? [];
 
   return (
     <div className="table-container">
-      <table className="data-table" role="table" aria-label="Inventory list">
-        <thead>
-          <tr>
-            <th scope="col">Item</th>
-            <th scope="col">Quantity</th>
-            <th scope="col">Reorder Level</th>
-            <th scope="col">Status</th>
-            <th scope="col">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {inventory.map((item) => (
-            <tr key={item.id}>
-              <th scope="row">{item.item}</th>
-              <td>{item.quantity}</td>
-              <td>{item.reorderLevel}</td>
-              <td>
-                <span
-                  className={`status-badge status-${item.status === 'Low Stock' ? 'warning' : 'confirmed'}`}
-                >
-                  {item.status}
-                </span>
-              </td>
-              <td>
-                <button className="btn-action" aria-label={`View details for ${item.item}`}>
-                  View
-                </button>
-                <button className="btn-action" aria-label={`Adjust stock for ${item.item}`}>
-                  Adjust
-                </button>
-              </td>
+      {loading ? (
+        <div role="status" aria-live="polite">
+          <p>Loading inventory...</p>
+        </div>
+      ) : isError ? (
+        <div className="alert alert-error" role="alert">
+          <p>Failed to load inventory. Please try again.</p>
+        </div>
+      ) : items.length === 0 ? (
+        <div role="status" aria-live="polite">
+          <p>No inventory items found. Add an item to get started.</p>
+        </div>
+      ) : (
+        <table className="data-table" role="table" aria-label="Inventory list">
+          <thead>
+            <tr>
+              <th scope="col">Item</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Reorder Point</th>
+              <th scope="col">Status</th>
+              <th scope="col">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {items.map((item) => {
+              const lowStock = item.quantity <= item.reorderPoint;
+              return (
+                <tr key={item.id}>
+                  <th scope="row">{item.name}</th>
+                  <td>
+                    {item.quantity}
+                    {item.unit ? ` ${item.unit}` : ''}
+                  </td>
+                  <td>{item.reorderPoint}</td>
+                  <td>
+                    <span
+                      className={`status-badge status-${lowStock ? 'warning' : 'confirmed'}`}
+                      role="status"
+                      aria-label={lowStock ? 'Low stock' : 'In stock'}
+                    >
+                      {lowStock ? 'Low Stock' : 'In Stock'}
+                    </span>
+                  </td>
+                  <td>
+                    <Link
+                      to={`/inventory/${item.id}/edit`}
+                      className="btn-action"
+                      aria-label={`Edit ${item.name}`}
+                    >
+                      Edit
+                    </Link>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 };
@@ -75,9 +108,9 @@ const Inventory = () => {
         <h1>
           <span aria-hidden="true">📦</span> Inventory
         </h1>
-        <button className="btn-primary" aria-label="Add inventory item">
+        <Link to="/inventory/create" className="btn-primary" aria-label="Add inventory item">
           + Add Item
-        </button>
+        </Link>
       </header>
 
       <nav className="sub-nav" role="navigation" aria-label="Inventory sections">
@@ -146,6 +179,8 @@ const Inventory = () => {
       >
         <Routes>
           <Route path="/" element={<InventoryList />} />
+          <Route path="/create" element={<InventoryCreate />} />
+          <Route path="/:id/edit" element={<InventoryEdit />} />
           <Route path="/stock-monitoring" element={<StockMonitoring />} />
           <Route path="/auto-reorder" element={<AutoReorder />} />
           <Route path="/vendors" element={<Vendors />} />

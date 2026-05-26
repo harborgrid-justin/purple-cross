@@ -66,6 +66,13 @@ jobs:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/purple_cross_test?schema=public
           NODE_ENV: test
 
+      - name: Run integration tests (real database)
+        working-directory: ./backend
+        run: npm run test:integration
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/purple_cross_test?schema=public
+          NODE_ENV: test
+
       - name: Upload coverage
         uses: codecov/codecov-action@v3
         with:
@@ -138,3 +145,25 @@ jobs:
           context: ./frontend
           push: false
           tags: purple-cross-frontend:test
+
+  security-audit:
+    name: Dependency Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Backend npm audit
+        working-directory: ./backend
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
+      - name: Frontend npm audit
+        working-directory: ./frontend
+        run: npm audit --audit-level=high
+        continue-on-error: true

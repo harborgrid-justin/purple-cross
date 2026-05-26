@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: purple-cross
+resources:
+  - ../../base
+# Pin to an immutable image tag at deploy time, e.g. via:
+#   kustomize edit set image ghcr.io/harborgrid-justin/purple-cross-backend=...:<sha>
+images:
+  - name: ghcr.io/harborgrid-justin/purple-cross-backend
+    newTag: latest
+  - name: ghcr.io/harborgrid-justin/purple-cross-frontend
+    newTag: latest
+patches:
+  - target:
+      kind: Deployment
+      name: purple-cross-backend
+    patch: |
+      - op: replace
+        path: /spec/replicas
+        value: 3

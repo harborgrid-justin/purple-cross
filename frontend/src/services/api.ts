@@ -5,7 +5,7 @@
  * Last Updated: 2025-10-22 | File Type: .ts
  */
 
-import axios, { AxiosInstance, AxiosError } from 'axios';
+import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios';
 import {
   API_CONFIG,
   HTTP_STATUS,
@@ -16,8 +16,18 @@ import {
   API_ENDPOINTS,
 } from '../constants';
 
+interface RefreshResponse {
+  data?: {
+    accessToken?: string;
+    refreshToken?: string;
+    user?: unknown;
+  };
+}
+
 class ApiClient {
   private client: AxiosInstance;
+  // Single-flight guard so concurrent 401s trigger only one refresh.
+  private refreshPromise: Promise<string | null> | null = null;
 
   constructor() {
     this.client = axios.create({
@@ -40,19 +50,101 @@ class ApiClient {
       (error) => Promise.reject(error)
     );
 
-    // Response interceptor for error handling
+    // Response interceptor: on 401, attempt a one-time silent refresh and retry
+    // the original request; if that fails, clear the session and redirect.
     this.client.interceptors.response.use(
       (response) => response,
-      (error: AxiosError) => {
-        if (error.response?.status === HTTP_STATUS.UNAUTHORIZED) {
-          // Handle unauthorized - redirect to login
-          localStorage.removeItem(STORAGE_KEYS.TOKEN);
-          window.location.href = ROUTES.LOGIN;
+      async (error: AxiosError) => {
+        const original = error.config as
+          | (InternalAxiosRequestConfig & { _retry?: boolean })
+          | undefined;
+        const url = original?.url ?? '';
+        const isAuthEndpoint =
+          url.includes('/auth/login') ||
+          url.includes('/auth/refresh') ||
+          url.includes('/auth/register');
+
+        if (
+          error.response?.status === HTTP_STATUS.UNAUTHORIZED &&
+          original &&
+          !original._retry &&
+          !isAuthEndpoint
+        ) {
+          original._retry = true;
+          const newToken = await this.refreshAccessToken();
+          if (newToken) {
+            original.headers.Authorization = `${HTTP_HEADERS.BEARER_PREFIX} ${newToken}`;
+            return this.client(original);
+          }
+          this.clearSessionAndRedirect();
         }
         return Promise.reject(error);
       }
     );
   }
+
+  /**
+   * Exchange the stored refresh token for a new access token. Uses a bare axios
+   * call (not the intercepted client) to avoid recursion, and de-duplicates
+   * concurrent refreshes via `refreshPromise`.
+   */
+  private refreshAccessToken(): Promise<string | null> {
+    if (this.refreshPromise) {
+      return this.refreshPromise;
+    }
+    const refreshToken = localStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
+    if (!refreshToken) {
+      return Promise.resolve(null);
+    }
+
+    this.refreshPromise = (async () => {
+      try {
+        const resp = await axios.post<RefreshResponse>(
+          `${API_CONFIG.BASE_URL}/auth/refresh`,
+          { refreshToken },
+          { headers: { [HTTP_HEADERS.CONTENT_TYPE]: CONTENT_TYPE.JSON } }
+        );
+        const data = resp.data?.data;
+        if (data?.accessToken) {
+          localStorage.setItem(STORAGE_KEYS.TOKEN, data.accessToken);
+          if (data.refreshToken) {
+            localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, data.refreshToken);
+          }
+          if (data.user) {
+            localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(data.user));
+          }
+          return data.accessToken;
+        }
+        return null;
+      } catch {
+        return null;
+      } finally {
+        this.refreshPromise = null;
+      }
+    })();
+
+    return this.refreshPromise;
+  }
+
+  private clearSessionAndRedirect(): void {
+    localStorage.removeItem(STORAGE_KEYS.TOKEN);
+    localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
+    localStorage.removeItem(STORAGE_KEYS.USER);
+    if (window.location.pathname !== ROUTES.LOGIN) {
+      window.location.href = ROUTES.LOGIN;
+    }
+  }
+
+  // Auth endpoints
+  auth = {
+    login: (credentials: { email: string; password: string }) =>
+      this.post('/auth/login', credentials),
+    register: (data: { email: string; password: string; firstName?: string; lastName?: string }) =>
+      this.post('/auth/register', data),
+    refresh: (refreshToken: string) => this.post('/auth/refresh', { refreshToken }),
+    logout: (refreshToken: string) => this.post('/auth/logout', { refreshToken }),
+    me: () => this.get('/auth/me'),
+  };
 
   // Generic methods
   async get<T>(url: string, params?: Record<string, unknown>) {

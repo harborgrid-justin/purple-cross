@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
@@ -14,6 +15,14 @@ async function main() {
 
   console.log('📝 Seeding sample data...');
 
+  // Ensure the bootstrap tenant exists (matches the multi-tenancy migration).
+  const tenant = await prisma.tenant.upsert({
+    where: { slug: 'default' },
+    update: {},
+    create: { name: 'Default Clinic', slug: 'default' },
+  });
+  console.log('✓ Default tenant:', tenant.slug);
+
   // Create sample client
   const client = await prisma.client.create({
     data: {
@@ -27,6 +36,7 @@ async function main() {
       zipCode: '62701',
       preferredContact: 'email',
       status: 'active',
+      tenantId: tenant.id,
     },
   });
 
@@ -44,6 +54,7 @@ async function main() {
       weight: 65.0,
       ownerId: client.id,
       status: 'active',
+      tenantId: tenant.id,
     },
   });
 
@@ -67,6 +78,26 @@ async function main() {
   });
 
   console.log('✓ Created sample staff member:', staff.email);
+
+  // Create a bootstrap ADMIN login (development only). Override via
+  // SEED_ADMIN_EMAIL / SEED_ADMIN_PASSWORD. Never seed this in production.
+  const adminEmail = process.env.SEED_ADMIN_EMAIL ?? 'admin@purplecross.vet';
+  const adminPassword = process.env.SEED_ADMIN_PASSWORD ?? 'ChangeMe123!';
+  const adminUser = await prisma.user.create({
+    data: {
+      email: adminEmail,
+      passwordHash: await bcrypt.hash(adminPassword, 12),
+      role: 'ADMIN',
+      status: 'active',
+      firstName: 'Sarah',
+      lastName: 'Johnson',
+      staffId: staff.id,
+      tenantId: tenant.id,
+      passwordChangedAt: new Date(),
+    },
+  });
+
+  console.log('✓ Created bootstrap admin user:', adminUser.email);
 
   // Create sample medication
   const medication = await prisma.medication.create({
@@ -109,6 +140,7 @@ async function main() {
   console.log('  - Clients: 1');
   console.log('  - Patients: 1');
   console.log('  - Staff: 1');
+  console.log('  - Users (admin): 1');
   console.log('  - Medications: 1');
   console.log('  - Inventory Items: 1');
 }

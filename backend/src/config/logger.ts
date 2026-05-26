@@ -1,8 +1,21 @@
 import winston from 'winston';
 import path from 'path';
+import { redactDeep } from '../utils/pii-redact';
 
 const logLevel = process.env.LOG_LEVEL || 'info';
 const logDir = process.env.LOG_FILE_PATH || './logs';
+
+// Redact PII/PHI/credentials from log metadata. Mutates the info object's
+// string-keyed fields in place so Winston's internal symbol props are preserved.
+const PRESERVED_KEYS = new Set(['level', 'message', 'timestamp', 'stack', 'environment', 'version']);
+const redactionFormat = winston.format((info) => {
+  for (const key of Object.keys(info)) {
+    if (!PRESERVED_KEYS.has(key)) {
+      info[key] = redactDeep(info[key]);
+    }
+  }
+  return info;
+})();
 
 /**
  * Custom format for structured logging
@@ -12,6 +25,7 @@ const structuredFormat = winston.format.combine(
   winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
   winston.format.errors({ stack: true }),
   winston.format.splat(),
+  redactionFormat,
   winston.format.json(),
   winston.format((info) => {
     // Add environment and version to all logs

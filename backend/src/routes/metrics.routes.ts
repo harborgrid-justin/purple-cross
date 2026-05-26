@@ -1,36 +1,15 @@
 import { Router, Request, Response } from 'express';
-import { getMetrics } from '../middleware/metrics';
+import { register } from '../config/metrics';
 
 const router = Router();
 
 /**
- * Metrics endpoint for monitoring and observability
- * Returns application metrics in JSON format
- * In production, consider using Prometheus format
+ * Prometheus metrics endpoint (text exposition format). Mounted behind
+ * authenticate + authorize(ADMIN) in app.ts. Scrapers use an ADMIN/service JWT.
  */
-router.get('/', (_req: Request, res: Response) => {
-  const metrics = getMetrics();
-  const memoryUsage = process.memoryUsage();
-
-  res.status(200).json({
-    timestamp: new Date().toISOString(),
-    metrics: {
-      requests: metrics,
-      system: {
-        uptime: metrics.uptimeSeconds,
-        memory: {
-          rss: memoryUsage.rss,
-          heapTotal: memoryUsage.heapTotal,
-          heapUsed: memoryUsage.heapUsed,
-          external: memoryUsage.external,
-          heapUsedPercentage: (memoryUsage.heapUsed / memoryUsage.heapTotal) * 100,
-        },
-        cpu: process.cpuUsage(),
-        platform: process.platform,
-        nodeVersion: process.version,
-      },
-    },
-  });
+router.get('/', async (_req: Request, res: Response) => {
+  res.set('Content-Type', register.contentType);
+  res.end(await register.metrics());
 });
 
 export default router;

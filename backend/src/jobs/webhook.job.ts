@@ -4,6 +4,20 @@ import { logger } from '../config/logger';
 import { webhookService } from '../services/webhook.service';
 import { webhookDeliveryService } from '../services/webhook-delivery.service';
 import { webhooksQueue } from '../config/queue';
+import { CircuitBreaker, createCircuitBreaker } from '../utils/circuit-breaker';
+
+// Per-destination circuit breakers: a consistently-failing webhook URL trips
+// its breaker so we fail fast instead of hammering a dead endpoint.
+const webhookBreakers = new Map<string, CircuitBreaker>();
+
+function getWebhookBreaker(webhookId: string): CircuitBreaker {
+  let breaker = webhookBreakers.get(webhookId);
+  if (!breaker) {
+    breaker = createCircuitBreaker(`webhook:${webhookId}`);
+    webhookBreakers.set(webhookId, breaker);
+  }
+  return breaker;
+}
 
 export interface WebhookPayload {
   webhookId: string;
@@ -96,17 +110,19 @@ export async function processWebhookJob(job: Job<WebhookPayload>): Promise<void>
     // Generate signature
     const signature = webhookService.generateSignature(payloadString, webhook.secret);
 
-    // Send webhook request
-    const response = await axios.post(webhook.url, payload, {
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Webhook-Signature': signature,
-        'X-Webhook-Event': event,
-        'User-Agent': 'Purple-Cross-Webhooks/1.0',
-      },
-      timeout: 10000, // 10 second timeout
-      validateStatus: (status) => status >= 200 && status < 300,
-    });
+    // Send webhook request through a per-destination circuit breaker.
+    const response = await getWebhookBreaker(webhookId).execute(() =>
+      axios.post(webhook.url, payload, {
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Webhook-Signature': signature,
+          'X-Webhook-Event': event,
+          'User-Agent': 'Purple-Cross-Webhooks/1.0',
+        },
+        timeout: 10000, // 10 second timeout
+        validateStatus: (status) => status >= 200 && status < 300,
+      })
+    );
 
     const duration = Date.now() - startTime;
 

@@ -13,7 +13,10 @@ import { apiRateLimiter } from './middleware/rate-limiter';
 import { timeoutMiddleware } from './middleware/timeout';
 import { metricsMiddleware } from './middleware/metrics';
 import { sanitizationMiddleware } from './middleware/sanitization';
-import { FILE_UPLOAD } from './constants';
+import { requestContextMiddleware } from './middleware/request-context';
+import { authenticate, authorize } from './middleware/auth';
+import { FILE_UPLOAD, ROLES } from './constants';
+import authRoutes from './routes/auth.routes';
 import patientRoutes from './routes/patient.routes';
 import clientRoutes from './routes/client.routes';
 import appointmentRoutes from './routes/appointment.routes';
@@ -53,6 +56,8 @@ import workflowExecutionRoutes from './routes/workflow-execution.routes';
 import healthRoutes from './routes/health.routes';
 import metricsRoutes from './routes/metrics.routes';
 import { serverAdapter } from './config/bull-board';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './config/swagger';
 
 export function createApp(): Application {
   // Initialize Sentry FIRST - before creating app
@@ -67,6 +72,10 @@ export function createApp(): Application {
 
   // Correlation ID middleware - track all requests
   app.use(correlationIdMiddleware);
+
+  // Open the AsyncLocalStorage request context (correlation id / ip / UA);
+  // enriched with the authenticated principal by the auth middleware.
+  app.use(requestContextMiddleware);
 
   // Metrics collection middleware
   app.use(metricsMiddleware);
@@ -104,16 +113,33 @@ export function createApp(): Application {
     );
   }
 
-  // Health check and metrics endpoints (before rate limiting)
+  // Health checks remain public for load balancers / Kubernetes probes.
   app.use('/health', healthRoutes);
-  app.use('/metrics', metricsRoutes);
 
-  // Bull Board - Queue monitoring dashboard (protected, before rate limiting)
-  // TODO: Add authentication middleware to protect this endpoint in production
-  app.use('/admin/queues', serverAdapter.getRouter());
+  // Metrics and the queue dashboard expose internal detail: require an
+  // authenticated ADMIN. (A dedicated scrape token can replace JWT here later.)
+  app.use('/metrics', authenticate, authorize(ROLES.ADMIN), metricsRoutes);
+  app.use('/admin/queues', authenticate, authorize(ROLES.ADMIN), serverAdapter.getRouter());
 
   // Rate limiting middleware (after health checks)
   app.use(apiRateLimiter);
+
+  // API documentation (public when enabled). Raw spec + Swagger UI.
+  if (env.enableSwagger) {
+    app.get('/api-docs.json', (_req, res) => res.json(swaggerSpec));
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  }
+
+  // Public auth endpoints (login / bootstrap register / refresh) — must be
+  // mounted before the global guard below.
+  app.use(`${env.apiPrefix}/auth`, authRoutes);
+
+  // Client portal authenticates against its own (separate) principal, so it is
+  // mounted ahead of the staff guard and manages its own access internally.
+  app.use(`${env.apiPrefix}/client-portal`, clientPortalRoutes);
+
+  // Everything mounted below requires a valid staff access token.
+  app.use(env.apiPrefix, authenticate);
 
   // API routes - Core modules
   app.use(`${env.apiPrefix}/patients`, patientRoutes);
@@ -133,7 +159,6 @@ export function createApp(): Application {
   app.use(`${env.apiPrefix}/breed-info`, breedInfoRoutes);
   app.use(`${env.apiPrefix}/patient-relationships`, patientRelationshipRoutes);
   app.use(`${env.apiPrefix}/patient-reminders`, patientReminderRoutes);
-  app.use(`${env.apiPrefix}/client-portal`, clientPortalRoutes);
   app.use(`${env.apiPrefix}/loyalty-programs`, loyaltyProgramRoutes);
   app.use(`${env.apiPrefix}/feedback`, feedbackRoutes);
   app.use(`${env.apiPrefix}/waitlist`, waitlistRoutes);

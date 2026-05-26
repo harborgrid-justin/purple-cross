@@ -1,0 +1,88 @@
+name: CD
+
+# Build + push images on version tags, then deploy to the cluster.
+# Requires repository secrets: KUBE_CONFIG (base64 kubeconfig). Images are
+# published to GHCR using the built-in GITHUB_TOKEN.
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_BASE: ghcr.io/${{ github.repository_owner }}/purple-cross
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      tag: ${{ steps.meta.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: meta
+        run: echo "tag=${GITHUB_REF_NAME:-$GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & push backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: true
+          tags: ${{ env.IMAGE_BASE }}-backend:${{ steps.meta.outputs.tag }}
+
+      - name: Build & push frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: true
+          tags: ${{ env.IMAGE_BASE }}-frontend:${{ steps.meta.outputs.tag }}
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    # Only deploy when a cluster is configured.
+    if: ${{ github.event_name == 'push' }}
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure kubectl
+        run: |
+          if [ -z "${{ secrets.KUBE_CONFIG }}" ]; then
+            echo "KUBE_CONFIG not set — skipping deploy (build/push completed)."
+            exit 0
+          fi
+          mkdir -p "$HOME/.kube"
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > "$HOME/.kube/config"
+
+      - name: Pin image tags
+        run: |
+          [ -f "$HOME/.kube/config" ] || exit 0
+          cd deploy/k8s/overlays/production
+          curl -sLo /usr/local/bin/kustomize https://github.com/kubernetes-sigs/kustomize/releases/latest/download/kustomize || true
+          kubectl kustomize . > /tmp/rendered.yaml || true
+
+      - name: Migrate then roll out
+        run: |
+          [ -f "$HOME/.kube/config" ] || { echo "no kubeconfig; skip"; exit 0; }
+          TAG=${{ needs.build-and-push.outputs.tag }}
+          kubectl -n purple-cross set image job/purple-cross-migrate migrate=${{ env.IMAGE_BASE }}-backend:$TAG --local -o yaml | kubectl apply -f - || true
+          kubectl apply -f deploy/k8s/base/migrate-job.yaml
+          kubectl -n purple-cross wait --for=condition=complete job/purple-cross-migrate --timeout=300s
+          kubectl -n purple-cross set image deployment/purple-cross-backend backend=${{ env.IMAGE_BASE }}-backend:$TAG
+          kubectl -n purple-cross set image deployment/purple-cross-frontend frontend=${{ env.IMAGE_BASE }}-frontend:$TAG
+          kubectl -n purple-cross rollout status deployment/purple-cross-backend --timeout=300s
+          kubectl -n purple-cross rollout status deployment/purple-cross-frontend --timeout=300s

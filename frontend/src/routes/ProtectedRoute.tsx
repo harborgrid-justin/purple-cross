@@ -1,11 +1,7 @@
-/**
- * WF-COMP-001 | ProtectedRoute.tsx - Protected route component
- * Purpose: Role-based route protection for authenticated users
- * Last Updated: 2025-10-22 | File Type: .tsx
- */
-
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { ROUTES } from '../constants';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -13,27 +9,29 @@ interface ProtectedRouteProps {
 }
 
 /**
- * ProtectedRoute component for role-based access control
- *
- * For now, this is a placeholder that allows all access.
- * In production, this should check authentication and user roles.
+ * Gates a route on authentication and (optionally) role. Unauthenticated users
+ * are sent to the login page (preserving their intended destination);
+ * authenticated users lacking the required role are sent to the dashboard.
  */
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles = [] }) => {
-  // TODO: Implement actual authentication check
-  // const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading, hasRole } = useAuth();
+  const location = useLocation();
 
-  // Placeholder: Allow all access for now
-  const isAuthenticated = true;
-  const hasRequiredRole = true; // In production: check user.role against allowedRoles
-
-  if (!isAuthenticated) {
-    // Redirect to login if not authenticated
-    return <Navigate to="/login" replace />;
+  if (isLoading) {
+    return (
+      <div className="loading-container" role="status" aria-live="polite" aria-label="Checking session">
+        <div className="loading-spinner" aria-hidden="true"></div>
+        <p className="loading-text">Loading...</p>
+      </div>
+    );
   }
 
-  if (allowedRoles.length > 0 && !hasRequiredRole) {
-    // Redirect to unauthorized page if user doesn't have required role
-    return <Navigate to="/unauthorized" replace />;
+  if (!isAuthenticated) {
+    return <Navigate to={ROUTES.LOGIN} replace state={{ from: location }} />;
+  }
+
+  if (allowedRoles.length > 0 && !hasRole(allowedRoles)) {
+    return <Navigate to={ROUTES.DASHBOARD} replace />;
   }
 
   return <>{children}</>;

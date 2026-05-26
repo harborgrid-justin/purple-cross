@@ -4,7 +4,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Purple Cross is an enterprise-grade veterinary practice management platform built with TypeScript, featuring 15 core modules covering everything from patient management to compliance tracking. The codebase emphasizes type safety, production-ready architecture, and Google-level engineering practices.
+Purple Cross is a veterinary practice management platform built with TypeScript, featuring 15+ modules covering everything from patient management to compliance tracking. The codebase emphasizes type safety and a layered, production-oriented architecture.
+
+> **Current state (2026-05):** The platform is being hardened toward production.
+> An honest, code-grounded assessment of what is real vs. aspirational lives in
+> **`docs/PRODUCTION_GAP_ANALYSIS.md`** — read it before trusting capability
+> claims. Headlines: backend services are ~85% real; **authentication is not yet
+> wired** (in active development); many frontend pages are still placeholders;
+> tests are being moved off fully-mocked DBs. The single production stack is
+> **Express `backend/` + Vite/React `frontend/`** (PostgreSQL). The earlier
+> parallel **NestJS** and **Next.js** migration forks have been removed to keep
+> one source of truth.
 
 ## Architecture
 

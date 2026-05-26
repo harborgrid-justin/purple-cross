@@ -8,8 +8,10 @@
 import { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
+import ProtectedRoute from './routes/ProtectedRoute';
 
 // Lazy load pages for better performance and code splitting
+const Login = lazy(() => import('./pages/auth/Login'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Patients = lazy(() => import('./pages/Patients'));
 const Clients = lazy(() => import('./pages/Clients'));
@@ -36,32 +38,51 @@ const LoadingFallback = () => (
   </div>
 );
 
+// All authenticated application routes, rendered inside the app shell.
+const AppRoutes = () => (
+  <Layout>
+    <Suspense fallback={<LoadingFallback />}>
+      <Routes>
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/patients/*" element={<Patients />} />
+        <Route path="/clients/*" element={<Clients />} />
+        <Route path="/appointments/*" element={<Appointments />} />
+        <Route path="/medical-records/*" element={<MedicalRecords />} />
+        <Route path="/prescriptions/*" element={<Prescriptions />} />
+        <Route path="/inventory/*" element={<Inventory />} />
+        <Route path="/billing/*" element={<Billing />} />
+        <Route path="/laboratory/*" element={<Laboratory />} />
+        <Route path="/staff/*" element={<Staff />} />
+        <Route path="/reports/*" element={<Reports />} />
+        <Route path="/communications/*" element={<Communications />} />
+        <Route path="/documents/*" element={<Documents />} />
+        <Route path="/compliance/*" element={<Compliance />} />
+        <Route path="/integrations/*" element={<Integrations />} />
+        <Route path="/mobile/*" element={<Mobile />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Suspense>
+  </Layout>
+);
+
 function App() {
   return (
-    <Layout>
-      <Suspense fallback={<LoadingFallback />}>
-        <Routes>
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/patients/*" element={<Patients />} />
-          <Route path="/clients/*" element={<Clients />} />
-          <Route path="/appointments/*" element={<Appointments />} />
-          <Route path="/medical-records/*" element={<MedicalRecords />} />
-          <Route path="/prescriptions/*" element={<Prescriptions />} />
-          <Route path="/inventory/*" element={<Inventory />} />
-          <Route path="/billing/*" element={<Billing />} />
-          <Route path="/laboratory/*" element={<Laboratory />} />
-          <Route path="/staff/*" element={<Staff />} />
-          <Route path="/reports/*" element={<Reports />} />
-          <Route path="/communications/*" element={<Communications />} />
-          <Route path="/documents/*" element={<Documents />} />
-          <Route path="/compliance/*" element={<Compliance />} />
-          <Route path="/integrations/*" element={<Integrations />} />
-          <Route path="/mobile/*" element={<Mobile />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Suspense>
-    </Layout>
+    <Suspense fallback={<LoadingFallback />}>
+      <Routes>
+        {/* Public */}
+        <Route path="/login" element={<Login />} />
+        {/* Everything else requires authentication */}
+        <Route
+          path="/*"
+          element={
+            <ProtectedRoute>
+              <AppRoutes />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </Suspense>
   );
 }
 
