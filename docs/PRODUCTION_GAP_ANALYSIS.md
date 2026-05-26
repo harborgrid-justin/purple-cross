@@ -96,6 +96,7 @@ complete" claims. Consolidating on the mature stack is the lowest-risk path.
 | 8 | Observability | Metrics are JSON, not Prometheus; no distributed tracing; logs not shipped off-box. |
 | 9 | Deployment | CI builds images but the deploy step is a stub; no Kubernetes/IaC; no tested restore. |
 | 10 | Docs vs reality | ~108 markdown files (63 root + ~45 `docs/`), many auto-generated "completion/verification" reports that overstate maturity. |
+| 11 | TypeScript debt | `tsc --noEmit` reports **57 backend / 58 frontend pre-existing errors** (null-safety, Prisma JSON input types, missing test typings). The "100% TypeScript compliance / zero `any`" claim is false; lockfiles are also gitignored (non-reproducible installs). |
 
 ---
 
