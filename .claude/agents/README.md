@@ -50,5 +50,10 @@ Guidelines:
 - **Model routing for cost** — `haiku` for read/search-heavy or high-volume agents, `opus` for hard reasoning, `sonnet`/`inherit` otherwise.
 - **A precise `description`** — Claude uses it to decide when to delegate; include "use proactively" for agents that should trigger automatically.
 
-> Note: `../../.github/agents/` holds the separate automated **code-review** agent
-> set used in CI; this directory is for interactive development subagents.
+> Note: `../../.github/agents/` holds separate agent sets (JSDoc-documentation
+> agents and a `code-review/` set); this `.claude/agents/` directory is for
+> interactive development subagents.
+>
+> On-demand workflows live in [`../skills/`](../skills/) — e.g.
+> `add-backend-endpoint` and `add-frontend-crud` encode this repo's layered
+> backend and CRUD-page patterns.
