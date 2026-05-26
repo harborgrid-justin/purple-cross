@@ -40,8 +40,14 @@ model Patient {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   
+  createdBy         String?
+  updatedBy         String?
+  version           Int       @default(1)
+  deletedAt         DateTime?
+
   @@index([ownerId])
   @@index([microchipId])
+  @@index([deletedAt])
   @@map("patients")
 }
 
@@ -73,8 +79,14 @@ model Client {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   
+  createdBy         String?
+  updatedBy         String?
+  version           Int       @default(1)
+  deletedAt         DateTime?
+
   @@index([email])
   @@index([phone])
+  @@index([deletedAt])
   @@map("clients")
 }
 
@@ -105,10 +117,16 @@ model Appointment {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   
+  createdBy         String?
+  updatedBy         String?
+  version           Int       @default(1)
+  deletedAt         DateTime?
+
   @@index([patientId])
   @@index([clientId])
   @@index([veterinarianId])
   @@index([startTime])
+  @@index([deletedAt])
   @@map("appointments")
 }
 
@@ -153,9 +171,15 @@ model MedicalRecord {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   
+  createdBy         String?
+  updatedBy         String?
+  version           Int       @default(1)
+  deletedAt         DateTime?
+
   @@index([patientId])
   @@index([veterinarianId])
   @@index([visitDate])
+  @@index([deletedAt])
   @@map("medical_records")
 }
 
@@ -188,9 +212,15 @@ model Prescription {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   
+  createdBy         String?
+  updatedBy         String?
+  version           Int       @default(1)
+  deletedAt         DateTime?
+
   @@index([patientId])
   @@index([medicationId])
   @@index([prescribedBy])
+  @@index([deletedAt])
   @@map("prescriptions")
 }
 
@@ -283,9 +313,15 @@ model Invoice {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   
+  createdBy         String?
+  updatedBy         String?
+  version           Int       @default(1)
+  deletedAt         DateTime?
+
   @@index([clientId])
   @@index([invoiceNumber])
   @@index([status])
+  @@index([deletedAt])
   @@map("invoices")
 }
 
@@ -524,10 +560,13 @@ model AuditLog {
   
   timestamp         DateTime @default(now())
   
+  tenantId          String?
+
   @@index([userId])
   @@index([action])
   @@index([resource])
   @@index([timestamp])
+  @@index([tenantId])
   @@map("audit_logs")
 }
 

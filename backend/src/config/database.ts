@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { logger } from './logger';
+import { auditExtension } from './prisma-extensions/audit';
 
 // Prisma event types for type-safe event handlers
 interface QueryEvent {
@@ -13,7 +14,8 @@ interface LogEvent {
   target: string;
 }
 
-const prisma: PrismaClient = new PrismaClient({
+// Base client: event logging is attached here, before extensions are applied.
+const basePrisma = new PrismaClient({
   log: [
     { level: 'query', emit: 'event' },
     { level: 'error', emit: 'event' },
@@ -23,19 +25,26 @@ const prisma: PrismaClient = new PrismaClient({
 
 // Log queries in development
 if (process.env.NODE_ENV === 'development') {
-  prisma.$on('query', (e: QueryEvent): void => {
+  basePrisma.$on('query', (e: QueryEvent): void => {
     logger.debug('Query: ' + e.query);
     logger.debug('Duration: ' + e.duration + 'ms');
   });
 }
 
-prisma.$on('error', (e: LogEvent): void => {
+basePrisma.$on('error', (e: LogEvent): void => {
   logger.error('Database error:', e);
 });
 
-prisma.$on('warn', (e: LogEvent): void => {
+basePrisma.$on('warn', (e: LogEvent): void => {
   logger.warn('Database warning:', e);
 });
+
+// Extended client used throughout the app. The export name is unchanged so the
+// ~37 importers are untouched. Future extensions (soft delete, tenant scoping,
+// field encryption) compose here in order.
+const prisma = basePrisma.$extends(auditExtension);
+
+export type ExtendedPrismaClient = typeof prisma;
 
 export async function connectDatabase(): Promise<void> {
   try {
