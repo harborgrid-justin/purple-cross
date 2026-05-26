@@ -162,3 +162,7 @@ vite.config.ts.timestamp-*
 # Screenshot analysis files
 docs/screenshots/analysis-results.json
 docs/screenshots/screenshot-errors.json
+
+# Claude Code: personal/machine-local overrides (team config is .claude/settings.json)
+.claude/settings.local.json
+.claude/worktrees/
