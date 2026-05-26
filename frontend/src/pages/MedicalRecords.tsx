@@ -1,13 +1,13 @@
 /**
  * WF-COMP-XXX | MedicalRecords.tsx - Medical Records
  * Purpose: React component for MedicalRecords functionality
- * Dependencies: react
- * Last Updated: 2025-10-23 | File Type: .tsx
+ * Dependencies: react, @tanstack/react-query
+ * Last Updated: 2026-05-26 | File Type: .tsx
  */
 
-import { useState, useEffect, Suspense, lazy } from 'react';
+import { useState, Suspense, lazy } from 'react';
 import { Link, Routes, Route, useLocation } from 'react-router-dom';
-import api from '../services/api';
+import { useMedicalRecords } from '../hooks/useMedicalRecords';
 import '../styles/Page.css';
 
 // Lazy load subfeature pages
@@ -19,85 +19,60 @@ const VitalSigns = lazy(() => import('./medical-records/VitalSigns'));
 const Attachments = lazy(() => import('./medical-records/Attachments'));
 const Sharing = lazy(() => import('./medical-records/Sharing'));
 const Audit = lazy(() => import('./medical-records/Audit'));
+const MedicalRecordsCreate = lazy(() => import('./medical-records/MedicalRecordsCreate'));
+const MedicalRecordsEdit = lazy(() => import('./medical-records/MedicalRecordsEdit'));
 
 interface MedicalRecord {
   id: string;
   visitDate: string;
   chiefComplaint: string;
   diagnosis?: string;
-  patient: { id: string; name: string };
-  veterinarian: { id: string; firstName: string; lastName: string };
+  patient?: { id: string; name: string };
+  veterinarian?: { id: string; firstName: string; lastName: string };
 }
 
 const MedicalRecordsList = () => {
-  const [records, setRecords] = useState<MedicalRecord[]>([]);
-  const [filteredRecords, setFilteredRecords] = useState<MedicalRecord[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [loading, setLoading] = useState(true);
+  const { data, isLoading: loading, isError } = useMedicalRecords({ limit: 50 });
 
-  useEffect(() => {
-    const fetchRecords = async () => {
-      try {
-        setLoading(true);
-        const response = (await api.medicalRecords.getAll({
-          limit: 50,
-        })) as { status: string; data: MedicalRecord[] };
-        setRecords(response.data);
-        setFilteredRecords(response.data);
-      } catch (err) {
-        console.error('Error fetching medical records:', err);
-        setRecords([]);
-        setFilteredRecords([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const records = (data as { data?: MedicalRecord[] } | undefined)?.data ?? [];
 
-    fetchRecords();
-  }, []);
-
-  useEffect(() => {
-    if (!searchTerm) {
-      setFilteredRecords(records);
-      return;
-    }
-
-    const filtered = records.filter((record) => {
-      const searchLower = searchTerm.toLowerCase();
-      return (
-        record.patient.name.toLowerCase().includes(searchLower) ||
-        record.chiefComplaint.toLowerCase().includes(searchLower) ||
-        (record.diagnosis && record.diagnosis.toLowerCase().includes(searchLower))
-      );
-    });
-    setFilteredRecords(filtered);
-  }, [searchTerm, records]);
+  const searchLower = searchTerm.toLowerCase();
+  const filteredRecords = searchTerm
+    ? records.filter(
+        (record) =>
+          (record.patient?.name ?? '').toLowerCase().includes(searchLower) ||
+          record.chiefComplaint.toLowerCase().includes(searchLower) ||
+          (record.diagnosis ?? '').toLowerCase().includes(searchLower)
+      )
+    : records;
 
   return (
     <div className="table-container">
-      <div className="search-container" style={{ marginBottom: '1rem' }}>
+      <div className="search-bar" role="search">
+        <label htmlFor="medical-record-search" className="sr-only">
+          Search medical records
+        </label>
         <input
-          type="text"
           id="medical-record-search"
+          type="search"
           placeholder="Search medical records by patient, complaint, or diagnosis..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          style={{
-            width: '100%',
-            padding: '0.5rem',
-            fontSize: '1rem',
-            border: '1px solid #ddd',
-            borderRadius: '4px',
-          }}
+          aria-label="Search medical records by patient, complaint, or diagnosis"
         />
       </div>
       {loading ? (
         <div role="status" aria-live="polite">
           <p>Loading medical records...</p>
         </div>
+      ) : isError ? (
+        <div className="alert alert-error" role="alert">
+          <p>Failed to load medical records. Please try again.</p>
+        </div>
       ) : filteredRecords.length === 0 ? (
         <div role="status" aria-live="polite">
-          <p>No medical records found.</p>
+          <p>No medical records found. Add a new record to get started.</p>
         </div>
       ) : (
         <table className="data-table" role="table" aria-label="Medical records list">
@@ -118,24 +93,21 @@ const MedicalRecordsList = () => {
                     {new Date(record.visitDate).toLocaleDateString()}
                   </time>
                 </td>
-                <th scope="row">{record.patient.name}</th>
+                <th scope="row">{record.patient?.name ?? 'Unknown'}</th>
                 <td>{record.chiefComplaint}</td>
                 <td>
-                  Dr. {record.veterinarian.firstName} {record.veterinarian.lastName}
+                  {record.veterinarian
+                    ? `Dr. ${record.veterinarian.firstName} ${record.veterinarian.lastName}`
+                    : 'Unassigned'}
                 </td>
                 <td>
-                  <button
+                  <Link
+                    to={`/medical-records/${record.id}/edit`}
                     className="btn-action"
-                    aria-label={`View record for ${record.patient.name}`}
-                  >
-                    View
-                  </button>
-                  <button
-                    className="btn-action"
-                    aria-label={`Edit record for ${record.patient.name}`}
+                    aria-label={`Edit record for ${record.patient?.name ?? 'patient'}`}
                   >
                     Edit
-                  </button>
+                  </Link>
                 </td>
               </tr>
             ))}
@@ -155,9 +127,9 @@ const MedicalRecords = () => {
         <h1>
           <span aria-hidden="true">📋</span> Medical Records
         </h1>
-        <button className="btn-primary" aria-label="Add new medical record">
+        <Link to="/medical-records/create" className="btn-primary" aria-label="Add new medical record">
           + Add Record
-        </button>
+        </Link>
       </header>
 
       <nav className="sub-nav" role="navigation" aria-label="Medical Records sections">
@@ -215,33 +187,6 @@ const MedicalRecords = () => {
         >
           Audit Trail
         </Link>
-        <Link to="/medical-records" className="sub-nav-link active">
-          All Records
-        </Link>
-        <Link to="/medical-records/emr" className="sub-nav-link">
-          EMR
-        </Link>
-        <Link to="/medical-records/clinical-notes" className="sub-nav-link">
-          Clinical Notes
-        </Link>
-        <Link to="/medical-records/diagnostics" className="sub-nav-link">
-          Diagnostics
-        </Link>
-        <Link to="/medical-records/treatment-history" className="sub-nav-link">
-          Treatment History
-        </Link>
-        <Link to="/medical-records/vital-signs" className="sub-nav-link">
-          Vital Signs
-        </Link>
-        <Link to="/medical-records/attachments" className="sub-nav-link">
-          Attachments
-        </Link>
-        <Link to="/medical-records/sharing" className="sub-nav-link">
-          Record Sharing
-        </Link>
-        <Link to="/medical-records/audit" className="sub-nav-link">
-          Audit Trail
-        </Link>
       </nav>
 
       <Suspense
@@ -253,6 +198,8 @@ const MedicalRecords = () => {
       >
         <Routes>
           <Route path="/" element={<MedicalRecordsList />} />
+          <Route path="/create" element={<MedicalRecordsCreate />} />
+          <Route path="/:id/edit" element={<MedicalRecordsEdit />} />
           <Route path="/emr" element={<EMR />} />
           <Route path="/clinical-notes" element={<ClinicalNotes />} />
           <Route path="/diagnostics" element={<Diagnostics />} />
