@@ -66,6 +66,13 @@ jobs:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/purple_cross_test?schema=public
           NODE_ENV: test
 
+      - name: Run integration tests (real database)
+        working-directory: ./backend
+        run: npm run test:integration
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/purple_cross_test?schema=public
+          NODE_ENV: test
+
       - name: Upload coverage
         uses: codecov/codecov-action@v3
         with:
