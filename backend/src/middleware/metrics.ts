@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { logger } from '../config/logger';
+import { httpRequestDuration, httpRequestsTotal } from '../config/metrics';
 
 interface RequestMetrics {
   totalRequests: number;
@@ -37,13 +38,19 @@ export const metricsMiddleware = (req: Request, res: Response, next: NextFunctio
     const method = req.method;
     const statusCode = res.statusCode.toString();
 
-    // Update metrics
+    // Update in-memory metrics (kept for the JSON summary / tests)
     metrics.totalRequests++;
     metrics.requestsByMethod[method] = (metrics.requestsByMethod[method] || 0) + 1;
     metrics.requestsByStatus[statusCode] = (metrics.requestsByStatus[statusCode] || 0) + 1;
     metrics.requestsByPath[path] = (metrics.requestsByPath[path] || 0) + 1;
     metrics.totalResponseTime += duration;
     metrics.averageResponseTime = metrics.totalResponseTime / metrics.totalRequests;
+
+    // Record Prometheus metrics (route label uses the matched pattern to keep
+    // cardinality bounded).
+    const labels = { method, route: path, status_code: statusCode };
+    httpRequestsTotal.inc(labels);
+    httpRequestDuration.observe(labels, duration / 1000);
 
     // Log slow requests (> 1 second)
     if (duration > 1000) {
