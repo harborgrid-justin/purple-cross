@@ -15,6 +15,14 @@ async function main() {
 
   console.log('📝 Seeding sample data...');
 
+  // Ensure the bootstrap tenant exists (matches the multi-tenancy migration).
+  const tenant = await prisma.tenant.upsert({
+    where: { slug: 'default' },
+    update: {},
+    create: { name: 'Default Clinic', slug: 'default' },
+  });
+  console.log('✓ Default tenant:', tenant.slug);
+
   // Create sample client
   const client = await prisma.client.create({
     data: {
@@ -28,6 +36,7 @@ async function main() {
       zipCode: '62701',
       preferredContact: 'email',
       status: 'active',
+      tenantId: tenant.id,
     },
   });
 
@@ -45,6 +54,7 @@ async function main() {
       weight: 65.0,
       ownerId: client.id,
       status: 'active',
+      tenantId: tenant.id,
     },
   });
 
@@ -82,6 +92,7 @@ async function main() {
       firstName: 'Sarah',
       lastName: 'Johnson',
       staffId: staff.id,
+      tenantId: tenant.id,
       passwordChangedAt: new Date(),
     },
   });

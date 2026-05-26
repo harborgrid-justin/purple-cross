@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { logger } from './logger';
 import { fieldCryptoExtension } from './prisma-extensions/field-crypto';
+import { tenantExtension } from './prisma-extensions/tenant';
 import { softDeleteExtension } from './prisma-extensions/soft-delete';
 import { auditExtension } from './prisma-extensions/audit';
 
@@ -45,10 +46,12 @@ basePrisma.$on('warn', (e: LogEvent): void => {
 // ~37 importers are untouched. Composition order matters:
 //  - field-crypto innermost: ciphertext is what hits the DB and what the audit
 //    layer logs; callers transparently get plaintext back.
+//  - tenant: injects/enforces tenantId on reads and writes.
 //  - soft-delete: delete() physically becomes update(deletedAt).
 //  - audit outermost: still logs the call as a delete and captures stamped data.
 const prisma = basePrisma
   .$extends(fieldCryptoExtension)
+  .$extends(tenantExtension)
   .$extends(softDeleteExtension)
   .$extends(auditExtension);
 

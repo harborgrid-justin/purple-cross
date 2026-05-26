@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import type { User } from '@prisma/client';
 import { prisma } from '../config/database';
+import { getContext } from '../context/request-context';
 import { AppError } from '../middleware/error-handler';
 import {
   HTTP_STATUS,
@@ -25,6 +26,7 @@ export interface SafeUser {
   firstName: string | null;
   lastName: string | null;
   staffId: string | null;
+  tenantId: string | null;
   lastLoginAt: Date | null;
   createdAt: Date;
 }
@@ -47,6 +49,7 @@ interface CreateUserInput {
   firstName?: string;
   lastName?: string;
   staffId?: string;
+  tenantId?: string;
 }
 
 function sanitizeUser(user: User): SafeUser {
@@ -58,6 +61,7 @@ function sanitizeUser(user: User): SafeUser {
     firstName: user.firstName,
     lastName: user.lastName,
     staffId: user.staffId,
+    tenantId: user.tenantId,
     lastLoginAt: user.lastLoginAt,
     createdAt: user.createdAt,
   };
@@ -83,6 +87,8 @@ export class AuthService {
 
     const role = input.role ? assertValidRole(input.role) : ROLES.RECEPTIONIST;
     const passwordHash = await bcrypt.hash(input.password, SECURITY.BCRYPT_ROUNDS);
+    // New users join the provisioning admin's tenant unless told otherwise.
+    const tenantId = input.tenantId ?? getContext()?.tenantId ?? null;
 
     const user = await prisma.user.create({
       data: {
@@ -92,11 +98,24 @@ export class AuthService {
         firstName: input.firstName ?? null,
         lastName: input.lastName ?? null,
         staffId: input.staffId ?? null,
+        tenantId,
         passwordChangedAt: new Date(),
       },
     });
 
     return sanitizeUser(user);
+  }
+
+  /** Find or create the bootstrap "Default Clinic" tenant. */
+  private async ensureDefaultTenant(): Promise<string> {
+    const existing = await prisma.tenant.findUnique({ where: { slug: 'default' } });
+    if (existing) {
+      return existing.id;
+    }
+    const created = await prisma.tenant.create({
+      data: { name: 'Default Clinic', slug: 'default' },
+    });
+    return created.id;
   }
 
   /**
@@ -113,7 +132,8 @@ export class AuthService {
     if (userCount > 0) {
       throw new AppError(ERROR_MESSAGES.REGISTRATION_CLOSED, HTTP_STATUS.FORBIDDEN);
     }
-    return this.createUser({ ...input, role: ROLES.ADMIN });
+    const tenantId = await this.ensureDefaultTenant();
+    return this.createUser({ ...input, role: ROLES.ADMIN, tenantId });
   }
 
   async login(
@@ -212,6 +232,7 @@ export class AuthService {
       email: user.email,
       role: user.role,
       staffId: user.staffId ?? undefined,
+      tenantId: user.tenantId ?? undefined,
     });
 
     const refreshToken = generateRefreshToken();

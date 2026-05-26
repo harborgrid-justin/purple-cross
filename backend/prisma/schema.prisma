@@ -45,9 +45,13 @@ model Patient {
   version           Int       @default(1)
   deletedAt         DateTime?
 
+  tenantId          String?
+  tenant            Tenant?  @relation(fields: [tenantId], references: [id])
+
   @@index([ownerId])
   @@index([microchipId])
   @@index([deletedAt])
+  @@index([tenantId])
   @@map("patients")
 }
 
@@ -84,9 +88,13 @@ model Client {
   version           Int       @default(1)
   deletedAt         DateTime?
 
+  tenantId          String?
+  tenant            Tenant?  @relation(fields: [tenantId], references: [id])
+
   @@index([email])
   @@index([phone])
   @@index([deletedAt])
+  @@index([tenantId])
   @@map("clients")
 }
 
@@ -122,11 +130,15 @@ model Appointment {
   version           Int       @default(1)
   deletedAt         DateTime?
 
+  tenantId          String?
+  tenant            Tenant?  @relation(fields: [tenantId], references: [id])
+
   @@index([patientId])
   @@index([clientId])
   @@index([veterinarianId])
   @@index([startTime])
   @@index([deletedAt])
+  @@index([tenantId])
   @@map("appointments")
 }
 
@@ -176,10 +188,14 @@ model MedicalRecord {
   version           Int       @default(1)
   deletedAt         DateTime?
 
+  tenantId          String?
+  tenant            Tenant?  @relation(fields: [tenantId], references: [id])
+
   @@index([patientId])
   @@index([veterinarianId])
   @@index([visitDate])
   @@index([deletedAt])
+  @@index([tenantId])
   @@map("medical_records")
 }
 
@@ -217,10 +233,14 @@ model Prescription {
   version           Int       @default(1)
   deletedAt         DateTime?
 
+  tenantId          String?
+  tenant            Tenant?  @relation(fields: [tenantId], references: [id])
+
   @@index([patientId])
   @@index([medicationId])
   @@index([prescribedBy])
   @@index([deletedAt])
+  @@index([tenantId])
   @@map("prescriptions")
 }
 
@@ -318,10 +338,14 @@ model Invoice {
   version           Int       @default(1)
   deletedAt         DateTime?
 
+  tenantId          String?
+  tenant            Tenant?  @relation(fields: [tenantId], references: [id])
+
   @@index([clientId])
   @@index([invoiceNumber])
   @@index([status])
   @@index([deletedAt])
+  @@index([tenantId])
   @@map("invoices")
 }
 
@@ -1875,6 +1899,9 @@ model User {
   staffId           String?   @unique
   staff             Staff?    @relation(fields: [staffId], references: [id])
 
+  tenantId          String?
+  tenant            Tenant?   @relation(fields: [tenantId], references: [id])
+
   lastLoginAt       DateTime?
   loginAttempts     Int       @default(0)
   lockedUntil       DateTime?
@@ -1887,6 +1914,7 @@ model User {
 
   @@index([email])
   @@index([role])
+  @@index([tenantId])
   @@map("users")
 }
 
@@ -1910,4 +1938,26 @@ model RefreshToken {
   @@index([userId])
   @@index([expiresAt])
   @@map("refresh_tokens")
+}
+
+// Organization / clinic boundary for multi-tenant data isolation. Tenant-scoped
+// models carry a tenantId; the tenant Prisma extension injects/enforces it.
+model Tenant {
+  id             String          @id @default(uuid())
+  name           String
+  slug           String          @unique
+  status         String          @default("active")
+
+  users          User[]
+  patients       Patient[]
+  clients        Client[]
+  appointments   Appointment[]
+  medicalRecords MedicalRecord[]
+  prescriptions  Prescription[]
+  invoices       Invoice[]
+
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  @@map("tenants")
 }

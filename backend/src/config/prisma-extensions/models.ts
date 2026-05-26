@@ -28,3 +28,6 @@ export const AUDITED_MODELS = new Set<string>(CORE_MODELS);
 
 /** Models with a `deletedAt` column and soft-delete semantics. */
 export const SOFT_DELETE_MODELS = new Set<string>(CORE_MODELS);
+
+/** Models scoped to a tenant (carry a `tenantId`, enforced by the extension). */
+export const TENANT_MODELS = new Set<string>(CORE_MODELS);
