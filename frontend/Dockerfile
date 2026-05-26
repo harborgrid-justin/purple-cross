@@ -1,7 +1,7 @@
 # =============================================================================
 # Build Stage
 # =============================================================================
-FROM node:18-alpine AS builder
+FROM node:26-alpine AS builder
 
 # Set build arguments for optimization
 ARG NODE_ENV=production
@@ -69,7 +69,7 @@ CMD ["nginx", "-g", "daemon off;"]
 # =============================================================================
 # Development Stage
 # =============================================================================
-FROM node:18-alpine AS development
+FROM node:26-alpine AS development
 
 WORKDIR /app
 
