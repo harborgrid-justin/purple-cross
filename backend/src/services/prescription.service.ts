@@ -10,7 +10,7 @@ export class PrescriptionService {
       include: {
         patient: true,
         medication: true,
-        prescribedBy: true,
+        prescriber: true,
       },
     });
 
@@ -29,7 +29,7 @@ export class PrescriptionService {
       include: {
         patient: true,
         medication: true,
-        prescribedBy: true,
+        prescriber: true,
       },
     });
 
@@ -74,11 +74,11 @@ export class PrescriptionService {
           medication: {
             select: { id: true, name: true, strength: true },
           },
-          prescribedBy: {
+          prescriber: {
             select: { id: true, firstName: true, lastName: true },
           },
         },
-        orderBy: { prescriptionDate: 'desc' },
+        orderBy: { prescribedDate: 'desc' },
       }),
       prisma.prescription.count({ where }),
     ]);
@@ -107,7 +107,7 @@ export class PrescriptionService {
       include: {
         patient: true,
         medication: true,
-        prescribedBy: true,
+        prescriber: true,
       },
     });
   }
@@ -134,12 +134,12 @@ export class PrescriptionService {
     const refilledPrescription = await prisma.prescription.update({
       where: { id },
       data: { 
-        refills: (prescription.refills as number) + 1,
+        refillsUsed: prescription.refillsUsed + 1,
       },
       include: {
         patient: true,
         medication: true,
-        prescribedBy: true,
+        prescriber: true,
       },
     });
 
