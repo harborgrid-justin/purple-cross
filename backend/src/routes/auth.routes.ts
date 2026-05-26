@@ -35,6 +35,83 @@ const refreshSchema = Joi.object({
   refreshToken: Joi.string().required(),
 });
 
+/**
+ * @openapi
+ * /auth/login:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Authenticate and receive access + refresh tokens
+ *     security: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [email, password]
+ *             properties:
+ *               email: { type: string, format: email }
+ *               password: { type: string }
+ *     responses:
+ *       200:
+ *         description: Authenticated
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/AuthTokens' }
+ *       401: { $ref: '#/components/responses/Unauthorized' }
+ *
+ * /auth/register:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Bootstrap the first (ADMIN) account; closed once a user exists
+ *     security: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [email, password]
+ *             properties:
+ *               email: { type: string, format: email }
+ *               password: { type: string, minLength: 8 }
+ *               firstName: { type: string }
+ *               lastName: { type: string }
+ *     responses:
+ *       201: { description: User created }
+ *       403: { description: Registration closed }
+ *
+ * /auth/refresh:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Exchange a refresh token for a new token pair (rotating)
+ *     security: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [refreshToken]
+ *             properties:
+ *               refreshToken: { type: string }
+ *     responses:
+ *       200:
+ *         description: Rotated
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/AuthTokens' }
+ *       401: { $ref: '#/components/responses/Unauthorized' }
+ *
+ * /auth/me:
+ *   get:
+ *     tags: [Auth]
+ *     summary: Return the authenticated principal
+ *     responses:
+ *       200: { description: Current user }
+ *       401: { $ref: '#/components/responses/Unauthorized' }
+ */
+
 // Public endpoints
 router.post('/register', validate(registerSchema), authController.register);
 router.post('/login', authRateLimiter, validate(loginSchema), authController.login);

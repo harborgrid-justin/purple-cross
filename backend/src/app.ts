@@ -56,6 +56,8 @@ import workflowExecutionRoutes from './routes/workflow-execution.routes';
 import healthRoutes from './routes/health.routes';
 import metricsRoutes from './routes/metrics.routes';
 import { serverAdapter } from './config/bull-board';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './config/swagger';
 
 export function createApp(): Application {
   // Initialize Sentry FIRST - before creating app
@@ -121,6 +123,12 @@ export function createApp(): Application {
 
   // Rate limiting middleware (after health checks)
   app.use(apiRateLimiter);
+
+  // API documentation (public when enabled). Raw spec + Swagger UI.
+  if (env.enableSwagger) {
+    app.get('/api-docs.json', (_req, res) => res.json(swaggerSpec));
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  }
 
   // Public auth endpoints (login / bootstrap register / refresh) — must be
   // mounted before the global guard below.
