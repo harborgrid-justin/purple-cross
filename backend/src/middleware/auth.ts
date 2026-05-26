@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { verifyAccessToken } from '../utils/jwt';
+import { getContext } from '../context/request-context';
 import { AppError } from './error-handler';
 import { HTTP_STATUS } from '../constants';
 
@@ -9,6 +10,7 @@ export interface AuthenticatedUser {
   email: string;
   role: string;
   staffId?: string;
+  tenantId?: string;
 }
 
 // Make the authenticated principal available on every request in a type-safe
@@ -38,7 +40,18 @@ export const authenticate = (req: Request, _res: Response, next: NextFunction): 
       email: decoded.email,
       role: decoded.role,
       staffId: decoded.staffId,
+      tenantId: decoded.tenantId,
     };
+
+    // Enrich the ambient request context so Prisma extensions can read the
+    // authenticated principal (audit stamping, tenant scoping).
+    const ctx = getContext();
+    if (ctx) {
+      ctx.userId = decoded.id;
+      ctx.role = decoded.role;
+      ctx.tenantId = decoded.tenantId;
+    }
+
     next();
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {

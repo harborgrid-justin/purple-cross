@@ -13,6 +13,7 @@ import { apiRateLimiter } from './middleware/rate-limiter';
 import { timeoutMiddleware } from './middleware/timeout';
 import { metricsMiddleware } from './middleware/metrics';
 import { sanitizationMiddleware } from './middleware/sanitization';
+import { requestContextMiddleware } from './middleware/request-context';
 import { authenticate, authorize } from './middleware/auth';
 import { FILE_UPLOAD, ROLES } from './constants';
 import authRoutes from './routes/auth.routes';
@@ -69,6 +70,10 @@ export function createApp(): Application {
 
   // Correlation ID middleware - track all requests
   app.use(correlationIdMiddleware);
+
+  // Open the AsyncLocalStorage request context (correlation id / ip / UA);
+  // enriched with the authenticated principal by the auth middleware.
+  app.use(requestContextMiddleware);
 
   // Metrics collection middleware
   app.use(metricsMiddleware);

@@ -8,6 +8,7 @@ export interface AccessTokenPayload {
   email: string;
   role: string;
   staffId?: string;
+  tenantId?: string;
 }
 
 /**
