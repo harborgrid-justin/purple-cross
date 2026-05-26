@@ -1,56 +1,52 @@
 /**
  * WF-COMP-014 | PatientsCreate.tsx - Create patient page
- * Purpose: Form page for creating new patients
- * Related: Patient form component, TanStack Query hooks
- * Last Updated: 2025-10-24 | File Type: .tsx
+ * Purpose: Form page for creating new patients (validated with Zod)
+ * Related: useZodForm, FormField, TanStack Query hooks
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { z } from 'zod';
 import { useCreatePatient } from '../../hooks/usePatients';
+import { useZodForm } from '../../hooks/useZodForm';
+import { FormField } from '../../components/form/FormField';
 import '../../styles/Page.css';
 
-interface PatientFormData {
-  name: string;
-  species: string;
-  breed?: string;
-  dateOfBirth?: string;
-  microchipId?: string;
-  ownerId: string;
-}
+// Mirrors the backend create-patient validation (name/species/dateOfBirth/
+// gender/ownerId required) so users get immediate client-side feedback.
+const patientSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  species: z.string().min(1, 'Species is required'),
+  gender: z.string().min(1, 'Gender is required'),
+  dateOfBirth: z.string().min(1, 'Date of birth is required'),
+  breed: z.string().optional(),
+  microchipId: z.string().optional(),
+  ownerId: z.string().uuid('Owner ID must be a valid UUID'),
+});
+
+type PatientFormData = z.infer<typeof patientSchema>;
+
+const SPECIES = ['Dog', 'Cat', 'Bird', 'Rabbit', 'Other'].map((v) => ({ value: v, label: v }));
+const GENDERS = [
+  { value: 'male', label: 'Male' },
+  { value: 'female', label: 'Female' },
+  { value: 'unknown', label: 'Unknown' },
+];
 
 const PatientsCreate: React.FC = () => {
   const navigate = useNavigate();
   const createPatientMutation = useCreatePatient();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useZodForm(patientSchema);
 
-  const [formData, setFormData] = useState<PatientFormData>({
-    name: '',
-    species: '',
-    breed: '',
-    dateOfBirth: '',
-    microchipId: '',
-    ownerId: '',
-  });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    createPatientMutation.mutate(formData, {
+  const onSubmit = (data: PatientFormData): void => {
+    createPatientMutation.mutate(data, {
       onSuccess: (response) => {
         const patientId = (response as { data?: { id?: string } })?.data?.id;
-        if (patientId) {
-          navigate(`/patients/${patientId}`);
-        } else {
-          navigate('/patients');
-        }
+        navigate(patientId ? `/patients/${patientId}` : '/patients');
       },
     });
   };
@@ -70,90 +66,47 @@ const PatientsCreate: React.FC = () => {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="form-container">
-        <div className="form-group">
-          <label htmlFor="name">
-            Name <span className="required">*</span>
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-            aria-required="true"
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="species">
-            Species <span className="required">*</span>
-          </label>
-          <select
-            id="species"
-            name="species"
-            value={formData.species}
-            onChange={handleChange}
-            required
-            aria-required="true"
-          >
-            <option value="">Select Species</option>
-            <option value="Dog">Dog</option>
-            <option value="Cat">Cat</option>
-            <option value="Bird">Bird</option>
-            <option value="Rabbit">Rabbit</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="breed">Breed</label>
-          <input type="text" id="breed" name="breed" value={formData.breed} onChange={handleChange} />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="dateOfBirth">Date of Birth</label>
-          <input
-            type="date"
-            id="dateOfBirth"
-            name="dateOfBirth"
-            value={formData.dateOfBirth}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="microchipId">Microchip ID</label>
-          <input
-            type="text"
-            id="microchipId"
-            name="microchipId"
-            value={formData.microchipId}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="ownerId">
-            Owner ID <span className="required">*</span>
-          </label>
-          <input
-            type="text"
-            id="ownerId"
-            name="ownerId"
-            value={formData.ownerId}
-            onChange={handleChange}
-            required
-            aria-required="true"
-          />
-        </div>
+      <form onSubmit={handleSubmit(onSubmit)} className="form-container" noValidate>
+        <FormField label="Name" registration={register('name')} error={errors.name} required />
+        <FormField
+          label="Species"
+          registration={register('species')}
+          error={errors.species}
+          options={SPECIES}
+          required
+        />
+        <FormField
+          label="Gender"
+          registration={register('gender')}
+          error={errors.gender}
+          options={GENDERS}
+          required
+        />
+        <FormField
+          label="Date of Birth"
+          type="date"
+          registration={register('dateOfBirth')}
+          error={errors.dateOfBirth}
+          required
+        />
+        <FormField label="Breed" registration={register('breed')} error={errors.breed} />
+        <FormField
+          label="Microchip ID"
+          registration={register('microchipId')}
+          error={errors.microchipId}
+        />
+        <FormField
+          label="Owner ID"
+          registration={register('ownerId')}
+          error={errors.ownerId}
+          required
+        />
 
         <div className="form-actions">
           <button
             type="submit"
             className="btn-primary"
-            disabled={createPatientMutation.isPending}
+            disabled={isSubmitting || createPatientMutation.isPending}
           >
             {createPatientMutation.isPending ? 'Creating...' : 'Create Patient'}
           </button>
