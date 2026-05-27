@@ -1,7 +1,7 @@
 # =============================================================================
 # Build Stage
 # =============================================================================
-FROM node:18-alpine AS builder
+FROM node:26-alpine AS builder
 
 # Install build dependencies
 RUN apk add --no-cache python3 make g++
@@ -33,7 +33,7 @@ RUN npm prune --production
 # =============================================================================
 # Production Stage
 # =============================================================================
-FROM node:18-alpine AS production
+FROM node:26-alpine AS production
 
 # Install dumb-init for proper signal handling
 RUN apk add --no-cache dumb-init
@@ -80,7 +80,7 @@ CMD ["./scripts/docker-entrypoint.sh"]
 # =============================================================================
 # Development Stage
 # =============================================================================
-FROM node:18-alpine AS development
+FROM node:26-alpine AS development
 
 # Install development tools
 RUN apk add --no-cache python3 make g++ git
