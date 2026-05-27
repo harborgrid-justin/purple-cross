@@ -29,7 +29,7 @@ RUN ls -la /app/dist && \
 # =============================================================================
 # Production Stage with Nginx
 # =============================================================================
-FROM nginx:1.25-alpine AS production
+FROM nginx:1.31-alpine AS production
 
 # Install curl for health checks
 RUN apk add --no-cache curl
