@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
 import {
@@ -13,7 +14,7 @@ import {
 import { domainEvents } from './domain-events.service';
 
 export class ClientService {
-  async createClient(data: Record<string, unknown>) {
+  async createClient(data: Prisma.ClientUncheckedCreateInput) {
     // Check if email already exists
     const existing = await prisma.client.findUnique({
       where: { email: data.email },
@@ -123,7 +124,7 @@ export class ClientService {
     };
   }
 
-  async updateClient(id: string, data: Record<string, unknown>) {
+  async updateClient(id: string, data: Prisma.ClientUncheckedUpdateInput) {
     const client = await prisma.client.findUnique({ where: { id } });
 
     if (!client) {

@@ -1,10 +1,11 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
 import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION, SORT_ORDER, FIELDS, WORKFLOW_EVENTS } from '../constants';
 import { domainEvents } from './domain-events.service';
 
 export class InvoiceService {
-  async createInvoice(data: Record<string, unknown>) {
+  async createInvoice(data: Prisma.InvoiceUncheckedCreateInput) {
     const invoice = await prisma.invoice.create({
       data,
       include: {
@@ -92,7 +93,7 @@ export class InvoiceService {
     };
   }
 
-  async updateInvoice(id: string, data: Record<string, unknown>) {
+  async updateInvoice(id: string, data: Prisma.InvoiceUncheckedUpdateInput) {
     const invoice = await prisma.invoice.findUnique({ where: { id } });
 
     if (!invoice) {

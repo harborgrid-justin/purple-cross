@@ -11,7 +11,7 @@ import './Alert.css';
 
 interface AlertProps {
   type?: 'success' | 'error' | 'warning' | 'info';
-  children: ReactNode;
+  children?: ReactNode;
   onClose?: () => void;
   className?: string;
 }

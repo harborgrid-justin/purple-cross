@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
 import {
@@ -13,7 +14,7 @@ import {
 import { domainEvents } from './domain-events.service';
 
 export class PatientService {
-  async createPatient(data: Record<string, unknown>) {
+  async createPatient(data: Prisma.PatientUncheckedCreateInput) {
     const patient = await prisma.patient.create({
       data,
       include: {
@@ -110,7 +111,7 @@ export class PatientService {
     };
   }
 
-  async updatePatient(id: string, data: Record<string, unknown>) {
+  async updatePatient(id: string, data: Prisma.PatientUncheckedUpdateInput) {
     const patient = await prisma.patient.findUnique({ where: { id } });
 
     if (!patient) {

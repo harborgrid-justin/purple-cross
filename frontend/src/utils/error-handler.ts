@@ -47,7 +47,9 @@ class ConsoleErrorLogger implements ErrorLogger {
   }
 
   captureMessage(message: string, level: 'info' | 'warning' | 'error'): void {
-    const logFn = console[level] || console.log;
+    // `console` exposes `warn`, not `warning`; map the level to the matching method.
+    const logFn =
+      level === 'error' ? console.error : level === 'warning' ? console.warn : console.info;
     logFn(`[${level.toUpperCase()}]`, message);
   }
 }

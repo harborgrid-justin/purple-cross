@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
 import {
@@ -10,7 +11,7 @@ import {
 } from '../constants';
 
 export class InventoryService {
-  async createInventoryItem(data: Record<string, unknown>) {
+  async createInventoryItem(data: Prisma.InventoryItemUncheckedCreateInput) {
     return prisma.inventoryItem.create({
       data,
     });
@@ -78,7 +79,7 @@ export class InventoryService {
     };
   }
 
-  async updateInventoryItem(id: string, data: Record<string, unknown>) {
+  async updateInventoryItem(id: string, data: Prisma.InventoryItemUncheckedUpdateInput) {
     const item = await prisma.inventoryItem.findUnique({ where: { id } });
 
     if (!item) {

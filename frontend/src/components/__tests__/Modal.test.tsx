@@ -500,8 +500,8 @@ describe('Modal Component', () => {
       const title = container.querySelector('.modal-title');
       const closeButton = container.querySelector('.modal-close');
 
-      expect(header).toContainElement(title);
-      expect(header).toContainElement(closeButton);
+      expect(header).toContainElement(title as HTMLElement);
+      expect(header).toContainElement(closeButton as HTMLElement);
     });
 
     it('should render all parts in correct order', () => {

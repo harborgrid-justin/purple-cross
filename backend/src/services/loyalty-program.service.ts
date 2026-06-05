@@ -45,7 +45,7 @@ export class LoyaltyProgramService {
     relatedType?: string,
     relatedId?: string
   ) {
-    let program = await this.getProgramByClient(clientId);
+    let program = await prisma.loyaltyProgram.findUnique({ where: { clientId } });
 
     if (!program) {
       program = await this.createProgram(clientId);
@@ -116,7 +116,7 @@ export class LoyaltyProgramService {
   }
 
   async updateSpending(clientId: string, amount: number) {
-    let program = await this.getProgramByClient(clientId);
+    let program = await prisma.loyaltyProgram.findUnique({ where: { clientId } });
 
     if (!program) {
       program = await this.createProgram(clientId);

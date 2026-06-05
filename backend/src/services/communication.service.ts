@@ -1,9 +1,10 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
 import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION } from '../constants';
 
 export class CommunicationService {
-  async createCommunication(data: Record<string, unknown>) {
+  async createCommunication(data: Prisma.CommunicationUncheckedCreateInput) {
     return prisma.communication.create({
       data,
       include: {
@@ -77,7 +78,7 @@ export class CommunicationService {
     };
   }
 
-  async updateCommunication(id: string, data: Record<string, unknown>) {
+  async updateCommunication(id: string, data: Prisma.CommunicationUncheckedUpdateInput) {
     const communication = await prisma.communication.findUnique({ where: { id } });
 
     if (!communication) {

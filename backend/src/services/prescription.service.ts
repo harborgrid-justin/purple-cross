@@ -1,10 +1,11 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
 import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION, WORKFLOW_EVENTS } from '../constants';
 import { domainEvents } from './domain-events.service';
 
 export class PrescriptionService {
-  async createPrescription(data: Record<string, unknown>) {
+  async createPrescription(data: Prisma.PrescriptionUncheckedCreateInput) {
     const prescription = await prisma.prescription.create({
       data,
       include: {
@@ -94,7 +95,7 @@ export class PrescriptionService {
     };
   }
 
-  async updatePrescription(id: string, data: Record<string, unknown>) {
+  async updatePrescription(id: string, data: Prisma.PrescriptionUncheckedUpdateInput) {
     const prescription = await prisma.prescription.findUnique({ where: { id } });
 
     if (!prescription) {

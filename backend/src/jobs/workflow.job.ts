@@ -2,15 +2,16 @@ import { Job, Queue } from 'bullmq';
 import { logger } from '../config/logger';
 import { workflowEngineService } from '../services/workflow-engine.service';
 import { WorkflowAction } from '../types/workflow-types';
-import Redis from 'ioredis';
 
-// Redis connection for BullMQ
-const redisConnection = new Redis({
+// Redis connection options for BullMQ. A plain options object is passed (rather
+// than a constructed ioredis instance) so BullMQ owns the connection lifecycle
+// and the types line up with its bundled ioredis version.
+const redisConnection = {
   host: process.env.REDIS_HOST || 'localhost',
   port: parseInt(process.env.REDIS_PORT || '6379'),
   password: process.env.REDIS_PASSWORD || undefined,
   maxRetriesPerRequest: null,
-});
+};
 
 // Create workflows queue
 export const workflowsQueue = new Queue('workflows', {
@@ -124,12 +125,7 @@ export async function processWorkflowJob(job: Job<WorkflowJobPayload>): Promise<
         throw new Error('Workflow name and actions are required for custom execution');
       }
 
-      await workflowEngineService.executeWorkflow(
-        workflowName,
-        triggerType,
-        triggerData,
-        actions
-      );
+      await workflowEngineService.executeWorkflow(workflowName, triggerType, triggerData, actions);
 
       logger.info('Custom workflow executed successfully', {
         jobId: job.id,

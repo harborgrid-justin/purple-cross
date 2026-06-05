@@ -50,11 +50,6 @@ export const createTestQueryClient = (): QueryClient => {
         retry: false,
       },
     },
-    logger: {
-      log: () => {},
-      warn: () => {},
-      error: () => {},
-    },
   });
 };
 
