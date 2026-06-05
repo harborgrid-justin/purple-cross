@@ -1,76 +1,125 @@
 /**
  * WF-COMP-XXX | HIPAA.tsx - H I P A A
  * Purpose: React component for HIPAA functionality
- * Dependencies: None
+ * Dependencies: react, @tanstack/react-query
  * Last Updated: 2025-10-23 | File Type: .tsx
  */
 
+import React, { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { usePolicies, useAcknowledgePolicy } from '../../hooks/usePolicies';
 import '../../styles/Page.css';
 
-const HIPAA = () => {
+const CATEGORY = 'hipaa';
+
+interface PolicyRow {
+  id: string;
+  title: string;
+  category: string;
+  version?: string;
+  status?: string;
+  effectiveDate?: string;
+}
+
+const HIPAA: React.FC = () => {
+  const [userId, setUserId] = useState('');
+  const { data, isLoading, isError } = usePolicies({ limit: 50 });
+  const acknowledgeMutation = useAcknowledgePolicy();
+
+  const rows = (data as { data?: PolicyRow[] } | undefined)?.data ?? [];
+
+  const filtered = useMemo(
+    () => rows.filter((p) => (p.category || '').toLowerCase() === CATEGORY),
+    [rows]
+  );
+
+  const handleAcknowledge = (id: string): void => {
+    if (!userId.trim()) return;
+    acknowledgeMutation.mutate({ id, acknowledgmentData: { userId: userId.trim() } });
+  };
+
   return (
     <div className="page">
       <header className="page-header">
         <h1>HIPAA Compliance</h1>
+        <p className="page-subtitle">Review and acknowledge HIPAA policies</p>
       </header>
 
-      <div className="content-section">
-        <p>Comprehensive HIPAA compliance management.</p>
-        <div
-          className="info-cards"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '1rem',
-            marginTop: '1rem',
-          }}
-        >
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Privacy</h3>
-            <ul>
-              <li>Privacy policies</li>
-              <li>Client consent</li>
-              <li>Access controls</li>
-              <li>Minimum necessary</li>
-            </ul>
-          </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Security</h3>
-            <ul>
-              <li>Data encryption</li>
-              <li>Audit logs</li>
-              <li>Risk assessments</li>
-              <li>Incident response</li>
-            </ul>
-          </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Training</h3>
-            <ul>
-              <li>Staff training</li>
-              <li>Annual updates</li>
-              <li>Certification</li>
-              <li>Documentation</li>
-            </ul>
-          </div>
+      {acknowledgeMutation.isError && (
+        <div className="alert alert-error" role="alert">
+          {acknowledgeMutation.error instanceof Error
+            ? acknowledgeMutation.error.message
+            : 'Failed to acknowledge policy'}
         </div>
+      )}
+
+      <div className="search-bar" role="search">
+        <label htmlFor="hipaa-user-id" className="sr-only">
+          Acknowledging user ID
+        </label>
+        <input
+          id="hipaa-user-id"
+          type="text"
+          placeholder="Enter your user ID to acknowledge policies..."
+          value={userId}
+          onChange={(e) => setUserId(e.target.value)}
+          aria-label="Acknowledging user ID"
+        />
+      </div>
+
+      <div className="table-container">
+        {isLoading ? (
+          <div role="status" aria-live="polite">
+            <p>Loading policies...</p>
+          </div>
+        ) : isError ? (
+          <div className="alert alert-error" role="alert">
+            <p>Failed to load policies. Please try again.</p>
+          </div>
+        ) : filtered.length === 0 ? (
+          <div role="status" aria-live="polite">
+            <p>No HIPAA policies found.</p>
+          </div>
+        ) : (
+          <table className="data-table" role="table" aria-label="HIPAA policies list">
+            <thead>
+              <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Version</th>
+                <th scope="col">Status</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((row) => (
+                <tr key={row.id}>
+                  <th scope="row">{row.title}</th>
+                  <td>{row.version || 'N/A'}</td>
+                  <td>
+                    <span className="status-badge status-confirmed">{row.status || 'N/A'}</span>
+                  </td>
+                  <td>
+                    <Link
+                      to={`/compliance/${row.id}`}
+                      className="btn-action"
+                      aria-label={`View ${row.title}`}
+                    >
+                      View
+                    </Link>
+                    <button
+                      className="btn-action"
+                      onClick={() => handleAcknowledge(row.id)}
+                      disabled={!userId.trim() || acknowledgeMutation.isPending}
+                      aria-label={`Acknowledge ${row.title}`}
+                    >
+                      Acknowledge
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );

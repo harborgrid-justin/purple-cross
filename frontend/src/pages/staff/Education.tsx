@@ -1,76 +1,83 @@
 /**
  * WF-COMP-XXX | Education.tsx - Education
  * Purpose: React component for Education functionality
- * Dependencies: None
+ * Dependencies: react, @tanstack/react-query
  * Last Updated: 2025-10-23 | File Type: .tsx
  */
 
+import { Link } from 'react-router-dom';
+import { useStaff } from '../../hooks/useStaff';
 import '../../styles/Page.css';
 
+interface EducationRow {
+  id: string;
+  firstName?: string;
+  lastName?: string;
+  role?: string;
+  specialization?: string;
+  licenseNumber?: string;
+  licenseExpiry?: string;
+}
+
 const Education = () => {
+  const { data, isLoading, isError } = useStaff({ limit: 50 });
+
+  const staff = (data as { data?: EducationRow[] } | undefined)?.data ?? [];
+
   return (
     <div className="page">
       <header className="page-header">
         <h1>Continuing Education</h1>
+        <p className="page-subtitle">Credentials, licenses, and specializations</p>
       </header>
 
-      <div className="content-section">
-        <p>Track CE credits and professional development.</p>
-        <div
-          className="info-cards"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '1rem',
-            marginTop: '1rem',
-          }}
-        >
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>CE Management</h3>
-            <ul>
-              <li>Credit tracking</li>
-              <li>License requirements</li>
-              <li>Renewal deadlines</li>
-              <li>Course catalog</li>
-            </ul>
+      <div className="table-container">
+        {isLoading ? (
+          <div role="status" aria-live="polite">
+            <p>Loading credentials...</p>
           </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Learning</h3>
-            <ul>
-              <li>Online courses</li>
-              <li>Webinars</li>
-              <li>Conferences</li>
-              <li>In-house training</li>
-            </ul>
+        ) : isError ? (
+          <div className="alert alert-error" role="alert">
+            <p>Failed to load credentials. Please try again.</p>
           </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Compliance</h3>
-            <ul>
-              <li>State requirements</li>
-              <li>Professional associations</li>
-              <li>Specialty certifications</li>
-              <li>Documentation</li>
-            </ul>
+        ) : staff.length === 0 ? (
+          <div role="status" aria-live="polite">
+            <p>No staff credentials found.</p>
           </div>
-        </div>
+        ) : (
+          <table className="data-table" role="table" aria-label="Staff credentials">
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Role</th>
+                <th scope="col">Specialization</th>
+                <th scope="col">License #</th>
+                <th scope="col">License Expiry</th>
+              </tr>
+            </thead>
+            <tbody>
+              {staff.map((member) => (
+                <tr key={member.id}>
+                  <th scope="row">
+                    {member.firstName ?? ''} {member.lastName ?? ''}
+                  </th>
+                  <td>{member.role ?? 'N/A'}</td>
+                  <td>{member.specialization ?? 'N/A'}</td>
+                  <td>{member.licenseNumber ?? 'N/A'}</td>
+                  <td>
+                    {member.licenseExpiry ? (
+                      <time dateTime={member.licenseExpiry}>
+                        {new Date(member.licenseExpiry).toLocaleDateString()}
+                      </time>
+                    ) : (
+                      'N/A'
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );

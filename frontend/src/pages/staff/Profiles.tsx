@@ -1,76 +1,119 @@
 /**
  * WF-COMP-XXX | Profiles.tsx - Profiles
  * Purpose: React component for Profiles functionality
- * Dependencies: None
+ * Dependencies: react, @tanstack/react-query
  * Last Updated: 2025-10-23 | File Type: .tsx
  */
 
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useStaff } from '../../hooks/useStaff';
 import '../../styles/Page.css';
 
+interface StaffProfile {
+  id: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  role?: string;
+  specialization?: string;
+  employmentType?: string;
+  status?: string;
+}
+
 const Profiles = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const { data, isLoading, isError } = useStaff({ limit: 50 });
+
+  const staff = (data as { data?: StaffProfile[] } | undefined)?.data ?? [];
+
+  const searchLower = searchTerm.toLowerCase();
+  const filtered = searchTerm
+    ? staff.filter(
+        (m) =>
+          `${m.firstName ?? ''} ${m.lastName ?? ''}`.toLowerCase().includes(searchLower) ||
+          (m.email ?? '').toLowerCase().includes(searchLower) ||
+          (m.role ?? '').toLowerCase().includes(searchLower)
+      )
+    : staff;
+
   return (
     <div className="page">
       <header className="page-header">
         <h1>Employee Profiles</h1>
+        <p className="page-subtitle">Comprehensive employee information</p>
       </header>
 
-      <div className="content-section">
-        <p>Comprehensive employee information management.</p>
-        <div
-          className="info-cards"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '1rem',
-            marginTop: '1rem',
-          }}
-        >
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Profile Info</h3>
-            <ul>
-              <li>Personal information</li>
-              <li>Contact details</li>
-              <li>Emergency contacts</li>
-              <li>Professional credentials</li>
-            </ul>
+      <div className="search-bar" role="search">
+        <label htmlFor="profiles-search" className="sr-only">
+          Search employee profiles
+        </label>
+        <input
+          id="profiles-search"
+          type="search"
+          placeholder="Search by name, email, or role..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          aria-label="Search employee profiles"
+        />
+      </div>
+
+      <div className="table-container">
+        {isLoading ? (
+          <div role="status" aria-live="polite">
+            <p>Loading employee profiles...</p>
           </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Employment</h3>
-            <ul>
-              <li>Job title</li>
-              <li>Department</li>
-              <li>Start date</li>
-              <li>Employment type</li>
-            </ul>
+        ) : isError ? (
+          <div className="alert alert-error" role="alert">
+            <p>Failed to load employee profiles. Please try again.</p>
           </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Skills</h3>
-            <ul>
-              <li>Certifications</li>
-              <li>Specialties</li>
-              <li>Languages</li>
-              <li>Training records</li>
-            </ul>
+        ) : filtered.length === 0 ? (
+          <div role="status" aria-live="polite">
+            <p>No employees found.</p>
           </div>
-        </div>
+        ) : (
+          <table className="data-table" role="table" aria-label="Employee profiles">
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Role</th>
+                <th scope="col">Specialization</th>
+                <th scope="col">Employment</th>
+                <th scope="col">Status</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((member) => (
+                <tr key={member.id}>
+                  <th scope="row">
+                    {member.firstName ?? ''} {member.lastName ?? ''}
+                  </th>
+                  <td>{member.email ?? 'N/A'}</td>
+                  <td>{member.role ?? 'N/A'}</td>
+                  <td>{member.specialization ?? 'N/A'}</td>
+                  <td>{member.employmentType ?? 'N/A'}</td>
+                  <td>
+                    <span className={`status-badge status-${member.status ?? 'active'}`}>
+                      {member.status ?? 'active'}
+                    </span>
+                  </td>
+                  <td>
+                    <Link
+                      to={`/staff/${member.id}`}
+                      className="btn-action"
+                      aria-label={`View profile for ${member.firstName ?? ''} ${member.lastName ?? ''}`}
+                    >
+                      View
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );

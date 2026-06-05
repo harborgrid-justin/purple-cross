@@ -6,72 +6,96 @@
  * Last Updated: 2025-10-23 | File Type: .tsx
  */
 
+import {
+  usePatientReminders,
+  useCompletePatientReminder,
+} from '../../hooks/usePatientReminders';
 import '../../styles/Page.css';
 
+interface ReminderRow {
+  id: string;
+  patientId: string;
+  type: string;
+  dueDate: string;
+  status?: string;
+  notes?: string;
+  patient?: { name: string };
+}
+
 const Reminders = () => {
+  const { data, isLoading, isError } = usePatientReminders({ limit: 100 });
+  const reminders = (data as { data?: ReminderRow[] } | undefined)?.data ?? [];
+  const completeReminder = useCompletePatientReminder();
+
   return (
     <div className="page">
       <header className="page-header">
         <h1>Reminder System</h1>
+        <p className="page-subtitle">Track upcoming reminders and confirm completion</p>
       </header>
 
-      <div className="content-section">
-        <p>Automated appointment reminders to reduce no-shows.</p>
-        <div
-          className="info-cards"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '1rem',
-            marginTop: '1rem',
-          }}
-        >
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Reminder Types</h3>
-            <ul>
-              <li>Email reminders</li>
-              <li>SMS reminders</li>
-              <li>Phone call reminders</li>
-              <li>Push notifications</li>
-            </ul>
+      <div className="table-container">
+        {isLoading ? (
+          <div role="status" aria-live="polite">
+            <p>Loading reminders...</p>
           </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Timing</h3>
-            <ul>
-              <li>24-hour reminders</li>
-              <li>1-week reminders</li>
-              <li>Custom timing</li>
-              <li>Multiple reminders</li>
-            </ul>
+        ) : isError ? (
+          <div className="alert alert-error" role="alert">
+            <p>Failed to load reminders. Please try again.</p>
           </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Confirmation</h3>
-            <ul>
-              <li>Confirm attendance</li>
-              <li>Request reschedule</li>
-              <li>One-click confirmation</li>
-              <li>Response tracking</li>
-            </ul>
+        ) : reminders.length === 0 ? (
+          <div role="status" aria-live="polite">
+            <p>No reminders scheduled.</p>
           </div>
-        </div>
+        ) : (
+          <table className="data-table" role="table" aria-label="Appointment reminders">
+            <thead>
+              <tr>
+                <th scope="col">Patient</th>
+                <th scope="col">Type</th>
+                <th scope="col">Due Date</th>
+                <th scope="col">Status</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {reminders.map((reminder) => {
+                const status = reminder.status ?? 'pending';
+                return (
+                  <tr key={reminder.id}>
+                    <th scope="row">{reminder.patient?.name ?? reminder.patientId}</th>
+                    <td>{reminder.type}</td>
+                    <td>
+                      <time dateTime={reminder.dueDate}>
+                        {new Date(reminder.dueDate).toLocaleDateString()}
+                      </time>
+                    </td>
+                    <td>
+                      <span
+                        className={`status-badge status-${status}`}
+                        role="status"
+                        aria-label={`Status: ${status}`}
+                      >
+                        {status}
+                      </span>
+                    </td>
+                    <td>
+                      <button
+                        type="button"
+                        className="btn-action"
+                        onClick={() => completeReminder.mutate(reminder.id)}
+                        disabled={completeReminder.isPending || status === 'completed'}
+                        aria-label={`Mark reminder for ${reminder.patient?.name ?? 'patient'} complete`}
+                      >
+                        Complete
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );

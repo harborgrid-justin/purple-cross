@@ -1,12 +1,13 @@
 /**
  * WF-COMP-XXX | Laboratory.tsx - Laboratory
  * Purpose: React component for Laboratory functionality
- * Dependencies: react
+ * Dependencies: react, @tanstack/react-query
  * Last Updated: 2025-10-23 | File Type: .tsx
  */
 
 import { useState, Suspense, lazy } from 'react';
 import { Link, Routes, Route, useLocation } from 'react-router-dom';
+import { useLabTests } from '../hooks/useLabTests';
 import '../styles/Page.css';
 
 // Lazy load subfeature pages
@@ -18,52 +19,115 @@ const Results = lazy(() => import('./laboratory/Results'));
 const QualityAssurance = lazy(() => import('./laboratory/QualityAssurance'));
 const LabEquipment = lazy(() => import('./laboratory/LabEquipment'));
 const LabReports = lazy(() => import('./laboratory/LabReports'));
+const LaboratoryCreate = lazy(() => import('./laboratory/LaboratoryCreate'));
+const LaboratoryDetail = lazy(() => import('./laboratory/LaboratoryDetail'));
+const LaboratoryEdit = lazy(() => import('./laboratory/LaboratoryEdit'));
+
+interface LabTestListRow {
+  id: string;
+  testName?: string;
+  testType?: string;
+  status?: string;
+  orderedDate?: string;
+  patient?: { id: string; name: string };
+}
 
 const LaboratoryList = () => {
-  const [tests] = useState([
-    { id: '1', patient: 'Max', testType: 'Blood Work', status: 'Completed', date: '2024-01-15' },
-    { id: '2', patient: 'Luna', testType: 'Urinalysis', status: 'In Progress', date: '2024-01-16' },
-  ]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const { data, isLoading: loading, isError } = useLabTests({ limit: 50 });
+
+  const tests = (data as { data?: LabTestListRow[] } | undefined)?.data ?? [];
+
+  const searchLower = searchTerm.toLowerCase();
+  const filtered = searchTerm
+    ? tests.filter(
+        (t) =>
+          (t.patient?.name ?? '').toLowerCase().includes(searchLower) ||
+          (t.testName ?? '').toLowerCase().includes(searchLower) ||
+          (t.testType ?? '').toLowerCase().includes(searchLower)
+      )
+    : tests;
 
   return (
     <div className="table-container">
-      <table className="data-table" role="table" aria-label="Laboratory tests list">
-        <thead>
-          <tr>
-            <th scope="col">Test ID</th>
-            <th scope="col">Patient</th>
-            <th scope="col">Test Type</th>
-            <th scope="col">Date</th>
-            <th scope="col">Status</th>
-            <th scope="col">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tests.map((test) => (
-            <tr key={test.id}>
-              <th scope="row">#{test.id}</th>
-              <td>{test.patient}</td>
-              <td>{test.testType}</td>
-              <td>{test.date}</td>
-              <td>
-                <span
-                  className={`status-badge status-${test.status === 'Completed' ? 'confirmed' : 'pending'}`}
-                >
-                  {test.status}
-                </span>
-              </td>
-              <td>
-                <button className="btn-action" aria-label={`View test results for ${test.patient}`}>
-                  View
-                </button>
-                <button className="btn-action" aria-label={`Download results for ${test.patient}`}>
-                  Download
-                </button>
-              </td>
+      <div className="search-bar" role="search">
+        <label htmlFor="lab-test-search" className="sr-only">
+          Search lab tests
+        </label>
+        <input
+          id="lab-test-search"
+          type="search"
+          placeholder="Search lab tests by patient, test name, or type..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          aria-label="Search lab tests by patient, test name, or type"
+        />
+      </div>
+      {loading ? (
+        <div role="status" aria-live="polite">
+          <p>Loading lab tests...</p>
+        </div>
+      ) : isError ? (
+        <div className="alert alert-error" role="alert">
+          <p>Failed to load lab tests. Please try again.</p>
+        </div>
+      ) : filtered.length === 0 ? (
+        <div role="status" aria-live="polite">
+          <p>No lab tests found. Order a new test to get started.</p>
+        </div>
+      ) : (
+        <table className="data-table" role="table" aria-label="Laboratory tests list">
+          <thead>
+            <tr>
+              <th scope="col">Test</th>
+              <th scope="col">Patient</th>
+              <th scope="col">Type</th>
+              <th scope="col">Ordered</th>
+              <th scope="col">Status</th>
+              <th scope="col">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filtered.map((test) => (
+              <tr key={test.id}>
+                <th scope="row">{test.testName ?? 'N/A'}</th>
+                <td>{test.patient?.name ?? 'Unknown'}</td>
+                <td>{test.testType ?? 'N/A'}</td>
+                <td>
+                  {test.orderedDate ? (
+                    <time dateTime={test.orderedDate}>
+                      {new Date(test.orderedDate).toLocaleDateString()}
+                    </time>
+                  ) : (
+                    'N/A'
+                  )}
+                </td>
+                <td>
+                  <span className={`status-badge status-${test.status ?? 'pending'}`}>
+                    {test.status ?? 'pending'}
+                  </span>
+                </td>
+                <td>
+                  <Link
+                    to={`/laboratory/${test.id}`}
+                    className="btn-action"
+                    aria-label={`View test ${test.testName ?? ''}`}
+                  >
+                    View
+                  </Link>
+                  <Link
+                    to={`/laboratory/${test.id}/edit`}
+                    className="btn-action"
+                    aria-label={`Edit test ${test.testName ?? ''}`}
+                  >
+                    Edit
+                  </Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 };
@@ -77,9 +141,9 @@ const Laboratory = () => {
         <h1>
           <span aria-hidden="true">🔬</span> Laboratory
         </h1>
-        <button className="btn-primary" aria-label="Order new lab test">
+        <Link to="/laboratory/create" className="btn-primary" aria-label="Order new lab test">
           + Order Test
-        </button>
+        </Link>
       </header>
 
       <nav className="sub-nav" role="navigation" aria-label="Laboratory sections">
@@ -148,6 +212,7 @@ const Laboratory = () => {
       >
         <Routes>
           <Route path="/" element={<LaboratoryList />} />
+          <Route path="/create" element={<LaboratoryCreate />} />
           <Route path="/in-house" element={<InHouse />} />
           <Route path="/external" element={<External />} />
           <Route path="/test-catalog" element={<TestCatalog />} />
@@ -156,6 +221,8 @@ const Laboratory = () => {
           <Route path="/quality-assurance" element={<QualityAssurance />} />
           <Route path="/equipment" element={<LabEquipment />} />
           <Route path="/reports" element={<LabReports />} />
+          <Route path="/:id/edit" element={<LaboratoryEdit />} />
+          <Route path="/:id" element={<LaboratoryDetail />} />
         </Routes>
       </Suspense>
     </div>

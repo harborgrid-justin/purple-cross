@@ -1,77 +1,109 @@
 /**
  * WF-COMP-XXX | UsageAnalytics.tsx - Usage Analytics
- * Purpose: React component for UsageAnalytics functionality
- * Dependencies: None
+ * Purpose: Display inventory usage metrics from the analytics report
+ * Dependencies: useInventoryReport
  * Last Updated: 2025-10-23 | File Type: .tsx
  */
 
+import { useInventoryReport } from '../../hooks/useAnalytics';
 import '../../styles/Page.css';
 
+interface TopItem {
+  id?: string;
+  name?: string;
+  quantityUsed?: number;
+}
+
+interface InventoryReport {
+  totalItems?: number;
+  lowStockCount?: number;
+  outOfStockCount?: number;
+  totalValue?: number;
+  topUsedItems?: TopItem[];
+}
+
 const UsageAnalytics = () => {
+  const { data, isLoading: loading, isError } = useInventoryReport();
+
+  const report = (data as { data?: InventoryReport } | undefined)?.data;
+  const topItems = report?.topUsedItems ?? [];
+
   return (
     <div className="page">
       <header className="page-header">
         <h1>Usage Analytics</h1>
+        <p className="page-subtitle">Inventory consumption and stock health</p>
       </header>
 
-      <div className="content-section">
-        <p>Analyze inventory usage patterns and trends.</p>
-        <div
-          className="info-cards"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '1rem',
-            marginTop: '1rem',
-          }}
-        >
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Analytics</h3>
-            <ul>
-              <li>Usage by item</li>
-              <li>Usage by department</li>
-              <li>Usage by provider</li>
-              <li>Seasonal trends</li>
-            </ul>
-          </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Optimization</h3>
-            <ul>
-              <li>Reduce waste</li>
-              <li>Optimize stock</li>
-              <li>Identify savings</li>
-              <li>Improve efficiency</li>
-            </ul>
-          </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Forecasting</h3>
-            <ul>
-              <li>Demand prediction</li>
-              <li>Stock planning</li>
-              <li>Budget forecasting</li>
-              <li>Capacity planning</li>
-            </ul>
-          </div>
+      {loading ? (
+        <div role="status" aria-live="polite">
+          <p>Loading usage analytics...</p>
         </div>
-      </div>
+      ) : isError ? (
+        <div className="alert alert-error" role="alert">
+          <p>Failed to load analytics. Please try again.</p>
+        </div>
+      ) : !report ? (
+        <div role="status" aria-live="polite">
+          <p>No analytics data available.</p>
+        </div>
+      ) : (
+        <>
+          <div className="stats-grid">
+            <div className="stat-card">
+              <div className="stat-content">
+                <div className="stat-label">Total Items</div>
+                <div className="stat-value">{report.totalItems ?? '—'}</div>
+              </div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-content">
+                <div className="stat-label">Low Stock</div>
+                <div className="stat-value">{report.lowStockCount ?? '—'}</div>
+              </div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-content">
+                <div className="stat-label">Out of Stock</div>
+                <div className="stat-value">{report.outOfStockCount ?? '—'}</div>
+              </div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-content">
+                <div className="stat-label">Total Value</div>
+                <div className="stat-value">
+                  {report.totalValue != null ? `$${Number(report.totalValue).toFixed(2)}` : '—'}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="table-container">
+            {topItems.length === 0 ? (
+              <div role="status" aria-live="polite">
+                <p>No usage data for top items.</p>
+              </div>
+            ) : (
+              <table className="data-table" role="table" aria-label="Top used items">
+                <thead>
+                  <tr>
+                    <th scope="col">Item</th>
+                    <th scope="col">Quantity Used</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {topItems.map((item, index) => (
+                    <tr key={item.id ?? `${item.name ?? 'item'}-${index}`}>
+                      <th scope="row">{item.name ?? 'N/A'}</th>
+                      <td>{item.quantityUsed ?? 0}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 };

@@ -21,6 +21,7 @@ const MedicationReminders = lazy(() => import('./prescriptions/MedicationReminde
 const Compounding = lazy(() => import('./prescriptions/Compounding'));
 const PrescriptionsCreate = lazy(() => import('./prescriptions/PrescriptionsCreate'));
 const PrescriptionsEdit = lazy(() => import('./prescriptions/PrescriptionsEdit'));
+const PrescriptionsDetail = lazy(() => import('./prescriptions/PrescriptionsDetail'));
 
 interface Prescription {
   id: string;
@@ -170,6 +171,7 @@ const Prescriptions = () => {
           <Route path="/create" element={<PrescriptionsCreate />} />
           <Route path="/:id/edit" element={<PrescriptionsEdit />} />
           <Route path="/e-prescribing" element={<EPrescribing />} />
+          <Route path="/:id" element={<PrescriptionsDetail />} />
           <Route path="/medication-database" element={<MedicationDatabase />} />
           <Route path="/history" element={<History />} />
           <Route path="/dosage-calculator" element={<DosageCalculator />} />

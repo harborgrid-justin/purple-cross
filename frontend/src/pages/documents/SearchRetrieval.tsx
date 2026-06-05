@@ -1,76 +1,108 @@
 /**
  * WF-COMP-XXX | SearchRetrieval.tsx - Search Retrieval
  * Purpose: React component for SearchRetrieval functionality
- * Dependencies: None
+ * Dependencies: react, @tanstack/react-query
  * Last Updated: 2025-10-23 | File Type: .tsx
  */
 
+import React, { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useDocuments } from '../../hooks/useDocuments';
 import '../../styles/Page.css';
 
-const SearchRetrieval = () => {
+interface DocumentRow {
+  id: string;
+  title?: string;
+  fileName?: string;
+  category?: string;
+  description?: string;
+  status?: string;
+}
+
+const SearchRetrieval: React.FC = () => {
+  const [search, setSearch] = useState('');
+  const { data, isLoading, isError } = useDocuments({ limit: 50 });
+
+  const rows = (data as { data?: DocumentRow[] } | undefined)?.data ?? [];
+
+  const results = useMemo(() => {
+    if (!search) return [];
+    const term = search.toLowerCase();
+    return rows.filter((doc) =>
+      [doc.title, doc.fileName, doc.category, doc.description].some((v) =>
+        v?.toLowerCase().includes(term)
+      )
+    );
+  }, [rows, search]);
+
   return (
     <div className="page">
       <header className="page-header">
-        <h1>Search & Retrieval</h1>
+        <h1>Search &amp; Retrieval</h1>
+        <p className="page-subtitle">Search across all documents and metadata</p>
       </header>
 
-      <div className="content-section">
-        <p>Full-text search and document retrieval.</p>
-        <div
-          className="info-cards"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '1rem',
-            marginTop: '1rem',
-          }}
-        >
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Search</h3>
-            <ul>
-              <li>Full-text search</li>
-              <li>Metadata search</li>
-              <li>Advanced filters</li>
-              <li>Boolean operators</li>
-            </ul>
+      <div className="search-bar" role="search">
+        <label htmlFor="document-fulltext-search" className="sr-only">
+          Search documents
+        </label>
+        <input
+          id="document-fulltext-search"
+          type="search"
+          placeholder="Search documents by name, category, or description..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          aria-label="Search documents"
+        />
+      </div>
+
+      <div className="table-container">
+        {isLoading ? (
+          <div role="status" aria-live="polite">
+            <p>Loading document index...</p>
           </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Features</h3>
-            <ul>
-              <li>Auto-suggestions</li>
-              <li>Spell check</li>
-              <li>Synonyms</li>
-              <li>Fuzzy matching</li>
-            </ul>
+        ) : isError ? (
+          <div className="alert alert-error" role="alert">
+            <p>Failed to load documents. Please try again.</p>
           </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Results</h3>
-            <ul>
-              <li>Relevance ranking</li>
-              <li>Quick preview</li>
-              <li>Highlighting</li>
-              <li>Batch operations</li>
-            </ul>
+        ) : !search ? (
+          <div role="status" aria-live="polite">
+            <p>Enter a search term above to find documents.</p>
           </div>
-        </div>
+        ) : results.length === 0 ? (
+          <div role="status" aria-live="polite">
+            <p>No documents match &ldquo;{search}&rdquo;.</p>
+          </div>
+        ) : (
+          <table className="data-table" role="table" aria-label="Search results">
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Category</th>
+                <th scope="col">Description</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {results.map((doc) => (
+                <tr key={doc.id}>
+                  <th scope="row">{doc.title || doc.fileName || 'Untitled'}</th>
+                  <td>{doc.category || 'N/A'}</td>
+                  <td>{doc.description || 'N/A'}</td>
+                  <td>
+                    <Link
+                      to={`/documents/${doc.id}`}
+                      className="btn-action"
+                      aria-label={`View ${doc.title || doc.fileName || 'document'}`}
+                    >
+                      View
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );

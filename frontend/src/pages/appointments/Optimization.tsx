@@ -6,75 +6,106 @@
  * Last Updated: 2025-10-23 | File Type: .tsx
  */
 
+import { useMemo } from 'react';
+import { useAppointments } from '../../hooks/useAppointments';
 import '../../styles/Page.css';
 
-const Optimization = () => {
+interface AppointmentRow {
+  id: string;
+  status: string;
+  startTime: string;
+}
+
+const OptimizationView = () => {
+  const { data, isLoading, isError } = useAppointments({ limit: 100 });
+  const appointments = (data as { data?: AppointmentRow[] } | undefined)?.data ?? [];
+
+  const statusBreakdown = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const a of appointments) {
+      counts.set(a.status, (counts.get(a.status) ?? 0) + 1);
+    }
+    return Array.from(counts.entries()).sort((a, b) => b[1] - a[1]);
+  }, [appointments]);
+
+  const hourBreakdown = useMemo(() => {
+    const counts = new Map<number, number>();
+    for (const a of appointments) {
+      const hour = new Date(a.startTime).getHours();
+      if (!Number.isNaN(hour)) counts.set(hour, (counts.get(hour) ?? 0) + 1);
+    }
+    return Array.from(counts.entries()).sort((a, b) => a[0] - b[0]);
+  }, [appointments]);
+
   return (
     <div className="page">
       <header className="page-header">
         <h1>Schedule Optimization</h1>
+        <p className="page-subtitle">Identify load distribution and peak times across appointments</p>
       </header>
 
-      <div className="content-section">
-        <p>AI-powered scheduling optimization for maximum efficiency.</p>
-        <div
-          className="info-cards"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '1rem',
-            marginTop: '1rem',
-          }}
-        >
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Optimization</h3>
-            <ul>
-              <li>Auto-scheduling</li>
-              <li>Gap filling</li>
-              <li>Resource balancing</li>
-              <li>Load distribution</li>
-            </ul>
+      <div className="table-container">
+        {isLoading ? (
+          <div role="status" aria-live="polite">
+            <p>Analyzing schedule...</p>
           </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Analytics</h3>
-            <ul>
-              <li>Utilization rates</li>
-              <li>Downtime analysis</li>
-              <li>Bottlenecks</li>
-              <li>Efficiency metrics</li>
-            </ul>
+        ) : isError ? (
+          <div className="alert alert-error" role="alert">
+            <p>Failed to load appointment data. Please try again.</p>
           </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Suggestions</h3>
-            <ul>
-              <li>Schedule improvements</li>
-              <li>Capacity planning</li>
-              <li>Staff allocation</li>
-              <li>Peak time management</li>
-            </ul>
+        ) : appointments.length === 0 ? (
+          <div role="status" aria-live="polite">
+            <p>No appointment data to analyze.</p>
           </div>
-        </div>
+        ) : (
+          <>
+            <table className="data-table" role="table" aria-label="Appointments by status">
+              <thead>
+                <tr>
+                  <th scope="col">Status</th>
+                  <th scope="col">Count</th>
+                  <th scope="col">Share</th>
+                </tr>
+              </thead>
+              <tbody>
+                {statusBreakdown.map(([status, count]) => (
+                  <tr key={status}>
+                    <th scope="row">{status}</th>
+                    <td>{count}</td>
+                    <td>{Math.round((count / appointments.length) * 100)}%</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <table
+              className="data-table"
+              role="table"
+              aria-label="Appointments by hour"
+              style={{ marginTop: '2rem' }}
+            >
+              <thead>
+                <tr>
+                  <th scope="col">Hour</th>
+                  <th scope="col">Appointments</th>
+                </tr>
+              </thead>
+              <tbody>
+                {hourBreakdown.map(([hour, count]) => (
+                  <tr key={hour}>
+                    <th scope="row">
+                      {hour.toString().padStart(2, '0')}:00 - {hour.toString().padStart(2, '0')}:59
+                    </th>
+                    <td>{count}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </>
+        )}
       </div>
     </div>
   );
 };
 
-export default Optimization;
+export default OptimizationView;

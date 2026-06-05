@@ -1,76 +1,96 @@
 /**
  * WF-COMP-XXX | History.tsx - History
- * Purpose: React component for History functionality
- * Dependencies: None
+ * Purpose: Full prescription history list across patients
+ * Dependencies: usePrescriptions
  * Last Updated: 2025-10-23 | File Type: .tsx
  */
 
+import { Link } from 'react-router-dom';
+import { usePrescriptions } from '../../hooks/usePrescriptions';
 import '../../styles/Page.css';
 
+interface PrescriptionRow {
+  id: string;
+  dosage: string;
+  frequency: string;
+  duration?: string;
+  status?: string;
+  prescriptionDate?: string;
+  patient?: { name: string };
+  medication?: { name: string };
+}
+
 const History = () => {
+  const { data, isLoading: loading, isError } = usePrescriptions({ limit: 100 });
+
+  const prescriptions = (data as { data?: PrescriptionRow[] } | undefined)?.data ?? [];
+
   return (
     <div className="page">
       <header className="page-header">
         <h1>Prescription History</h1>
+        <p className="page-subtitle">Complete medication history across patients</p>
       </header>
 
-      <div className="content-section">
-        <p>Complete medication history for each patient.</p>
-        <div
-          className="info-cards"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '1rem',
-            marginTop: '1rem',
-          }}
-        >
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>History View</h3>
-            <ul>
-              <li>All prescriptions</li>
-              <li>Active medications</li>
-              <li>Discontinued</li>
-              <li>Past medications</li>
-            </ul>
+      <div className="table-container">
+        {loading ? (
+          <div role="status" aria-live="polite">
+            <p>Loading prescription history...</p>
           </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Details</h3>
-            <ul>
-              <li>Medication names</li>
-              <li>Dosages</li>
-              <li>Durations</li>
-              <li>Prescribers</li>
-            </ul>
+        ) : isError ? (
+          <div className="alert alert-error" role="alert">
+            <p>Failed to load prescriptions. Please try again.</p>
           </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Analysis</h3>
-            <ul>
-              <li>Medication trends</li>
-              <li>Compliance</li>
-              <li>Refill patterns</li>
-              <li>Adverse events</li>
-            </ul>
+        ) : prescriptions.length === 0 ? (
+          <div role="status" aria-live="polite">
+            <p>No prescriptions found.</p>
           </div>
-        </div>
+        ) : (
+          <table className="data-table" role="table" aria-label="Prescription history">
+            <thead>
+              <tr>
+                <th scope="col">Patient</th>
+                <th scope="col">Medication</th>
+                <th scope="col">Dosage</th>
+                <th scope="col">Date</th>
+                <th scope="col">Status</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {prescriptions.map((rx) => (
+                <tr key={rx.id}>
+                  <th scope="row">{rx.patient?.name ?? 'Unknown'}</th>
+                  <td>{rx.medication?.name ?? 'N/A'}</td>
+                  <td>{rx.dosage}</td>
+                  <td>
+                    {rx.prescriptionDate
+                      ? new Date(rx.prescriptionDate).toLocaleDateString()
+                      : 'N/A'}
+                  </td>
+                  <td>
+                    <span
+                      className={`status-badge status-${rx.status ?? 'pending'}`}
+                      role="status"
+                      aria-label={`Status: ${rx.status ?? 'unknown'}`}
+                    >
+                      {rx.status ?? 'N/A'}
+                    </span>
+                  </td>
+                  <td>
+                    <Link
+                      to={`/prescriptions/${rx.id}`}
+                      className="btn-action"
+                      aria-label={`View prescription for ${rx.patient?.name ?? 'patient'}`}
+                    >
+                      View
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );
