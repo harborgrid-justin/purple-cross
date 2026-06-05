@@ -1,76 +1,88 @@
 /**
  * WF-COMP-XXX | AutoReorder.tsx - Auto Reorder
- * Purpose: React component for AutoReorder functionality
- * Dependencies: None
+ * Purpose: Surface items at or below their reorder point for replenishment
+ * Dependencies: useLowStockInventory
  * Last Updated: 2025-10-23 | File Type: .tsx
  */
 
+import { Link } from 'react-router-dom';
+import { useLowStockInventory } from '../../hooks/useInventory';
 import '../../styles/Page.css';
 
+interface LowStockItem {
+  id: string;
+  name: string;
+  quantity: number;
+  reorderPoint: number;
+  unit?: string;
+  supplier?: string;
+}
+
 const AutoReorder = () => {
+  const { data, isLoading: loading, isError } = useLowStockInventory();
+
+  const items = (data as { data?: LowStockItem[] } | undefined)?.data ?? [];
+
   return (
     <div className="page">
       <header className="page-header">
         <h1>Automatic Reordering</h1>
+        <p className="page-subtitle">Items at or below their reorder point</p>
       </header>
 
-      <div className="content-section">
-        <p>Automated purchase order generation based on stock levels.</p>
-        <div
-          className="info-cards"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '1rem',
-            marginTop: '1rem',
-          }}
-        >
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Auto-Reorder</h3>
-            <ul>
-              <li>Min/max levels</li>
-              <li>Par levels</li>
-              <li>Reorder points</li>
-              <li>Lead times</li>
-            </ul>
+      <div className="table-container">
+        {loading ? (
+          <div role="status" aria-live="polite">
+            <p>Loading reorder suggestions...</p>
           </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Smart Ordering</h3>
-            <ul>
-              <li>Usage patterns</li>
-              <li>Seasonal adjustments</li>
-              <li>Bulk discounts</li>
-              <li>Vendor preferences</li>
-            </ul>
+        ) : isError ? (
+          <div className="alert alert-error" role="alert">
+            <p>Failed to load low-stock items. Please try again.</p>
           </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Approval</h3>
-            <ul>
-              <li>Auto-approve</li>
-              <li>Manual review</li>
-              <li>Spending limits</li>
-              <li>Multi-level approval</li>
-            </ul>
+        ) : items.length === 0 ? (
+          <div role="status" aria-live="polite">
+            <p>No items need reordering. Stock levels are healthy.</p>
           </div>
-        </div>
+        ) : (
+          <table className="data-table" role="table" aria-label="Items to reorder">
+            <thead>
+              <tr>
+                <th scope="col">Item</th>
+                <th scope="col">On Hand</th>
+                <th scope="col">Reorder Point</th>
+                <th scope="col">Suggested Order</th>
+                <th scope="col">Supplier</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {items.map((item) => {
+                const suggested = Math.max(item.reorderPoint * 2 - item.quantity, 0);
+                return (
+                  <tr key={item.id}>
+                    <th scope="row">{item.name}</th>
+                    <td>
+                      {item.quantity}
+                      {item.unit ? ` ${item.unit}` : ''}
+                    </td>
+                    <td>{item.reorderPoint}</td>
+                    <td>{suggested}</td>
+                    <td>{item.supplier ?? 'N/A'}</td>
+                    <td>
+                      <Link
+                        to="/inventory/purchase-orders"
+                        className="btn-action"
+                        aria-label={`Create purchase order for ${item.name}`}
+                      >
+                        Order
+                      </Link>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );

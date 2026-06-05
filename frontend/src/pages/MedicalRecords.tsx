@@ -21,6 +21,7 @@ const Sharing = lazy(() => import('./medical-records/Sharing'));
 const Audit = lazy(() => import('./medical-records/Audit'));
 const MedicalRecordsCreate = lazy(() => import('./medical-records/MedicalRecordsCreate'));
 const MedicalRecordsEdit = lazy(() => import('./medical-records/MedicalRecordsEdit'));
+const MedicalRecordsDetail = lazy(() => import('./medical-records/MedicalRecordsDetail'));
 
 interface MedicalRecord {
   id: string;
@@ -101,6 +102,13 @@ const MedicalRecordsList = () => {
                     : 'Unassigned'}
                 </td>
                 <td>
+                  <Link
+                    to={`/medical-records/${record.id}`}
+                    className="btn-action"
+                    aria-label={`View record for ${record.patient?.name ?? 'patient'}`}
+                  >
+                    View
+                  </Link>
                   <Link
                     to={`/medical-records/${record.id}/edit`}
                     className="btn-action"
@@ -200,6 +208,7 @@ const MedicalRecords = () => {
           <Route path="/" element={<MedicalRecordsList />} />
           <Route path="/create" element={<MedicalRecordsCreate />} />
           <Route path="/:id/edit" element={<MedicalRecordsEdit />} />
+          <Route path="/:id" element={<MedicalRecordsDetail />} />
           <Route path="/emr" element={<EMR />} />
           <Route path="/clinical-notes" element={<ClinicalNotes />} />
           <Route path="/diagnostics" element={<Diagnostics />} />

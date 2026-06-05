@@ -5,77 +5,117 @@
  * Last Updated: 2025-10-23 | File Type: .tsx
  */
 
+import React from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { z } from 'zod';
+import { useCreatePatient } from '../../hooks/usePatients';
+import { useZodForm } from '../../hooks/useZodForm';
+import { FormField } from '../../components/form/FormField';
 import '../../styles/Page.css';
 
-const PatientRegistration = () => {
+// Mirrors the backend create-patient validation so users get immediate
+// client-side feedback before the record is persisted.
+const patientSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  species: z.string().min(1, 'Species is required'),
+  gender: z.string().min(1, 'Gender is required'),
+  dateOfBirth: z.string().min(1, 'Date of birth is required'),
+  breed: z.string().optional(),
+  microchipId: z.string().optional(),
+  ownerId: z.string().uuid('Owner ID must be a valid UUID'),
+});
+
+type PatientFormData = z.infer<typeof patientSchema>;
+
+const SPECIES = ['Dog', 'Cat', 'Bird', 'Rabbit', 'Other'].map((v) => ({ value: v, label: v }));
+const GENDERS = [
+  { value: 'male', label: 'Male' },
+  { value: 'female', label: 'Female' },
+  { value: 'unknown', label: 'Unknown' },
+];
+
+const PatientRegistration: React.FC = () => {
+  const navigate = useNavigate();
+  const createPatientMutation = useCreatePatient();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useZodForm(patientSchema);
+
+  const onSubmit = (data: PatientFormData): void => {
+    createPatientMutation.mutate(data, {
+      onSuccess: (response) => {
+        const patientId = (response as { data?: { id?: string } })?.data?.id;
+        navigate(patientId ? `/patients/${patientId}` : '/patients');
+      },
+    });
+  };
+
   return (
     <div className="page">
       <header className="page-header">
-        <h1>Patient Registration & Profiles</h1>
-        <button className="btn-primary">Register New Patient</button>
+        <h1>Patient Registration &amp; Profiles</h1>
+        <p className="page-subtitle">Register a new patient in the system</p>
       </header>
 
-      <div className="content-section">
-        <p>
-          Comprehensive patient registration system with detailed profile management for all pet
-          information.
-        </p>
-        <div
-          className="info-cards"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '1rem',
-            marginTop: '1rem',
-          }}
-        >
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Basic Information</h3>
-            <ul>
-              <li>Name, species, breed</li>
-              <li>Date of birth, age</li>
-              <li>Sex, color, markings</li>
-              <li>Microchip ID</li>
-            </ul>
-          </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Owner Details</h3>
-            <ul>
-              <li>Primary & secondary owners</li>
-              <li>Contact information</li>
-              <li>Emergency contacts</li>
-              <li>Billing contacts</li>
-            </ul>
-          </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Medical Overview</h3>
-            <ul>
-              <li>Allergies & sensitivities</li>
-              <li>Current medications</li>
-              <li>Vaccination status</li>
-              <li>Medical alerts</li>
-            </ul>
-          </div>
+      {createPatientMutation.isError && (
+        <div className="alert alert-error" role="alert">
+          {createPatientMutation.error instanceof Error
+            ? createPatientMutation.error.message
+            : 'Failed to register patient'}
         </div>
-      </div>
+      )}
+
+      <form onSubmit={handleSubmit(onSubmit)} className="form-container" noValidate>
+        <FormField label="Name" registration={register('name')} error={errors.name} required />
+        <FormField
+          label="Species"
+          registration={register('species')}
+          error={errors.species}
+          options={SPECIES}
+          required
+        />
+        <FormField
+          label="Gender"
+          registration={register('gender')}
+          error={errors.gender}
+          options={GENDERS}
+          required
+        />
+        <FormField
+          label="Date of Birth"
+          type="date"
+          registration={register('dateOfBirth')}
+          error={errors.dateOfBirth}
+          required
+        />
+        <FormField label="Breed" registration={register('breed')} error={errors.breed} />
+        <FormField
+          label="Microchip ID"
+          registration={register('microchipId')}
+          error={errors.microchipId}
+        />
+        <FormField
+          label="Owner ID"
+          registration={register('ownerId')}
+          error={errors.ownerId}
+          required
+        />
+
+        <div className="form-actions">
+          <button
+            type="submit"
+            className="btn-primary"
+            disabled={isSubmitting || createPatientMutation.isPending}
+          >
+            {createPatientMutation.isPending ? 'Registering...' : 'Register Patient'}
+          </button>
+          <Link to="/patients" className="btn-secondary">
+            Cancel
+          </Link>
+        </div>
+      </form>
     </div>
   );
 };
