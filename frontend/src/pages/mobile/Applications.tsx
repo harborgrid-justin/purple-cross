@@ -5,72 +5,132 @@
  * Last Updated: 2025-10-23 | File Type: .tsx
  */
 
+import { useState } from 'react';
+import { z } from 'zod';
+import { useZodForm } from '../../hooks/useZodForm';
+import { FormField } from '../../components/form/FormField';
 import '../../styles/Page.css';
 
+const appSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  platform: z.string().min(1, 'Platform is required'),
+  version: z.string().min(1, 'Version is required'),
+});
+
+type AppFormData = z.infer<typeof appSchema>;
+
+interface MobileApp {
+  id: string;
+  name: string;
+  platform: string;
+  version: string;
+  published: boolean;
+}
+
+const PLATFORMS = [
+  { value: 'ios', label: 'iOS' },
+  { value: 'android', label: 'Android' },
+  { value: 'web', label: 'Progressive Web App' },
+];
+
 const Applications = () => {
+  const [apps, setApps] = useState<MobileApp[]>([]);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useZodForm(appSchema);
+
+  const onSubmit = (data: AppFormData): void => {
+    setApps((prev) => [
+      { id: crypto.randomUUID(), published: false, ...data },
+      ...prev,
+    ]);
+    reset();
+  };
+
+  const handleTogglePublish = (id: string): void => {
+    setApps((prev) =>
+      prev.map((app) => (app.id === id ? { ...app, published: !app.published } : app))
+    );
+  };
+
   return (
     <div className="page">
       <header className="page-header">
         <h1>Mobile Applications</h1>
       </header>
+      <p className="page-subtitle">Register and manage client-facing mobile apps.</p>
 
-      <div className="content-section">
-        <p>Native mobile apps for iOS and Android.</p>
-        <div
-          className="info-cards"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '1rem',
-            marginTop: '1rem',
-          }}
-        >
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Features</h3>
-            <ul>
-              <li>Full functionality</li>
-              <li>Offline mode</li>
-              <li>Push notifications</li>
-              <li>Biometric auth</li>
-            </ul>
-          </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>iOS App</h3>
-            <ul>
-              <li>iPhone support</li>
-              <li>iPad optimization</li>
-              <li>Apple Watch</li>
-              <li>App Store</li>
-            </ul>
-          </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Android App</h3>
-            <ul>
-              <li>Phone support</li>
-              <li>Tablet optimization</li>
-              <li>Android Wear</li>
-              <li>Play Store</li>
-            </ul>
-          </div>
+      <form onSubmit={handleSubmit(onSubmit)} className="form-container" noValidate>
+        <FormField label="App Name" registration={register('name')} error={errors.name} required />
+        <FormField
+          label="Platform"
+          registration={register('platform')}
+          error={errors.platform}
+          options={PLATFORMS}
+          required
+        />
+        <FormField
+          label="Version"
+          registration={register('version')}
+          error={errors.version}
+          placeholder="1.0.0"
+          required
+        />
+        <div className="form-actions">
+          <button type="submit" className="btn-primary">
+            Register App
+          </button>
         </div>
+      </form>
+
+      <h2>Registered Apps</h2>
+      <div className="table-container">
+        {apps.length === 0 ? (
+          <div role="status" aria-live="polite">
+            <p>No mobile applications registered yet.</p>
+          </div>
+        ) : (
+          <table className="data-table" role="table" aria-label="Mobile applications">
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Platform</th>
+                <th scope="col">Version</th>
+                <th scope="col">Status</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {apps.map((app) => (
+                <tr key={app.id}>
+                  <th scope="row">{app.name}</th>
+                  <td>{app.platform}</td>
+                  <td>{app.version}</td>
+                  <td>
+                    <span
+                      className={`status-badge status-${app.published ? 'confirmed' : 'pending'}`}
+                      role="status"
+                    >
+                      {app.published ? 'Published' : 'Draft'}
+                    </span>
+                  </td>
+                  <td>
+                    <button
+                      className="btn-action"
+                      onClick={() => handleTogglePublish(app.id)}
+                      aria-label={`${app.published ? 'Unpublish' : 'Publish'} ${app.name}`}
+                    >
+                      {app.published ? 'Unpublish' : 'Publish'}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );
