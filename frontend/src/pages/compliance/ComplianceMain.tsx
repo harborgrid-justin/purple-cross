@@ -5,8 +5,9 @@
  * Last Updated: 2025-10-22 | File Type: .tsx
  */
 
-import { useState, Suspense, lazy } from 'react';
+import { Suspense, lazy } from 'react';
 import { Link, Routes, Route, useLocation } from 'react-router-dom';
+import { usePolicies } from '../../hooks/usePolicies';
 import '../../styles/Page.css';
 
 // Lazy load subfeature pages
@@ -19,61 +20,75 @@ const Policies = lazy(() => import('./Policies'));
 const AuditPrep = lazy(() => import('./AuditPrep'));
 const Updates = lazy(() => import('./Updates'));
 
+interface ComplianceRow {
+  id: string;
+  title: string;
+  category: string;
+  status?: string;
+  effectiveDate?: string;
+}
+
 const ComplianceList = () => {
-  const [items] = useState([
-    {
-      id: '1',
-      type: 'License',
-      name: 'Dr. Smith DEA License',
-      expiry: '2024-12-31',
-      status: 'Active',
-    },
-    {
-      id: '2',
-      type: 'Audit',
-      name: 'HIPAA Compliance Audit',
-      date: '2024-01-15',
-      status: 'Completed',
-    },
-  ]);
+  const { data, isLoading, isError } = usePolicies({ limit: 50 });
+
+  const items = (data as { data?: ComplianceRow[] } | undefined)?.data ?? [];
 
   return (
     <div className="table-container">
-      <table className="data-table" role="table" aria-label="Compliance items list">
-        <thead>
-          <tr>
-            <th scope="col">Type</th>
-            <th scope="col">Name</th>
-            <th scope="col">Date/Expiry</th>
-            <th scope="col">Status</th>
-            <th scope="col">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.map((item) => (
-            <tr key={item.id}>
-              <td>{item.type}</td>
-              <th scope="row">{item.name}</th>
-              <td>{item.expiry || item.date}</td>
-              <td>
-                <span
-                  className={`status-badge status-${item.status === 'Active' || item.status === 'Completed' ? 'confirmed' : 'pending'}`}
-                >
-                  {item.status}
-                </span>
-              </td>
-              <td>
-                <button className="btn-action" aria-label={`View ${item.name}`}>
-                  View
-                </button>
-                <button className="btn-action" aria-label={`Manage ${item.name}`}>
-                  Manage
-                </button>
-              </td>
+      {isLoading ? (
+        <div role="status" aria-live="polite">
+          <p>Loading compliance items...</p>
+        </div>
+      ) : isError ? (
+        <div className="alert alert-error" role="alert">
+          <p>Failed to load compliance items. Please try again.</p>
+        </div>
+      ) : items.length === 0 ? (
+        <div role="status" aria-live="polite">
+          <p>No compliance items found. Add one to get started.</p>
+        </div>
+      ) : (
+        <table className="data-table" role="table" aria-label="Compliance items list">
+          <thead>
+            <tr>
+              <th scope="col">Category</th>
+              <th scope="col">Title</th>
+              <th scope="col">Effective Date</th>
+              <th scope="col">Status</th>
+              <th scope="col">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {items.map((item) => (
+              <tr key={item.id}>
+                <td>{item.category}</td>
+                <th scope="row">{item.title}</th>
+                <td>
+                  {item.effectiveDate ? (
+                    <time dateTime={item.effectiveDate}>
+                      {new Date(item.effectiveDate).toLocaleDateString()}
+                    </time>
+                  ) : (
+                    'N/A'
+                  )}
+                </td>
+                <td>
+                  <span className="status-badge status-confirmed">{item.status || 'N/A'}</span>
+                </td>
+                <td>
+                  <Link
+                    to={`/compliance/${item.id}`}
+                    className="btn-action"
+                    aria-label={`View ${item.title}`}
+                  >
+                    View
+                  </Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 };
@@ -87,9 +102,9 @@ const ComplianceMain = () => {
         <h1>
           <span aria-hidden="true">✓</span> Compliance & Regulatory
         </h1>
-        <button className="btn-primary" aria-label="Add compliance item">
+        <Link to="/compliance/create" className="btn-primary" aria-label="Add compliance item">
           + Add Item
-        </button>
+        </Link>
       </header>
 
       <nav className="sub-nav" role="navigation" aria-label="Compliance sections">

@@ -111,9 +111,9 @@ const CommunicationsMain = () => {
         <h1>
           <span aria-hidden="true">✉️</span> Communications
         </h1>
-        <button className="btn-primary" aria-label="Send new message">
+        <Link to="/communications/create" className="btn-primary" aria-label="Send new message">
           + New Message
-        </button>
+        </Link>
       </header>
 
       <nav className="sub-nav" role="navigation" aria-label="Communications sections">
