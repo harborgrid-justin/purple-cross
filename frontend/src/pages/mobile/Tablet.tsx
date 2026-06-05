@@ -5,72 +5,82 @@
  * Last Updated: 2025-10-23 | File Type: .tsx
  */
 
+import { useState } from 'react';
+import { usePatients } from '../../hooks/usePatients';
 import '../../styles/Page.css';
 
+type Orientation = 'portrait' | 'landscape';
+
+interface PatientRow {
+  id: string;
+  name: string;
+  species?: string;
+}
+
+const DIMENSIONS: Record<Orientation, { width: number; height: number }> = {
+  portrait: { width: 768, height: 1024 },
+  landscape: { width: 1024, height: 768 },
+};
+
 const Tablet = () => {
+  const [orientation, setOrientation] = useState<Orientation>('portrait');
+  const { data, isLoading } = usePatients({ limit: 5 });
+
+  const patients = (data as { data?: PatientRow[] } | undefined)?.data ?? [];
+  const { width, height } = DIMENSIONS[orientation];
+  const scale = 0.35;
+
   return (
     <div className="page">
       <header className="page-header">
         <h1>Tablet Optimization</h1>
       </header>
+      <p className="page-subtitle">Preview how patient lists render on tablet viewports.</p>
 
-      <div className="content-section">
-        <p>Optimized interface for tablet devices.</p>
-        <div
-          className="info-cards"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '1rem',
-            marginTop: '1rem',
-          }}
-        >
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
+      <div className="search-bar" role="search">
+        <div className="form-group">
+          <label htmlFor="orientation">Orientation</label>
+          <select
+            id="orientation"
+            value={orientation}
+            onChange={(e) => setOrientation(e.target.value as Orientation)}
           >
-            <h3>Features</h3>
-            <ul>
-              <li>Large screen layouts</li>
-              <li>Split-screen</li>
-              <li>Stylus support</li>
-              <li>Keyboard shortcuts</li>
-            </ul>
-          </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Use Cases</h3>
-            <ul>
-              <li>Exam rooms</li>
-              <li>Reception desk</li>
-              <li>Hospital rounds</li>
-              <li>Field service</li>
-            </ul>
-          </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Platforms</h3>
-            <ul>
-              <li>iPad</li>
-              <li>Android tablets</li>
-              <li>Windows tablets</li>
-              <li>Surface devices</li>
-            </ul>
-          </div>
+            <option value="portrait">Portrait ({DIMENSIONS.portrait.width}×{DIMENSIONS.portrait.height})</option>
+            <option value="landscape">
+              Landscape ({DIMENSIONS.landscape.width}×{DIMENSIONS.landscape.height})
+            </option>
+          </select>
         </div>
+      </div>
+
+      <div
+        role="img"
+        aria-label={`Tablet preview in ${orientation} orientation`}
+        style={{
+          width: width * scale,
+          height: height * scale,
+          border: '2px solid var(--border-color)',
+          borderRadius: 'var(--radius-lg)',
+          padding: 'var(--spacing-md)',
+          overflow: 'auto',
+          backgroundColor: 'var(--bg-primary)',
+        }}
+      >
+        {isLoading ? (
+          <p role="status" aria-live="polite">
+            Loading preview…
+          </p>
+        ) : patients.length === 0 ? (
+          <p>No patient data to preview.</p>
+        ) : (
+          <ul>
+            {patients.map((patient) => (
+              <li key={patient.id}>
+                {patient.name} — {patient.species ?? 'N/A'}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );

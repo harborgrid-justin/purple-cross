@@ -1,13 +1,13 @@
 /**
  * WF-COMP-XXX | Staff.tsx - Staff
  * Purpose: React component for Staff functionality
- * Dependencies: react
+ * Dependencies: react, @tanstack/react-query
  * Last Updated: 2025-10-23 | File Type: .tsx
  */
 
-import { useState, useEffect, Suspense, lazy } from 'react';
+import { useState, Suspense, lazy } from 'react';
 import { Link, Routes, Route, useLocation } from 'react-router-dom';
-import api from '../services/api';
+import { useStaff } from '../hooks/useStaff';
 import '../styles/Page.css';
 
 // Lazy load subfeature pages
@@ -19,88 +19,64 @@ const Performance = lazy(() => import('./staff/Performance'));
 const Education = lazy(() => import('./staff/Education'));
 const Communication = lazy(() => import('./staff/Communication'));
 const HRDocuments = lazy(() => import('./staff/HRDocuments'));
+const StaffCreate = lazy(() => import('./staff/StaffCreate'));
+const StaffDetail = lazy(() => import('./staff/StaffDetail'));
+const StaffEdit = lazy(() => import('./staff/StaffEdit'));
 
 interface StaffMember {
   id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  role: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  role?: string;
   department?: string;
   phone?: string;
 }
 
 const StaffList = () => {
-  const [staff, setStaff] = useState<StaffMember[]>([]);
-  const [filteredStaff, setFilteredStaff] = useState<StaffMember[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [loading, setLoading] = useState(true);
+  const { data, isLoading: loading, isError } = useStaff({ limit: 50 });
 
-  useEffect(() => {
-    const fetchStaff = async () => {
-      try {
-        setLoading(true);
-        const response = (await api.staff.getAll({
-          limit: 50,
-        })) as { status: string; data: StaffMember[] };
-        setStaff(response.data);
-        setFilteredStaff(response.data);
-      } catch (err) {
-        console.error('Error fetching staff:', err);
-        setStaff([]);
-        setFilteredStaff([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const staff = (data as { data?: StaffMember[] } | undefined)?.data ?? [];
 
-    fetchStaff();
-  }, []);
-
-  useEffect(() => {
-    if (!searchTerm) {
-      setFilteredStaff(staff);
-      return;
-    }
-
-    const filtered = staff.filter((member) => {
-      const searchLower = searchTerm.toLowerCase();
-      return (
-        member.firstName.toLowerCase().includes(searchLower) ||
-        member.lastName.toLowerCase().includes(searchLower) ||
-        member.email.toLowerCase().includes(searchLower) ||
-        (member.role && member.role.toLowerCase().includes(searchLower)) ||
-        (member.department && member.department.toLowerCase().includes(searchLower))
-      );
-    });
-    setFilteredStaff(filtered);
-  }, [searchTerm, staff]);
+  const searchLower = searchTerm.toLowerCase();
+  const filteredStaff = searchTerm
+    ? staff.filter(
+        (member) =>
+          `${member.firstName ?? ''} ${member.lastName ?? ''}`
+            .toLowerCase()
+            .includes(searchLower) ||
+          (member.email ?? '').toLowerCase().includes(searchLower) ||
+          (member.role ?? '').toLowerCase().includes(searchLower)
+      )
+    : staff;
 
   return (
     <div className="table-container">
-      <div className="search-container" style={{ marginBottom: '1rem' }}>
+      <div className="search-bar" role="search">
+        <label htmlFor="staff-search" className="sr-only">
+          Search staff
+        </label>
         <input
-          type="text"
           id="staff-search"
-          placeholder="Search staff by name, email, role, or department..."
+          type="search"
+          placeholder="Search staff by name, email, or role..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          style={{
-            width: '100%',
-            padding: '0.5rem',
-            fontSize: '1rem',
-            border: '1px solid #ddd',
-            borderRadius: '4px',
-          }}
+          aria-label="Search staff by name, email, or role"
         />
       </div>
       {loading ? (
         <div role="status" aria-live="polite">
           <p>Loading staff...</p>
         </div>
+      ) : isError ? (
+        <div className="alert alert-error" role="alert">
+          <p>Failed to load staff. Please try again.</p>
+        </div>
       ) : filteredStaff.length === 0 ? (
         <div role="status" aria-live="polite">
-          <p>No staff members found.</p>
+          <p>No staff members found. Add a staff member to get started.</p>
         </div>
       ) : (
         <table className="data-table" role="table" aria-label="Staff list">
@@ -109,7 +85,7 @@ const StaffList = () => {
               <th scope="col">Name</th>
               <th scope="col">Email</th>
               <th scope="col">Role</th>
-              <th scope="col">Department</th>
+              <th scope="col">Phone</th>
               <th scope="col">Actions</th>
             </tr>
           </thead>
@@ -117,24 +93,26 @@ const StaffList = () => {
             {filteredStaff.map((member) => (
               <tr key={member.id}>
                 <th scope="row">
-                  {member.firstName} {member.lastName}
+                  {member.firstName ?? ''} {member.lastName ?? ''}
                 </th>
-                <td>{member.email}</td>
-                <td>{member.role || 'N/A'}</td>
-                <td>{member.department || 'N/A'}</td>
+                <td>{member.email ?? 'N/A'}</td>
+                <td>{member.role ?? 'N/A'}</td>
+                <td>{member.phone ?? 'N/A'}</td>
                 <td>
-                  <button
+                  <Link
+                    to={`/staff/${member.id}`}
                     className="btn-action"
-                    aria-label={`View profile for ${member.firstName} ${member.lastName}`}
+                    aria-label={`View profile for ${member.firstName ?? ''} ${member.lastName ?? ''}`}
                   >
                     View
-                  </button>
-                  <button
+                  </Link>
+                  <Link
+                    to={`/staff/${member.id}/edit`}
                     className="btn-action"
-                    aria-label={`Edit information for ${member.firstName} ${member.lastName}`}
+                    aria-label={`Edit information for ${member.firstName ?? ''} ${member.lastName ?? ''}`}
                   >
                     Edit
-                  </button>
+                  </Link>
                 </td>
               </tr>
             ))}
@@ -154,9 +132,9 @@ const Staff = () => {
         <h1>
           <span aria-hidden="true">👨‍⚕️</span> Staff Management
         </h1>
-        <button className="btn-primary" aria-label="Add new staff member">
+        <Link to="/staff/create" className="btn-primary" aria-label="Add new staff member">
           + Add Staff
-        </button>
+        </Link>
       </header>
 
       <nav className="sub-nav" role="navigation" aria-label="Staff sections">
@@ -188,7 +166,7 @@ const Staff = () => {
           to="/staff/attendance"
           className={`sub-nav-link ${location.pathname.includes('/attendance') ? 'active' : ''}`}
         >
-          Time & Attendance
+          Time &amp; Attendance
         </Link>
         <Link
           to="/staff/performance"
@@ -225,6 +203,7 @@ const Staff = () => {
       >
         <Routes>
           <Route path="/" element={<StaffList />} />
+          <Route path="/create" element={<StaffCreate />} />
           <Route path="/profiles" element={<Profiles />} />
           <Route path="/access-control" element={<AccessControl />} />
           <Route path="/scheduling" element={<Scheduling />} />
@@ -233,6 +212,8 @@ const Staff = () => {
           <Route path="/education" element={<Education />} />
           <Route path="/communication" element={<Communication />} />
           <Route path="/hr-documents" element={<HRDocuments />} />
+          <Route path="/:id/edit" element={<StaffEdit />} />
+          <Route path="/:id" element={<StaffDetail />} />
         </Routes>
       </Suspense>
     </div>
