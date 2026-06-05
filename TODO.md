@@ -33,8 +33,23 @@ for the original assessment.
 - [ ] Audit Joi validation coverage across all 36 backend route files.
 
 ### Phase 4 — testing depth
+- [x] **TypeScript compliance restored** — `tsc --noEmit` is now **clean on both
+  backend and frontend (0 errors, down from 36 + 36)**. Fixes included real
+  schema/field bugs that would have failed at runtime (`lab-test` treated the
+  scalar `orderedBy` as a relation and used non-existent `orderDate`/`resultDate`;
+  `analytics`/`staff` referenced non-existent `quantity`/`shiftDate`/
+  `veterinarianAppointments`), service `data` params now typed with the proper
+  `Prisma.*UncheckedCreate/UpdateInput` types instead of `Record<string, unknown>`,
+  loyalty null-safety, and the BullMQ/ioredis connection typing. Frontend: vitest
+  globals + jest-dom wired into `vite-env.d.ts`, `children` made optional on the
+  base UI components, and the untyped API-response casts tightened. Both stacks
+  now `build` cleanly as well.
 - [ ] Frontend: real RTL render/interaction tests + MSW; consolidate Cypress↔Playwright to one E2E tool; golden-path specs.
-- [ ] Backend: more service/HTTP integration tests (per module); fix the ~58 pre-existing frontend + ~44 backend `tsc` errors (mostly Prisma JSON typing + test-util typings).
+- [ ] Backend: more service/HTTP integration tests (per module). The stricter
+  service typing makes more unit suites compile (15 pass vs. 12 before); the
+  remaining unit-test failures are pre-existing fully-mocked-Prisma gaps
+  (e.g. the global mock omits newer models such as `loyaltyProgram`) and partial
+  test fixtures — to be reworked here against an ephemeral Postgres.
 - [ ] Raise coverage gates against the now-real suites.
 
 ### Phase 5 — observability depth
@@ -51,5 +66,8 @@ for the original assessment.
   rollout migration reconciles 4 of them — audit the schema vs. migrations for any
   others before a production deploy.
 - Lockfiles are gitignored (non-reproducible installs) — consider committing them.
-- Backend/frontend each carry pre-existing `tsc` errors (44 / 58) unrelated to this
-  work; tracked under Phase 4.
+- `tsc --noEmit` is now clean for both backend and frontend (was 36 / 36). Note the
+  Prisma client `output` is `backend/node_modules/.prisma/client`; in the hoisted
+  workspace layout the resolved client lives at the repo-root `node_modules`, so run
+  `npm install` at the root (its `postinstall` runs `prisma generate`) before
+  typechecking.

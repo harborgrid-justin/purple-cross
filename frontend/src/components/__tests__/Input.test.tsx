@@ -354,7 +354,6 @@ describe('Input Component', () => {
 
     it('should support controlled input', async () => {
       const handleChange = vi.fn();
-      const user = createUser();
       const { getByRole, rerender } = renderWithoutRouter(
         <Input label="Name" value="Initial" onChange={handleChange} />
       );

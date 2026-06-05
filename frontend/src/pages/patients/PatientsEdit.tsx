@@ -23,7 +23,18 @@ const PatientsEdit: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { data: response, isLoading: fetchLoading } = usePatient(id || '');
-  const patient = response?.data;
+  const patient = (
+    response as {
+      data?: {
+        name?: string;
+        species?: string;
+        breed?: string;
+        dateOfBirth?: string;
+        microchipId?: string;
+        ownerId?: string;
+      };
+    }
+  )?.data;
   const updatePatientMutation = useUpdatePatient();
 
   const [formData, setFormData] = useState<PatientFormData>({

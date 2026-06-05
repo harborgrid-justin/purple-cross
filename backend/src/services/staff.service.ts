@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
 import {
@@ -11,7 +12,7 @@ import {
 } from '../constants';
 
 export class StaffService {
-  async createStaff(data: Record<string, unknown>) {
+  async createStaff(data: Prisma.StaffUncheckedCreateInput) {
     // Check if email already exists
     const existing = await prisma.staff.findUnique({
       where: { email: data.email },
@@ -33,13 +34,13 @@ export class StaffService {
     const staff = await prisma.staff.findUnique({
       where: { id },
       include: {
-        veterinarianAppointments: {
+        appointments: {
           take: QUERY_LIMITS.APPOINTMENTS,
           orderBy: { [FIELDS.START_TIME]: SORT_ORDER.DESC },
         },
         schedules: {
           take: QUERY_LIMITS.RECENT_ITEMS,
-          orderBy: { shiftDate: 'desc' },
+          orderBy: { effectiveFrom: 'desc' },
         },
       },
     });
@@ -100,7 +101,7 @@ export class StaffService {
     };
   }
 
-  async updateStaff(id: string, data: Record<string, unknown>) {
+  async updateStaff(id: string, data: Prisma.StaffUncheckedUpdateInput) {
     const staff = await prisma.staff.findUnique({ where: { id } });
 
     if (!staff) {

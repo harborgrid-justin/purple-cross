@@ -36,7 +36,7 @@ export class WorkflowEngineService {
       workflowName: template.name,
       triggerType: template.triggerType,
       triggerData,
-      actions: template.actions as WorkflowAction[],
+      actions: template.actions as unknown as WorkflowAction[],
     });
 
     // Queue execution for processing

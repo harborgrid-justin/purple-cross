@@ -1,15 +1,15 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
 import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION, WORKFLOW_EVENTS } from '../constants';
 import { domainEvents } from './domain-events.service';
 
 export class LabTestService {
-  async createLabTest(data: Record<string, unknown>) {
+  async createLabTest(data: Prisma.LabTestUncheckedCreateInput) {
     const labTest = await prisma.labTest.create({
       data,
       include: {
         patient: true,
-        orderedBy: true,
       },
     });
 
@@ -27,7 +27,6 @@ export class LabTestService {
       where: { id },
       include: {
         patient: true,
-        orderedBy: true,
       },
     });
 
@@ -54,9 +53,10 @@ export class LabTestService {
     } = options;
     const skip = (page - 1) * limit;
 
-    const where: Record<string, unknown> = {
+    // `orderedBy` is a scalar column storing the ordering staff identifier.
+    const where: Prisma.LabTestWhereInput = {
       ...(patientId && { patientId }),
-      ...(orderedById && { orderedById }),
+      ...(orderedById && { orderedBy: orderedById }),
       ...(status && { status }),
     };
 
@@ -69,11 +69,8 @@ export class LabTestService {
           patient: {
             select: { id: true, name: true, species: true },
           },
-          orderedBy: {
-            select: { id: true, firstName: true, lastName: true },
-          },
         },
-        orderBy: { orderDate: 'desc' },
+        orderBy: { orderedDate: 'desc' },
       }),
       prisma.labTest.count({ where }),
     ]);
@@ -89,7 +86,7 @@ export class LabTestService {
     };
   }
 
-  async updateLabTest(id: string, data: Record<string, unknown>) {
+  async updateLabTest(id: string, data: Prisma.LabTestUncheckedUpdateInput) {
     const labTest = await prisma.labTest.findUnique({ where: { id } });
 
     if (!labTest) {
@@ -101,7 +98,6 @@ export class LabTestService {
       data,
       include: {
         patient: true,
-        orderedBy: true,
       },
     });
   }
@@ -127,14 +123,13 @@ export class LabTestService {
 
     const completedLabTest = await prisma.labTest.update({
       where: { id },
-      data: { 
+      data: {
         status: 'completed',
         results,
-        resultDate: new Date(),
+        completedDate: new Date(),
       },
       include: {
         patient: true,
-        orderedBy: true,
       },
     });
 

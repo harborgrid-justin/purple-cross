@@ -1,10 +1,11 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
 import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION, STATUS, WORKFLOW_EVENTS } from '../constants';
 import { domainEvents } from './domain-events.service';
 
 export class AppointmentService {
-  async createAppointment(data: Record<string, unknown>) {
+  async createAppointment(data: Prisma.AppointmentUncheckedCreateInput) {
     // Check for scheduling conflicts
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const dataAny = data as any;
@@ -137,7 +138,7 @@ export class AppointmentService {
     };
   }
 
-  async updateAppointment(id: string, data: Record<string, unknown>) {
+  async updateAppointment(id: string, data: Prisma.AppointmentUncheckedUpdateInput) {
     const appointment = await prisma.appointment.findUnique({ where: { id } });
 
     if (!appointment) {

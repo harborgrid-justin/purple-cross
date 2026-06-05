@@ -336,8 +336,8 @@ describe('Card Component', () => {
       const title = container.querySelector('.card-title');
       const subtitle = container.querySelector('.card-subtitle');
 
-      expect(headerContent).toContainElement(title);
-      expect(headerContent).toContainElement(subtitle);
+      expect(headerContent).toContainElement(title as HTMLElement);
+      expect(headerContent).toContainElement(subtitle as HTMLElement);
     });
 
     it('should render header with title and actions side by side', () => {

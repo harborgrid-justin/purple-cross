@@ -1,10 +1,11 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
 import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION, SORT_ORDER, FIELDS, WORKFLOW_EVENTS } from '../constants';
 import { domainEvents } from './domain-events.service';
 
 export class MedicalRecordService {
-  async createMedicalRecord(data: Record<string, unknown>) {
+  async createMedicalRecord(data: Prisma.MedicalRecordUncheckedCreateInput) {
     const medicalRecord = await prisma.medicalRecord.create({
       data,
       include: {
@@ -86,7 +87,7 @@ export class MedicalRecordService {
     };
   }
 
-  async updateMedicalRecord(id: string, data: Record<string, unknown>) {
+  async updateMedicalRecord(id: string, data: Prisma.MedicalRecordUncheckedUpdateInput) {
     const record = await prisma.medicalRecord.findUnique({ where: { id } });
 
     if (!record) {
