@@ -17,9 +17,13 @@ Purple Cross is a veterinary practice management platform built with TypeScript,
 > placeholder sub-pages across all 15 modules have been replaced with real,
 > data-driven pages wired to the API via the per-module TanStack Query hooks and
 > the shared `useZodForm` + `FormField` layer (all production code typechecks
-> clean). Remaining program work is the deeper enterprise hardening tail
-> (Prometheus/OpenTelemetry, K8s/Helm CD, and real integration/E2E test suites —
-> backend tests are still being moved off fully-mocked DBs). The single
+> clean). **Observability and resilience are now wired**: Prometheus metrics +
+> **OpenTelemetry tracing** (`backend/src/config/tracing.ts`) + optional off-box
+> **log shipping** (`backend/src/config/logger.ts`), and a circuit-breaker/retry
+> **outbound provider facade** for email/SMS (`backend/src/integrations/`).
+> Remaining program work is the deployment tail (K8s/Helm CD) and real
+> integration/E2E test suites (backend tests are still being moved off
+> fully-mocked DBs). The single
 > production stack is **Express `backend/` + Vite/React `frontend/`**
 > (PostgreSQL). The earlier parallel **NestJS** and **Next.js** migration forks
 > have been removed to keep one source of truth.
@@ -228,14 +232,17 @@ npm test -- --testPathPattern=validation      # Pattern matching
 ### Observability
 
 - **Correlation IDs:** Every request gets a unique ID (X-Correlation-ID header) for distributed tracing
-- **Structured Logging:** Winston logger with JSON output, includes correlation IDs
+- **Structured Logging:** Winston logger with JSON output, includes correlation IDs; PII/PHI redacted (backend/src/utils/pii-redact.ts)
+- **Log Shipping:** Optional off-box HTTP transport to a log sink (Logstash/Vector/Loki/Datadog), gated by `LOG_SHIPPING_*` (backend/src/config/logger.ts)
+- **Distributed Tracing:** OpenTelemetry, opt-in via `OTEL_ENABLED`; OTLP/HTTP export with http/express/pg/ioredis auto-instrumentation (backend/src/config/tracing.ts) — imported first in `index.ts`/`worker.ts`
 - **Health Endpoints:** `/health`, `/health/live`, `/health/ready`, `/health/detailed`
-- **Metrics:** `/metrics` endpoint for monitoring
+- **Metrics:** Prometheus `/metrics` endpoint (backend/src/config/metrics.ts); HTTP + outbound-provider (`external_requests_total`, `circuit_breaker_state`) series
 
 ### Resilience
 
 - **Circuit Breakers:** Prevent cascading failures (backend/src/utils/circuit-breaker.ts)
 - **Retry Logic:** Exponential backoff with jitter (backend/src/utils/retry.ts)
+- **Outbound Provider Facade:** Email/SMS sends route through `backend/src/integrations/notification.service.ts`, which wraps each vendor call (SendGrid/Twilio, with logging fallbacks) in a per-provider circuit breaker + retry. Used by the email/reminder queue jobs.
 - **Timeouts:** 30-second request timeout middleware
 - **Rate Limiting:** Per-IP throttling (backend/src/middleware/rate-limiter.ts)
 

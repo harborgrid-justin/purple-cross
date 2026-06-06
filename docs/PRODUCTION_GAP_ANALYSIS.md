@@ -40,15 +40,34 @@ from docs). File paths are cited so findings are reproducible.
   pages** wired to the backend via the per-module TanStack Query hooks and the
   shared `useZodForm` + `FormField` form layer. All production frontend code
   typechecks clean (`tsc --noEmit`); zero `any`, no leftover info-card stubs.
+- **Observability — metrics & tracing (was §8):** Prometheus metrics are wired
+  (`backend/src/config/metrics.ts` + `middleware/metrics.ts`, scraped at
+  `GET /metrics`); **OpenTelemetry distributed tracing** is now implemented
+  (`backend/src/config/tracing.ts`, opt-in via `OTEL_ENABLED`, OTLP/HTTP export
+  with http/express/pg/ioredis auto-instrumentation, imported first in
+  `index.ts`/`worker.ts`); **off-box log shipping** is available via an optional
+  winston HTTP transport (`backend/src/config/logger.ts`, `LOG_SHIPPING_*`).
+  Logs are PII/PHI-redacted (`utils/pii-redact.ts`) and Sentry is wired.
+- **Resilience activation (was §4/§5):** the circuit-breaker and retry utilities
+  are no longer dead code — outbound email/SMS now flow through a resilient
+  provider facade (`backend/src/integrations/notification.service.ts`) that wraps
+  every vendor call (SendGrid/Twilio, with logging fallbacks) in a per-provider
+  **circuit breaker + retry with backoff**, emitting `external_requests_total` /
+  `circuit_breaker_state` Prometheus metrics. The email and reminder queue jobs
+  now use it instead of TODO stubs.
 
 **Still open (enterprise-hardening tail):**
 
 - **Test integrity (§3.4):** integration tests against ephemeral Postgres and
   RTL/MSW component tests are still in progress; ~32 pre-existing **test-infra**
   type errors remain (vitest globals / jest-dom matcher typings) — production
-  code is clean.
-- **Observability (§8):** Prometheus metrics / OpenTelemetry tracing / log
-  shipping not yet done.
+  code is clean. (New resilience facade has unit coverage in
+  `backend/tests/unit/integrations/`.)
+- **TypeScript debt (§11):** still present and now reproducible — a fresh
+  workspace install resolves **Prisma 6.19.x**, which types `*CreateInput` /
+  aggregate selectors more strictly and surfaces ~36 pre-existing service-layer
+  errors (e.g. `lab-test.service.ts`, `loyalty-program.service.ts`,
+  `analytics.service.ts`). These predate this work; lockfiles remain gitignored.
 - **Deployment / CD / IaC (§9):** K8s/Helm + real CD pipeline + tested
   restore not yet done.
 
@@ -154,10 +173,10 @@ complete" claims. Consolidating on the mature stack is the lowest-risk path.
 | **Architecture coherence** | **Fragmented** | **Critical** |
 | **Frontend feature completeness** | **~15–20%** | **Critical** |
 | **Test integrity** | **Illusory** | **High** |
-| Resilience (CB/retry) | Coded, unused | High |
+| Resilience (CB/retry) | Wired (email/SMS/webhook providers) | — |
 | Data model (soft delete/audit/tenant) | Missing | High |
 | Security / HIPAA / PII | Missing | High |
-| Observability (metrics/tracing/logs) | Partial | Medium |
+| Observability (metrics/tracing/logs) | Ready (Prometheus + OTel + log shipping) | — |
 | Deployment / CD / IaC | Missing | High |
 | Config validation / secrets | Missing / weak | High |
 | Docs accuracy | Overstated | Medium |

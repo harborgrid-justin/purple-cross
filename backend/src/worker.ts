@@ -1,3 +1,6 @@
+// Tracing must be imported first so OpenTelemetry can instrument ioredis/http
+// before those modules are required below.
+import { stopTracing } from './config/tracing';
 import { Worker } from 'bullmq';
 import { QUEUES } from './config/queue';
 import { processEmailJob } from './jobs/email.job';
@@ -89,6 +92,8 @@ const shutdown = async (): Promise<void> => {
     notificationsWorker.close(),
     webhooksWorker.close(),
   ]);
+
+  await stopTracing();
 
   logger.info('Workers shut down successfully');
   process.exit(0);

@@ -1,6 +1,7 @@
 import { Job } from 'bullmq';
 import { logger } from '../config/logger';
 import { emailQueue } from '../config/queue';
+import { notificationService } from '../integrations/notification.service';
 
 export interface EmailJobData {
   to: string | string[];
@@ -25,22 +26,29 @@ export async function processEmailJob(job: Job<EmailJobData>): Promise<void> {
   try {
     await job.updateProgress(10);
 
-    // TODO: Implement actual email sending
-    // For now, just log the email
-    logger.info('Email would be sent', {
-      to,
-      subject,
-      template,
-    });
+    // Render a body from the job context. A full template engine can replace
+    // this later; the resilient transport below is provider-agnostic.
+    const { context } = job.data;
+    const text =
+      typeof context.text === 'string'
+        ? context.text
+        : typeof context.body === 'string'
+          ? context.body
+          : `You have a new ${template} notification.`;
+    const html = typeof context.html === 'string' ? context.html : undefined;
 
-    // Simulate email sending delay
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await job.updateProgress(40);
+
+    // Send through the resilient facade (circuit breaker + retry + metrics).
+    const result = await notificationService.sendEmail({ to, subject, text, html });
 
     await job.updateProgress(100);
 
     logger.info('Email sent successfully', {
       jobId: job.id,
       template,
+      provider: result.provider,
+      messageId: result.messageId,
     });
   } catch (error) {
     logger.error('Failed to send email', {
