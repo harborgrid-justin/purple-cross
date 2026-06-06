@@ -127,9 +127,9 @@ const DocumentsMain = () => {
         <h1>
           <span aria-hidden="true">📄</span> Documents
         </h1>
-        <button className="btn-primary" aria-label="Upload new document">
+        <Link to="/documents/create" className="btn-primary" aria-label="Upload new document">
           + Upload Document
-        </button>
+        </Link>
       </header>
 
       <nav className="sub-nav" role="navigation" aria-label="Documents sections">
