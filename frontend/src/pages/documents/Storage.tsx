@@ -25,7 +25,10 @@ const Storage: React.FC = () => {
   const [search, setSearch] = useState('');
   const { data, isLoading, isError } = useDocuments({ limit: 50 });
 
-  const rows = (data as { data?: DocumentRow[] } | undefined)?.data ?? [];
+  const rows = useMemo<DocumentRow[]>(
+    () => (data as { data?: DocumentRow[] } | undefined)?.data ?? [],
+    [data]
+  );
 
   const filtered = useMemo(() => {
     if (!search) return rows;

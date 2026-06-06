@@ -350,7 +350,7 @@ const WorkflowTemplates = () => {
 
               {formData.actions.length === 0 ? (
                 <p style={{ textAlign: 'center', padding: '1rem', color: 'var(--text-secondary)' }}>
-                  No actions added yet. Click "Add Action" to get started.
+                  No actions added yet. Click &quot;Add Action&quot; to get started.
                 </p>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>

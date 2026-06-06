@@ -19,7 +19,10 @@ interface DocumentRow {
 const Analytics: React.FC = () => {
   const { data, isLoading, isError } = useDocuments({ limit: 50 });
 
-  const rows = (data as { data?: DocumentRow[] } | undefined)?.data ?? [];
+  const rows = useMemo<DocumentRow[]>(
+    () => (data as { data?: DocumentRow[] } | undefined)?.data ?? [],
+    [data]
+  );
 
   const stats = useMemo(() => {
     const total = rows.length;

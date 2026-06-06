@@ -28,7 +28,10 @@ const calcAge = (dob?: string): string => {
 
 const PatientDemographics = () => {
   const { data, isLoading, isError } = usePatients({ limit: 100 });
-  const patients = (data as { data?: PatientRow[] } | undefined)?.data ?? [];
+  const patients = useMemo<PatientRow[]>(
+    () => (data as { data?: PatientRow[] } | undefined)?.data ?? [],
+    [data]
+  );
 
   const speciesBreakdown = useMemo(() => {
     const counts = new Map<string, number>();

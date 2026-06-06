@@ -26,7 +26,10 @@ const HIPAA: React.FC = () => {
   const { data, isLoading, isError } = usePolicies({ limit: 50 });
   const acknowledgeMutation = useAcknowledgePolicy();
 
-  const rows = (data as { data?: PolicyRow[] } | undefined)?.data ?? [];
+  const rows = useMemo<PolicyRow[]>(
+    () => (data as { data?: PolicyRow[] } | undefined)?.data ?? [],
+    [data]
+  );
 
   const filtered = useMemo(
     () => rows.filter((p) => (p.category || '').toLowerCase() === CATEGORY),

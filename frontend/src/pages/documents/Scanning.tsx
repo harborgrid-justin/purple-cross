@@ -25,7 +25,10 @@ const Scanning: React.FC = () => {
   const [category, setCategory] = useState('');
   const { data, isLoading, isError } = useDocuments({ limit: 50 });
 
-  const rows = (data as { data?: DocumentRow[] } | undefined)?.data ?? [];
+  const rows = useMemo<DocumentRow[]>(
+    () => (data as { data?: DocumentRow[] } | undefined)?.data ?? [],
+    [data]
+  );
 
   const categories = useMemo(
     () => Array.from(new Set(rows.map((d) => d.category).filter(Boolean))) as string[],

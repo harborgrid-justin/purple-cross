@@ -41,7 +41,10 @@ const PatientLifecycle = () => {
   const [stageFilter, setStageFilter] = useState<string>('');
   const { data, isLoading, isError } = usePatients({ limit: 100 });
 
-  const allPatients = (data as { data?: PatientRow[] } | undefined)?.data ?? [];
+  const allPatients = useMemo<PatientRow[]>(
+    () => (data as { data?: PatientRow[] } | undefined)?.data ?? [],
+    [data]
+  );
 
   const withStage = useMemo(
     () => allPatients.map((p) => ({ ...p, stage: lifeStage(p.dateOfBirth) })),
