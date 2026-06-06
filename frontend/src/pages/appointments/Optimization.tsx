@@ -18,7 +18,10 @@ interface AppointmentRow {
 
 const OptimizationView = () => {
   const { data, isLoading, isError } = useAppointments({ limit: 100 });
-  const appointments = (data as { data?: AppointmentRow[] } | undefined)?.data ?? [];
+  const appointments = useMemo<AppointmentRow[]>(
+    () => (data as { data?: AppointmentRow[] } | undefined)?.data ?? [],
+    [data]
+  );
 
   const statusBreakdown = useMemo(() => {
     const counts = new Map<string, number>();

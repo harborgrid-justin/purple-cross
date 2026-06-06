@@ -38,7 +38,10 @@ const Segmentation = () => {
   const [segment, setSegment] = useState<Segment>('all');
   const { data, isLoading, isError } = useClients({ limit: 100 });
 
-  const clients = (data as { data?: ClientRow[] } | undefined)?.data ?? [];
+  const clients = useMemo<ClientRow[]>(
+    () => (data as { data?: ClientRow[] } | undefined)?.data ?? [],
+    [data]
+  );
 
   const segmented = useMemo(
     () =>

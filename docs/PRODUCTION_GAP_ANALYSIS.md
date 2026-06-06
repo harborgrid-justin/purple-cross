@@ -16,6 +16,48 @@ from docs). File paths are cited so findings are reproducible.
 
 ---
 
+## 0. Progress Update (2026-06)
+
+> This section records work completed since the 2026-05-26 audit below. The
+> original findings are preserved unedited for traceability; where a gap has been
+> closed it is annotated here.
+
+**Closed since the audit:**
+
+- **Authentication / RBAC (was P0 §3.1):** `User`, `RefreshToken`, `Tenant`,
+  `ApiKey`, and `AuditLog` models now exist (`backend/prisma/schema.prisma`);
+  `authenticate` is mounted globally in `backend/src/app.ts` (every `/api`
+  route requires a valid token), `/metrics` and `/admin/queues` are guarded by
+  `authorize(ROLES.ADMIN)`, and the frontend has a real `AuthContext`/login
+  flow with silent token refresh (`frontend/src/services/api.ts`).
+- **Data architecture & compliance (was §4/§6/§7):** Prisma client extensions
+  provide soft-delete (`deletedAt`), multi-tenancy (`tenantId`),
+  `createdBy/updatedBy` stamping, and **field-level encryption**
+  (`backend/src/config/prisma-extensions/field-crypto.ts`); models carry
+  `deletedAt`/`tenantId` indexes.
+- **Frontend feature completeness (was P0 §3.3):** the ~150 placeholder
+  sub-pages across all 15 modules have been replaced with **real, data-driven
+  pages** wired to the backend via the per-module TanStack Query hooks and the
+  shared `useZodForm` + `FormField` form layer. All production frontend code
+  typechecks clean (`tsc --noEmit`); zero `any`, no leftover info-card stubs.
+
+**Still open (enterprise-hardening tail):**
+
+- **Test integrity (§3.4):** integration tests against ephemeral Postgres and
+  RTL/MSW component tests are still in progress; ~32 pre-existing **test-infra**
+  type errors remain (vitest globals / jest-dom matcher typings) — production
+  code is clean.
+- **Observability (§8):** Prometheus metrics / OpenTelemetry tracing / log
+  shipping not yet done.
+- **Deployment / CD / IaC (§9):** K8s/Helm + real CD pipeline + tested
+  restore not yet done.
+
+Updated scorecard deltas: **Authentication/RBAC → Ready**; **Frontend feature
+completeness → ~90% (Ready for core flows)**; **Data model (soft-delete/audit/
+tenant/encryption) → Ready**. Other rows unchanged from §5.
+
+---
+
 ## 1. Decisions Driving the Plan
 
 | Decision | Choice |

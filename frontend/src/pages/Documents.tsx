@@ -38,7 +38,10 @@ const DocumentsList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const { data, isLoading: loading, isError } = useDocuments({ limit: 50 });
 
-  const documents = (data as { data?: DocumentRow[] } | undefined)?.data ?? [];
+  const documents = useMemo<DocumentRow[]>(
+    () => (data as { data?: DocumentRow[] } | undefined)?.data ?? [],
+    [data]
+  );
 
   const filteredDocuments = useMemo(() => {
     if (!searchTerm) return documents;

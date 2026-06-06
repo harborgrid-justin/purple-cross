@@ -6,15 +6,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Purple Cross is a veterinary practice management platform built with TypeScript, featuring 15+ modules covering everything from patient management to compliance tracking. The codebase emphasizes type safety and a layered, production-oriented architecture.
 
-> **Current state (2026-05):** The platform is being hardened toward production.
+> **Current state (2026-06):** The platform is being hardened toward production.
 > An honest, code-grounded assessment of what is real vs. aspirational lives in
 > **`docs/PRODUCTION_GAP_ANALYSIS.md`** — read it before trusting capability
-> claims. Headlines: backend services are ~85% real; **authentication is not yet
-> wired** (in active development); many frontend pages are still placeholders;
-> tests are being moved off fully-mocked DBs. The single production stack is
-> **Express `backend/` + Vite/React `frontend/`** (PostgreSQL). The earlier
-> parallel **NestJS** and **Next.js** migration forks have been removed to keep
-> one source of truth.
+> claims. Headlines: backend services are ~85% real and **authentication/RBAC,
+> multi-tenancy, soft-delete, audit, and field-level encryption are now wired**
+> (see `backend/src/middleware/auth.ts`, `config/prisma-extensions/`, and the
+> `User`/`RefreshToken`/`Tenant`/`AuditLog` models in `prisma/schema.prisma`).
+> The **frontend feature surface is now built out**: the ~150 former
+> placeholder sub-pages across all 15 modules have been replaced with real,
+> data-driven pages wired to the API via the per-module TanStack Query hooks and
+> the shared `useZodForm` + `FormField` layer (all production code typechecks
+> clean). Remaining program work is the deeper enterprise hardening tail
+> (Prometheus/OpenTelemetry, K8s/Helm CD, and real integration/E2E test suites —
+> backend tests are still being moved off fully-mocked DBs). The single
+> production stack is **Express `backend/` + Vite/React `frontend/`**
+> (PostgreSQL). The earlier parallel **NestJS** and **Next.js** migration forks
+> have been removed to keep one source of truth.
 
 ## Architecture
 

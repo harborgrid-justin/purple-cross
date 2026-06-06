@@ -31,7 +31,10 @@ const Types = () => {
   const [typeFilter, setTypeFilter] = useState('');
   const { data, isLoading, isError } = useAppointments({ limit: 100 });
 
-  const allAppointments = (data as { data?: AppointmentRow[] } | undefined)?.data ?? [];
+  const allAppointments = useMemo<AppointmentRow[]>(
+    () => (data as { data?: AppointmentRow[] } | undefined)?.data ?? [],
+    [data]
+  );
 
   const types = useMemo(
     () => Array.from(new Set(allAppointments.map((a) => a.appointmentType))).sort(),
