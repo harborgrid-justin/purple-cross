@@ -45,9 +45,7 @@ const MedicalRecordsEdit: React.FC = () => {
   useEffect(() => {
     if (record) {
       setFormData({
-        visitDate: record.visitDate
-          ? new Date(record.visitDate).toISOString().split('T')[0]
-          : '',
+        visitDate: record.visitDate ? new Date(record.visitDate).toISOString().split('T')[0] : '',
         chiefComplaint: record.chiefComplaint || '',
         diagnosis: record.diagnosis || '',
         treatment: record.treatment || '',
@@ -56,9 +54,7 @@ const MedicalRecordsEdit: React.FC = () => {
     }
   }, [record]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ): void => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };

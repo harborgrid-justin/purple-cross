@@ -25,8 +25,7 @@ interface StaffMemberDetail {
   status?: string;
 }
 
-const fmtDate = (value?: string): string =>
-  value ? new Date(value).toLocaleDateString() : 'N/A';
+const fmtDate = (value?: string): string => (value ? new Date(value).toLocaleDateString() : 'N/A');
 
 const StaffDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();

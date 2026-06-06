@@ -50,9 +50,7 @@ const Segmentation = () => {
   );
 
   const filtered =
-    segment === 'all'
-      ? segmented
-      : segmented.filter((c) => segmentOf(c.petCount) === segment);
+    segment === 'all' ? segmented : segmented.filter((c) => segmentOf(c.petCount) === segment);
 
   return (
     <div className="page">

@@ -43,9 +43,7 @@ const BillingEdit: React.FC = () => {
     }
   }, [invoice]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLSelectElement | HTMLTextAreaElement>
-  ): void => {
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLTextAreaElement>): void => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -96,9 +94,7 @@ const BillingEdit: React.FC = () => {
     <div className="page">
       <header className="page-header">
         <h1>Edit Invoice</h1>
-        <p className="page-subtitle">
-          Update invoice {invoice.invoiceNumber ?? ''}
-        </p>
+        <p className="page-subtitle">Update invoice {invoice.invoiceNumber ?? ''}</p>
       </header>
 
       {updateMutation.isError && (

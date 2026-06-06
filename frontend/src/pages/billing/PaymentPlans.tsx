@@ -74,9 +74,7 @@ const PaymentPlans = () => {
               {plans.map((plan) => (
                 <tr key={plan.id}>
                   <th scope="row">
-                    {plan.client
-                      ? `${plan.client.firstName} ${plan.client.lastName}`
-                      : 'Unknown'}
+                    {plan.client ? `${plan.client.firstName} ${plan.client.lastName}` : 'Unknown'}
                   </th>
                   <td>${Number(plan.totalAmount).toFixed(2)}</td>
                   <td>

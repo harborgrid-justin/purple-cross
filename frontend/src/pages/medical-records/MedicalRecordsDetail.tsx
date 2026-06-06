@@ -73,9 +73,7 @@ const MedicalRecordsDetail: React.FC = () => {
             <h2>Visit Information</h2>
             <dl>
               <dt>Visit Date:</dt>
-              <dd>
-                {record.visitDate ? new Date(record.visitDate).toLocaleDateString() : 'N/A'}
-              </dd>
+              <dd>{record.visitDate ? new Date(record.visitDate).toLocaleDateString() : 'N/A'}</dd>
               <dt>Chief Complaint:</dt>
               <dd>{record.chiefComplaint || 'N/A'}</dd>
               <dt>Diagnosis:</dt>

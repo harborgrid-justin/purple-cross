@@ -77,9 +77,7 @@ const InventoryDetail: React.FC = () => {
             <dd>{item.supplier ?? 'N/A'}</dd>
             <dt>Expiration Date</dt>
             <dd>
-              {item.expirationDate
-                ? new Date(item.expirationDate).toLocaleDateString()
-                : 'N/A'}
+              {item.expirationDate ? new Date(item.expirationDate).toLocaleDateString() : 'N/A'}
             </dd>
           </dl>
         </div>

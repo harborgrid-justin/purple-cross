@@ -68,7 +68,12 @@ const API = () => {
       <p className="page-subtitle">Generate and manage API keys for programmatic access.</p>
 
       <form onSubmit={handleSubmit(onSubmit)} className="form-container" noValidate>
-        <FormField label="Key Label" registration={register('label')} error={errors.label} required />
+        <FormField
+          label="Key Label"
+          registration={register('label')}
+          error={errors.label}
+          required
+        />
         <FormField
           label="Scope"
           registration={register('scope')}

@@ -66,9 +66,7 @@ const Accounting = () => {
 
   const handleSync = (id: string): void => {
     setConnections((prev) =>
-      prev.map((conn) =>
-        conn.id === id ? { ...conn, lastSync: new Date().toISOString() } : conn
-      )
+      prev.map((conn) => (conn.id === id ? { ...conn, lastSync: new Date().toISOString() } : conn))
     );
   };
 

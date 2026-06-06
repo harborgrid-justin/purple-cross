@@ -74,9 +74,7 @@ const PrescriptionsDetail: React.FC = () => {
             </dd>
             <dt>Prescription Date</dt>
             <dd>
-              {rx.prescriptionDate
-                ? new Date(rx.prescriptionDate).toLocaleDateString()
-                : 'N/A'}
+              {rx.prescriptionDate ? new Date(rx.prescriptionDate).toLocaleDateString() : 'N/A'}
             </dd>
             <dt>Dosage</dt>
             <dd>{rx.dosage ?? 'N/A'}</dd>

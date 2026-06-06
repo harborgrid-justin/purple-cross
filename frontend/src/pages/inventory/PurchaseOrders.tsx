@@ -86,9 +86,7 @@ const PurchaseOrders = () => {
                   <th scope="row">{order.orderNumber ?? order.id.slice(0, 8)}</th>
                   <td>{order.supplier ?? 'N/A'}</td>
                   <td>
-                    {order.totalAmount != null
-                      ? `$${Number(order.totalAmount).toFixed(2)}`
-                      : 'N/A'}
+                    {order.totalAmount != null ? `$${Number(order.totalAmount).toFixed(2)}` : 'N/A'}
                   </td>
                   <td>
                     <span

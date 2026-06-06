@@ -36,7 +36,9 @@ const Waitlist = () => {
     <div className="page">
       <header className="page-header">
         <h1>Waitlist Management</h1>
-        <p className="page-subtitle">Fill last-minute openings by notifying and booking waitlisted clients</p>
+        <p className="page-subtitle">
+          Fill last-minute openings by notifying and booking waitlisted clients
+        </p>
       </header>
 
       <div className="table-container">
@@ -72,14 +74,10 @@ const Waitlist = () => {
                 return (
                   <tr key={item.id}>
                     <th scope="row">
-                      {item.patient
-                        ? `${item.patient.name} (${item.patient.species})`
-                        : 'N/A'}
+                      {item.patient ? `${item.patient.name} (${item.patient.species})` : 'N/A'}
                     </th>
                     <td>
-                      {item.client
-                        ? `${item.client.firstName} ${item.client.lastName}`
-                        : 'N/A'}
+                      {item.client ? `${item.client.firstName} ${item.client.lastName}` : 'N/A'}
                     </td>
                     <td>{item.priority ?? 'Normal'}</td>
                     <td>{item.preferredTime || 'Any'}</td>

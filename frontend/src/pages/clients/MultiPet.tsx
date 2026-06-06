@@ -32,12 +32,16 @@ const MultiPet = () => {
   const { data: clientsData, isLoading: clientsLoading } = useClients({ limit: 100 });
   const clients = (clientsData as { data?: ClientOption[] } | undefined)?.data ?? [];
 
-  const { data: patientsData, isLoading: patientsLoading, isError } = usePatients({
+  const {
+    data: patientsData,
+    isLoading: patientsLoading,
+    isError,
+  } = usePatients({
     ownerId: selectedClientId || undefined,
     limit: 100,
   });
   const pets = selectedClientId
-    ? (patientsData as { data?: PatientRow[] } | undefined)?.data ?? []
+    ? ((patientsData as { data?: PatientRow[] } | undefined)?.data ?? [])
     : [];
 
   return (

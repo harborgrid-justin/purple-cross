@@ -121,9 +121,7 @@ const CommunicationHistory = () => {
                       </time>
                     </th>
                     <td>
-                      {comm.client
-                        ? `${comm.client.firstName} ${comm.client.lastName}`
-                        : 'Unknown'}
+                      {comm.client ? `${comm.client.firstName} ${comm.client.lastName}` : 'Unknown'}
                     </td>
                     <td>{comm.type}</td>
                     <td>{comm.subject || comm.content || 'N/A'}</td>

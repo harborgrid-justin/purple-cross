@@ -78,7 +78,9 @@ const APIAnalytics = () => {
               </span>
               <div className="stat-content">
                 <div className="stat-label">Appointments Today</div>
-                <div className="stat-value">{(metrics.appointmentsToday ?? 0).toLocaleString()}</div>
+                <div className="stat-value">
+                  {(metrics.appointmentsToday ?? 0).toLocaleString()}
+                </div>
               </div>
             </div>
           </div>

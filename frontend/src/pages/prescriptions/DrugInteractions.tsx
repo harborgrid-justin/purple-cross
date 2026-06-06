@@ -22,12 +22,14 @@ const INTERACTIONS: InteractionRule[] = [
   {
     drugs: ['ketoconazole', 'cyclosporine'],
     severity: 'critical',
-    description: 'Ketoconazole inhibits cyclosporine metabolism, raising plasma levels and toxicity risk.',
+    description:
+      'Ketoconazole inhibits cyclosporine metabolism, raising plasma levels and toxicity risk.',
   },
   {
     drugs: ['nsaids', 'corticosteroids'],
     severity: 'critical',
-    description: 'Concurrent NSAIDs and corticosteroids markedly increase gastrointestinal ulceration risk.',
+    description:
+      'Concurrent NSAIDs and corticosteroids markedly increase gastrointestinal ulceration risk.',
   },
   {
     drugs: ['furosemide', 'gentamicin'],
@@ -51,17 +53,13 @@ const INTERACTIONS: InteractionRule[] = [
   },
 ];
 
-const DRUG_OPTIONS = Array.from(
-  new Set(INTERACTIONS.flatMap((rule) => rule.drugs))
-).sort();
+const DRUG_OPTIONS = Array.from(new Set(INTERACTIONS.flatMap((rule) => rule.drugs))).sort();
 
 const DrugInteractions = () => {
   const [selected, setSelected] = useState<string[]>([]);
 
   const toggleDrug = (drug: string): void => {
-    setSelected((prev) =>
-      prev.includes(drug) ? prev.filter((d) => d !== drug) : [...prev, drug]
-    );
+    setSelected((prev) => (prev.includes(drug) ? prev.filter((d) => d !== drug) : [...prev, drug]));
   };
 
   const matches = INTERACTIONS.filter(

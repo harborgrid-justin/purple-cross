@@ -42,8 +42,7 @@ const PatientRelationships = () => {
     isLoading: relLoading,
     isError: relError,
   } = usePatientRelationships(selectedPatientId);
-  const relationships =
-    (relationshipsData as { data?: RelationshipRow[] } | undefined)?.data ?? [];
+  const relationships = (relationshipsData as { data?: RelationshipRow[] } | undefined)?.data ?? [];
 
   const createRelationship = useCreatePatientRelationship();
   const deleteRelationship = useDeletePatientRelationship();

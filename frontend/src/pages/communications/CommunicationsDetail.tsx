@@ -89,17 +89,13 @@ const CommunicationsDetail: React.FC = () => {
             <div className="detail-row">
               <dt>Sent At</dt>
               <dd>
-                {communication.sentAt
-                  ? new Date(communication.sentAt).toLocaleString()
-                  : 'N/A'}
+                {communication.sentAt ? new Date(communication.sentAt).toLocaleString() : 'N/A'}
               </dd>
             </div>
             <div className="detail-row">
               <dt>Read At</dt>
               <dd>
-                {communication.readAt
-                  ? new Date(communication.readAt).toLocaleString()
-                  : 'Unread'}
+                {communication.readAt ? new Date(communication.readAt).toLocaleString() : 'Unread'}
               </dd>
             </div>
           </dl>

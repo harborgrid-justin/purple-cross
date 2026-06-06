@@ -82,9 +82,7 @@ const ReportsDetail: React.FC = () => {
               <tr>
                 <th scope="row">Created</th>
                 <td>
-                  {template.createdAt
-                    ? new Date(template.createdAt).toLocaleString()
-                    : 'N/A'}
+                  {template.createdAt ? new Date(template.createdAt).toLocaleString() : 'N/A'}
                 </td>
               </tr>
             </tbody>

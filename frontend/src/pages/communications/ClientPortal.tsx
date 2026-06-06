@@ -98,9 +98,7 @@ const ClientPortal: React.FC = () => {
             <div className="detail-row">
               <dt>Last Login</dt>
               <dd>
-                {account.lastLoginAt
-                  ? new Date(account.lastLoginAt).toLocaleString()
-                  : 'Never'}
+                {account.lastLoginAt ? new Date(account.lastLoginAt).toLocaleString() : 'Never'}
               </dd>
             </div>
           </dl>

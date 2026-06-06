@@ -23,7 +23,18 @@ const PatientsEdit: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { data: response, isLoading: fetchLoading } = usePatient(id || '');
-  const patient = response?.data;
+  const patient = (
+    response as {
+      data?: {
+        name?: string;
+        species?: string;
+        breed?: string;
+        dateOfBirth?: string;
+        microchipId?: string;
+        ownerId?: string;
+      };
+    }
+  )?.data;
   const updatePatientMutation = useUpdatePatient();
 
   const [formData, setFormData] = useState<PatientFormData>({
@@ -196,11 +207,7 @@ const PatientsEdit: React.FC = () => {
         </div>
 
         <div className="form-actions">
-          <button
-            type="submit"
-            className="btn-primary"
-            disabled={updatePatientMutation.isPending}
-          >
+          <button type="submit" className="btn-primary" disabled={updatePatientMutation.isPending}>
             {updatePatientMutation.isPending ? 'Saving...' : 'Save Changes'}
           </button>
           <Link to={`/patients/${id}`} className="btn-secondary">

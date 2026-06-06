@@ -87,9 +87,7 @@ const DocumentsDetail: React.FC = () => {
               <dt>Uploaded</dt>
               <dd>
                 {document.uploadedAt || document.createdAt
-                  ? new Date(
-                      (document.uploadedAt || document.createdAt) as string
-                    ).toLocaleString()
+                  ? new Date((document.uploadedAt || document.createdAt) as string).toLocaleString()
                   : 'N/A'}
               </dd>
             </div>

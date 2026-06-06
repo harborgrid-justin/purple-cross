@@ -58,9 +58,7 @@ const HL7FHIR = () => {
   const handleToggle = (id: string): void => {
     setConnections((prev) =>
       prev.map((conn) =>
-        conn.id === id
-          ? { ...conn, status: conn.status === 'active' ? 'paused' : 'active' }
-          : conn
+        conn.id === id ? { ...conn, status: conn.status === 'active' ? 'paused' : 'active' } : conn
       )
     );
   };

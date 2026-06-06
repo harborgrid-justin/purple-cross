@@ -135,7 +135,11 @@ const MedicalRecords = () => {
         <h1>
           <span aria-hidden="true">📋</span> Medical Records
         </h1>
-        <Link to="/medical-records/create" className="btn-primary" aria-label="Add new medical record">
+        <Link
+          to="/medical-records/create"
+          className="btn-primary"
+          aria-label="Add new medical record"
+        >
           + Add Record
         </Link>
       </header>

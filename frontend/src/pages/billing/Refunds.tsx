@@ -70,9 +70,7 @@ const Refunds = () => {
                       ? `${refund.client.firstName} ${refund.client.lastName}`
                       : 'Unknown'}
                   </th>
-                  <td>
-                    {refund.amount != null ? `$${Number(refund.amount).toFixed(2)}` : 'N/A'}
-                  </td>
+                  <td>{refund.amount != null ? `$${Number(refund.amount).toFixed(2)}` : 'N/A'}</td>
                   <td>{refund.reason ?? 'N/A'}</td>
                   <td>
                     <span

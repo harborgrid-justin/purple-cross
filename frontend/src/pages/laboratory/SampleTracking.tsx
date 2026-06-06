@@ -20,8 +20,7 @@ interface SampleRow {
   patient?: { id: string; name: string };
 }
 
-const fmtDate = (value?: string): string =>
-  value ? new Date(value).toLocaleDateString() : '—';
+const fmtDate = (value?: string): string => (value ? new Date(value).toLocaleDateString() : '—');
 
 const SampleTracking = () => {
   const { data, isLoading, isError } = useLabTests({ limit: 50 });

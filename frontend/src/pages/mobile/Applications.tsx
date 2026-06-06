@@ -43,10 +43,7 @@ const Applications = () => {
   } = useZodForm(appSchema);
 
   const onSubmit = (data: AppFormData): void => {
-    setApps((prev) => [
-      { id: crypto.randomUUID(), published: false, ...data },
-      ...prev,
-    ]);
+    setApps((prev) => [{ id: crypto.randomUUID(), published: false, ...data }, ...prev]);
     reset();
   };
 

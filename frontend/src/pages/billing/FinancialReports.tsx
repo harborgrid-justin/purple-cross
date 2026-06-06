@@ -29,8 +29,7 @@ const FinancialReports = () => {
 
   const report = (data as { data?: FinancialReport } | undefined)?.data;
 
-  const money = (value?: number): string =>
-    value != null ? `$${Number(value).toFixed(2)}` : '—';
+  const money = (value?: number): string => (value != null ? `$${Number(value).toFixed(2)}` : '—');
 
   return (
     <div className="page">

@@ -6,10 +6,7 @@
  * Last Updated: 2025-10-23 | File Type: .tsx
  */
 
-import {
-  usePatientReminders,
-  useCompletePatientReminder,
-} from '../../hooks/usePatientReminders';
+import { usePatientReminders, useCompletePatientReminder } from '../../hooks/usePatientReminders';
 import '../../styles/Page.css';
 
 interface ReminderRow {

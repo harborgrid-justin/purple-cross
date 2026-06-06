@@ -7,10 +7,7 @@
 
 import React from 'react';
 import { z } from 'zod';
-import {
-  useDocumentTemplates,
-  useCreateDocumentTemplate,
-} from '../../hooks/useDocumentTemplates';
+import { useDocumentTemplates, useCreateDocumentTemplate } from '../../hooks/useDocumentTemplates';
 import { useZodForm } from '../../hooks/useZodForm';
 import { FormField } from '../../components/form/FormField';
 import '../../styles/Page.css';

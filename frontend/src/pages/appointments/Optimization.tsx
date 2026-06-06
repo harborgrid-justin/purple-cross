@@ -41,7 +41,9 @@ const OptimizationView = () => {
     <div className="page">
       <header className="page-header">
         <h1>Schedule Optimization</h1>
-        <p className="page-subtitle">Identify load distribution and peak times across appointments</p>
+        <p className="page-subtitle">
+          Identify load distribution and peak times across appointments
+        </p>
       </header>
 
       <div className="table-container">

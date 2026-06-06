@@ -89,9 +89,7 @@ const Storage: React.FC = () => {
                   <td>
                     {doc.uploadedAt || doc.createdAt ? (
                       <time dateTime={(doc.uploadedAt || doc.createdAt) as string}>
-                        {new Date(
-                          (doc.uploadedAt || doc.createdAt) as string
-                        ).toLocaleDateString()}
+                        {new Date((doc.uploadedAt || doc.createdAt) as string).toLocaleDateString()}
                       </time>
                     ) : (
                       'N/A'

@@ -47,7 +47,11 @@ const ControlledSubstances = () => {
             <p>No controlled substance prescriptions found.</p>
           </div>
         ) : (
-          <table className="data-table" role="table" aria-label="Controlled substance prescriptions">
+          <table
+            className="data-table"
+            role="table"
+            aria-label="Controlled substance prescriptions"
+          >
             <thead>
               <tr>
                 <th scope="col">Patient</th>

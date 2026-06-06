@@ -28,8 +28,7 @@ interface LabTestDetail {
   patient?: { id: string; name: string };
 }
 
-const fmtDate = (value?: string): string =>
-  value ? new Date(value).toLocaleDateString() : 'N/A';
+const fmtDate = (value?: string): string => (value ? new Date(value).toLocaleDateString() : 'N/A');
 
 const LaboratoryDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();

@@ -82,12 +82,7 @@ const Registration: React.FC = () => {
           error={errors.email}
           required
         />
-        <FormField
-          label="Phone"
-          registration={register('phone')}
-          error={errors.phone}
-          required
-        />
+        <FormField label="Phone" registration={register('phone')} error={errors.phone} required />
         <FormField label="Address" registration={register('address')} error={errors.address} />
         <FormField label="City" registration={register('city')} error={errors.city} />
         <FormField label="State" registration={register('state')} error={errors.state} />

@@ -97,7 +97,11 @@ const Prescriptions = () => {
         <h1>
           <span aria-hidden="true">💊</span> Prescriptions
         </h1>
-        <Link to="/prescriptions/create" className="btn-primary" aria-label="Create new prescription">
+        <Link
+          to="/prescriptions/create"
+          className="btn-primary"
+          aria-label="Create new prescription"
+        >
           + New Prescription
         </Link>
       </header>

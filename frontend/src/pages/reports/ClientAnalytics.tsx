@@ -47,7 +47,9 @@ const ClientAnalytics = () => {
               </span>
               <div className="stat-content">
                 <div className="stat-label">Total Clients</div>
-                <div className="stat-value">{(demographics.totalClients ?? 0).toLocaleString()}</div>
+                <div className="stat-value">
+                  {(demographics.totalClients ?? 0).toLocaleString()}
+                </div>
               </div>
             </div>
             <div className="stat-card">

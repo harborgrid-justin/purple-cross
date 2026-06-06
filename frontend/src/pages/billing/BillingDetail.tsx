@@ -78,9 +78,7 @@ const BillingDetail: React.FC = () => {
             </dd>
             <dt>Invoice Date</dt>
             <dd>
-              {invoice.invoiceDate
-                ? new Date(invoice.invoiceDate).toLocaleDateString()
-                : 'N/A'}
+              {invoice.invoiceDate ? new Date(invoice.invoiceDate).toLocaleDateString() : 'N/A'}
             </dd>
             <dt>Due Date</dt>
             <dd>{invoice.dueDate ? new Date(invoice.dueDate).toLocaleDateString() : 'N/A'}</dd>

@@ -83,9 +83,7 @@ const Audit = () => {
                   <td>{record.version ?? 1}</td>
                   <td>{record.updatedBy ?? 'System'}</td>
                   <td>
-                    {record.createdAt
-                      ? new Date(record.createdAt).toLocaleDateString()
-                      : 'N/A'}
+                    {record.createdAt ? new Date(record.createdAt).toLocaleDateString() : 'N/A'}
                   </td>
                   <td>
                     <Link

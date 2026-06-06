@@ -32,9 +32,7 @@ const MedicationReminders = () => {
 
       {complete.isError && (
         <div className="alert alert-error" role="alert">
-          {complete.error instanceof Error
-            ? complete.error.message
-            : 'Failed to complete reminder'}
+          {complete.error instanceof Error ? complete.error.message : 'Failed to complete reminder'}
         </div>
       )}
 
@@ -70,9 +68,7 @@ const MedicationReminders = () => {
                   <td>{reminder.type ?? 'N/A'}</td>
                   <td>{reminder.message ?? '—'}</td>
                   <td>
-                    {reminder.dueDate
-                      ? new Date(reminder.dueDate).toLocaleDateString()
-                      : 'N/A'}
+                    {reminder.dueDate ? new Date(reminder.dueDate).toLocaleDateString() : 'N/A'}
                   </td>
                   <td>
                     <span

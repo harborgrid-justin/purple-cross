@@ -45,7 +45,9 @@ const Tablet = () => {
             value={orientation}
             onChange={(e) => setOrientation(e.target.value as Orientation)}
           >
-            <option value="portrait">Portrait ({DIMENSIONS.portrait.width}×{DIMENSIONS.portrait.height})</option>
+            <option value="portrait">
+              Portrait ({DIMENSIONS.portrait.width}×{DIMENSIONS.portrait.height})
+            </option>
             <option value="landscape">
               Landscape ({DIMENSIONS.landscape.width}×{DIMENSIONS.landscape.height})
             </option>

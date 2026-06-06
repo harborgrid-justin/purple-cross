@@ -134,9 +134,7 @@ const Email: React.FC = () => {
                   </td>
                   <td>
                     {row.sentAt ? (
-                      <time dateTime={row.sentAt}>
-                        {new Date(row.sentAt).toLocaleString()}
-                      </time>
+                      <time dateTime={row.sentAt}>{new Date(row.sentAt).toLocaleString()}</time>
                     ) : (
                       'N/A'
                     )}

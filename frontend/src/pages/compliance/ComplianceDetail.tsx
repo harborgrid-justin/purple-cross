@@ -75,9 +75,7 @@ const ComplianceDetail: React.FC = () => {
             <div className="detail-row">
               <dt>Effective Date</dt>
               <dd>
-                {policy.effectiveDate
-                  ? new Date(policy.effectiveDate).toLocaleDateString()
-                  : 'N/A'}
+                {policy.effectiveDate ? new Date(policy.effectiveDate).toLocaleDateString() : 'N/A'}
               </dd>
             </div>
             <div className="detail-row">

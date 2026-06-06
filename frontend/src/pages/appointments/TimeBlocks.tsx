@@ -8,11 +8,7 @@
 
 import { useState } from 'react';
 import { z } from 'zod';
-import {
-  useTimeBlocks,
-  useCreateTimeBlock,
-  useDeleteTimeBlock,
-} from '../../hooks/useTimeBlocks';
+import { useTimeBlocks, useCreateTimeBlock, useDeleteTimeBlock } from '../../hooks/useTimeBlocks';
 import { useZodForm } from '../../hooks/useZodForm';
 import { FormField } from '../../components/form/FormField';
 import '../../styles/Page.css';
@@ -166,9 +162,7 @@ const TimeBlocks = () => {
                     </time>
                   </td>
                   <td>
-                    <time dateTime={block.endTime}>
-                      {new Date(block.endTime).toLocaleString()}
-                    </time>
+                    <time dateTime={block.endTime}>{new Date(block.endTime).toLocaleString()}</time>
                   </td>
                   <td>
                     <button

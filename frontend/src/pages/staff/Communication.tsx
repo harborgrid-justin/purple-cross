@@ -84,9 +84,7 @@ const Communication = () => {
                 <tr key={comm.id}>
                   <th scope="row">
                     {comm.sentAt ? (
-                      <time dateTime={comm.sentAt}>
-                        {new Date(comm.sentAt).toLocaleString()}
-                      </time>
+                      <time dateTime={comm.sentAt}>{new Date(comm.sentAt).toLocaleString()}</time>
                     ) : (
                       'N/A'
                     )}
