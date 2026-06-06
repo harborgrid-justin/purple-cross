@@ -129,13 +129,7 @@ const InventoryEdit: React.FC = () => {
       <form onSubmit={handleSubmit} className="form-container">
         <div className="form-group">
           <label htmlFor="name">Name</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-          />
+          <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} />
         </div>
 
         <div className="form-group">

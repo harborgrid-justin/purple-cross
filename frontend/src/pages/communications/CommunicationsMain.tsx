@@ -5,8 +5,9 @@
  * Last Updated: 2025-10-22 | File Type: .tsx
  */
 
-import { useState, Suspense, lazy } from 'react';
+import { Suspense, lazy } from 'react';
 import { Link, Routes, Route, useLocation } from 'react-router-dom';
+import { useCommunications } from '../../hooks/useCommunications';
 import '../../styles/Page.css';
 
 // Lazy load subfeature pages
@@ -19,64 +20,84 @@ const Notifications = lazy(() => import('./Notifications'));
 const SocialMedia = lazy(() => import('./SocialMedia'));
 const Marketing = lazy(() => import('./Marketing'));
 
+interface MessageRow {
+  id: string;
+  type: string;
+  subject?: string;
+  message: string;
+  status: string;
+  sentAt?: string;
+  client?: { firstName?: string; lastName?: string };
+}
+
 const CommunicationsList = () => {
-  const [messages] = useState([
-    {
-      id: '1',
-      recipient: 'John Smith',
-      type: 'SMS',
-      subject: 'Appointment Reminder',
-      date: '2024-01-15',
-      status: 'Sent',
-    },
-    {
-      id: '2',
-      recipient: 'Sarah Johnson',
-      type: 'Email',
-      subject: 'Lab Results',
-      date: '2024-01-14',
-      status: 'Delivered',
-    },
-  ]);
+  const { data, isLoading, isError } = useCommunications({ limit: 50 });
+
+  const messages = (data as { data?: MessageRow[] } | undefined)?.data ?? [];
 
   return (
     <div className="table-container">
-      <table className="data-table" role="table" aria-label="Messages list">
-        <thead>
-          <tr>
-            <th scope="col">Recipient</th>
-            <th scope="col">Type</th>
-            <th scope="col">Subject</th>
-            <th scope="col">Date</th>
-            <th scope="col">Status</th>
-            <th scope="col">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {messages.map((message) => (
-            <tr key={message.id}>
-              <th scope="row">{message.recipient}</th>
-              <td>{message.type}</td>
-              <td>{message.subject}</td>
-              <td>{message.date}</td>
-              <td>
-                <span className="status-badge status-confirmed">{message.status}</span>
-              </td>
-              <td>
-                <button className="btn-action" aria-label={`View message to ${message.recipient}`}>
-                  View
-                </button>
-                <button
-                  className="btn-action"
-                  aria-label={`Resend message to ${message.recipient}`}
-                >
-                  Resend
-                </button>
-              </td>
+      {isLoading ? (
+        <div role="status" aria-live="polite">
+          <p>Loading messages...</p>
+        </div>
+      ) : isError ? (
+        <div className="alert alert-error" role="alert">
+          <p>Failed to load messages. Please try again.</p>
+        </div>
+      ) : messages.length === 0 ? (
+        <div role="status" aria-live="polite">
+          <p>No messages found. Create one to get started.</p>
+        </div>
+      ) : (
+        <table className="data-table" role="table" aria-label="Messages list">
+          <thead>
+            <tr>
+              <th scope="col">Recipient</th>
+              <th scope="col">Type</th>
+              <th scope="col">Subject</th>
+              <th scope="col">Date</th>
+              <th scope="col">Status</th>
+              <th scope="col">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {messages.map((message) => {
+              const recipient = message.client
+                ? `${message.client.firstName ?? ''} ${message.client.lastName ?? ''}`.trim()
+                : 'Unknown';
+              return (
+                <tr key={message.id}>
+                  <th scope="row">{recipient || 'Unknown'}</th>
+                  <td>{message.type}</td>
+                  <td>{message.subject || 'N/A'}</td>
+                  <td>
+                    {message.sentAt ? (
+                      <time dateTime={message.sentAt}>
+                        {new Date(message.sentAt).toLocaleDateString()}
+                      </time>
+                    ) : (
+                      'N/A'
+                    )}
+                  </td>
+                  <td>
+                    <span className="status-badge status-confirmed">{message.status}</span>
+                  </td>
+                  <td>
+                    <Link
+                      to={`/communications/${message.id}`}
+                      className="btn-action"
+                      aria-label={`View message ${message.subject || message.id}`}
+                    >
+                      View
+                    </Link>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 };
@@ -90,9 +111,9 @@ const CommunicationsMain = () => {
         <h1>
           <span aria-hidden="true">✉️</span> Communications
         </h1>
-        <button className="btn-primary" aria-label="Send new message">
+        <Link to="/communications/create" className="btn-primary" aria-label="Send new message">
           + New Message
-        </button>
+        </Link>
       </header>
 
       <nav className="sub-nav" role="navigation" aria-label="Communications sections">

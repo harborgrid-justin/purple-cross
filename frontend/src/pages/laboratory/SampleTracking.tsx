@@ -1,76 +1,96 @@
 /**
  * WF-COMP-XXX | SampleTracking.tsx - Sample Tracking
  * Purpose: React component for SampleTracking functionality
- * Dependencies: None
+ * Dependencies: react, @tanstack/react-query
  * Last Updated: 2025-10-23 | File Type: .tsx
  */
 
+import { Link } from 'react-router-dom';
+import { useLabTests } from '../../hooks/useLabTests';
 import '../../styles/Page.css';
 
+interface SampleRow {
+  id: string;
+  testName?: string;
+  sampleId?: string;
+  status?: string;
+  collectionDate?: string;
+  receivedDate?: string;
+  completedDate?: string;
+  patient?: { id: string; name: string };
+}
+
+const fmtDate = (value?: string): string => (value ? new Date(value).toLocaleDateString() : '—');
+
 const SampleTracking = () => {
+  const { data, isLoading, isError } = useLabTests({ limit: 50 });
+
+  const tests = (data as { data?: SampleRow[] } | undefined)?.data ?? [];
+  // Only tests with a sample associated are meaningful to track.
+  const samples = tests.filter((t) => !!t.sampleId);
+
   return (
     <div className="page">
       <header className="page-header">
         <h1>Sample Tracking</h1>
+        <p className="page-subtitle">Sample lifecycle from collection to completion</p>
       </header>
 
-      <div className="content-section">
-        <p>Track specimens from collection to disposal.</p>
-        <div
-          className="info-cards"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '1rem',
-            marginTop: '1rem',
-          }}
-        >
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Tracking</h3>
-            <ul>
-              <li>Collection</li>
-              <li>Processing</li>
-              <li>Testing</li>
-              <li>Storage</li>
-            </ul>
+      <div className="table-container">
+        {isLoading ? (
+          <div role="status" aria-live="polite">
+            <p>Loading samples...</p>
           </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Identification</h3>
-            <ul>
-              <li>Barcoding</li>
-              <li>Specimen labels</li>
-              <li>Chain of custody</li>
-              <li>Location tracking</li>
-            </ul>
+        ) : isError ? (
+          <div className="alert alert-error" role="alert">
+            <p>Failed to load samples. Please try again.</p>
           </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Management</h3>
-            <ul>
-              <li>Sample inventory</li>
-              <li>Disposal records</li>
-              <li>Retention policies</li>
-              <li>Audit trails</li>
-            </ul>
+        ) : samples.length === 0 ? (
+          <div role="status" aria-live="polite">
+            <p>No tracked samples found.</p>
           </div>
-        </div>
+        ) : (
+          <table className="data-table" role="table" aria-label="Sample tracking">
+            <thead>
+              <tr>
+                <th scope="col">Sample ID</th>
+                <th scope="col">Test</th>
+                <th scope="col">Patient</th>
+                <th scope="col">Collected</th>
+                <th scope="col">Received</th>
+                <th scope="col">Completed</th>
+                <th scope="col">Status</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {samples.map((test) => (
+                <tr key={test.id}>
+                  <th scope="row">{test.sampleId}</th>
+                  <td>{test.testName ?? 'N/A'}</td>
+                  <td>{test.patient?.name ?? 'Unknown'}</td>
+                  <td>{fmtDate(test.collectionDate)}</td>
+                  <td>{fmtDate(test.receivedDate)}</td>
+                  <td>{fmtDate(test.completedDate)}</td>
+                  <td>
+                    <span className={`status-badge status-${test.status ?? 'pending'}`}>
+                      {test.status ?? 'pending'}
+                    </span>
+                  </td>
+                  <td>
+                    <Link
+                      to={`/laboratory/${test.id}`}
+                      className="btn-action"
+                      aria-label={`View sample for ${test.testName ?? ''}`}
+                    >
+                      View
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );

@@ -13,7 +13,25 @@ import '../../styles/Page.css';
 const PatientsDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { data: response, isLoading: loading, error } = usePatient(id || '');
-  const patient = (response as { data?: any })?.data;
+  const patient = (
+    response as {
+      data?: {
+        id?: string;
+        name?: string;
+        species?: string;
+        breed?: string;
+        dateOfBirth?: string;
+        microchipId?: string;
+        owner?: {
+          id?: string;
+          firstName?: string;
+          lastName?: string;
+        };
+        createdAt: string;
+        updatedAt: string;
+      };
+    }
+  )?.data;
 
   if (loading) {
     return (

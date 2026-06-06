@@ -21,6 +21,7 @@ const Barcode = lazy(() => import('./inventory/Barcode'));
 const Equipment = lazy(() => import('./inventory/Equipment'));
 const InventoryCreate = lazy(() => import('./inventory/InventoryCreate'));
 const InventoryEdit = lazy(() => import('./inventory/InventoryEdit'));
+const InventoryDetail = lazy(() => import('./inventory/InventoryDetail'));
 
 interface InventoryItem {
   id: string;
@@ -182,6 +183,7 @@ const Inventory = () => {
           <Route path="/create" element={<InventoryCreate />} />
           <Route path="/:id/edit" element={<InventoryEdit />} />
           <Route path="/stock-monitoring" element={<StockMonitoring />} />
+          <Route path="/:id" element={<InventoryDetail />} />
           <Route path="/auto-reorder" element={<AutoReorder />} />
           <Route path="/vendors" element={<Vendors />} />
           <Route path="/purchase-orders" element={<PurchaseOrders />} />

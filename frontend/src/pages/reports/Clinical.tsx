@@ -5,73 +5,109 @@
  * Last Updated: 2025-10-23 | File Type: .tsx
  */
 
+import { useDashboardAnalytics, usePatientDemographics } from '../../hooks/useAnalytics';
 import '../../styles/Page.css';
 
+interface DashboardMetrics {
+  totalPatients?: number;
+  appointmentsToday?: number;
+  upcomingAppointments?: number;
+}
+
+interface SpeciesBreakdown {
+  bySpecies?: Array<{ species: string; count: number }>;
+}
+
 const Clinical = () => {
+  const dashboardQuery = useDashboardAnalytics();
+  const demographicsQuery = usePatientDemographics();
+
+  const metrics = (dashboardQuery.data as { data?: DashboardMetrics } | undefined)?.data ?? {};
+  const demographics =
+    (demographicsQuery.data as { data?: SpeciesBreakdown } | undefined)?.data ?? {};
+  const bySpecies = demographics.bySpecies ?? [];
+
+  const isLoading = dashboardQuery.isLoading || demographicsQuery.isLoading;
+  const isError = dashboardQuery.isError || demographicsQuery.isError;
+
   return (
     <div className="page">
       <header className="page-header">
         <h1>Clinical Analytics</h1>
       </header>
+      <p className="page-subtitle">Caseload and patient population overview.</p>
 
-      <div className="content-section">
-        <p>Medical outcomes and clinical performance metrics.</p>
-        <div
-          className="info-cards"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '1rem',
-            marginTop: '1rem',
-          }}
-        >
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Outcomes</h3>
-            <ul>
-              <li>Treatment success rates</li>
-              <li>Complication rates</li>
-              <li>Mortality rates</li>
-              <li>Readmission rates</li>
-            </ul>
-          </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Quality</h3>
-            <ul>
-              <li>Protocol compliance</li>
-              <li>Best practices</li>
-              <li>Clinical guidelines</li>
-              <li>Evidence-based care</li>
-            </ul>
-          </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Benchmarking</h3>
-            <ul>
-              <li>Industry benchmarks</li>
-              <li>Peer comparisons</li>
-              <li>Best performers</li>
-              <li>Quality scores</li>
-            </ul>
-          </div>
+      {isLoading ? (
+        <div role="status" aria-live="polite">
+          <p>Loading clinical analytics…</p>
         </div>
-      </div>
+      ) : isError ? (
+        <div className="alert alert-error" role="alert">
+          <p>Failed to load clinical analytics. Please try again.</p>
+        </div>
+      ) : (
+        <>
+          <div className="stats-grid">
+            <div className="stat-card">
+              <span className="stat-icon" aria-hidden="true">
+                🐾
+              </span>
+              <div className="stat-content">
+                <div className="stat-label">Total Patients</div>
+                <div className="stat-value">{(metrics.totalPatients ?? 0).toLocaleString()}</div>
+              </div>
+            </div>
+            <div className="stat-card">
+              <span className="stat-icon" aria-hidden="true">
+                📅
+              </span>
+              <div className="stat-content">
+                <div className="stat-label">Cases Today</div>
+                <div className="stat-value">
+                  {(metrics.appointmentsToday ?? 0).toLocaleString()}
+                </div>
+              </div>
+            </div>
+            <div className="stat-card">
+              <span className="stat-icon" aria-hidden="true">
+                ⏭️
+              </span>
+              <div className="stat-content">
+                <div className="stat-label">Upcoming Cases</div>
+                <div className="stat-value">
+                  {(metrics.upcomingAppointments ?? 0).toLocaleString()}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h2>Patient Population by Species</h2>
+          <div className="table-container">
+            {bySpecies.length === 0 ? (
+              <div role="status" aria-live="polite">
+                <p>No species breakdown available.</p>
+              </div>
+            ) : (
+              <table className="data-table" role="table" aria-label="Patients by species">
+                <thead>
+                  <tr>
+                    <th scope="col">Species</th>
+                    <th scope="col">Patients</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {bySpecies.map((row) => (
+                    <tr key={row.species}>
+                      <th scope="row">{row.species}</th>
+                      <td>{row.count.toLocaleString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 };

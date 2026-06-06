@@ -5,64 +5,122 @@
  * Last Updated: 2025-10-23 | File Type: .tsx
  */
 
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { usePatients } from '../../hooks/usePatients';
 import '../../styles/Page.css';
 
+interface PatientRow {
+  id: string;
+  name: string;
+  species: string;
+  breed?: string;
+  microchipId?: string;
+  owner?: { firstName: string; lastName: string };
+}
+
 const PatientSearch = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [speciesFilter, setSpeciesFilter] = useState('');
+
+  const { data, isLoading, isError } = usePatients({
+    search: searchTerm || undefined,
+    limit: 50,
+  });
+
+  const allPatients = (data as { data?: PatientRow[] } | undefined)?.data ?? [];
+  const patients = speciesFilter
+    ? allPatients.filter((p) => p.species === speciesFilter)
+    : allPatients;
+
   return (
     <div className="page">
       <header className="page-header">
-        <h1>Patient Search & Filtering</h1>
+        <h1>Patient Search &amp; Filtering</h1>
+        <p className="page-subtitle">Quickly locate patient records by name, microchip, or owner</p>
       </header>
 
-      <div className="content-section">
-        <p>Advanced search and filtering capabilities to quickly locate patient records.</p>
-        <div className="search-bar" role="search" style={{ marginBottom: '2rem' }}>
-          <input
-            type="search"
-            placeholder="Search by name, microchip, owner, or species..."
-            style={{ flex: 1 }}
-          />
-          <button className="btn-secondary">Advanced Filters</button>
-        </div>
-        <div
-          className="info-cards"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '1rem',
-          }}
+      <div className="search-bar" role="search">
+        <label htmlFor="patient-search" className="sr-only">
+          Search patients
+        </label>
+        <input
+          id="patient-search"
+          type="search"
+          placeholder="Search by name, microchip, or owner..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          aria-label="Search patients by name, microchip, or owner"
+        />
+        <label htmlFor="species-filter" className="sr-only">
+          Filter by species
+        </label>
+        <select
+          id="species-filter"
+          value={speciesFilter}
+          onChange={(e) => setSpeciesFilter(e.target.value)}
+          aria-label="Filter by species"
         >
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Search Options</h3>
-            <ul>
-              <li>Name & microchip search</li>
-              <li>Species & breed filters</li>
-              <li>Owner name search</li>
-              <li>Age range filters</li>
-            </ul>
+          <option value="">All Species</option>
+          <option value="Dog">Dog</option>
+          <option value="Cat">Cat</option>
+          <option value="Bird">Bird</option>
+          <option value="Rabbit">Rabbit</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div className="table-container">
+        {isLoading ? (
+          <div role="status" aria-live="polite">
+            <p>Searching patients...</p>
           </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Advanced Filters</h3>
-            <ul>
-              <li>Medical condition filters</li>
-              <li>Vaccination status</li>
-              <li>Last visit date range</li>
-              <li>Active/inactive status</li>
-            </ul>
+        ) : isError ? (
+          <div className="alert alert-error" role="alert">
+            <p>Failed to search patients. Please try again.</p>
           </div>
-        </div>
+        ) : patients.length === 0 ? (
+          <div role="status" aria-live="polite">
+            <p>No patients match your search.</p>
+          </div>
+        ) : (
+          <table className="data-table" role="table" aria-label="Patient search results">
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Species</th>
+                <th scope="col">Breed</th>
+                <th scope="col">Microchip ID</th>
+                <th scope="col">Owner</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {patients.map((patient) => (
+                <tr key={patient.id}>
+                  <th scope="row">{patient.name}</th>
+                  <td>{patient.species}</td>
+                  <td>{patient.breed || 'N/A'}</td>
+                  <td>{patient.microchipId || 'N/A'}</td>
+                  <td>
+                    {patient.owner
+                      ? `${patient.owner.firstName} ${patient.owner.lastName}`
+                      : 'Unknown'}
+                  </td>
+                  <td>
+                    <Link
+                      to={`/patients/${patient.id}`}
+                      className="btn-action"
+                      aria-label={`View details for ${patient.name}`}
+                    >
+                      View
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );

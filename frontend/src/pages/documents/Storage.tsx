@@ -1,76 +1,117 @@
 /**
  * WF-COMP-XXX | Storage.tsx - Storage
  * Purpose: React component for Storage functionality
- * Dependencies: None
+ * Dependencies: react, @tanstack/react-query
  * Last Updated: 2025-10-23 | File Type: .tsx
  */
 
+import React, { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useDocuments } from '../../hooks/useDocuments';
 import '../../styles/Page.css';
 
-const Storage = () => {
+interface DocumentRow {
+  id: string;
+  title?: string;
+  fileName?: string;
+  category?: string;
+  fileSize?: number;
+  status?: string;
+  uploadedAt?: string;
+  createdAt?: string;
+}
+
+const Storage: React.FC = () => {
+  const [search, setSearch] = useState('');
+  const { data, isLoading, isError } = useDocuments({ limit: 50 });
+
+  const rows = useMemo<DocumentRow[]>(
+    () => (data as { data?: DocumentRow[] } | undefined)?.data ?? [],
+    [data]
+  );
+
+  const filtered = useMemo(() => {
+    if (!search) return rows;
+    const term = search.toLowerCase();
+    return rows.filter((doc) =>
+      [doc.title, doc.fileName, doc.category].some((v) => v?.toLowerCase().includes(term))
+    );
+  }, [rows, search]);
+
   return (
     <div className="page">
       <header className="page-header">
         <h1>Document Storage</h1>
+        <p className="page-subtitle">Browse all stored documents</p>
       </header>
 
-      <div className="content-section">
-        <p>Secure cloud-based document storage and management.</p>
-        <div
-          className="info-cards"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '1rem',
-            marginTop: '1rem',
-          }}
-        >
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Storage</h3>
-            <ul>
-              <li>Unlimited storage</li>
-              <li>Cloud backup</li>
-              <li>Version control</li>
-              <li>Automatic sync</li>
-            </ul>
+      <div className="search-bar" role="search">
+        <label htmlFor="storage-search" className="sr-only">
+          Search stored documents
+        </label>
+        <input
+          id="storage-search"
+          type="search"
+          placeholder="Filter by name or category..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          aria-label="Filter stored documents"
+        />
+      </div>
+
+      <div className="table-container">
+        {isLoading ? (
+          <div role="status" aria-live="polite">
+            <p>Loading documents...</p>
           </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Organization</h3>
-            <ul>
-              <li>Folders</li>
-              <li>Tags</li>
-              <li>Categories</li>
-              <li>Smart collections</li>
-            </ul>
+        ) : isError ? (
+          <div className="alert alert-error" role="alert">
+            <p>Failed to load documents. Please try again.</p>
           </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Security</h3>
-            <ul>
-              <li>Encryption</li>
-              <li>Access controls</li>
-              <li>Audit trails</li>
-              <li>Compliance</li>
-            </ul>
+        ) : filtered.length === 0 ? (
+          <div role="status" aria-live="polite">
+            <p>No documents found.</p>
           </div>
-        </div>
+        ) : (
+          <table className="data-table" role="table" aria-label="Stored documents list">
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Category</th>
+                <th scope="col">Size</th>
+                <th scope="col">Uploaded</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((doc) => (
+                <tr key={doc.id}>
+                  <th scope="row">{doc.title || doc.fileName || 'Untitled'}</th>
+                  <td>{doc.category || 'N/A'}</td>
+                  <td>{doc.fileSize != null ? `${doc.fileSize} bytes` : 'N/A'}</td>
+                  <td>
+                    {doc.uploadedAt || doc.createdAt ? (
+                      <time dateTime={(doc.uploadedAt || doc.createdAt) as string}>
+                        {new Date((doc.uploadedAt || doc.createdAt) as string).toLocaleDateString()}
+                      </time>
+                    ) : (
+                      'N/A'
+                    )}
+                  </td>
+                  <td>
+                    <Link
+                      to={`/documents/${doc.id}`}
+                      className="btn-action"
+                      aria-label={`View ${doc.title || doc.fileName || 'document'}`}
+                    >
+                      View
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );

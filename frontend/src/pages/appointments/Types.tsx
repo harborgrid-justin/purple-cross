@@ -6,72 +6,133 @@
  * Last Updated: 2025-10-23 | File Type: .tsx
  */
 
+import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useAppointments } from '../../hooks/useAppointments';
 import '../../styles/Page.css';
 
+interface AppointmentRow {
+  id: string;
+  appointmentType: string;
+  startTime: string;
+  endTime: string;
+  status: string;
+  patient?: { name: string };
+}
+
+const durationMinutes = (start: string, end: string): number | null => {
+  const s = new Date(start).getTime();
+  const e = new Date(end).getTime();
+  if (Number.isNaN(s) || Number.isNaN(e) || e <= s) return null;
+  return Math.round((e - s) / 60000);
+};
+
 const Types = () => {
+  const [typeFilter, setTypeFilter] = useState('');
+  const { data, isLoading, isError } = useAppointments({ limit: 100 });
+
+  const allAppointments = useMemo<AppointmentRow[]>(
+    () => (data as { data?: AppointmentRow[] } | undefined)?.data ?? [],
+    [data]
+  );
+
+  const types = useMemo(
+    () => Array.from(new Set(allAppointments.map((a) => a.appointmentType))).sort(),
+    [allAppointments]
+  );
+
+  const appointments = typeFilter
+    ? allAppointments.filter((a) => a.appointmentType === typeFilter)
+    : allAppointments;
+
   return (
     <div className="page">
       <header className="page-header">
-        <h1>Appointment Types & Duration</h1>
+        <h1>Appointment Types &amp; Duration</h1>
+        <p className="page-subtitle">Review appointments by type and their scheduled durations</p>
       </header>
 
-      <div className="content-section">
-        <p>Define and manage different appointment types and their durations.</p>
-        <div
-          className="info-cards"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '1rem',
-            marginTop: '1rem',
-          }}
+      <div className="search-bar" role="search">
+        <label htmlFor="type-filter" className="sr-only">
+          Filter by appointment type
+        </label>
+        <select
+          id="type-filter"
+          value={typeFilter}
+          onChange={(e) => setTypeFilter(e.target.value)}
+          aria-label="Filter by appointment type"
         >
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Appointment Types</h3>
-            <ul>
-              <li>Wellness exams</li>
-              <li>Sick visits</li>
-              <li>Surgery</li>
-              <li>Dental cleaning</li>
-            </ul>
+          <option value="">All Types</option>
+          {types.map((t) => (
+            <option key={t} value={t}>
+              {t}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="table-container">
+        {isLoading ? (
+          <div role="status" aria-live="polite">
+            <p>Loading appointment types...</p>
           </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Duration Settings</h3>
-            <ul>
-              <li>Standard durations</li>
-              <li>Custom durations</li>
-              <li>Buffer time</li>
-              <li>Cleanup time</li>
-            </ul>
+        ) : isError ? (
+          <div className="alert alert-error" role="alert">
+            <p>Failed to load appointments. Please try again.</p>
           </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Resource Requirements</h3>
-            <ul>
-              <li>Staff requirements</li>
-              <li>Equipment needed</li>
-              <li>Room type</li>
-              <li>Special preparations</li>
-            </ul>
+        ) : appointments.length === 0 ? (
+          <div role="status" aria-live="polite">
+            <p>No appointments found for this type.</p>
           </div>
-        </div>
+        ) : (
+          <table className="data-table" role="table" aria-label="Appointments by type">
+            <thead>
+              <tr>
+                <th scope="col">Type</th>
+                <th scope="col">Patient</th>
+                <th scope="col">Start</th>
+                <th scope="col">Duration</th>
+                <th scope="col">Status</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {appointments.map((appt) => {
+                const mins = durationMinutes(appt.startTime, appt.endTime);
+                return (
+                  <tr key={appt.id}>
+                    <th scope="row">{appt.appointmentType}</th>
+                    <td>{appt.patient?.name ?? 'N/A'}</td>
+                    <td>
+                      <time dateTime={appt.startTime}>
+                        {new Date(appt.startTime).toLocaleString()}
+                      </time>
+                    </td>
+                    <td>{mins !== null ? `${mins} min` : 'N/A'}</td>
+                    <td>
+                      <span
+                        className={`status-badge status-${appt.status}`}
+                        role="status"
+                        aria-label={`Status: ${appt.status}`}
+                      >
+                        {appt.status}
+                      </span>
+                    </td>
+                    <td>
+                      <Link
+                        to={`/appointments/${appt.id}`}
+                        className="btn-action"
+                        aria-label={`View appointment for ${appt.patient?.name ?? 'patient'}`}
+                      >
+                        View
+                      </Link>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );

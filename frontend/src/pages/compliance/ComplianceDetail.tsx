@@ -7,10 +7,25 @@
 
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { usePolicy } from '../../hooks/usePolicies';
 import '../../styles/Page.css';
+
+interface PolicyDetail {
+  id: string;
+  title?: string;
+  category?: string;
+  content?: string;
+  version?: string;
+  status?: string;
+  effectiveDate?: string;
+  reviewDate?: string;
+}
 
 const ComplianceDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const { data, isLoading, isError } = usePolicy(id || '');
+
+  const policy = (data as { data?: PolicyDetail } | undefined)?.data;
 
   return (
     <div className="page">
@@ -28,9 +43,54 @@ const ComplianceDetail: React.FC = () => {
         </div>
       </header>
 
-      <div className="content-section">
-        <p>Detail view for compliance ID: {id}</p>
-      </div>
+      {isLoading ? (
+        <div role="status" aria-live="polite">
+          <p>Loading policy...</p>
+        </div>
+      ) : isError || !policy ? (
+        <div className="alert alert-warning" role="alert">
+          <p>Policy not found.</p>
+        </div>
+      ) : (
+        <div className="content-section">
+          <dl className="detail-list">
+            <div className="detail-row">
+              <dt>Title</dt>
+              <dd>{policy.title || 'N/A'}</dd>
+            </div>
+            <div className="detail-row">
+              <dt>Category</dt>
+              <dd>{policy.category || 'N/A'}</dd>
+            </div>
+            <div className="detail-row">
+              <dt>Version</dt>
+              <dd>{policy.version || 'N/A'}</dd>
+            </div>
+            <div className="detail-row">
+              <dt>Status</dt>
+              <dd>
+                <span className="status-badge status-confirmed">{policy.status || 'N/A'}</span>
+              </dd>
+            </div>
+            <div className="detail-row">
+              <dt>Effective Date</dt>
+              <dd>
+                {policy.effectiveDate ? new Date(policy.effectiveDate).toLocaleDateString() : 'N/A'}
+              </dd>
+            </div>
+            <div className="detail-row">
+              <dt>Review Date</dt>
+              <dd>
+                {policy.reviewDate ? new Date(policy.reviewDate).toLocaleDateString() : 'N/A'}
+              </dd>
+            </div>
+            <div className="detail-row">
+              <dt>Content</dt>
+              <dd>{policy.content || 'N/A'}</dd>
+            </div>
+          </dl>
+        </div>
+      )}
     </div>
   );
 };

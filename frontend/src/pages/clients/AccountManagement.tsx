@@ -6,72 +6,147 @@
  * Last Updated: 2025-10-23 | File Type: .tsx
  */
 
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useClients } from '../../hooks/useClients';
 import '../../styles/Page.css';
 
+interface ClientRow {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  status?: string;
+  patients?: Array<{ id: string }>;
+}
+
+const PAGE_SIZE = 25;
+
 const AccountManagement = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [page, setPage] = useState(1);
+
+  const { data, isLoading, isError } = useClients({
+    search: searchTerm || undefined,
+    page,
+    limit: PAGE_SIZE,
+  });
+
+  const clients = (data as { data?: ClientRow[] } | undefined)?.data ?? [];
+  const meta = (data as { meta?: { total?: number; totalPages?: number } } | undefined)?.meta;
+  const totalPages = meta?.totalPages ?? 1;
+
   return (
     <div className="page">
       <header className="page-header">
         <h1>Client Account Management</h1>
+        <p className="page-subtitle">Oversee client accounts, status, and contact details</p>
       </header>
 
-      <div className="content-section">
-        <p>Comprehensive client account oversight and management tools.</p>
-        <div
-          className="info-cards"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '1rem',
-            marginTop: '1rem',
+      <div className="search-bar" role="search">
+        <label htmlFor="account-search" className="sr-only">
+          Search client accounts
+        </label>
+        <input
+          id="account-search"
+          type="search"
+          placeholder="Search accounts by name, email, or phone..."
+          value={searchTerm}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            setPage(1);
           }}
-        >
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Account Status</h3>
-            <ul>
-              <li>Active accounts</li>
-              <li>Suspended accounts</li>
-              <li>Account history</li>
-              <li>Status changes</li>
-            </ul>
+          aria-label="Search client accounts"
+        />
+      </div>
+
+      <div className="table-container">
+        {isLoading ? (
+          <div role="status" aria-live="polite">
+            <p>Loading accounts...</p>
           </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Financial Overview</h3>
-            <ul>
-              <li>Account balance</li>
-              <li>Payment history</li>
-              <li>Outstanding invoices</li>
-              <li>Credit limits</li>
-            </ul>
+        ) : isError ? (
+          <div className="alert alert-error" role="alert">
+            <p>Failed to load client accounts. Please try again.</p>
           </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Account Settings</h3>
-            <ul>
-              <li>Notification preferences</li>
-              <li>Privacy settings</li>
-              <li>Two-factor authentication</li>
-              <li>Account permissions</li>
-            </ul>
+        ) : clients.length === 0 ? (
+          <div role="status" aria-live="polite">
+            <p>No client accounts found.</p>
           </div>
-        </div>
+        ) : (
+          <>
+            <table className="data-table" role="table" aria-label="Client accounts">
+              <thead>
+                <tr>
+                  <th scope="col">Name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Phone</th>
+                  <th scope="col">Pets</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {clients.map((client) => {
+                  const status = client.status ?? 'active';
+                  return (
+                    <tr key={client.id}>
+                      <th scope="row">
+                        {client.firstName} {client.lastName}
+                      </th>
+                      <td>{client.email}</td>
+                      <td>{client.phone}</td>
+                      <td>{client.patients?.length ?? 0}</td>
+                      <td>
+                        <span
+                          className={`status-badge status-${status}`}
+                          role="status"
+                          aria-label={`Status: ${status}`}
+                        >
+                          {status}
+                        </span>
+                      </td>
+                      <td>
+                        <Link
+                          to={`/clients/${client.id}`}
+                          className="btn-action"
+                          aria-label={`View account for ${client.firstName} ${client.lastName}`}
+                        >
+                          View
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+
+            <div className="form-actions" style={{ marginTop: '1rem' }}>
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page <= 1}
+                aria-label="Previous page"
+              >
+                Previous
+              </button>
+              <span role="status" aria-live="polite">
+                Page {page} of {totalPages}
+              </span>
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={() => setPage((p) => p + 1)}
+                disabled={page >= totalPages}
+                aria-label="Next page"
+              >
+                Next
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

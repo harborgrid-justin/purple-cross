@@ -23,9 +23,16 @@
 - **`STATUS.md`** — folder status and inventory.
 
 > ⚠️ **Honesty note.** Where a capability is aspirational rather than shipped
-> (e.g., authentication/authorization is **not yet wired**), the documents say
-> so explicitly and mark it **PLANNED** / **IN PROGRESS**. Do not read these as
-> a claim that every capability is production-complete.
+> the documents say so explicitly and mark it **PLANNED** / **IN PROGRESS**. Do
+> not read these as a claim that every capability is production-complete.
+>
+> **Update (2026-06):** authentication/authorization/RBAC, multi-tenancy,
+> soft-delete, audit logging, and field-level encryption are now **wired** in
+> `backend/`, and the `frontend/` feature surface (formerly ~150 placeholder
+> sub-pages) is now built out as real, API-wired pages. The remaining
+> aspirational items are the enterprise-hardening tail (Prometheus/OpenTelemetry
+> observability, K8s/Helm CD, and real integration/E2E test suites). See
+> [`../docs/PRODUCTION_GAP_ANALYSIS.md`](../docs/PRODUCTION_GAP_ANALYSIS.md) §0.
 
 ---
 

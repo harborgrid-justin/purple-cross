@@ -1,76 +1,81 @@
 /**
  * WF-COMP-XXX | LabEquipment.tsx - Lab Equipment
  * Purpose: React component for LabEquipment functionality
- * Dependencies: None
+ * Dependencies: react, @tanstack/react-query
  * Last Updated: 2025-10-23 | File Type: .tsx
  */
 
+import { useEquipment } from '../../hooks/useEquipment';
 import '../../styles/Page.css';
 
+interface EquipmentRow {
+  id: string;
+  name?: string;
+  category?: string;
+  manufacturer?: string;
+  modelNumber?: string;
+  serialNumber?: string;
+  location?: string;
+  status?: string;
+}
+
 const LabEquipment = () => {
+  const { data, isLoading, isError } = useEquipment({ limit: 50 });
+
+  const equipment = (data as { data?: EquipmentRow[] } | undefined)?.data ?? [];
+
   return (
     <div className="page">
       <header className="page-header">
-        <h1>Lab Equipment Management</h1>
+        <h1>Equipment Management</h1>
+        <p className="page-subtitle">Laboratory instruments and assets</p>
       </header>
 
-      <div className="content-section">
-        <p>Manage laboratory equipment and maintenance.</p>
-        <div
-          className="info-cards"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '1rem',
-            marginTop: '1rem',
-          }}
-        >
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Equipment</h3>
-            <ul>
-              <li>Analyzers</li>
-              <li>Microscopes</li>
-              <li>Centrifuges</li>
-              <li>Incubators</li>
-            </ul>
+      <div className="table-container">
+        {isLoading ? (
+          <div role="status" aria-live="polite">
+            <p>Loading equipment...</p>
           </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Maintenance</h3>
-            <ul>
-              <li>Service schedules</li>
-              <li>Calibration</li>
-              <li>Repairs</li>
-              <li>Replacement planning</li>
-            </ul>
+        ) : isError ? (
+          <div className="alert alert-error" role="alert">
+            <p>Failed to load equipment. Please try again.</p>
           </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Tracking</h3>
-            <ul>
-              <li>Usage logs</li>
-              <li>Maintenance logs</li>
-              <li>Performance metrics</li>
-              <li>Cost tracking</li>
-            </ul>
+        ) : equipment.length === 0 ? (
+          <div role="status" aria-live="polite">
+            <p>No equipment found.</p>
           </div>
-        </div>
+        ) : (
+          <table className="data-table" role="table" aria-label="Laboratory equipment">
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Category</th>
+                <th scope="col">Manufacturer</th>
+                <th scope="col">Model</th>
+                <th scope="col">Serial</th>
+                <th scope="col">Location</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {equipment.map((item) => (
+                <tr key={item.id}>
+                  <th scope="row">{item.name ?? 'N/A'}</th>
+                  <td>{item.category ?? 'N/A'}</td>
+                  <td>{item.manufacturer ?? 'N/A'}</td>
+                  <td>{item.modelNumber ?? 'N/A'}</td>
+                  <td>{item.serialNumber ?? 'N/A'}</td>
+                  <td>{item.location ?? 'N/A'}</td>
+                  <td>
+                    <span className={`status-badge status-${item.status ?? 'active'}`}>
+                      {item.status ?? 'active'}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );

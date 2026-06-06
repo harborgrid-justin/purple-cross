@@ -10,7 +10,16 @@ import '../styles/Page.css';
 
 const Dashboard = () => {
   const { data: response, isLoading: loading, error } = useDashboardAnalytics();
-  const stats = (response as { data?: any })?.data;
+  const stats = (
+    response as {
+      data?: {
+        totalPatients: number;
+        todayAppointments: number;
+        activePatients: number;
+        pendingInvoices: number;
+      };
+    }
+  )?.data;
 
   const recentActivities = [
     { time: '10:30 AM', activity: 'Appointment with Max (Labrador)', type: 'appointment' },

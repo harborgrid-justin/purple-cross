@@ -5,7 +5,7 @@
  * Last Updated: 2025-10-23 | File Type: .tsx
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { webhooksApi } from '../../services/modules/webhooksApi';
 import type { Webhook, WebhookDelivery, WebhookStats } from '../../services/modules/webhooksApi';
@@ -23,13 +23,7 @@ const WebhookDetail = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  useEffect(() => {
-    if (id) {
-      fetchWebhookDetails();
-    }
-  }, [id, page]);
-
-  const fetchWebhookDetails = async () => {
+  const fetchWebhookDetails = useCallback(async () => {
     if (!id) return;
 
     try {
@@ -51,7 +45,13 @@ const WebhookDetail = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, page]);
+
+  useEffect(() => {
+    if (id) {
+      fetchWebhookDetails();
+    }
+  }, [id, fetchWebhookDetails]);
 
   const handleTestWebhook = async () => {
     if (!id) return;

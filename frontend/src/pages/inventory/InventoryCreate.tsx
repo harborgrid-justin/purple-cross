@@ -18,7 +18,10 @@ const inventorySchema = z.object({
   name: z.string().min(1, 'Name is required'),
   sku: z.string().min(1, 'SKU is required'),
   category: z.string().min(1, 'Category is required'),
-  quantity: z.coerce.number().int('Quantity must be a whole number').min(0, 'Quantity must be 0 or more'),
+  quantity: z.coerce
+    .number()
+    .int('Quantity must be a whole number')
+    .min(0, 'Quantity must be 0 or more'),
   unit: z.string().min(1, 'Unit is required'),
   reorderPoint: z.coerce
     .number()
@@ -105,11 +108,7 @@ const InventoryCreate: React.FC = () => {
           error={errors.unitCost}
           required
         />
-        <FormField
-          label="Supplier"
-          registration={register('supplier')}
-          error={errors.supplier}
-        />
+        <FormField label="Supplier" registration={register('supplier')} error={errors.supplier} />
         <FormField
           label="Expiration Date"
           type="date"

@@ -21,6 +21,7 @@ const FinancialReports = lazy(() => import('./billing/FinancialReports'));
 const Refunds = lazy(() => import('./billing/Refunds'));
 const BillingCreate = lazy(() => import('./billing/BillingCreate'));
 const BillingEdit = lazy(() => import('./billing/BillingEdit'));
+const BillingDetail = lazy(() => import('./billing/BillingDetail'));
 
 interface Invoice {
   id: string;
@@ -187,6 +188,7 @@ const Billing = () => {
           <Route path="/create" element={<BillingCreate />} />
           <Route path="/:id/edit" element={<BillingEdit />} />
           <Route path="/invoice-generation" element={<InvoiceGeneration />} />
+          <Route path="/:id" element={<BillingDetail />} />
           <Route path="/payment-processing" element={<PaymentProcessing />} />
           <Route path="/insurance-claims" element={<InsuranceClaims />} />
           <Route path="/estimates" element={<Estimates />} />

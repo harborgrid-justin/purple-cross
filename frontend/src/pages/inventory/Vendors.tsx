@@ -1,76 +1,81 @@
 /**
  * WF-COMP-XXX | Vendors.tsx - Vendors
- * Purpose: React component for Vendors functionality
- * Dependencies: None
+ * Purpose: Summarize suppliers derived from the inventory catalog
+ * Dependencies: useInventory
  * Last Updated: 2025-10-23 | File Type: .tsx
  */
 
+import { useInventory } from '../../hooks/useInventory';
 import '../../styles/Page.css';
 
+interface SupplierItem {
+  id: string;
+  supplier?: string;
+  unitCost?: number;
+}
+
+interface VendorSummary {
+  name: string;
+  itemCount: number;
+  totalValue: number;
+}
+
 const Vendors = () => {
+  const { data, isLoading: loading, isError } = useInventory({ limit: 200 });
+
+  const items = (data as { data?: SupplierItem[] } | undefined)?.data ?? [];
+
+  const vendorMap = new Map<string, VendorSummary>();
+  for (const item of items) {
+    const name = item.supplier?.trim();
+    if (!name) continue;
+    const existing = vendorMap.get(name) ?? { name, itemCount: 0, totalValue: 0 };
+    existing.itemCount += 1;
+    existing.totalValue += Number(item.unitCost ?? 0);
+    vendorMap.set(name, existing);
+  }
+  const vendors = Array.from(vendorMap.values()).sort((a, b) => a.name.localeCompare(b.name));
+
   return (
     <div className="page">
       <header className="page-header">
         <h1>Vendor Management</h1>
+        <p className="page-subtitle">Suppliers sourced from the inventory catalog</p>
       </header>
 
-      <div className="content-section">
-        <p>Manage relationships with suppliers and vendors.</p>
-        <div
-          className="info-cards"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '1rem',
-            marginTop: '1rem',
-          }}
-        >
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Vendor Info</h3>
-            <ul>
-              <li>Contact details</li>
-              <li>Product catalogs</li>
-              <li>Pricing</li>
-              <li>Terms</li>
-            </ul>
+      <div className="table-container">
+        {loading ? (
+          <div role="status" aria-live="polite">
+            <p>Loading vendors...</p>
           </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Performance</h3>
-            <ul>
-              <li>Delivery times</li>
-              <li>Quality metrics</li>
-              <li>Pricing trends</li>
-              <li>Reliability scores</li>
-            </ul>
+        ) : isError ? (
+          <div className="alert alert-error" role="alert">
+            <p>Failed to load vendors. Please try again.</p>
           </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Communication</h3>
-            <ul>
-              <li>Order tracking</li>
-              <li>Issue resolution</li>
-              <li>Price negotiations</li>
-              <li>Contract management</li>
-            </ul>
+        ) : vendors.length === 0 ? (
+          <div role="status" aria-live="polite">
+            <p>No vendors found. Add suppliers to inventory items to populate this list.</p>
           </div>
-        </div>
+        ) : (
+          <table className="data-table" role="table" aria-label="Vendors">
+            <thead>
+              <tr>
+                <th scope="col">Vendor</th>
+                <th scope="col">Items Supplied</th>
+                <th scope="col">Catalog Unit Cost Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {vendors.map((vendor) => (
+                <tr key={vendor.name}>
+                  <th scope="row">{vendor.name}</th>
+                  <td>{vendor.itemCount}</td>
+                  <td>${vendor.totalValue.toFixed(2)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );

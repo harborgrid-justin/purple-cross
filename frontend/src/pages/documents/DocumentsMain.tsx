@@ -5,9 +5,9 @@
  * Last Updated: 2025-10-22 | File Type: .tsx
  */
 
-import { useState, useEffect, Suspense, lazy } from 'react';
+import { useMemo, useState, Suspense, lazy } from 'react';
 import { Link, Routes, Route, useLocation } from 'react-router-dom';
-import api from '../../services/api';
+import { useDocuments } from '../../hooks/useDocuments';
 import '../../styles/Page.css';
 
 // Lazy load subfeature pages
@@ -20,79 +20,56 @@ const SearchRetrieval = lazy(() => import('./SearchRetrieval'));
 const AccessControl = lazy(() => import('./AccessControl'));
 const Analytics = lazy(() => import('./Analytics'));
 
-interface Document {
+interface DocumentRow {
   id: string;
-  name: string;
-  type: string;
-  createdAt: string;
-  patient?: { id: string; name: string };
+  title?: string;
+  fileName?: string;
+  fileType?: string;
+  mimeType?: string;
+  category?: string;
+  createdAt?: string;
+  uploadedAt?: string;
 }
 
 const DocumentsList = () => {
-  const [documents, setDocuments] = useState<Document[]>([]);
-  const [filteredDocuments, setFilteredDocuments] = useState<Document[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [loading, setLoading] = useState(true);
+  const { data, isLoading: loading, isError } = useDocuments({ limit: 50 });
 
-  useEffect(() => {
-    const fetchDocuments = async () => {
-      try {
-        setLoading(true);
-        const response = (await api.documents.getAll({
-          limit: 50,
-        })) as { status: string; data: Document[] };
-        setDocuments(response.data);
-        setFilteredDocuments(response.data);
-      } catch (err) {
-        console.error('Error fetching documents:', err);
-        setDocuments([]);
-        setFilteredDocuments([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const documents = useMemo<DocumentRow[]>(
+    () => (data as { data?: DocumentRow[] } | undefined)?.data ?? [],
+    [data]
+  );
 
-    fetchDocuments();
-  }, []);
-
-  useEffect(() => {
-    if (!searchTerm) {
-      setFilteredDocuments(documents);
-      return;
-    }
-
-    const filtered = documents.filter((doc) => {
-      const searchLower = searchTerm.toLowerCase();
-      return (
-        doc.name.toLowerCase().includes(searchLower) ||
-        doc.type.toLowerCase().includes(searchLower) ||
-        (doc.patient && doc.patient.name.toLowerCase().includes(searchLower))
-      );
-    });
-    setFilteredDocuments(filtered);
+  const filteredDocuments = useMemo(() => {
+    if (!searchTerm) return documents;
+    const term = searchTerm.toLowerCase();
+    return documents.filter((doc) =>
+      [doc.title, doc.fileName, doc.category].some((v) => v?.toLowerCase().includes(term))
+    );
   }, [searchTerm, documents]);
 
   return (
     <div className="table-container">
-      <div className="search-container" style={{ marginBottom: '1rem' }}>
+      <div className="search-bar" role="search">
+        <label htmlFor="document-search" className="sr-only">
+          Search documents
+        </label>
         <input
-          type="text"
           id="document-search"
-          placeholder="Search documents by name, type, or patient..."
+          type="search"
+          placeholder="Search documents by name or category..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          style={{
-            width: '100%',
-            padding: '0.5rem',
-            fontSize: '1rem',
-            border: '1px solid #ddd',
-            borderRadius: '4px',
-          }}
+          aria-label="Search documents by name or category"
         />
       </div>
       {loading ? (
         <div role="status" aria-live="polite">
           <p>Loading documents...</p>
+        </div>
+      ) : isError ? (
+        <div className="alert alert-error" role="alert">
+          <p>Failed to load documents. Please try again.</p>
         </div>
       ) : filteredDocuments.length === 0 ? (
         <div role="status" aria-live="polite">
@@ -104,32 +81,39 @@ const DocumentsList = () => {
             <tr>
               <th scope="col">Document Name</th>
               <th scope="col">Type</th>
-              <th scope="col">Patient</th>
+              <th scope="col">Category</th>
               <th scope="col">Date</th>
               <th scope="col">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {filteredDocuments.map((doc) => (
-              <tr key={doc.id}>
-                <th scope="row">{doc.name}</th>
-                <td>{doc.type}</td>
-                <td>{doc.patient ? doc.patient.name : 'N/A'}</td>
-                <td>
-                  <time dateTime={doc.createdAt}>
-                    {new Date(doc.createdAt).toLocaleDateString()}
-                  </time>
-                </td>
-                <td>
-                  <button className="btn-action" aria-label={`View ${doc.name}`}>
-                    View
-                  </button>
-                  <button className="btn-action" aria-label={`Download ${doc.name}`}>
-                    Download
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {filteredDocuments.map((doc) => {
+              const name = doc.title || doc.fileName || 'Untitled';
+              const date = doc.uploadedAt || doc.createdAt;
+              return (
+                <tr key={doc.id}>
+                  <th scope="row">{name}</th>
+                  <td>{doc.mimeType || doc.fileType || 'N/A'}</td>
+                  <td>{doc.category || 'N/A'}</td>
+                  <td>
+                    {date ? (
+                      <time dateTime={date}>{new Date(date).toLocaleDateString()}</time>
+                    ) : (
+                      'N/A'
+                    )}
+                  </td>
+                  <td>
+                    <Link
+                      to={`/documents/${doc.id}`}
+                      className="btn-action"
+                      aria-label={`View ${name}`}
+                    >
+                      View
+                    </Link>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       )}
@@ -146,9 +130,9 @@ const DocumentsMain = () => {
         <h1>
           <span aria-hidden="true">📄</span> Documents
         </h1>
-        <button className="btn-primary" aria-label="Upload new document">
+        <Link to="/documents/create" className="btn-primary" aria-label="Upload new document">
           + Upload Document
-        </button>
+        </Link>
       </header>
 
       <nav className="sub-nav" role="navigation" aria-label="Documents sections">

@@ -5,73 +5,102 @@
  * Last Updated: 2025-10-23 | File Type: .tsx
  */
 
+import { useNavigate, Link } from 'react-router-dom';
+import { z } from 'zod';
+import { useCreateReportTemplate } from '../../hooks/useReportTemplates';
+import { useZodForm } from '../../hooks/useZodForm';
+import { FormField } from '../../components/form/FormField';
 import '../../styles/Page.css';
 
+const reportTemplateSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  category: z.string().min(1, 'Category is required'),
+  description: z.string().optional(),
+  format: z.string().min(1, 'Format is required'),
+});
+
+type ReportTemplateFormData = z.infer<typeof reportTemplateSchema>;
+
+const CATEGORIES = ['Financial', 'Operational', 'Clinical', 'Client', 'Inventory'].map((v) => ({
+  value: v,
+  label: v,
+}));
+
+const FORMATS = [
+  { value: 'pdf', label: 'PDF' },
+  { value: 'csv', label: 'CSV' },
+  { value: 'xlsx', label: 'Excel (XLSX)' },
+  { value: 'json', label: 'JSON' },
+];
+
 const Builder = () => {
+  const navigate = useNavigate();
+  const createMutation = useCreateReportTemplate();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useZodForm(reportTemplateSchema);
+
+  const onSubmit = (data: ReportTemplateFormData): void => {
+    createMutation.mutate(data, {
+      onSuccess: (response) => {
+        const id = (response as { data?: { id?: string } })?.data?.id;
+        navigate(id ? `/reports/${id}` : '/reports');
+      },
+    });
+  };
+
   return (
     <div className="page">
       <header className="page-header">
         <h1>Custom Report Builder</h1>
       </header>
+      <p className="page-subtitle">Define a reusable report template.</p>
 
-      <div className="content-section">
-        <p>Build custom reports with drag-and-drop interface.</p>
-        <div
-          className="info-cards"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '1rem',
-            marginTop: '1rem',
-          }}
-        >
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Builder Features</h3>
-            <ul>
-              <li>Drag-and-drop</li>
-              <li>Data selection</li>
-              <li>Filters</li>
-              <li>Grouping</li>
-            </ul>
-          </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Visualization</h3>
-            <ul>
-              <li>Charts</li>
-              <li>Graphs</li>
-              <li>Tables</li>
-              <li>Dashboards</li>
-            </ul>
-          </div>
-          <div
-            style={{
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <h3>Distribution</h3>
-            <ul>
-              <li>Export options</li>
-              <li>Email delivery</li>
-              <li>Scheduled reports</li>
-              <li>Report templates</li>
-            </ul>
-          </div>
+      {createMutation.isError && (
+        <div className="alert alert-error" role="alert">
+          {createMutation.error instanceof Error
+            ? createMutation.error.message
+            : 'Failed to create report template'}
         </div>
-      </div>
+      )}
+
+      <form onSubmit={handleSubmit(onSubmit)} className="form-container" noValidate>
+        <FormField label="Name" registration={register('name')} error={errors.name} required />
+        <FormField
+          label="Category"
+          registration={register('category')}
+          error={errors.category}
+          options={CATEGORIES}
+          required
+        />
+        <FormField
+          label="Description"
+          registration={register('description')}
+          error={errors.description}
+        />
+        <FormField
+          label="Output Format"
+          registration={register('format')}
+          error={errors.format}
+          options={FORMATS}
+          required
+        />
+
+        <div className="form-actions">
+          <button
+            type="submit"
+            className="btn-primary"
+            disabled={isSubmitting || createMutation.isPending}
+          >
+            {createMutation.isPending ? 'Creating…' : 'Create Template'}
+          </button>
+          <Link to="/reports" className="btn-secondary">
+            Cancel
+          </Link>
+        </div>
+      </form>
     </div>
   );
 };
