@@ -296,7 +296,7 @@ describe('Alert Component', () => {
       const icon = container.querySelector('.alert-icon');
       const content = container.querySelector('.alert-content');
 
-      expect(alert).toContainElement(icon);
+      expect(alert).toContainElement(icon as HTMLElement);
       expect(alert).toContainElement(content as HTMLElement);
     });
 
@@ -311,9 +311,9 @@ describe('Alert Component', () => {
       const content = container.querySelector('.alert-content');
       const closeButton = container.querySelector('.alert-close');
 
-      expect(alert).toContainElement(icon);
+      expect(alert).toContainElement(icon as HTMLElement);
       expect(alert).toContainElement(content as HTMLElement);
-      expect(alert).toContainElement(closeButton);
+      expect(alert).toContainElement(closeButton as HTMLElement);
     });
 
     it('should order elements correctly: icon, content, close button', () => {
@@ -422,7 +422,7 @@ describe('Alert Component', () => {
 
   describe('Edge Cases', () => {
     it('should handle empty children', () => {
-      const { getByRole } = renderWithoutRouter(<Alert />);
+      const { getByRole } = renderWithoutRouter(<Alert>{''}</Alert>);
 
       expect(getByRole('alert')).toBeInTheDocument();
     });

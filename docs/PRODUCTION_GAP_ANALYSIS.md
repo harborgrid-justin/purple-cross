@@ -55,25 +55,34 @@ from docs). File paths are cited so findings are reproducible.
   **circuit breaker + retry with backoff**, emitting `external_requests_total` /
   `circuit_breaker_state` Prometheus metrics. The email and reminder queue jobs
   now use it instead of TODO stubs.
+- **Frontend observability (new):** Sentry is now wired in the SPA
+  (`frontend/src/config/observability.ts`, opt-in via `VITE_SENTRY_DSN`, browser
+  tracing + PII/PHI-scrubbing `beforeSend`); the previously-unmounted
+  `ErrorBoundary` now wraps the app and forwards caught errors, and the
+  `ErrorReporting` service forwards to Sentry instead of a console stub.
+- **TypeScript debt (was §11) — CLOSED:** `tsc --noEmit` is now **clean across
+  the monorepo (0 backend + 0 frontend errors)**. The ~36 service-layer errors
+  surfaced by the reproducible Prisma 6.19.x install were fixed (typed Prisma
+  inputs; corrected drifted schema field names in `lab-test`, `analytics`,
+  `staff`; null-safe loyalty get-or-create; BullMQ connection-options in
+  `workflow.job`). Frontend test-infra typings (vitest globals / jest-dom
+  matchers / stale test props) were also resolved.
 
 **Still open (enterprise-hardening tail):**
 
-- **Test integrity (§3.4):** integration tests against ephemeral Postgres and
-  RTL/MSW component tests are still in progress; ~32 pre-existing **test-infra**
-  type errors remain (vitest globals / jest-dom matcher typings) — production
-  code is clean. (New resilience facade has unit coverage in
+- **Test integrity (§3.4):** unit suites still rely on a fully-mocked Prisma
+  client (model methods undefined → ~52 mocked-DB failures) and a few Input
+  snapshots are stale; real integration tests against ephemeral Postgres are
+  still pending. (The new resilience facade has real unit coverage in
   `backend/tests/unit/integrations/`.)
-- **TypeScript debt (§11):** still present and now reproducible — a fresh
-  workspace install resolves **Prisma 6.19.x**, which types `*CreateInput` /
-  aggregate selectors more strictly and surfaces ~36 pre-existing service-layer
-  errors (e.g. `lab-test.service.ts`, `loyalty-program.service.ts`,
-  `analytics.service.ts`). These predate this work; lockfiles remain gitignored.
 - **Deployment / CD / IaC (§9):** K8s/Helm + real CD pipeline + tested
   restore not yet done.
 
 Updated scorecard deltas: **Authentication/RBAC → Ready**; **Frontend feature
 completeness → ~90% (Ready for core flows)**; **Data model (soft-delete/audit/
-tenant/encryption) → Ready**. Other rows unchanged from §5.
+tenant/encryption) → Ready**; **Observability → Ready (backend + frontend)**;
+**TypeScript compliance → Ready (tsc clean monorepo-wide)**. Other rows
+unchanged from §5.
 
 ---
 

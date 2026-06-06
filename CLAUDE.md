@@ -237,6 +237,7 @@ npm test -- --testPathPattern=validation      # Pattern matching
 - **Distributed Tracing:** OpenTelemetry, opt-in via `OTEL_ENABLED`; OTLP/HTTP export with http/express/pg/ioredis auto-instrumentation (backend/src/config/tracing.ts) — imported first in `index.ts`/`worker.ts`
 - **Health Endpoints:** `/health`, `/health/live`, `/health/ready`, `/health/detailed`
 - **Metrics:** Prometheus `/metrics` endpoint (backend/src/config/metrics.ts); HTTP + outbound-provider (`external_requests_total`, `circuit_breaker_state`) series
+- **Frontend errors/tracing:** Sentry in the SPA (frontend/src/config/observability.ts), opt-in via `VITE_SENTRY_DSN`, PII/PHI scrubbed; the app `ErrorBoundary` and `ErrorReporting` service forward to it
 
 ### Resilience
 
