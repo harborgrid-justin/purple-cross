@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
 import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION, STATUS, WORKFLOW_EVENTS } from '../constants';
@@ -31,7 +32,7 @@ export class AppointmentService {
     }
 
     const appointment = await prisma.appointment.create({
-      data,
+      data: data as Prisma.AppointmentCreateInput,
       include: {
         patient: true,
         client: true,

@@ -45,11 +45,8 @@ export class LoyaltyProgramService {
     relatedType?: string,
     relatedId?: string
   ) {
-    let program = await this.getProgramByClient(clientId);
-
-    if (!program) {
-      program = await this.createProgram(clientId);
-    }
+    const program =
+      (await this.getProgramByClient(clientId)) ?? (await this.createProgram(clientId));
 
     const newBalance = program.pointsBalance + points;
     const newLifetimePoints = program.lifetimePoints + points;
@@ -116,11 +113,8 @@ export class LoyaltyProgramService {
   }
 
   async updateSpending(clientId: string, amount: number) {
-    let program = await this.getProgramByClient(clientId);
-
-    if (!program) {
-      program = await this.createProgram(clientId);
-    }
+    const program =
+      (await this.getProgramByClient(clientId)) ?? (await this.createProgram(clientId));
 
     const points = Math.floor(amount / 10); // 1 point per $10 spent
     const newSpending = program.lifetimeSpending + amount;

@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
 import {
@@ -15,7 +16,7 @@ import { domainEvents } from './domain-events.service';
 export class PatientService {
   async createPatient(data: Record<string, unknown>) {
     const patient = await prisma.patient.create({
-      data,
+      data: data as Prisma.PatientCreateInput,
       include: {
         owner: true,
       },

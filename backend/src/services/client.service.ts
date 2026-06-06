@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
 import {
@@ -16,7 +17,7 @@ export class ClientService {
   async createClient(data: Record<string, unknown>) {
     // Check if email already exists
     const existing = await prisma.client.findUnique({
-      where: { email: data.email },
+      where: { email: data.email as string },
     });
 
     if (existing) {
@@ -27,7 +28,7 @@ export class ClientService {
     }
 
     const client = await prisma.client.create({
-      data,
+      data: data as Prisma.ClientCreateInput,
       include: {
         patients: true,
       },

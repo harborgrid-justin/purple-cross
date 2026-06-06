@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
 import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION, WORKFLOW_EVENTS } from '../constants';
@@ -6,10 +7,9 @@ import { domainEvents } from './domain-events.service';
 export class LabTestService {
   async createLabTest(data: Record<string, unknown>) {
     const labTest = await prisma.labTest.create({
-      data,
+      data: data as Prisma.LabTestCreateInput,
       include: {
         patient: true,
-        orderedBy: true,
       },
     });
 
@@ -27,7 +27,6 @@ export class LabTestService {
       where: { id },
       include: {
         patient: true,
-        orderedBy: true,
       },
     });
 
@@ -56,7 +55,7 @@ export class LabTestService {
 
     const where: Record<string, unknown> = {
       ...(patientId && { patientId }),
-      ...(orderedById && { orderedById }),
+      ...(orderedById && { orderedBy: orderedById }),
       ...(status && { status }),
     };
 
@@ -69,11 +68,8 @@ export class LabTestService {
           patient: {
             select: { id: true, name: true, species: true },
           },
-          orderedBy: {
-            select: { id: true, firstName: true, lastName: true },
-          },
         },
-        orderBy: { orderDate: 'desc' },
+        orderBy: { orderedDate: 'desc' },
       }),
       prisma.labTest.count({ where }),
     ]);
@@ -98,10 +94,9 @@ export class LabTestService {
 
     return prisma.labTest.update({
       where: { id },
-      data,
+      data: data as Prisma.LabTestUpdateInput,
       include: {
         patient: true,
-        orderedBy: true,
       },
     });
   }
@@ -127,14 +122,13 @@ export class LabTestService {
 
     const completedLabTest = await prisma.labTest.update({
       where: { id },
-      data: { 
+      data: {
         status: 'completed',
         results,
-        resultDate: new Date(),
+        completedDate: new Date(),
       },
       include: {
         patient: true,
-        orderedBy: true,
       },
     });
 

@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
 import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION } from '../constants';
@@ -5,7 +6,7 @@ import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION } from '../constants';
 export class CommunicationService {
   async createCommunication(data: Record<string, unknown>) {
     return prisma.communication.create({
-      data,
+      data: data as Prisma.CommunicationCreateInput,
       include: {
         client: true,
       },

@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
 import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION, SORT_ORDER, FIELDS, WORKFLOW_EVENTS } from '../constants';
@@ -6,7 +7,7 @@ import { domainEvents } from './domain-events.service';
 export class InvoiceService {
   async createInvoice(data: Record<string, unknown>) {
     const invoice = await prisma.invoice.create({
-      data,
+      data: data as Prisma.InvoiceCreateInput,
       include: {
         client: true,
         lineItems: true,
