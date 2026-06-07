@@ -9,6 +9,12 @@ interface RetryConfig {
   maxDelay: number;
   backoffMultiplier: number;
   retryableErrors?: string[];
+  /**
+   * Predicate that decides whether a given error is worth retrying. Takes
+   * precedence over `retryableErrors`. Return `false` to fail fast on terminal
+   * errors (e.g. a 4xx from an upstream provider).
+   */
+  shouldRetry?: (error: Error) => boolean;
   name?: string;
 }
 
@@ -51,6 +57,17 @@ export async function retry<T>(
       return result;
     } catch (error) {
       lastError = error instanceof Error ? error : new Error(String(error));
+
+      // A `shouldRetry` predicate takes precedence and fails fast on terminal errors.
+      if (finalConfig.shouldRetry && !finalConfig.shouldRetry(lastError)) {
+        logger.warn({
+          message: 'Non-retryable error encountered',
+          operation: finalConfig.name,
+          error: lastError.message,
+          attempt,
+        });
+        throw lastError;
+      }
 
       // Check if error is retryable
       if (finalConfig.retryableErrors && finalConfig.retryableErrors.length > 0) {

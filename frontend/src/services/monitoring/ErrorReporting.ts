@@ -6,6 +6,7 @@
  */
 
 import { AppError, ErrorType } from '../utils/errorHandlers';
+import { captureException } from '../../config/observability';
 
 // ==========================================
 // TYPE DEFINITIONS
@@ -113,28 +114,16 @@ class ErrorReporting {
   }
 
   /**
-   * Send error to tracking service (placeholder)
+   * Forward the error to the observability backend (Sentry). No-op when Sentry
+   * is not configured (see config/observability).
    */
   private sendToErrorTrackingService(report: ErrorReport): void {
-    // Placeholder for integration with error tracking service
-    // Example implementations:
-
-    // Sentry
-    // if (window.Sentry) {
-    //   window.Sentry.captureException(report.error, {
-    //     tags: { type: report.error.type },
-    //     contexts: { custom: { context: report.context } }
-    //   });
-    // }
-
-    // Or send to custom backend endpoint
-    // fetch('/api/errors', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(report)
-    // }).catch(err => console.error('Failed to send error report:', err));
-
-    console.log('[ErrorReporting] Would send to tracking service:', report);
+    captureException(report.error, {
+      type: report.error.type,
+      status: report.error.status,
+      context: report.context,
+      url: report.url,
+    });
   }
 
   /**

@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
 import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION } from '../constants';
@@ -5,7 +6,7 @@ import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION } from '../constants';
 export class DocumentService {
   async createDocument(data: Record<string, unknown>) {
     return prisma.document.create({
-      data,
+      data: data as Prisma.DocumentCreateInput,
     });
   }
 

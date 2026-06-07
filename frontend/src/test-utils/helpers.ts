@@ -53,18 +53,13 @@ export const waitForLoadingToFinish = async (
  * Mock window.scrollTo (not implemented in jsdom)
  */
 export const mockScrollTo = (): void => {
-  window.scrollTo = vi.fn();
+  window.scrollTo = vi.fn() as unknown as typeof window.scrollTo;
 };
 
 /**
  * Mock localStorage for testing
  */
-export const mockLocalStorage = (): {
-  getItem: ReturnType<typeof vi.fn>;
-  setItem: ReturnType<typeof vi.fn>;
-  removeItem: ReturnType<typeof vi.fn>;
-  clear: ReturnType<typeof vi.fn>;
-} => {
+export const mockLocalStorage = () => {
   const storage: Record<string, string> = {};
 
   return {
@@ -158,11 +153,7 @@ export const simulateNetworkDelay = async (ms = 500): Promise<void> => {
 /**
  * Create a spy for console methods (useful for testing error handling)
  */
-export const spyOnConsole = (): {
-  log: ReturnType<typeof vi.spyOn>;
-  warn: ReturnType<typeof vi.spyOn>;
-  error: ReturnType<typeof vi.spyOn>;
-} => {
+export const spyOnConsole = () => {
   return {
     log: vi.spyOn(console, 'log').mockImplementation(() => {}),
     warn: vi.spyOn(console, 'warn').mockImplementation(() => {}),

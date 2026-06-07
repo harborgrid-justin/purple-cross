@@ -7,7 +7,14 @@ const logDir = process.env.LOG_FILE_PATH || './logs';
 
 // Redact PII/PHI/credentials from log metadata. Mutates the info object's
 // string-keyed fields in place so Winston's internal symbol props are preserved.
-const PRESERVED_KEYS = new Set(['level', 'message', 'timestamp', 'stack', 'environment', 'version']);
+const PRESERVED_KEYS = new Set([
+  'level',
+  'message',
+  'timestamp',
+  'stack',
+  'environment',
+  'version',
+]);
 const redactionFormat = winston.format((info) => {
   for (const key of Object.keys(info)) {
     if (!PRESERVED_KEYS.has(key)) {
@@ -79,6 +86,31 @@ if (process.env.NODE_ENV !== 'production') {
   logger.add(
     new winston.transports.Console({
       format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
+    })
+  );
+} else {
+  // In production also emit structured JSON to stdout so a container log
+  // collector (Fluent Bit / Vector / Loki agent) can scrape it off-box.
+  logger.add(new winston.transports.Console());
+}
+
+// Optional off-box log shipping. When `LOG_SHIPPING_ENABLED=true` the same
+// redacted, structured records are POSTed to an HTTP log sink (e.g. Logstash
+// HTTP input, Vector, or a Loki/Datadog HTTP endpoint). Credentials/host are
+// read from the environment so no secrets live in code. Failures here never
+// affect request handling — winston swallows transport errors.
+if (process.env.LOG_SHIPPING_ENABLED === 'true' && process.env.LOG_SHIPPING_HOST) {
+  const headers: Record<string, string> = {};
+  if (process.env.LOG_SHIPPING_API_KEY) {
+    headers.Authorization = `Bearer ${process.env.LOG_SHIPPING_API_KEY}`;
+  }
+  logger.add(
+    new winston.transports.Http({
+      host: process.env.LOG_SHIPPING_HOST,
+      port: process.env.LOG_SHIPPING_PORT ? Number(process.env.LOG_SHIPPING_PORT) : 443,
+      path: process.env.LOG_SHIPPING_PATH || '/',
+      ssl: process.env.LOG_SHIPPING_SSL !== 'false',
+      headers,
     })
   );
 }

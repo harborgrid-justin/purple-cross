@@ -47,3 +47,12 @@ Prisma) and `frontend/` (Vite + React) stack.
 | Operational (OV) | OV-1, OV-2, OV-3, OV-4, OV-5a/5b, OV-6a/6b/6c | Baseline drafted |
 | Systems (SV) | SV-1 … SV-10c | Baseline drafted |
 | Services (SvcV) | SvcV-1 … SvcV-10c | Baseline drafted |
+
+> **Implementation note (2026-06):** the observability and resilience items that
+> several SV/SvcV views flagged **PLANNED** are now shipped in `backend/`:
+> OpenTelemetry tracing (`src/config/tracing.ts`), optional off-box log shipping
+> (`src/config/logger.ts`), and the circuit-breaker/retry-backed outbound
+> email/SMS provider facade (`src/integrations/`). Prometheus already exposed
+> `/metrics`; new `external_requests_total` / `circuit_breaker_state` series
+> cover the provider layer. Refresh SV-7/SvcV-7 (measures), SV-8/SvcV-8
+> (evolution), and the SvcV-1/2 service-context views when re-deriving.

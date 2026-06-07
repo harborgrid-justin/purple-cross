@@ -336,7 +336,7 @@ describe('Button Component', () => {
 
   describe('Edge Cases', () => {
     it('should handle empty children', () => {
-      const { container } = renderWithoutRouter(<Button />);
+      const { container } = renderWithoutRouter(<Button>{''}</Button>);
 
       expect(container.querySelector('button')).toBeInTheDocument();
     });

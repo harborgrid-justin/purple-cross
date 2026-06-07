@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
 import {
@@ -12,7 +13,7 @@ import {
 export class InventoryService {
   async createInventoryItem(data: Record<string, unknown>) {
     return prisma.inventoryItem.create({
-      data,
+      data: data as Prisma.InventoryItemCreateInput,
     });
   }
 

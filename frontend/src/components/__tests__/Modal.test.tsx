@@ -500,8 +500,8 @@ describe('Modal Component', () => {
       const title = container.querySelector('.modal-title');
       const closeButton = container.querySelector('.modal-close');
 
-      expect(header).toContainElement(title);
-      expect(header).toContainElement(closeButton);
+      expect(header).toContainElement(title as HTMLElement);
+      expect(header).toContainElement(closeButton as HTMLElement);
     });
 
     it('should render all parts in correct order', () => {
@@ -626,7 +626,9 @@ describe('Modal Component', () => {
   describe('Edge Cases', () => {
     it('should handle empty children', () => {
       const { getByRole } = renderWithoutRouter(
-        <Modal isOpen onClose={vi.fn()} />
+        <Modal isOpen onClose={vi.fn()}>
+          {''}
+        </Modal>
       );
 
       expect(getByRole('dialog')).toBeInTheDocument();

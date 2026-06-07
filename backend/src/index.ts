@@ -1,3 +1,6 @@
+// Tracing must be imported first so OpenTelemetry can instrument http/express/pg
+// before those modules are required by the app.
+import { stopTracing } from './config/tracing';
 import { createApp } from './app';
 import env from './config/env';
 import { logger } from './config/logger';
@@ -23,6 +26,7 @@ async function bootstrap() {
       server.close(async () => {
         logger.info('HTTP server closed');
         await disconnectDatabase();
+        await stopTracing();
         process.exit(0);
       });
 

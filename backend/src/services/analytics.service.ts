@@ -139,7 +139,7 @@ export class AnalyticsService {
     const [lowStockItems, expiringItems, totalItems] = await Promise.all([
       prisma.inventoryItem.count({
         where: {
-          quantity: { lte: prisma.inventoryItem.fields.reorderPoint },
+          quantityOnHand: { lte: prisma.inventoryItem.fields.reorderPoint },
         },
       }),
       prisma.inventoryItem.count({
@@ -156,7 +156,7 @@ export class AnalyticsService {
     const byCategory = await prisma.inventoryItem.groupBy({
       by: ['category'],
       _count: { category: true },
-      _sum: { quantity: true },
+      _sum: { quantityOnHand: true },
     });
 
     return {
@@ -166,7 +166,7 @@ export class AnalyticsService {
       byCategory: byCategory.map((item: any) => ({
         category: item.category,
         count: item._count.category,
-        totalQuantity: item._sum.quantity || 0,
+        totalQuantity: item._sum.quantityOnHand || 0,
       })),
     };
   }

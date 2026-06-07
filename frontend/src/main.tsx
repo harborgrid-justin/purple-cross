@@ -11,13 +11,15 @@ import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import App from './App';
+import ErrorBoundary from './components/ErrorBoundary';
 import { AuthProvider } from './contexts/AuthContext';
+import { initObservability, captureException } from './config/observability';
 import './styles/index.css';
-import {
-  QUERY_STALE_TIME,
-  QUERY_CACHE_TIME,
-  QUERY_RETRY,
-} from './constants';
+import { QUERY_STALE_TIME, QUERY_CACHE_TIME, QUERY_RETRY } from './constants';
+
+// Initialize observability (Sentry) before anything renders so early errors are
+// captured. No-op unless VITE_SENTRY_DSN is configured.
+initObservability();
 
 /**
  * Optimized QueryClient configuration for Purple Cross
@@ -94,20 +96,24 @@ if (!rootElement) throw new Error('Root element not found');
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <AuthProvider>
-          <App />
-        </AuthProvider>
-      </BrowserRouter>
-      {/* React Query DevTools - Only in development */}
-      {import.meta.env.DEV && (
-        <ReactQueryDevtools
-          initialIsOpen={false}
-          position="bottom"
-          buttonPosition="bottom-right"
-        />
-      )}
-    </QueryClientProvider>
+    <ErrorBoundary
+      onError={(error, info) => captureException(error, { componentStack: info.componentStack })}
+    >
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <AuthProvider>
+            <App />
+          </AuthProvider>
+        </BrowserRouter>
+        {/* React Query DevTools - Only in development */}
+        {import.meta.env.DEV && (
+          <ReactQueryDevtools
+            initialIsOpen={false}
+            position="bottom"
+            buttonPosition="bottom-right"
+          />
+        )}
+      </QueryClientProvider>
+    </ErrorBoundary>
   </React.StrictMode>
 );

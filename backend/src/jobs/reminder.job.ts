@@ -1,6 +1,7 @@
 import { Job } from 'bullmq';
 import { logger } from '../config/logger';
 import { remindersQueue } from '../config/queue';
+import { notificationService } from '../integrations/notification.service';
 
 export interface ReminderJobData {
   type: 'appointment' | 'medication' | 'vaccination' | 'followup' | 'payment';
@@ -54,15 +55,16 @@ export async function processReminderJob(job: Job<ReminderJobData>): Promise<voi
           recipientId,
         });
       } else {
-        // TODO: Integrate with email service or queue email job
-        logger.info('Sending reminder via email', {
+        // Deliver through the resilient facade (circuit breaker + retry + metrics).
+        await notificationService.sendEmail({
+          to: job.data.recipientEmail,
+          subject: job.data.subject || `Reminder: ${type}`,
+          text: job.data.message,
+        });
+        logger.info('Sent reminder via email', {
           jobId: job.id,
-          email: job.data.recipientEmail,
           type,
         });
-
-        // Simulate email sending
-        await new Promise((resolve) => setTimeout(resolve, 100));
       }
     }
 
@@ -76,15 +78,14 @@ export async function processReminderJob(job: Job<ReminderJobData>): Promise<voi
           recipientId,
         });
       } else {
-        // TODO: Integrate with SMS service (Twilio)
-        logger.info('Sending reminder via SMS', {
+        await notificationService.sendSms({
+          to: job.data.recipientPhone,
+          body: job.data.message,
+        });
+        logger.info('Sent reminder via SMS', {
           jobId: job.id,
-          phone: job.data.recipientPhone,
           type,
         });
-
-        // Simulate SMS sending
-        await new Promise((resolve) => setTimeout(resolve, 150));
       }
     }
 

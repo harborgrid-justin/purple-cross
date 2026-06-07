@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '../config/database';
 import { AppError } from '../middleware/error-handler';
 import { HTTP_STATUS, ERROR_MESSAGES, PAGINATION, WORKFLOW_EVENTS } from '../constants';
@@ -6,7 +7,7 @@ import { domainEvents } from './domain-events.service';
 export class PrescriptionService {
   async createPrescription(data: Record<string, unknown>) {
     const prescription = await prisma.prescription.create({
-      data,
+      data: data as Prisma.PrescriptionCreateInput,
       include: {
         patient: true,
         medication: true,
