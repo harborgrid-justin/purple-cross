@@ -11,54 +11,73 @@ migration"* — or let Claude pick based on each agent's `description`.
 
 ## Available agents
 
-| Agent | Use it for |
-| --- | --- |
-| `typescript-architect` | Advanced TypeScript implementation, type-system design, rigorous review |
-| `typescript-orchestrator` | Multi-domain features that need coordination across parallel workstreams |
-| `database-architect` | Prisma schema, migrations, indexing/query optimization, multi-tenancy |
-| `api-architect` | REST/GraphQL endpoint design, auth patterns, API review |
-| `swagger-api-documentation-architect` | OpenAPI/Swagger specs, `@openapi` route annotations |
-| `react-component-architect` | React components, hooks, component architecture |
-| `state-management-architect` | TanStack Query / Zustand data flow, re-render performance |
-| `ui-ux-architect` | UX flows, information architecture, interaction patterns |
-| `css-styling-architect` | Styling architecture, design tokens, Tailwind/CSS systems |
-| `accessibility-architect` | WCAG 2.1+ compliance, ARIA, assistive technology |
-| `frontend-performance-architect` | Bundle size, Core Web Vitals, lazy-loading |
-| `frontend-testing-architect` | Jest/Vitest/RTL/Playwright/Cypress strategy and tests |
-| `jsdoc-typescript-architect` | TypeScript with comprehensive JSDoc documentation |
-| `server-management-architect` | Deployment infra, scaling, server troubleshooting |
-| `code-reviewer` | **Read-only** review of a diff for correctness/edge-cases/consistency (Writer/Reviewer pattern) |
-| `security-reviewer` | **Read-only** security review (injection, authz, secrets, tenant isolation, PHI/PII) — use proactively after auth/data changes |
+| Agent | Model | Use it for |
+| --- | --- | --- |
+| `typescript-architect` | opus | Hard type-system problems, advanced TS implementation, rigorous review |
+| `typescript-orchestrator` | opus | Multi-domain features needing decomposition + delegation across workstreams |
+| `database-architect` | sonnet | Prisma schema, migrations, indexing/query optimization, tenancy wiring |
+| `api-architect` | sonnet | REST endpoint design, auth patterns, API review |
+| `swagger-api-documentation-architect` | haiku | `@openapi` route annotations, spec fixes |
+| `react-component-architect` | sonnet | React components/pages, hooks, component architecture |
+| `state-management-architect` | sonnet | TanStack Query / Zustand data flow, cache + re-render performance |
+| `ui-ux-architect` | sonnet | UX flows, information architecture, interaction patterns |
+| `css-styling-architect` | sonnet | Plain-CSS conventions, design tokens, styling refactors |
+| `accessibility-architect` | sonnet | WCAG 2.1 AA, ARIA, keyboard/screen-reader fixes |
+| `frontend-performance-architect` | sonnet | Bundle size, code-splitting, Core Web Vitals |
+| `frontend-testing-architect` | sonnet | Vitest/RTL + Jest/integration test strategy and tests |
+| `jsdoc-typescript-architect` | haiku | JSDoc documentation passes |
+| `server-management-architect` | sonnet | Docker/CI/CD, observability wiring, prod troubleshooting |
+| `code-reviewer` | sonnet | **Read-only** diff review for correctness/edge-cases/consistency |
+| `security-reviewer` | opus | **Read-only** security review (injection, authz, tenancy, PHI/PII) — proactive after auth/data changes |
 
-The two reviewers are **read-only** (`tools: Read, Grep, Glob, Bash`), demonstrating
-the least-privilege pattern; `security-reviewer` runs on `opus`. The architects
-omit `tools` (inherit all) because they implement as well as design.
+The two reviewers are **read-only** (`tools: Read, Grep, Glob, Bash`) — the
+least-privilege pattern. The architects omit `tools` (inherit all) because they
+implement as well as design.
 
-## Authoring / editing an agent
+## Authoring rules (token economy)
 
-Each agent is a Markdown file with YAML frontmatter + a system-prompt body:
+Every agent's `description` is loaded into **every** session's context so the
+main agent can route work; the body is loaded for every invocation. Budget both:
+
+- **`description`: 1–2 sentences, ≤ ~50 words.** Say *what it does* and *when
+  to use it* (add "Use proactively…" for auto-trigger agents). **Never include
+  `<example>` blocks or dialogue transcripts** — they cost hundreds of tokens
+  per agent in every session and add no routing signal a good sentence doesn't.
+- **Body: ≤ ~60 lines**, repo-grounded. Reference this repo's actual files,
+  commands, and patterns instead of generic competency lists. Generic expertise
+  is already in the model; only project specifics earn their tokens.
+- **No file-based coordination protocols** (`.temp/` trackers, status JSON,
+  cross-agent file references). Claude Code's built-in task tracking does this;
+  file protocols burn tokens and leave litter in the repo.
+- **Model routing is a primary cost lever**: `haiku` for formulaic/high-volume
+  work, `opus` only for genuinely hard reasoning, `sonnet` otherwise.
+- **Least-privilege `tools`** for agents that shouldn't write (reviewers).
+- Every agent ends with an **Output contract**: the caller sees only the final
+  message, so it must carry decisions, file:line references, and verification
+  results — concisely.
+
+Template:
 
 ```markdown
 ---
-name: security-reviewer
-description: Reviews code for security vulnerabilities. Use proactively after auth/data changes.
-tools: Read, Grep, Glob, Bash       # least-privilege: only what the task needs
-model: opus                          # opus | sonnet | haiku | inherit
+name: my-agent
+description: One sentence on what it does; one on when to use it.
+tools: Read, Grep, Glob, Bash   # only if restricting; omit to inherit all
+model: sonnet                    # opus | sonnet | haiku | inherit
 ---
-You are a senior security engineer. Review for injection (SQL/XSS/command),
-authn/authz flaws, secrets in code, and insecure data handling. Cite file:line
-and suggest fixes.
+You are <role> for Purple Cross (<relevant stack slice>).
+
+## Scope / rules (repo-grounded)
+...
+
+## Working method & output
+- Read only what the task needs; targeted verification (typecheck, single test).
+- Final message: decisions, files touched (file:line), verification results.
 ```
 
-Guidelines:
-- **Focused responsibility** — one clear job per agent.
-- **Least-privilege tools** — list only the tools the task needs (omit `tools` to inherit all).
-- **Model routing for cost** — `haiku` for read/search-heavy or high-volume agents, `opus` for hard reasoning, `sonnet`/`inherit` otherwise.
-- **A precise `description`** — Claude uses it to decide when to delegate; include "use proactively" for agents that should trigger automatically.
-
 > Note: `../../.github/agents/` holds separate agent sets (JSDoc-documentation
-> agents and a `code-review/` set); this `.claude/agents/` directory is for
-> interactive development subagents.
+> agents and a `code-review/` set) used by CI; this `.claude/agents/` directory
+> is for interactive development subagents.
 >
 > On-demand workflows live in [`../skills/`](../skills/) — e.g.
 > `add-backend-endpoint` and `add-frontend-crud` encode this repo's layered

@@ -2,7 +2,7 @@
 name: code-reviewer
 description: Use proactively to review a diff or recently written code for correctness, edge cases, and consistency with the repo's patterns before committing/merging. Ideal as the "Reviewer" half of a Writer/Reviewer workflow (fresh context catches what the author missed). Read-only.
 tools: Read, Grep, Glob, Bash
-model: inherit
+model: sonnet
 ---
 
 You are a senior engineer performing a focused code review. You have

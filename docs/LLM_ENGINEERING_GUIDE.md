@@ -1,7 +1,7 @@
 # LLM Engineering Guide — Working with Claude
 
 _Enterprise guidance for using Claude (Anthropic) as the LLM/agentic engineering
-assistant on Purple Cross. Last updated: 2026-05-26._
+assistant on Purple Cross. Last updated: 2026-06-10._
 
 Claude is the **standard and only supported LLM** for engineering on this
 repository — via [Claude Code](https://code.claude.com/docs) (CLI, desktop, web,
@@ -54,6 +54,38 @@ Common waste patterns to avoid (from Anthropic's best-practices): the
 and over" (after two failed corrections, `/clear` and rewrite the prompt), and
 "infinite exploration" (scope investigations or hand them to a subagent). See
 [Reduce token usage](https://code.claude.com/docs/en/costs).
+
+### Diagnosing context spend
+
+- **`/context`** shows what is occupying the window (CLAUDE.md, MCP tools,
+  skills, conversation).
+- **`/usage`** shows session token totals **and a per-category breakdown**
+  (skills, subagents, plugins, individual MCP servers) over the last 24h/7d —
+  use it to find which add-on is eating the budget.
+- A [status line](https://code.claude.com/docs/en/statusline) can display
+  context usage continuously.
+
+---
+
+## 1b. Upstream issues Claude Code has worked through — and our safeguards
+
+The Claude Code changelog shows recurring problem areas Anthropic has been
+fixing release after release. Even where the product now mitigates them, we
+keep our own guardrails so usage stays efficient regardless of client version:
+
+| Upstream issue (changelog/docs) | Product mitigation | Our safeguard in this repo |
+| --- | --- | --- |
+| **MCP tool definitions bloating every session's context** | Tool definitions are deferred (ToolSearch loads them on demand); `/plugin` shows projected context cost | Prefer CLI tools (`gh`, `psql`, `npm`) over MCP where equivalent; disable unused servers via `/mcp`; audit with `/context` |
+| **Oversized CLAUDE.md degrading instruction-following** (warning now scales with the model's window) | "CLAUDE.md too long" warning; guidance: ≤ ~200 lines | Root `CLAUDE.md` kept under 200 lines; workflow detail moved to on-demand skills and linked docs |
+| **Verbose agent `description`s loaded into every session** | — | Authoring rule in `.claude/agents/README.md`: descriptions ≤ 2 sentences, **no `<example>` transcripts**; bodies ≤ ~60 repo-grounded lines |
+| **Auto-compaction losing the wrong things** (multiple compaction fixes shipped) | Reactive compaction improvements; custom compact instructions supported | `# Compact instructions` section in `CLAUDE.md` pins what summarization must preserve (task, diffs, decisions, verification state) |
+| **Full test/build output flooding the window** | Docs recommend hook-based preprocessing | `.claude/hooks/filter-test-output.sh` (PreToolUse Bash) rewrites bare full-suite runs to failures + summary only |
+| **Permission rules too coarse / bypassable** (deny-glob support, WebFetch rule precedence, managed-settings enforcement fixes) | Deny rules support globs; explicit rules take precedence | `settings.json` denies force-push, hard reset, `git clean`, `rm -rf`, `prisma migrate reset`, and reads of `.env*`/key files |
+| **Destructive file edits with no deterministic guard** | Hooks API (`PreToolUse` permissionDecision) | `.claude/hooks/protect-migrations.sh` blocks Edit **and Write** on applied Prisma migrations |
+| **Subagent/agent-team cost blowups** (agent teams ≈ 7× tokens; teammates each load CLAUDE.md+MCP+skills) | Per-agent `model:` routing; agent teams disabled by default | Roster routes haiku/sonnet/opus per task class; agent teams stay disabled (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` unset); spawn prompts kept minimal |
+| **Extended-thinking token spend on simple tasks** | `/effort` levels; `MAX_THINKING_TOKENS`; thinking toggle | Default effort for routine work; reserve high effort/Opus for hard reasoning (§4) |
+| **Background token usage** (resume summarization, status checks) | Documented (~<$0.04/session) | Accepted; close idle sessions, clean up finished teammates/subagents |
+| **Text-search-driven over-reading in typed codebases** | Code-intelligence plugins (go-to-definition instead of grep + read) | Recommended: install a TS code-intelligence plugin via `/plugin` for symbol-precise navigation |
 
 ---
 
@@ -191,9 +223,11 @@ the error." If you can't verify it, don't ship it.
 - **Auditability**: prefer small, reviewable commits; let a fresh-context session
   review changes; require human review before merge to `master`.
 - **Determinism where it matters**: encode non-negotiable steps as **hooks**, not
-  advisory CLAUDE.md text. Configured today: a `PreToolUse` hook
-  (`.claude/hooks/protect-migrations.sh`) that blocks edits to already-applied
-  Prisma migrations (they're immutable — edit-in-place causes drift). Auto
+  advisory CLAUDE.md text. Configured today: `PreToolUse` hooks
+  (`.claude/hooks/protect-migrations.sh`, blocking Edit/Write on already-applied
+  Prisma migrations, and `.claude/hooks/filter-test-output.sh`, filtering bare
+  full-suite test runs to failures + summary), plus permission **deny rules**
+  for destructive git/prisma commands and `.env`/key-file reads. Auto
   lint/typecheck-on-edit hooks are intentionally **deferred** until the `tsc`/lint
   baseline is clean (Phase 4) so they don't fire constantly on pre-existing debt.
 - **Independent review**: run the read-only `code-reviewer` / `security-reviewer`
